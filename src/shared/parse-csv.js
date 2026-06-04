@@ -21,7 +21,7 @@ function wixImageUrl(wixUri, width = 800) {
   if (wixUri.startsWith('http')) return wixUri;
   const m = wixUri.match(/wix:image:\/\/v1\/([^/]+)/);
   if (!m) return '';
-  // Use simple CDN URL (same as wixImageUrlFull) - /v1/fill/ causes 403 on external domains
+  // Simple CDN URL - works on external domains (confirmed working)
   return `https://static.wixstatic.com/media/${m[1]}`;
 }
 
