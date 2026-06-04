@@ -172,6 +172,8 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
+      <li><a href="/exclusivas.html">⭐ Exclusivas</a></li>
+      <li><a href="/proximamente.html">🔔 Próximamente</a></li>
     </ul>
     <a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="nav-cta">Asesoría</a>
   </div>
