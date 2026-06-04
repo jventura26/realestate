@@ -70,9 +70,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-fil
 section{padding:88px 6%}
 .ey{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
 .ey::before{content:'';width:26px;height:1px;background:var(--or)}
-.st{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
+.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:20px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
 .st em{font-style:italic;color:var(--or)}
-.ss{font-size:.8rem;color:var(--sv);line-height:1.9;max-width:500px;font-weight:300}
+.ss{font-size:1.1rem;font-weight:300;line-height:2;letter-spacing:.02em;color:var(--sv);line-height:1.9;max-width:500px;font-weight:300}
+.description-premium{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;line-height:1.8;color:var(--wh);margin-bottom:24px;letter-spacing:.01em}
 /* BUTTONS */
 .btn-or{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--or);color:var(--ink);border:1px solid var(--or);padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;transition:all .3s;cursor:pointer}
 .btn-or:hover{background:var(--or2);border-color:var(--or2);transform:translateY(-1px);box-shadow:0 8px 28px rgba(245,130,13,.35)}
