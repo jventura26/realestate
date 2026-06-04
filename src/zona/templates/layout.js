@@ -166,7 +166,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
+    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
     <ul class="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
