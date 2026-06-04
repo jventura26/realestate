@@ -281,11 +281,11 @@ function parseProperties(csvPath) {
     );
 
     // Images
-    const imageFields = [
-      firstValue(row, ['Imagen']),
-      firstValue(row, ['Imagen-1']),
-      firstValue(row, ['Imagen-2']),
-    ].filter(Boolean);
+   const imageFields = [
+  firstValue(row, ['Imagen-1']),
+  firstValue(row, ['Imagen']),
+  firstValue(row, ['Imagen-2']),
+].filter(Boolean);
 
     const galleryImages = parseGallery(firstValue(row, ['Gallery']));
 
@@ -294,9 +294,15 @@ function parseProperties(csvPath) {
       ...galleryImages,
     ]);
 
-    const mainImageRaw = imageFields[0] || allImages[0] || '';
-    const mainImage = wixImageUrl(mainImageRaw, 1200) || wixImageUrlFull(mainImageRaw);
-    const mainImageThumb = wixImageUrl(mainImageRaw, 600) || mainImage;
+    const mainImageRaw =
+  firstValue(row, ['Imagen-1']) ||
+  imageFields[0] ||
+  allImages[0] ||
+  '';
+
+const mainImage = wixImageUrlFull(mainImageRaw);
+
+const mainImageThumb = mainImage;
 
     const finalGallery = uniqueArray([
       mainImage,
