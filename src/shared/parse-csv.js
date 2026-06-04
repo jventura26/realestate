@@ -31,20 +31,18 @@ function wixImageUrl(wixUri, width = 1200) {
   if (!wixUri) return '';
 
   const value = String(wixUri).trim();
-
   if (!value) return '';
 
   if (value.startsWith('http')) return value;
 
   const match = value.match(/wix:image:\/\/v1\/([^/]+)/);
-
   if (!match) return '';
 
   return `https://static.wixstatic.com/media/${match[1]}`;
 }
-
 function wixImageUrlFull(wixUri) {
-  if (!wixUri) return '';
+  return wixImageUrl(wixUri);
+}
 
   const value = String(wixUri).trim();
 
@@ -282,8 +280,8 @@ function parseProperties(csvPath) {
 
     // Images
    const imageFields = [
-  firstValue(row, ['Imagen-1']),
   firstValue(row, ['Imagen']),
+  firstValue(row, ['Imagen-1']),
   firstValue(row, ['Imagen-2']),
 ].filter(Boolean);
 
