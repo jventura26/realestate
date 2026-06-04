@@ -10,146 +10,255 @@
  * - Published filter from last Status column
  */
 
-const fs   = require('fs');
+  /**
+ * parse-csv.js — Wix CMS CSV parser
+ *
+ * Handles:
+ * - Wix image URIs → static.wixstatic.com URLs
+ * - Wix Gallery JSON → image arrays
+ * - Wix rich text JSON → plain text
+ * - Published filtering
+ * - Slugs from old Wix URLs
+ */
+
+const fs = require('fs');
 const { parse } = require('csv-parse/sync');
 
-// ── Wix image URI → CDN URL ──────────────────────────────────────────
-// Input:  wix:image://v1/71b3d1_cbfbac~mv2.jpeg/14.jpeg#originWidth=…
-// Output: https://static.wixstatic.com/media/71b3d1_cbfbac~mv2.jpeg
-function wixImageUrl(wixUri, width = 800) {
+// ─────────────────────────────────────────────
+// Wix image URI → CDN URL
+// ─────────────────────────────────────────────
+function wixImageUrl(wixUri, width = 1200) {
   if (!wixUri) return '';
-  if (wixUri.startsWith('http')) return wixUri;
-  const m = wixUri.match(/wix:image:\/\/v1\/([^/]+)/);
-  if (!m) return '';
-  // append width for performance (Wix image service)
-  return `https://static.wixstatic.com/media/${m[1]}/v1/fill/w_${width},q_85,usm_0.66_1.00_0.01/${m[1]}`;
+
+  const value = String(wixUri).trim();
+
+  if (!value) return '';
+
+  if (value.startsWith('http')) return value;
+
+  const match = value.match(/wix:image:\/\/v1\/([^/]+)/);
+
+  if (!match) return '';
+
+  const fileName = match[1];
+
+  return `https://static.wixstatic.com/media/${fileName}/v1/fill/w_${width},q_85,usm_0.66_1.00_0.01/${fileName}`;
 }
 
-// Keep original hash for gallery full-size
 function wixImageUrlFull(wixUri) {
   if (!wixUri) return '';
-  if (wixUri.startsWith('http')) return wixUri;
-  const m = wixUri.match(/wix:image:\/\/v1\/([^/]+)/);
-  if (!m) return '';
-  return `https://static.wixstatic.com/media/${m[1]}`;
+
+  const value = String(wixUri).trim();
+
+  if (!value) return '';
+
+  if (value.startsWith('http')) return value;
+
+  const match = value.match(/wix:image:\/\/v1\/([^/]+)/);
+
+  if (!match) return '';
+
+  return `https://static.wixstatic.com/media/${match[1]}`;
 }
 
-// ── Wix Gallery JSON → URL array ─────────────────────────────────────
+// ─────────────────────────────────────────────
+// Gallery parser
+// ─────────────────────────────────────────────
 function parseGallery(galleryStr) {
-  if (!galleryStr || galleryStr.trim() === '') return [];
+  if (!galleryStr) return [];
+
+  const value = String(galleryStr).trim();
+
+  if (!value) return [];
+
   try {
-    const items = JSON.parse(galleryStr);
-    return items
-      .map(item => wixImageUrlFull(item.src || ''))
-      .filter(Boolean);
-  } catch (_) {
+    const parsed = JSON.parse(value);
+
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map(item => {
+          if (typeof item === 'string') return wixImageUrlFull(item);
+          return wixImageUrlFull(item.src || item.url || item.image || '');
+        })
+        .filter(Boolean);
+    }
+
     return [];
+  } catch (_) {
+    return value
+      .split(/[,|;]/)
+      .map(v => wixImageUrlFull(v.trim()))
+      .filter(Boolean);
   }
 }
 
-// ── Wix rich-text JSON → plain text ──────────────────────────────────
-function extractText(jsonStr) {
-  if (!jsonStr || jsonStr.trim() === '') return '';
+// ─────────────────────────────────────────────
+// Rich text JSON → plain text
+// ─────────────────────────────────────────────
+function extractText(value) {
+  if (!value) return '';
+
+  const raw = String(value).trim();
+
+  if (!raw) return '';
+
   try {
-    const doc = JSON.parse(jsonStr);
+    const doc = JSON.parse(raw);
     const parts = [];
+
     function walk(nodes) {
       if (!Array.isArray(nodes)) return;
-      for (const n of nodes) {
-        if (n.type === 'TEXT') {
-          const t = (n.textData?.text || '').trim();
-          if (t) parts.push(t);
+
+      for (const node of nodes) {
+        if (node.type === 'TEXT') {
+          const text = node.textData?.text || '';
+          if (text.trim()) parts.push(text.trim());
         }
-        if (n.nodes?.length) walk(n.nodes);
+
+        if (node.nodes) walk(node.nodes);
       }
     }
+
     walk(doc.nodes || []);
-    // Clean emojis and excess whitespace
-    return parts.join(' ')
+
+    return parts
+      .join(' ')
       .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')
       .replace(/\s{2,}/g, ' ')
       .trim()
-      .substring(0, 1200);
+      .substring(0, 1500);
   } catch (_) {
-    return String(jsonStr).substring(0, 400);
+    return raw
+      .replace(/\s{2,}/g, ' ')
+      .trim()
+      .substring(0, 1500);
   }
 }
 
-// ── Slug from Wix item path ───────────────────────────────────────────
-// Input:  /propiedades-1/hacienda-nueva-1
-// Output: hacienda-nueva-1
+// ─────────────────────────────────────────────
+// Slug
+// ─────────────────────────────────────────────
 function extractSlug(itemPath, title) {
   if (itemPath) {
-    const cleaned = itemPath
-      .replace(/\/propiedades-1\//g, '')
-      .replace(/\/propiedades\//g,   '')
+    const cleaned = String(itemPath)
+      .replace('/propiedades-1/items/', '')
+      .replace('/propiedades-1/', '')
+      .replace('/propiedades/', '')
       .replace(/^\/+|\/+$/g, '')
       .trim();
+
     if (cleaned) return cleaned;
   }
-  // Fallback: generate from title
-  return title
+
+  return String(title || 'propiedad')
     .toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
-    .substring(0, 60);
+    .substring(0, 80);
 }
 
-// ── Price formatting ──────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// Cleaning helpers
+// ─────────────────────────────────────────────
 function formatPrice(priceStr) {
-  if (!priceStr || priceStr.trim() === '') return 'Consultar';
-  const s = priceStr.trim();
-  // Already formatted strings from Wix
-  if (s.startsWith('Q.') || s.startsWith('Q ')) return s;
-  if (s.startsWith('$'))  return s.replace('$ ', '$').replace('$  ', '$');
-  return s;
+  if (!priceStr) return 'Consultar';
+
+  const value = String(priceStr).trim();
+
+  if (!value) return 'Consultar';
+
+  return value;
 }
 
 function priceNumeric(priceStr) {
   if (!priceStr) return 0;
-  const num = priceStr.replace(/[^0-9.]/g, '');
-  return parseFloat(num) || 0;
+
+  const value = String(priceStr).replace(/[^0-9.]/g, '');
+
+  return parseFloat(value) || 0;
 }
 
-// ── Area cleaning ─────────────────────────────────────────────────────
 function cleanArea(raw) {
   if (!raw) return '';
-  const s = raw.replace(/'/g, '').trim();
-  // Remove garbage values
-  if (s === '- m²' || s === '--- m²' || s === '0 v²' || s === '0 m²' || s === '0') return '';
-  // Normalize v² → m²
-  return s.replace(/v²/g, 'm²').replace(/\s+/g, ' ');
+
+  const value = String(raw)
+    .replace(/'/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (
+    !value ||
+    value === '- m²' ||
+    value === '--- m²' ||
+    value === '0 v²' ||
+    value === '0 m²' ||
+    value === '0'
+  ) {
+    return '';
+  }
+
+  return value.replace(/v²/g, 'm²');
 }
 
-// ── Parking normalization ─────────────────────────────────────────────
 function cleanParking(raw) {
   if (!raw) return '';
-  const s = String(raw).trim().toLowerCase();
-  if (s === 'si' || s === 'sí' || s === 'yes') return 'Sí';
-  if (s === 'no') return 'No';
-  if (!isNaN(parseInt(s)) && parseInt(s) > 0) return s;
-  return s || '';
+
+  const value = String(raw).trim();
+
+  if (!value) return '';
+
+  const lower = value.toLowerCase();
+
+  if (lower === 'si' || lower === 'sí' || lower === 'yes') return 'Sí';
+  if (lower === 'no') return 'No';
+
+  return value;
 }
 
-// ── Published check ───────────────────────────────────────────────────
+function isYes(value) {
+  const lower = String(value || '').trim().toLowerCase();
+  return lower === 'si' || lower === 'sí' || lower === 'yes';
+}
+
 function isPublished(row) {
-  // Wix CSV has Status in multiple columns — last one is most reliable
-  const vals = Object.values(row);
-  return vals.some(v => String(v).trim().toUpperCase() === 'PUBLISHED');
+  const values = Object.values(row).map(v =>
+    String(v || '').trim().toUpperCase()
+  );
+
+  return values.includes('PUBLISHED');
 }
 
-// ── Main parser ───────────────────────────────────────────────────────
+function firstValue(row, keys) {
+  for (const key of keys) {
+    const value = row[key];
+
+    if (value !== undefined && value !== null && String(value).trim() !== '') {
+      return String(value).trim();
+    }
+  }
+
+  return '';
+}
+
+function uniqueArray(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+// ─────────────────────────────────────────────
+// Main parser
+// ─────────────────────────────────────────────
 function parseProperties(csvPath) {
   const raw = fs.readFileSync(csvPath, 'utf-8');
 
   const records = parse(raw, {
-    columns:           true,
-    skip_empty_lines:  true,
-    trim:              true,
-    bom:               true,
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    bom: true,
     relax_column_count: true,
   });
 
@@ -158,77 +267,142 @@ function parseProperties(csvPath) {
   for (const row of records) {
     if (!isPublished(row)) continue;
 
-    const title       = (row['Titulo'] || '').trim();
+    const title = firstValue(row, ['Titulo', 'Titulo Descricion']);
     if (!title) continue;
 
-    const itemPath    = row['Propiedades (Item)'] || '';
-    const slug        = extractSlug(itemPath, title);
-    const description = extractText(row['Description'] || '');
-    const mainImageRaw= row['Imagen'] || '';
-    const mainImage   = wixImageUrl(mainImageRaw, 1200);
-    const mainImageThumb = wixImageUrl(mainImageRaw, 600);
-    const gallery     = parseGallery(row['Gallery'] || '');
+    const itemPath = firstValue(row, [
+      'Propiedades (Item)',
+      'Link-copy-2-of-properties-all',
+      'Link_Privado',
+    ]);
 
-    // Prefer gallery for images; add mainImage if not already in gallery
-    const allImages   = gallery.length > 0 ? gallery : (mainImage ? [mainImage] : []);
+    const slug = extractSlug(itemPath, title);
 
-    const precio      = (row['Precio'] || '').trim();
-    const tipo        = (row['Tipo de propiedad'] || 'Casa').trim();
-    const cinta       = (row['Cinta'] || '').trim();          // Venta / Renta / Nueva / Usada
-    const estado      = (row['Estado'] || '').trim();         // Condición del inmueble
-    const municipio   = (row['Municipio'] || '').trim();
-    const departamento= (row['Departamento'] || '').trim();
-    const lugar       = (row['Lugar'] || '').trim();
+    const description = extractText(
+      firstValue(row, ['Description', 'Descripcion', 'Titulo Descricion'])
+    );
 
-    const habitaciones= (row['Numero de Dormitorios'] || row['Dormitorios'] || '').trim();
-    const banos       = (row['Numero de Baños']       || row['Baños']       || '').trim();
-    const parqueos    = cleanParking(row['Garaje'] || '');
-    const areaConst   = cleanArea(row['Area de Construccion'] || '');
-    const terreno     = cleanArea(row['Tamaño del Terreno'] || row['Tamaño de la Propiedad'] || '');
-    const codigo      = (row['Codigo Inmueble'] || '').trim();
-    const jardin      = (row['Jardin']  || '').toLowerCase().trim();
-    const terraza     = (row['Terraza'] || '').toLowerCase().trim();
+    // Images
+    const imageFields = [
+      firstValue(row, ['Imagen']),
+      firstValue(row, ['Imagen-1']),
+      firstValue(row, ['Imagen-2']),
+    ].filter(Boolean);
 
-    const locationFull = [municipio, departamento].filter(Boolean).join(', ');
+    const galleryImages = parseGallery(firstValue(row, ['Gallery']));
 
-    // Build amenities from boolean fields
+    const allImages = uniqueArray([
+      ...imageFields.map(img => wixImageUrlFull(img)),
+      ...galleryImages,
+    ]);
+
+    const mainImageRaw = imageFields[0] || allImages[0] || '';
+    const mainImage = wixImageUrl(mainImageRaw, 1200) || wixImageUrlFull(mainImageRaw);
+    const mainImageThumb = wixImageUrl(mainImageRaw, 600) || mainImage;
+
+    const finalGallery = uniqueArray([
+      mainImage,
+      ...allImages,
+    ]);
+
+    // Property data
+    const precio = firstValue(row, ['Precio']);
+
+    const tipo = firstValue(row, ['Tipo de propiedad']) || 'Propiedad';
+
+    const cinta = firstValue(row, ['Cinta']);
+
+    const estado = firstValue(row, [
+      'Estado',
+      'Condicion de la Propiedad',
+      'Status',
+      'Status-1',
+    ]);
+
+    const municipio = firstValue(row, ['Municipio']);
+    const departamento = firstValue(row, ['Departamento']);
+    const lugar = firstValue(row, ['Lugar']);
+
+    const habitaciones = firstValue(row, [
+      'Numero de Dormitorios',
+      'Dormitorios',
+    ]);
+
+    const banos = firstValue(row, [
+      'Numero de Baños',
+      'Baños',
+    ]);
+
+    const parqueos = cleanParking(firstValue(row, ['Garaje']));
+
+    const areaConst = cleanArea(
+      firstValue(row, [
+        'Area de Construccion',
+        'Area de Construccion-1',
+        'Tamaño de la Propiedad',
+      ])
+    );
+
+    const terreno = cleanArea(
+      firstValue(row, [
+        'Tamaño del Terreno',
+        'Tamaño',
+      ])
+    );
+
+    const codigo = firstValue(row, ['Codigo Inmueble', 'ID']);
+
+    const locationFull = [municipio, departamento]
+      .filter(Boolean)
+      .join(', ');
+
     const amenities = [];
-    if (jardin  === 'si' || jardin  === 'sí') amenities.push('Jardín');
-    if (terraza === 'si' || terraza === 'sí') amenities.push('Terraza');
-    if (parqueos && parqueos !== 'No')        amenities.push(`Garaje`);
 
-    // Old Wix URL for redirect generation
-    const wixPath = itemPath; // e.g. /propiedades-1/hacienda-nueva-1
+    if (isYes(row['Jardin'])) amenities.push('Jardín');
+    if (isYes(row['Terraza'])) amenities.push('Terraza');
+    if (parqueos && parqueos !== 'No') amenities.push('Garaje');
 
     properties.push({
       title,
       slug,
       description,
+
       mainImage,
       mainImageThumb,
-      gallery:     allImages,
+      gallery: finalGallery,
+
       precio,
       priceFormatted: formatPrice(precio),
-      priceNumeric:   priceNumeric(precio),
+      priceNumeric: priceNumeric(precio),
+
       tipo,
-      cinta,       // badge on card
+      cinta,
       estado,
+
       municipio,
       departamento,
       lugar,
       locationFull,
+
       habitaciones,
       banos,
       parqueos,
+
       areaConst,
       terreno,
+
       amenities,
+
       codigo,
-      wixPath,
+      wixPath: itemPath,
     });
   }
 
   return properties;
 }
 
-module.exports = { parseProperties, wixImageUrl };
+module.exports = {
+  parseProperties,
+  wixImageUrl,
+  wixImageUrlFull,
+};
