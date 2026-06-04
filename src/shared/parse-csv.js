@@ -40,9 +40,7 @@ function wixImageUrl(wixUri, width = 1200) {
 
   if (!match) return '';
 
-  const fileName = match[1];
-
-  return `https://static.wixstatic.com/media/${fileName}/v1/fill/w_${width},q_85,usm_0.66_1.00_0.01/${fileName}`;
+  return `https://static.wixstatic.com/media/${match[1]}`;
 }
 
 function wixImageUrlFull(wixUri) {
