@@ -23,7 +23,7 @@ function card(p) {
   data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
   data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
   data-habs="${p.habitaciones||0}">
-  <img src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy">
+  <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy">
   <div class="pc-ov"></div>
   ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
   <div class="pc-info">
@@ -219,7 +219,7 @@ function detailPage(prop, all) {
 
   const gal    = prop.gallery.slice(0, 10);
   const galHtml= gal.length > 1
-    ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
+    ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
 
   const relHtml = related.length
     ? `<section class="related"><div class="ey">Relacionadas</div><h2 class="st">También te puede <em>interesar</em></h2><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></section>` : '';
@@ -245,7 +245,7 @@ function detailPage(prop, all) {
 <div class="det-body">
   <!-- LEFT -->
   <div>
-    <div class="main-img"><img id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}"></div>
+    <div class="main-img"><img referrerpolicy="no-referrer" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}"></div>
     ${galHtml}
     <div style="margin-top:42px">
       <div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:8px">${escapeHtml(prop.tipo)} · ${escapeHtml(prop.cinta||prop.estado||'')}</div>

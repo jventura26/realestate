@@ -127,8 +127,3 @@ real-estate-sites/
 ├── package.json
 └── README.md
 ```
-# WEBS
-# realestate
-# realestate
-# realestate
-# realestate

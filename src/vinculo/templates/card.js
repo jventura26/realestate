@@ -14,7 +14,7 @@ function card(p) {
   data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
   data-habs="${p.habitaciones||0}">
   <div class="pc-img">
-    <img src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy">
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
   </div>
   <div class="pc-body">

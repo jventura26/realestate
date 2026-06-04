@@ -126,7 +126,7 @@ function detailPage(prop, all) {
 
   const gal = prop.gallery.slice(0, 10);
   const galHtml = gal.length > 1
-    ? `<div class="gal-grid">${gal.slice(1).map(src=>`<img src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>`
+    ? `<div class="gal-grid">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>`
     : '';
 
   const relHtml = related.length
@@ -141,7 +141,7 @@ function detailPage(prop, all) {
 </div>
 <div class="detail-grid">
   <div>
-    <div class="main-img"><img id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}"></div>
+    <div class="main-img"><img referrerpolicy="no-referrer" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}"></div>
     ${galHtml}
     <div style="margin-top:40px">
       <div class="eyebrow">${escapeHtml(prop.tipo)} · ${escapeHtml(prop.cinta||prop.estado||'')}</div>
