@@ -21,8 +21,8 @@ function wixImageUrl(wixUri, width = 800) {
   if (wixUri.startsWith('http')) return wixUri;
   const m = wixUri.match(/wix:image:\/\/v1\/([^/]+)/);
   if (!m) return '';
-  // append width for performance (Wix image service)
-  return `https://static.wixstatic.com/media/${m[1]}/v1/fill/w_${width},q_85,usm_0.66_1.00_0.01/${m[1]}`;
+  // Use simple CDN URL (same as wixImageUrlFull) - /v1/fill/ causes 403 on external domains
+  return `https://static.wixstatic.com/media/${m[1]}`;
 }
 
 // Keep original hash for gallery full-size
