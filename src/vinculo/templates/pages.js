@@ -2,16 +2,17 @@ const { layout }           = require('./layout');
 const { card }             = require('./card');
 const { escapeHtml, uniqueValues } = require('../../shared/utils');
 
-// ── INDEX ─────────────────────────────────────────────────────────────
+// ââ INDEX âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function indexPage(props) {
   const featured = props.slice(0, 9);
 
   const body = `
 <section class="hero-new">
-  <h1>Propiedades en Guatemala</h1>
-  <p>Explora casas, apartamentos y fincas con información completa, fotos y precios verificados.</p>
+  <div class="hero-tag">🥇 Portal inmobiliario premium</div>
+  <h1>Las mejores propiedades<br><span>en Guatemala</span></h1>
+  <p>Donde las oportunidades inmobiliarias se conectan. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.</p>
   <div class="search-main">
-    <input type="text" placeholder="¿Qué buscas? (zona, tipo, precio...)">
+    <input type="text" placeholder="Buscar por zona, tipo, precio...">
     <button>Buscar</button>
   </div>
 </section>
@@ -19,18 +20,18 @@ function indexPage(props) {
 <section style="padding:40px 6%;text-align:center">
   <div style="margin-bottom:32px">
     <h2 style="font-size:24px;font-weight:700;margin-bottom:8px;color:var(--gray-900)">Inventario curado</h2>
-    <p style="color:var(--gray-600)">Propiedades verificadas con información completa</p>
+    <p style="color:var(--gray-600)">Propiedades verificadas con informaciÃ³n completa</p>
   </div>
   <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
   <div style="margin-top:40px">
-    <a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:12px 32px;border-radius:6px;font-weight:600;display:inline-block;transition:opacity .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">Ver catálogo completo →</a>
+    <a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:12px 32px;border-radius:6px;font-weight:600;display:inline-block;transition:opacity .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">Ver catÃ¡logo completo â</a>
   </div>
 </section>`;
 
-  return layout({ title: null, desc: `Catálogo de propiedades en Guatemala. ${props.length} propiedades.`, canonical: '/', body });
+  return layout({ title: null, desc: `CatÃ¡logo de propiedades en Guatemala. ${props.length} propiedades.`, canonical: '/', body });
 }
 
-// ── CATALOG ───────────────────────────────────────────────────────────
+// ââ CATALOG âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function catalogPage(props) {
   const tipos    = uniqueValues(props, 'tipo');
   const ciudades = uniqueValues(props, 'municipio');
@@ -79,10 +80,10 @@ function catalogPage(props) {
   <select id="fc3"><option value="">Estado</option>${cintasOptions}</select>
   <select id="fp"><option value="">Precio</option>
     <option value="0-100000">Hasta $100K / Q1M</option>
-    <option value="100000-300000">$100K–$300K</option>
-    <option value="300000-600000">$300K–$600K</option>
-    <option value="600000-1000000">$600K–$1M</option>
-    <option value="1000000-9999999">Más de $1M</option>
+    <option value="100000-300000">$100Kâ$300K</option>
+    <option value="300000-600000">$300Kâ$600K</option>
+    <option value="600000-1000000">$600Kâ$1M</option>
+    <option value="1000000-9999999">MÃ¡s de $1M</option>
   </select>
   <select id="fh"><option value="">Habitaciones</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select>
   <button id="cl">Limpiar</button>
@@ -95,10 +96,10 @@ function catalogPage(props) {
 </div>
 ${filterJS}`;
 
-  return layout({ title: 'Propiedades', desc: 'Catálogo completo de propiedades en Guatemala', canonical: '/propiedades.html', body });
+  return layout({ title: 'Propiedades', desc: 'CatÃ¡logo completo de propiedades en Guatemala', canonical: '/propiedades.html', body });
 }
 
-// ── DETAIL ────────────────────────────────────────────────────────────
+// ââ DETAIL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function detailPage(prop) {
   const gallery = (prop.gallery || []).slice(0, 8);
   
@@ -114,25 +115,25 @@ function detailPage(prop) {
 
   const specHTML = `
     ${prop.habitaciones && prop.habitaciones !== '0' ? `<div class="spec"><div class="spec-value">${prop.habitaciones}</div><div class="spec-label">Habitaciones</div></div>` : ''}
-    ${prop.banos && prop.banos !== '0' ? `<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">Baños</div></div>` : ''}
-    ${prop.areaConst ? `<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">m² Construcción</div></div>` : ''}
+    ${prop.banos && prop.banos !== '0' ? `<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">BaÃ±os</div></div>` : ''}
+    ${prop.areaConst ? `<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">mÂ² ConstrucciÃ³n</div></div>` : ''}
   `;
 
   const descHTML = prop.description ? `
     <div class="description">
-      <h2>Descripción</h2>
+      <h2>DescripciÃ³n</h2>
       <p>${escapeHtml(prop.description)}</p>
     </div>
   ` : '';
 
   const infoHTML = `
     <div class="info-item">
-      <span class="label">Ubicación</span>
+      <span class="label">UbicaciÃ³n</span>
       <span class="value">${escapeHtml(prop.locationFull)}</span>
     </div>
     ${prop.codigoInmueble ? `
     <div class="info-item">
-      <span class="label">Código</span>
+      <span class="label">CÃ³digo</span>
       <span class="value">${escapeHtml(prop.codigoInmueble)}</span>
     </div>
     ` : ''}
