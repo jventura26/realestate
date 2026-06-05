@@ -1,4 +1,5 @@
 # Rutas especÃ­ficas - NO redirigir
 /admin                /admin.html          200
 
+
 # Fallback para el resto
