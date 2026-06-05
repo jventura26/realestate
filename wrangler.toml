@@ -1,0 +1,17 @@
+name = "inmuhub-admin"
+main = "src/worker.js"
+compatibility_date = "2024-01-01"
+account_id = "cf3bba94e40a7a9012f4b0b075464317"
+
+[env.production]
+routes = [
+  { pattern = "inmuhub.com/api/*", zone_id = "cf3bba94e40a7a9012f4b0b075464317" }
+]
+
+[[durable_objects.bindings]]
+name = "PROPERTIES_DB"
+class_name = "PropertiesDatabase"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["PropertiesDatabase"]
