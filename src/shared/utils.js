@@ -27,9 +27,9 @@ function getRelated(prop, all, limit = 3) {
     .slice(0, limit);
 }
 
-// Generate Netlify _redirects from old Wix paths → new paths
+// Generate Netlify _redirects from old Wix paths â new paths
 function generateRedirects(properties, siteBase) {
-  const lines = ['# Old Wix URLs → new static URLs (301 permanent)'];
+  const lines = ['# Old Wix URLs â new static URLs (301 permanent)'];
   for (const p of properties) {
     if (!p.wixPath || !p.wixPath.includes('/propiedades-1/')) continue;
     lines.push(`${p.wixPath}    /propiedades/${p.slug}.html    301!`);
@@ -38,9 +38,7 @@ function generateRedirects(properties, siteBase) {
   // Also redirect old catalog
   lines.push('/propiedades-1/   /propiedades.html   301!');
   lines.push('/propiedades-1    /propiedades.html   301!');
-  // SPA fallback
   lines.push('');
-  lines.push('# SPA fallback');
   lines.push('/*   /index.html   200');
   return lines.join('\n');
 }
