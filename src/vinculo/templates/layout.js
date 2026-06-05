@@ -1,16 +1,16 @@
 const { escapeHtml } = require('../../shared/utils');
 
-const DOMAIN = 'https://vinculoinmobiliario.com';
+const DOMAIN = 'https://inmuhub.com';
 
 function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
-  const pageTitle = title
-    ? `${escapeHtml(title)} | Vinculo Inmobiliario`
-    : 'Vinculo Inmobiliario | Propiedades en Guatemala';
-  const metaDesc  = escapeHtml(desc || 'Catálogo de propiedades en Guatemala. Casas, apartamentos, fincas con precios, fotos y características verificadas.');
-  const ogImg     = ogImage || `${DOMAIN}/assets/og.jpg`;
-  const canon     = `${DOMAIN}${canonical || '/'}`;
+const pageTitle = title
+? `${escapeHtml(title)} | INMUHUB.COM`
+: 'INMUHUB.COM | Donde las oportunidades inmobiliarias se conectan';
+const metaDesc = escapeHtml(desc || 'Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.');
+const ogImg = ogImage || `${DOMAIN}/assets/og.jpg`;
+const canon = `${DOMAIN}${canonical || '/'}`;
 
-  return `<!DOCTYPE html>
+return `<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -19,21 +19,21 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
-<meta property="og:type"        content="website">
-<meta property="og:title"       content="${pageTitle}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${pageTitle}">
 <meta property="og:description" content="${metaDesc}">
-<meta property="og:url"         content="${canon}">
-<meta property="og:image"       content="${escapeHtml(ogImg)}">
-<meta property="og:locale"      content="es_GT">
-<meta name="twitter:card"       content="summary_large_image">
+<meta property="og:url" content="${canon}">
+<meta property="og:image" content="${escapeHtml(ogImg)}">
+<meta property="og:locale" content="es_GT">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --white:#FFFFFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;
-  --gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-600:#4B5563;--gray-900:#111827;
-  --blue:#0066CC;--red:#DC2626;--border:var(--gray-200)
+--white:#FFFFFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;
+--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-600:#4B5563;--gray-900:#111827;
+--blue:#0066CC;--red:#DC2626;--border:var(--gray-200);--gold:#C9A96E
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -43,26 +43,31 @@ a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
-.logo{font-size:16px;font-weight:700;letter-spacing:-0.5px;color:var(--gray-900)}
+.logo{display:flex;flex-direction:column;gap:2px}
+.logo-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
+.logo-tag{font-size:10px;font-weight:500;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;line-height:1}
 .search-compact{display:flex;gap:8px;flex:1;max-width:320px}
 .search-compact input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:14px;outline:none}
 .search-compact input::placeholder{color:var(--gray-400)}
 .search-compact button{background:none;border:1px solid var(--border);border-radius:8px;cursor:pointer;padding:8px 12px;color:var(--gray-600);transition:all .2s}
 .search-compact button:hover{border-color:var(--blue);color:var(--blue)}
 /* HERO */
-.hero-new{background:var(--gray-50);padding:64px 6%;text-align:center}
-.hero-new h1{font-size:clamp(32px,5vw,48px);font-weight:700;letter-spacing:-1px;margin-bottom:12px;color:var(--gray-900)}
-.hero-new p{font-size:16px;color:var(--gray-600);max-width:600px;margin:0 auto 32px;line-height:1.6}
-.search-main{display:flex;gap:8px;max-width:600px;margin:0 auto;background:var(--white);border-radius:8px;border:1px solid var(--border);padding:4px}
-.search-main input{flex:1;border:none;padding:12px 16px;font-size:16px;outline:none;font-family:inherit}
-.search-main button{background:var(--blue);color:var(--white);border:none;border-radius:6px;padding:12px 24px;font-weight:600;cursor:pointer;transition:all .2s}
-.search-main button:hover{opacity:.9}
+.hero-new{background:var(--gray-900);padding:72px 6%;text-align:center;position:relative;overflow:hidden}
+.hero-new::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.08) 0%,transparent 60%);pointer-events:none}
+.hero-new .hero-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,169,110,0.35);padding:5px 16px;border-radius:100px;margin-bottom:20px}
+.hero-new h1{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-1.5px;margin-bottom:14px;color:var(--white);line-height:1.1}
+.hero-new h1 span{color:var(--gold)}
+.hero-new p{font-size:16px;color:rgba(255,255,255,.65);max-width:560px;margin:0 auto 36px;line-height:1.7}
+.search-main{display:flex;gap:8px;max-width:600px;margin:0 auto;background:var(--white);border-radius:10px;border:1px solid var(--border);padding:5px}
+.search-main input{flex:1;border:none;padding:12px 16px;font-size:15px;outline:none;font-family:inherit;color:var(--gray-900)}
+.search-main button{background:var(--gray-900);color:var(--white);border:none;border-radius:7px;padding:12px 24px;font-weight:600;cursor:pointer;transition:all .2s;font-size:14px}
+.search-main button:hover{background:var(--blue)}
 /* FILTERS */
 .filter-bar{background:var(--gray-50);padding:20px 6%;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .filter-bar select,.filter-bar input{background:var(--white);border:1px solid var(--border);color:var(--gray-900);padding:8px 12px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;min-width:120px}
 .filter-bar select:focus,.filter-bar input:focus{border-color:var(--blue)}
-#clearF{background:none;border:1px solid var(--border);color:var(--gray-600);padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s}
-#clearF:hover{border-color:var(--blue);color:var(--blue)}
+#clearF,#cl{background:none;border:1px solid var(--border);color:var(--gray-600);padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s}
+#clearF:hover,#cl:hover{border-color:var(--blue);color:var(--blue)}
 .f-count{font-size:13px;color:var(--gray-600);margin-left:auto;font-weight:500}
 /* GRID */
 .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:32px 6%}
@@ -71,7 +76,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .property-image{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--gray-100)}
 .property-image img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
 .property-card:hover .property-image img{transform:scale(1.05)}
-.badge{position:absolute;top:12px;left:12px;background:var(--red);color:var(--white);font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border-radius:4px;text-transform:uppercase}
+.badge{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--gray-900);font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border-radius:4px;text-transform:uppercase}
 .property-info{padding:16px;flex:1;display:flex;flex-direction:column}
 .property-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px}
 .property-header h3{font-size:16px;font-weight:600;margin:0;color:var(--gray-900);flex:1}
@@ -106,69 +111,83 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 /* FOOTER */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px}
 .footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:1fr 2fr;gap:48px}
-.footer-brand h3{font-size:18px;font-weight:700;margin-bottom:8px}
-.footer-brand p{color:rgba(255,255,255,.6);font-size:14px}
+.footer-brand h3{font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
+.footer-brand h3 span{color:var(--gold)}
+.footer-brand .footer-slogan{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
+.footer-brand p{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7}
 .footer-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:32px}
-.footer-col h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.footer-col h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;color:var(--gold)}
 .footer-col ul{list-style:none}
 .footer-col ul li{margin-bottom:8px}
 .footer-col a{color:rgba(255,255,255,.6);font-size:14px;transition:color .2s}
 .footer-col a:hover{color:var(--white)}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:24px 6%;text-align:center;color:rgba(255,255,255,.4);font-size:12px}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:24px 6%;text-align:center;color:rgba(255,255,255,.35);font-size:12px}
 /* NO RESULTS */
 .no-res{text-align:center;padding:72px 20px;grid-column:1/-1}
 .no-res p{font-size:16px;color:var(--gray-600)}
 /* RESPONSIVE */
 @media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
-  nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
-  .hero-new{padding:48px 4%}.prop-grid{grid-template-columns:1fr;padding:20px 4%}
-  .filter-bar{padding:14px 4%}.detail-container{padding:24px 4%}
-  .footer-content{grid-template-columns:1fr;gap:32px}
-  .specs-grid{grid-template-columns:1fr}
+nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
+.hero-new{padding:56px 4%}.prop-grid{grid-template-columns:1fr;padding:20px 4%}
+.filter-bar{padding:14px 4%}.detail-container{padding:24px 4%}
+.footer-content{grid-template-columns:1fr;gap:32px}
+.specs-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <nav>
-  <div class="nav-inner">
-    <a href="/" class="logo">Vinculo</a>
-    <div class="search-compact">
-      <input type="text" id="navSearch" placeholder="Buscar propiedades...">
-      <button aria-label="Filtros">⚙️</button>
-    </div>
-  </div>
+<div class="nav-inner">
+<a href="/" class="logo">
+<span class="logo-name">INMUHUB<span style="color:var(--gold)">.</span>COM</span>
+<span class="logo-tag">Propiedades premium en Guatemala</span>
+</a>
+<div class="search-compact">
+<input type="text" id="navSearch" placeholder="Buscar propiedades...">
+<button aria-label="Filtros">⚙️</button>
+</div>
+</div>
 </nav>
 ${body}
 <footer>
-  <div class="footer-content">
-    <div class="footer-brand">
-      <h3>Vinculo Inmobiliario</h3>
-      <p>Catálogo de propiedades premium en Guatemala. Información visual, precios y características verificadas.</p>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <h4>Propiedades</h4>
-        <ul>
-          <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
-          <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
-          <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
-          <li><a href="/propiedades.html?tipo=Terreno">Terrenos</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Zonas</h4>
-        <ul>
-          <li><a href="/propiedades.html?municipio=Zona%2010">Zona 10</a></li>
-          <li><a href="/propiedades.html?municipio=Zona%2014">Zona 14</a></li>
-          <li><a href="/propiedades.html?municipio=Cayalá">Cayalá</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>&copy; ${new Date().getFullYear()} Vinculo Inmobiliario · Portal informativo · Guatemala</p>
-  </div>
+<div class="footer-content">
+<div class="footer-brand">
+<h3>INMUHUB<span>.</span>COM</h3>
+<div class="footer-slogan">Donde las oportunidades inmobiliarias se conectan</div>
+<p>Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con información verificada en las mejores zonas.</p>
+</div>
+<div class="footer-links">
+<div class="footer-col">
+<h4>Propiedades</h4>
+<ul>
+<li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
+<li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
+<li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
+<li><a href="/propiedades.html?tipo=Terreno">Terrenos</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Zonas</h4>
+<ul>
+<li><a href="/propiedades.html?municipio=Zona%2010">Zona 10</a></li>
+<li><a href="/propiedades.html?municipio=Zona%2014">Zona 14</a></li>
+<li><a href="/propiedades.html?municipio=Cayalá">Cayalá</a></li>
+<li><a href="/propiedades.html?municipio=Fraijanes">Fraijanes</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Inmuhub</h4>
+<ul>
+<li><a href="/">Inicio</a></li>
+<li><a href="/propiedades.html">Catálogo</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>&copy; ${new Date().getFullYear()} INMUHUB.COM &nbsp;·&nbsp; Donde las oportunidades inmobiliarias se conectan &nbsp;·&nbsp; Guatemala</p>
+</div>
 </footer>
 ${scripts}
 </body>
