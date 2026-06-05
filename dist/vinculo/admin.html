@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin - Inmuhub</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #111; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { background: #0066CC; color: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; }
+    header h1 { font-size: 32px; margin-bottom: 5px; }
+    .section { background: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .section h2 { font-size: 20px; margin-bottom: 20px; color: #0066CC; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; }
+    input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #0066CC; box-shadow: 0 0 0 3px rgba(0,102,204,0.1); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    button { background: #0066CC; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 14px; margin-top: 15px; }
+    button:hover { background: #0052A3; }
+    button.danger { background: #dc2626; }
+    .alert { padding: 12px; border-radius: 6px; margin-bottom: 15px; }
+    .alert.success { background: #dcfce7; color: #166534; }
+    .property-item { border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .property-info h3 { font-size: 16px; margin-bottom: 5px; }
+    .property-info p { font-size: 12px; color: #666; }
+    textarea { resize: vertical; min-height: 80px; }
+    @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } .property-item { flex-direction: column; align-items: flex-start; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏠 Admin Inmuhub</h1>
+      <p>Gestiona tus propiedades</p>
+    </header>
+
+    <div class="section">
+      <h2>➕ Agregar Propiedad</h2>
+      <div id="msg"></div>
+      <form id="form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Título *</label>
+            <input type="text" id="title" required placeholder="Casa en Zona 10">
+          </div>
+          <div class="form-group">
+            <label>Ubicación *</label>
+            <input type="text" id="location" required placeholder="Zona 10, Guatemala">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo *</label>
+            <select id="tipo" required>
+              <option value="">Selecciona</option>
+              <option value="Casa">Casa</option>
+              <option value="Apartamento">Apartamento</option>
+              <option value="Finca">Finca</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Precio USD *</label>
+            <input type="number" id="price" required placeholder="250000">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Habitaciones</label>
+            <input type="number" id="hab" placeholder="3">
+          </div>
+          <div class="form-group">
+            <label>Baños</label>
+            <input type="number" id="banos" placeholder="2">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="desc" placeholder="Detalles..."></textarea>
+        </div>
+
+        <button type="submit">✨ Agregar</button>
+      </form>
+    </div>
+
+    <div class="section">
+      <h2>📋 Propiedades</h2>
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <script>
+    const getProps = () => JSON.parse(localStorage.getItem('props') || '[]');
+    const saveProps = (p) => localStorage.setItem('props', JSON.stringify(p));
+
+    function render() {
+      const props = getProps();
+      const list = document.getElementById('list');
+      if (!props.length) {
+        list.innerHTML = '<p>Sin propiedades</p>';
+        return;
+      }
+      list.innerHTML = props.map((p, i) => `
+        <div class="property-item">
+          <div class="property-info">
+            <h3>${p.title}</h3>
+            <p>📍 ${p.location} | 🏠 ${p.tipo} | 💰 $${p.price}</p>
+          </div>
+          <button class="danger" onclick="del(${i})">Eliminar</button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const p = {
+        title: document.getElementById('title').value,
+        location: document.getElementById('location').value,
+        tipo: document.getElementById('tipo').value,
+        price: document.getElementById('price').value,
+        hab: document.getElementById('hab').value,
+        banos: document.getElementById('banos').value,
+        desc: document.getElementById('desc').value
+      };
+      const props = getProps();
+      props.push(p);
+      saveProps(props);
+      document.getElementById('msg').innerHTML = '<div class="alert success">✅ Agregada</div>';
+      document.getElementById('form').reset();
+      render();
+      setTimeout(() => document.getElementById('msg').innerHTML = '', 3000);
+    });
+
+    function del(i) {
+      if (!confirm('¿Eliminar?')) return;
+      const props = getProps();
+      props.splice(i, 1);
+      saveProps(props);
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
