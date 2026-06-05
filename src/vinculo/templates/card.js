@@ -10,7 +10,7 @@ function card(p) {
   data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
   data-habs="${p.habitaciones||0}">
   <div class="property-image">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.tipo||'Propiedad')} en ${escapeHtml(p.municipio||'Guatemala')} - ${escapeHtml(p.title)}" loading="lazy" width="600" height="375">
     ${badge ? `<span class="badge">${escapeHtml(badge)}</span>` : ''}
   </div>
   <div class="property-info">
