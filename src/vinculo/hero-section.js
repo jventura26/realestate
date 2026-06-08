@@ -19,24 +19,27 @@ function heroSection() {
         justify-content: center;
         padding: 60px 20px;
         overflow: hidden;
+        background: linear-gradient(135deg, #1a2a4e 0%, #2d4069 50%, #1a3a5e 100%);
       }
 
       .hero-background {
         position: absolute;
         inset: 0;
         z-index: 0;
+        opacity: 0.6;
       }
 
       .hero-background-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: none;
       }
 
       .hero-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(26, 42, 78, 0.7) 0%, rgba(15, 31, 60, 0.5) 50%, rgba(245, 247, 250, 0.85) 100%);
+        background: linear-gradient(135deg, rgba(26, 42, 78, 0.7) 0%, rgba(15, 31, 60, 0.5) 50%, rgba(26, 58, 94, 0.8) 100%);
       }
 
       .hero-content {
@@ -54,6 +57,7 @@ function heroSection() {
         margin-bottom: 16px;
         line-height: 1.2;
         letter-spacing: -0.5px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       }
 
       .hero-subtitle {
@@ -61,6 +65,7 @@ function heroSection() {
         color: rgba(255, 255, 255, 0.95);
         margin-bottom: 40px;
         font-weight: 400;
+        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
       }
 
       .search-box {
@@ -68,6 +73,18 @@ function heroSection() {
         border-radius: var(--radius-lg);
         padding: 24px;
         box-shadow: var(--shadow-xl);
+        animation: slideUp 0.6s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .search-tabs {
@@ -133,10 +150,11 @@ function heroSection() {
         cursor: pointer;
         transition: all var(--transition);
         white-space: nowrap;
+        font-weight: 700;
       }
 
       .search-button:hover {
-        background: var(--color-primary-light);
+        background: var(--color-accent);
         transform: translateY(-2px);
         box-shadow: 0 8px 16px rgba(26, 42, 78, 0.2);
       }
@@ -226,11 +244,13 @@ function heroSection() {
       function handleHeroSearch(e) {
         e.preventDefault();
         const searchInput = document.getElementById('hero-search-input').value;
-        const params = new URLSearchParams({
-          type: heroSearchType,
-          q: searchInput,
-        });
-        window.location.href = '/buscar?' + params.toString();
+        if (searchInput.trim()) {
+          const params = new URLSearchParams({
+            type: heroSearchType,
+            q: searchInput,
+          });
+          window.location.href = '/buscar?' + params.toString();
+        }
       }
     </script>
   `;
