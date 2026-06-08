@@ -3,3 +3,7 @@ dist/
 .DS_Store
 *.log
 .env
+# Archivos de herramientas que NO deben ser regenerados por build.js
+/dist/vinculo/herramientas/calculadora-hipotecaria.html
+/dist/vinculo/herramientas/dashboard-v2.html
+
