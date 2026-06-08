@@ -100,7 +100,7 @@ function valuacionPage() {
 
 <div style="background:#f3f4f6;border-radius:12px;padding:24px;margin-bottom:32px">
 <p style="font-weight:600;color:#1a2a4e;margin-bottom:16px;font-size:14px">Características Adicionales</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;width:100%">
+<div style="display:grid;grid-template-columns:1fr;gap:10px;width:100%">
   <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#4b5563">
     <input type="checkbox" id="piscina" style="width:16px;height:16px;cursor:pointer"> Piscina (+5%)
   </label>
