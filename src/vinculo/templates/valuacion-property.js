@@ -3,7 +3,7 @@ function valuacionPage() {
 <div style="max-width:900px;margin:40px auto;padding:20px">
 
 <h2>Valuador de Propiedades</h2>
-<p style="color:#666;margin-bottom:30px">Calcula el valor estimado de tu propiedad en Guatemala</p>
+<p style="color:#666;margin-bottom:30px">Calcula el valor estimado de tu propiedad en Guatemala - Precios 2026</p>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px">
 
@@ -11,31 +11,42 @@ function valuacionPage() {
 <label><strong>Zona / Ubicación</strong></label>
 <select id="zona" onchange="calcular()" style="width:100%;padding:10px;margin:10px 0;border:1px solid #ddd">
   <option value="">Selecciona una zona</option>
-  <optgroup label="Zona de Guatemala">
-  <option value="zona1">Zona 1 - $1,200/m²</option>
-  <option value="zona2">Zona 2 - $1,150/m²</option>
-  <option value="zona3">Zona 3 - $980/m²</option>
-  <option value="zona4">Zona 4 - $1,050/m²</option>
-  <option value="zona5">Zona 5 - $900/m²</option>
-  <option value="zona10">Zona 10 - $1,850/m²</option>
-  <option value="zona12">Zona 12 - $1,300/m²</option>
-  <option value="zona14">Zona 14 - $1,620/m²</option>
-  <option value="zona15">Zona 15 - $1,420/m²</option>
-  <option value="zona16">Zona 16 - $1,350/m²</option>
-  <option value="zona17">Zona 17 - $1,100/m²</option>
-  <option value="zona18">Zona 18 - $950/m²</option>
-  <option value="zona19">Zona 19 - $850/m²</option>
-  <option value="zona21">Zona 21 - $1,180/m²</option>
+  <optgroup label="Zonas Premium">
+  <option value="cayala">Cayalá (Apto: $2,500-4,500 | Casa: $2,200-4,000)</option>
+  <option value="zona14">Zona 14 (Apto: $2,200-3,800 | Casa: $2,000-3,500)</option>
+  <option value="zona15">Zona 15 (Apto: $2,000-3,500 | Casa: $1,800-3,200)</option>
+  <option value="zona10">Zona 10 (Apto: $2,000-3,200 | Casa: $1,800-3,000)</option>
   </optgroup>
-  <optgroup label="Municipios">
-  <option value="cayala">Cayalá - $1,900/m²</option>
-  <option value="fraijanes">Fraijanes - $980/m²</option>
-  <option value="san-jose">San José Pinula - $920/m²</option>
-  <option value="mixco">Mixco - $1,100/m²</option>
-  <option value="santa-catarina">Santa Catarina Pinula - $1,050/m²</option>
-  <option value="san-pedro">San Pedro Sacatepéquez - $880/m²</option>
-  <option value="carretera">Carretera a El Salvador - $850/m²</option>
+  <optgroup label="Zonas Residenciales">
+  <option value="zona4">Zona 4 (Apto: $1,800-3,000 | Casa: $1,500-2,500)</option>
+  <option value="zona16">Zona 16 (Apto: $1,600-3,000 | Casa: $1,400-2,800)</option>
+  <option value="zona13">Zona 13 (Apto: $1,500-2,500 | Casa: $1,300-2,300)</option>
+  <option value="zona11">Zona 11 (Apto: $1,100-1,900 | Casa: $1,000-1,800)</option>
   </optgroup>
+  <optgroup label="Municipios Desarrollo">
+  <option value="carretera">Carretera a El Salvador (Apto: $1,100-2,000 | Casa: $900-2,000)</option>
+  <option value="santa-catarina">Santa Catarina Pinula (Apto: $1,100-2,000 | Casa: $1,000-2,000)</option>
+  <option value="san-cristobal">San Cristóbal (Apto: $1,000-1,800 | Casa: $900-1,800)</option>
+  <option value="fraijanes">Fraijanes (Apto: $1,000-1,800 | Casa: $900-1,800)</option>
+  <option value="san-jose">San José Pinula (Apto: $800-1,400 | Casa: $700-1,400)</option>
+  <option value="mixco">Mixco (Apto: $800-1,500 | Casa: $700-1,500)</option>
+  </optgroup>
+  <optgroup label="Municipios Accesibles">
+  <option value="villa-nueva">Villa Nueva (Apto: $700-1,300 | Casa: $600-1,200)</option>
+  <option value="villa-canales">Villa Canales (Apto: $600-1,200 | Casa: $500-1,200)</option>
+  <option value="amatitlan">Amatitlán (Apto: $500-1,000 | Casa: $500-1,000)</option>
+  <option value="palencia">Palencia (Casa/Terreno: $400-900)</option>
+  <option value="chinautla">Chinautla (Casa/Terreno: $400-900)</option>
+  </optgroup>
+</select>
+</div>
+
+<div>
+<label><strong>Tipo de Propiedad</strong></label>
+<select id="tipo" onchange="calcular()" style="width:100%;padding:10px;margin:10px 0;border:1px solid #ddd">
+  <option value="casa">Casa</option>
+  <option value="apartamento">Apartamento</option>
+  <option value="terreno">Terreno</option>
 </select>
 </div>
 
@@ -82,13 +93,14 @@ function valuacionPage() {
 <label><input type="checkbox" id="seguridad" onchange="calcular()"> Seguridad 24/7</label>
 </div>
 
-<div id="resultado" style="background:#fff9f0;border:2px solid #ff9500;border-radius:8px;padding:20px;text-align:center">
-<h3 style="color:#1a2a4e;margin-top:0">Valor Estimado de la Propiedad</h3>
+<div id="resultado" style="background:#fff9f0;border:2px solid #ff9500;border-radius:8px;padding:20px">
+<h3 style="color:#1a2a4e;margin-top:0">Valor Estimado (USD)</h3>
 <div style="font-size:28px;font-weight:bold;color:#ff9500;margin:15px 0">
-Q <span id="valorTotal">0</span>
+US\$ <span id="valorTotal">0</span>
 </div>
 <p style="color:#666;font-size:12px;margin:10px 0">
-Valor Base: Q <span id="valorBase">0</span> | Ajustes: <span id="ajustes">0%</span>
+Rango de Mercado: US\$ <span id="minValor">0</span> - US\$ <span id="maxValor">0</span><br>
+Valor Base: US\$ <span id="valorBase">0</span> | Ajustes: <span id="ajustes">0%</span>
 </p>
 </div>
 
@@ -96,27 +108,28 @@ Valor Base: Q <span id="valorBase">0</span> | Ajustes: <span id="ajustes">0%</sp
 
 <script>
 const precios = {
-  'zona1': 1200,
-  'zona2': 1150,
-  'zona3': 980,
-  'zona4': 1050,
-  'zona5': 900,
-  'zona10': 1850,
-  'zona12': 1300,
-  'zona14': 1620,
-  'zona15': 1420,
-  'zona16': 1350,
-  'zona17': 1100,
-  'zona18': 950,
-  'zona19': 850,
-  'zona21': 1180,
-  'cayala': 1900,
-  'fraijanes': 980,
-  'san-jose': 920,
-  'mixco': 1100,
-  'santa-catarina': 1050,
-  'san-pedro': 880,
-  'carretera': 850
+  // Premium
+  'cayala': { casa: [2200, 4000], apto: [2500, 4500] },
+  'zona14': { casa: [2000, 3500], apto: [2200, 3800] },
+  'zona15': { casa: [1800, 3200], apto: [2000, 3500] },
+  'zona10': { casa: [1800, 3000], apto: [2000, 3200] },
+  // Residencial
+  'zona4': { casa: [1500, 2500], apto: [1800, 3000] },
+  'zona16': { casa: [1400, 2800], apto: [1600, 3000] },
+  'zona13': { casa: [1300, 2300], apto: [1500, 2500] },
+  'zona11': { casa: [1000, 1800], apto: [1100, 1900] },
+  // Municipios
+  'carretera': { casa: [900, 2000], apto: [1100, 2000] },
+  'santa-catarina': { casa: [1000, 2000], apto: [1100, 2000] },
+  'san-cristobal': { casa: [900, 1800], apto: [1000, 1800] },
+  'fraijanes': { casa: [900, 1800], apto: [1000, 1800] },
+  'san-jose': { casa: [700, 1400], apto: [800, 1400] },
+  'mixco': { casa: [700, 1500], apto: [800, 1500] },
+  'villa-nueva': { casa: [600, 1200], apto: [700, 1300] },
+  'villa-canales': { casa: [500, 1200], apto: [600, 1200] },
+  'amatitlan': { casa: [500, 1000], apto: [500, 1000] },
+  'palencia': { casa: [400, 900], apto: [400, 900] },
+  'chinautla': { casa: [400, 900], apto: [400, 900] }
 };
 
 const ajusteEstado = {
@@ -129,10 +142,9 @@ const ajusteEstado = {
 
 function calcular(){
   const zona = document.getElementById('zona').value;
+  const tipo = document.getElementById('tipo').value;
   const area = parseFloat(document.getElementById('area').value) || 0;
   const anio = parseInt(document.getElementById('anio').value) || 2015;
-  const cuartos = parseInt(document.getElementById('cuartos').value) || 0;
-  const banos = parseFloat(document.getElementById('banos').value) || 0;
   const estado = document.getElementById('estado').value;
   
   if (!zona || area === 0) {
@@ -140,8 +152,14 @@ function calcular(){
     return;
   }
   
-  const precioM2 = precios[zona];
-  const valorBase = area * precioM2;
+  const rangoPrecio = precios[zona][tipo];
+  const minPrecio = rangoPrecio[0];
+  const maxPrecio = rangoPrecio[1];
+  const promedioPrecio = (minPrecio + maxPrecio) / 2;
+  
+  const valorBaseMin = area * minPrecio;
+  const valorBaseMax = area * maxPrecio;
+  const valorBase = area * promedioPrecio;
   
   let ajuste = ajusteEstado[estado] || 0;
   
@@ -160,11 +178,15 @@ function calcular(){
   if (document.getElementById('seguridad').checked) ajuste += 0.03;
   
   const valorFinal = valorBase * (1 + ajuste);
+  const valorFinalMin = valorBaseMin * (1 + ajuste);
+  const valorFinalMax = valorBaseMax * (1 + ajuste);
   
-  const fmt = n => 'Q ' + Math.round(n).toLocaleString('es-ES');
+  const fmt = n => '\$' + Math.round(n).toLocaleString('es-ES');
   
   document.getElementById('valorBase').textContent = fmt(valorBase);
   document.getElementById('valorTotal').textContent = fmt(valorFinal);
+  document.getElementById('minValor').textContent = fmt(valorFinalMin);
+  document.getElementById('maxValor').textContent = fmt(valorFinalMax);
   document.getElementById('ajustes').textContent = (ajuste >= 0 ? '+' : '') + (ajuste * 100).toFixed(0) + '%';
 }
 
