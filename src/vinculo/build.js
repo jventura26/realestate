@@ -51,3 +51,12 @@ write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots
 write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
 
 console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
+
+// Generar páginas de herramientas
+const { mortgageCalcPage, investmentSimulatorPage, guiaCompraPage } = require('./templates/pages');
+const HERRAMIENTAS = path.join(OUT, 'herramientas');
+fs.mkdirSync(HERRAMIENTAS, { recursive: true });
+
+write(path.join(HERRAMIENTAS, 'calculadora-hipotecaria.html'), mortgageCalcPage(props)); console.log(' herramientas: calculadora-hipotecaria.html');
+write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), investmentSimulatorPage(props)); console.log(' herramientas: simulador-inversion.html');
+write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPage(props)); console.log(' herramientas: guia-compra.html');

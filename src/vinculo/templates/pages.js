@@ -106,3 +106,42 @@ return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Preci
 }
 
 module.exports = { indexPage, catalogPage, zonaPage, detailPage };
+
+const { mortgageCalculator } = require('./mortgage-calculator');
+const { investmentSimulator } = require('./investment-simulator');
+const { leadsMagnet } = require('./leads-magnet');
+
+// Página: Calculadora Hipotecaria
+function mortgageCalcPage(props) {
+  const body = mortgageCalculator();
+  return layout({
+    title: 'Calculadora Hipotecaria',
+    desc: 'Calcula tu cuota hipotecaria mensual para propiedades en Guatemala',
+    canonical: '/herramientas/calculadora-hipotecaria.html',
+    body
+  });
+}
+
+// Página: Simulador de Inversión
+function investmentSimulatorPage(props) {
+  const body = investmentSimulator();
+  return layout({
+    title: 'Simulador de Inversión',
+    desc: 'Analiza el ROI de invertir en propiedades guatemaltecas',
+    canonical: '/herramientas/simulador-inversion.html',
+    body
+  });
+}
+
+// Página: Guía de Compra
+function guiaCompraPage(props) {
+  const body = leadsMagnet();
+  return layout({
+    title: 'Guía Completa de Compra',
+    desc: 'Descarga la guía premium para invertir en real estate sin errores',
+    canonical: '/herramientas/guia-compra.html',
+    body
+  });
+}
+
+module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
