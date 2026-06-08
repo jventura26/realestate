@@ -132,18 +132,7 @@ label[style*="display:flex"][style*="gap:8px"] {
 
 
 
-/* Characteristics alignment */
-@media(max-width:768px){
-div[style*="display:block"] > div[style*="margin-bottom:8px"] {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-div[style*="display:block"] > div[style*="margin-bottom:8px"] input[type="checkbox"] {
-  margin: 0 !important;
-  flex-shrink: 0;
-}
-}
+
 
 /* HERO */
 .hero-new{background:var(--gray-900);padding:72px 6%;text-align:center;position:relative;overflow:hidden}
