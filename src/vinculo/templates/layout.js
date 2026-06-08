@@ -35,7 +35,9 @@ return `<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Cache Break: 1780943256260 -->
 <style>
+/* Generated: 2026-06-08T18:27:36.260Z */
 /* Cache Breaker: 1780941103618 */
 /* Build: 2026-06-08T16:53:42.342Z - Mobile Fix */
 :root{
