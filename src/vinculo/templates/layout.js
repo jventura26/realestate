@@ -6,7 +6,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
 const pageTitle = title
 ? `${escapeHtml(title)} | INMUHUB.COM`
 : 'INMUHUB.COM | Donde las oportunidades inmobiliarias se conectan';
-const metaDesc = escapeHtml(desc || 'Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.');
+const metaDesc = escapeHtml(desc || 'CatÃ¡logo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.');
 const ogImg = ogImage || `${DOMAIN}/assets/og.jpg`;
 const canon = `${DOMAIN}${canonical || '/'}`;
 
@@ -70,18 +70,25 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 #clearF:hover,#cl:hover{border-color:var(--blue);color:var(--blue)}
 .f-count{font-size:13px;color:var(--gray-600);margin-left:auto;font-weight:500}
 /* GRID */
-.prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:32px 6%}
-.property-card{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s ease;text-decoration:none;color:inherit}
-.property-card:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(0,102,204,.12);transform:translateY(-2px)}
-.property-image{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--gray-100)}
-.property-image img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
-.property-card:hover .property-image img{transform:scale(1.05)}
-.badge{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--gray-900);font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border-radius:4px;text-transform:uppercase}
-.property-info{padding:16px;flex:1;display:flex;flex-direction:column}
-.property-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px}
-.property-header h3{font-size:16px;font-weight:600;margin:0;color:var(--gray-900);flex:1}
-.property-price{font-size:18px;font-weight:700;color:var(--blue);white-space:nowrap}
-.property-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--gray-600);margin-top:auto}
+.prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:32px 6%}
+.property-card{display:flex;flex-direction:column;background:var(--white);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .25s ease,transform .25s ease;text-decoration:none;color:inherit}
+.property-card:hover{border-color:var(--gray-400,#9ca3af);transform:translateY(-3px)}
+.property-card:hover .card-img-wrap img{transform:scale(1.04)}
+.card-img-wrap{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--gray-100)}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;display:block}
+.card-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-tipo{background:rgba(0,0,0,0.52);color:#fff;font-size:10px;font-weight:600;letter-spacing:.06em;padding:4px 10px;border-radius:20px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.card-cinta{font-size:10px;font-weight:700;letter-spacing:.05em;padding:4px 10px;border-radius:20px;text-transform:uppercase;margin-left:auto}
+.card-cinta--nueva,.card-cinta--precio-reducido{background:var(--gold,#C9A96E);color:#2d2416}
+.card-cinta--venta{background:var(--blue);color:#fff}
+.card-cinta--renta{background:var(--gray-700,#374151);color:#fff}
+.card-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
+.card-price{font-size:19px;font-weight:700;color:var(--gold,#C9A96E);line-height:1;margin-bottom:7px;letter-spacing:-0.02em}
+.card-title{font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-specs{display:flex;align-items:center;gap:5px;padding-top:10px;border-top:0.5px solid var(--border);margin-top:auto}
+.cs-item{font-size:12px;color:var(--gray-600);font-weight:500}
+.cs-dot{color:var(--gray-300,#d1d5db);font-size:11px}
 /* DETAIL */
 .detail-container{max-width:1200px;margin:0 auto;padding:40px 6%}
 .detail-gallery{margin-bottom:40px}
@@ -145,7 +152,7 @@ nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
 </a>
 <div class="search-compact">
 <input type="text" id="navSearch" placeholder="Buscar propiedades...">
-<button aria-label="Filtros">⚙️</button>
+<button aria-label="Filtros">âï¸</button>
 </div>
 </div>
 </nav>
@@ -155,7 +162,7 @@ ${body}
 <div class="footer-brand">
 <h3>INMUHUB<span>.</span>COM</h3>
 <div class="footer-slogan">Donde las oportunidades inmobiliarias se conectan</div>
-<p>Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con información verificada en las mejores zonas.</p>
+<p>CatÃ¡logo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con informaciÃ³n verificada en las mejores zonas.</p>
 </div>
 <div class="footer-links">
 <div class="footer-col">
@@ -172,7 +179,7 @@ ${body}
 <ul>
 <li><a href="/propiedades.html?municipio=Zona%2010">Zona 10</a></li>
 <li><a href="/propiedades.html?municipio=Zona%2014">Zona 14</a></li>
-<li><a href="/propiedades.html?municipio=Cayalá">Cayalá</a></li>
+<li><a href="/propiedades.html?municipio=CayalÃ¡">CayalÃ¡</a></li>
 <li><a href="/propiedades.html?municipio=Fraijanes">Fraijanes</a></li>
 </ul>
 </div>
@@ -180,13 +187,13 @@ ${body}
 <h4>Inmuhub</h4>
 <ul>
 <li><a href="/">Inicio</a></li>
-<li><a href="/propiedades.html">Catálogo</a></li>
+<li><a href="/propiedades.html">CatÃ¡logo</a></li>
 </ul>
 </div>
 </div>
 </div>
 <div class="footer-bottom">
-<p>&copy; ${new Date().getFullYear()} INMUHUB.COM &nbsp;·&nbsp; Donde las oportunidades inmobiliarias se conectan &nbsp;·&nbsp; Guatemala</p>
+<p>&copy; ${new Date().getFullYear()} INMUHUB.COM &nbsp;Â·&nbsp; Donde las oportunidades inmobiliarias se conectan &nbsp;Â·&nbsp; Guatemala</p>
 </div>
 </footer>
 ${scripts}
