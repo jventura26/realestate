@@ -1,4 +1,4 @@
-module.exports = () => `
+const mortgageCalculator = () => `
 <div style="max-width:800px;margin:0 auto;padding:20px">
 
 <h2>Simulación Hipotecaria Avanzada</h2>
@@ -55,7 +55,6 @@ function calcular(){
   const plazo = parseFloat(document.getElementById('plazo').value) || 20;
   const tasa = parseFloat(document.getElementById('banco').value) || 7.5;
   
-  // Hipoteca
   const enganche = precio * (enganchePct / 100);
   const aFinanciar = precio - enganche;
   const tasaMensual = tasa / 100 / 12;
@@ -63,7 +62,6 @@ function calcular(){
   const cuota = aFinanciar * (tasaMensual * Math.pow(1 + tasaMensual, meses)) / (Math.pow(1 + tasaMensual, meses) - 1);
   const intereses = (cuota * meses) - aFinanciar;
   
-  // Impuestos
   const iusiAnual = precio * 0.0012;
   const seguroMensual = precio * 0.0035 / 12;
   const comision = aFinanciar * 0.005;
@@ -90,3 +88,5 @@ document.getElementById('banco').addEventListener('change', calcular);
 
 </div>
 `;
+
+module.exports = { mortgageCalculator };
