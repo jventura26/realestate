@@ -1,159 +1,92 @@
-function mortgageCalculator() {
-  return `
-<section style="padding:60px 6%;background:linear-gradient(135deg,#f9fafb 0%,#f3f4f6 100%)">
-  <div style="max-width:900px;margin:0 auto">
-    <!-- Título -->
-    <div style="text-align:center;margin-bottom:48px">
-      <h2 style="font-size:36px;font-weight:700;color:#1a2a4e;margin-bottom:12px">Calculadora Hipotecaria</h2>
-      <p style="font-size:16px;color:#666;max-width:600px;margin:0 auto">Simula el costo de tu hipoteca incluyendo la cuota inicial del 20% que pide el banco</p>
-    </div>
+module.exports = () => `
+<div style="max-width:800px;margin:0 auto;padding:20px">
 
-    <!-- Calculadora -->
-    <div style="background:white;border-radius:16px;padding:48px;box-shadow:0 4px 20px rgba(0,0,0,0.08);border:1px solid #e5e7eb">
-      
-      <!-- Input: Precio Propiedad -->
-      <div style="margin-bottom:32px">
-        <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:15px">Precio de la Propiedad: Q <span id="priceDisplay">500,000</span></label>
-        <input type="range" id="price" min="100000" max="5000000" step="50000" value="500000" style="width:100%;height:8px;background:#e5e7eb;border-radius:4px;appearance:none;-webkit-appearance:none">
-        <style>
-          input[type=range]::-webkit-slider-thumb { appearance:none; width:24px; height:24px; background:#ffa500; border-radius:50%; cursor:pointer }
-          input[type=range]::-moz-range-thumb { width:24px; height:24px; background:#ffa500; border-radius:50%; cursor:pointer; border:none }
-        </style>
-      </div>
+<h2>Simulación Hipotecaria Avanzada</h2>
 
-      <!-- Input: Cuota Inicial (20%) -->
-      <div style="margin-bottom:32px;padding:24px;background:#fff3e0;border-radius:12px;border:1px solid #ffe0b2">
-        <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:15px">⚠️ Cuota Inicial Requerida (20%): Q <span id="downPaymentDisplay">100,000</span></label>
-        <input type="number" id="downPayment" value="100000" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:14px;box-sizing:border-box;background:#ffffff;color:#1a2a4e;font-weight:600">
-        <p style="font-size:12px;color:#666;margin-top:8px;margin-bottom:0">💡 Se actualiza automáticamente al cambiar el precio. Puedes editarlo manualmente si tienes una cifra diferente.</p>
-      </div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0">
 
-      <!-- Input: Plazo -->
-      <div style="margin-bottom:32px">
-        <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:15px">Plazo: <span id="termDisplay">20</span> años</label>
-        <input type="range" id="term" min="5" max="30" step="1" value="20" style="width:100%;height:8px;background:#e5e7eb;border-radius:4px;appearance:none;-webkit-appearance:none">
-      </div>
+<div>
+<label>Precio Propiedad (Q)</label>
+<input type="number" id="precio" value="2500000" style="width:100%;padding:10px;margin:10px 0">
 
-      <!-- Input: Tasa Interés -->
-      <div style="margin-bottom:48px">
-        <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:15px">Tasa de Interés: <span id="rateDisplay">7.5</span>%</label>
-        <input type="range" id="rate" min="3" max="12" step="0.1" value="7.5" style="width:100%;height:8px;background:#e5e7eb;border-radius:4px;appearance:none;-webkit-appearance:none">
-      </div>
+<label>Enganche (%)</label>
+<input type="number" id="enganche" value="30" min="10" max="80" style="width:100%;padding:10px;margin:10px 0">
 
-      <!-- Grid de resultados -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px">
-        
-        <!-- Columna Izquierda: Financiamiento -->
-        <div style="background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);border-radius:12px;padding:32px;color:white">
-          <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.2)">
-            <p style="font-size:13px;opacity:0.9;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Cuota Inicial</p>
-            <p style="font-size:32px;font-weight:700" id="summaryDownDisplay">Q 100,000</p>
-          </div>
-          <div>
-            <p style="font-size:12px;opacity:0.8;margin-bottom:4px">Monto a Financiar (80%)</p>
-            <p style="font-size:24px;font-weight:600" id="loanAmount">Q 400,000</p>
-          </div>
-        </div>
+<label>Plazo (Años)</label>
+<input type="number" id="plazo" value="20" min="5" max="30" style="width:100%;padding:10px;margin:10px 0">
 
-        <!-- Columna Derecha: Cuota Mensual -->
-        <div style="background:linear-gradient(135deg,#1a2a4e 0%,#2d4069 100%);border-radius:12px;padding:32px;color:white">
-          <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.2)">
-            <p style="font-size:13px;opacity:0.8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Cuota Mensual</p>
-            <p style="font-size:32px;font-weight:700;color:#ffa500" id="monthlyPayment">Q 3,081</p>
-          </div>
-          <div>
-            <p style="font-size:12px;opacity:0.8;margin-bottom:4px">Total a Pagar (20 años)</p>
-            <p style="font-size:20px;font-weight:600" id="totalPayment">Q 739,584</p>
-          </div>
-        </div>
-      </div>
+<label>Selecciona Banco</label>
+<select id="banco" style="width:100%;padding:10px;margin:10px 0">
+  <option value="7.0">Banco G&T (7.0%)</option>
+  <option value="7.2">Banco Agromercantil (7.2%)</option>
+  <option value="7.5" selected>Banco Industrial (7.5%)</option>
+  <option value="7.8">Banco Santander (7.8%)</option>
+  <option value="7.3">Banco del Ahorro (7.3%)</option>
+</select>
 
-      <!-- Resumen completo -->
-      <div style="background:#f9fafb;border-radius:12px;padding:24px;border:1px solid #e5e7eb;margin-bottom:32px">
-        <h4 style="font-size:16px;font-weight:700;color:#1a2a4e;margin-bottom:16px">Resumen Financiero Completo</h4>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:14px">
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
-            <span style="color:#666">Precio Propiedad:</span>
-            <span style="font-weight:600;color:#1a2a4e" id="summaryPrice">Q 500,000</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
-            <span style="color:#666">Cuota Inicial (20%):</span>
-            <span style="font-weight:600;color:#ffa500" id="summaryDown">Q 100,000</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
-            <span style="color:#666">Monto Financiado (80%):</span>
-            <span style="font-weight:600;color:#1a2a4e" id="summaryLoan">Q 400,000</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
-            <span style="color:#666">Intereses Totales:</span>
-            <span style="font-weight:600;color:#dc2626" id="totalInterest">Q 339,584</span>
-          </div>
-        </div>
-      </div>
+<button onclick="calcular()" style="width:100%;padding:12px;background:#ff9500;color:#fff;border:none;cursor:pointer;font-weight:600;margin-top:20px">CALCULAR</button>
+</div>
 
-      <!-- Botón CTA -->
-      <div style="text-align:center">
-        <a href="https://wa.me/502XXXXXXXX?text=Tengo%20el%2020%25%20inicial%20y%20quiero%20financiar%20una%20propiedad" target="_blank" style="display:inline-block;background:#1a2a4e;color:white;padding:16px 48px;border-radius:8px;font-weight:600;text-decoration:none;transition:all 0.3s" onmouseover="this.style.background='#2d4069'" onmouseout="this.style.background='#1a2a4e'">
-          Contactar Asesor de Financiamiento →
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+<div id="resultados" style="background:#f5f7fa;padding:20px;border-radius:8px">
+  <h3 style="color:#1a2a4e;margin-bottom:15px">Resumen Financiero</h3>
+  <p><strong>Enganche:</strong> <span id="res-enganche">Q 750,000</span></p>
+  <p><strong>A Financiar:</strong> <span id="res-financiar">Q 1,750,000</span></p>
+  <p><strong>Cuota Mensual:</strong> <span id="res-cuota" style="color:#ff9500;font-size:20px;font-weight:bold">Q 10,500</span></p>
+  <p><strong>Intereses (20 años):</strong> <span id="res-intereses">Q 770,000</span></p>
+  
+  <hr style="margin:15px 0">
+  
+  <h4 style="color:#1a2a4e;margin:10px 0">Impuestos y Gastos</h4>
+  <p><strong>IUSI Anual:</strong> <span id="res-iusi">Q 3,000</span></p>
+  <p><strong>Seguro Mensual:</strong> <span id="res-seguro">Q 730</span></p>
+  <p><strong>Comisión Bancaria:</strong> <span id="res-comision">Q 8,750</span></p>
+  
+  <hr style="margin:15px 0">
+  
+  <p><strong>Cuota Total Mensual + Extras:</strong> <span id="res-total-mensual" style="color:#ff9500;font-size:18px;font-weight:bold">Q 11,230</span></p>
+</div>
+
+</div>
 
 <script>
-  const priceInput = document.getElementById('price');
-  const downPaymentInput = document.getElementById('downPayment');
-  const termInput = document.getElementById('term');
-  const rateInput = document.getElementById('rate');
+function calcular(){
+  const precio = parseFloat(document.getElementById('precio').value) || 2500000;
+  const enganchePct = parseFloat(document.getElementById('enganche').value) || 30;
+  const plazo = parseFloat(document.getElementById('plazo').value) || 20;
+  const tasa = parseFloat(document.getElementById('banco').value) || 7.5;
   
-  function formatNumber(n) { return n.toLocaleString('es-GT'); }
+  // Hipoteca
+  const enganche = precio * (enganchePct / 100);
+  const aFinanciar = precio - enganche;
+  const tasaMensual = tasa / 100 / 12;
+  const meses = plazo * 12;
+  const cuota = aFinanciar * (tasaMensual * Math.pow(1 + tasaMensual, meses)) / (Math.pow(1 + tasaMensual, meses) - 1);
+  const intereses = (cuota * meses) - aFinanciar;
   
-  function calculateMortgage() {
-    const price = parseFloat(priceInput.value);
-    const downPayment = parseFloat(downPaymentInput.value);
-    const principal = price - downPayment; // Lo que financia el banco
-    const r = parseFloat(rateInput.value) / 100 / 12;
-    const n = parseFloat(termInput.value) * 12;
-    
-    const monthly = (principal * r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
-    const total = monthly * n;
-    const interest = total - principal;
-    
-    // Actualizar displays
-    document.getElementById('priceDisplay').textContent = formatNumber(Math.round(price));
-    document.getElementById('downPaymentDisplay').textContent = formatNumber(Math.round(downPayment));
-    document.getElementById('termDisplay').textContent = termInput.value;
-    document.getElementById('rateDisplay').textContent = rateInput.value;
-    
-    document.getElementById('loanAmount').textContent = 'Q ' + formatNumber(Math.round(principal));
-    document.getElementById('monthlyPayment').textContent = 'Q ' + formatNumber(Math.round(monthly));
-    document.getElementById('totalPayment').textContent = 'Q ' + formatNumber(Math.round(total));
-    document.getElementById('totalInterest').textContent = 'Q ' + formatNumber(Math.round(interest));
-    
-    // Resumen
-    document.getElementById('summaryPrice').textContent = 'Q ' + formatNumber(Math.round(price));
-    document.getElementById('summaryDown').textContent = 'Q ' + formatNumber(Math.round(downPayment));
-    document.getElementById('summaryDownDisplay').textContent = 'Q ' + formatNumber(Math.round(downPayment));
-    document.getElementById('summaryLoan').textContent = 'Q ' + formatNumber(Math.round(principal));
-  }
+  // Impuestos
+  const iusiAnual = precio * 0.0012;
+  const seguroMensual = precio * 0.0035 / 12;
+  const comision = aFinanciar * 0.005;
+  const totalMensualConExtras = cuota + seguroMensual + (iusiAnual / 12);
   
-  // Actualizar 20% automáticamente cuando cambia el precio
-  priceInput.addEventListener('input', function() {
-    const autoDownPayment = parseFloat(this.value) * 0.2;
-    downPaymentInput.value = Math.round(autoDownPayment);
-    calculateMortgage();
-  });
+  const fmt = n => 'Q ' + Math.round(n).toLocaleString('es-ES');
   
-  downPaymentInput.addEventListener('input', calculateMortgage);
-  termInput.addEventListener('input', calculateMortgage);
-  rateInput.addEventListener('input', calculateMortgage);
-  
-  calculateMortgage();
-</script>
-`;
+  document.getElementById('res-enganche').textContent = fmt(enganche);
+  document.getElementById('res-financiar').textContent = fmt(aFinanciar);
+  document.getElementById('res-cuota').textContent = fmt(cuota);
+  document.getElementById('res-intereses').textContent = fmt(intereses);
+  document.getElementById('res-iusi').textContent = fmt(iusiAnual);
+  document.getElementById('res-seguro').textContent = fmt(seguroMensual);
+  document.getElementById('res-comision').textContent = fmt(comision);
+  document.getElementById('res-total-mensual').textContent = fmt(totalMensualConExtras);
 }
 
-module.exports = { mortgageCalculator };
+calcular();
+document.getElementById('precio').addEventListener('change', calcular);
+document.getElementById('enganche').addEventListener('change', calcular);
+document.getElementById('plazo').addEventListener('change', calcular);
+document.getElementById('banco').addEventListener('change', calcular);
+</script>
 
-// MEJORAS: Bancos e Impuestos
+</div>
+`;
