@@ -12,7 +12,7 @@ function valuacionPage() {
 
 <form id="valuationForm" style="background:white;border-radius:16px;padding:48px;box-shadow:0 10px 40px rgba(0,0,0,0.1);border:1px solid #e5e7eb">
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:32px">
   <div>
     <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">Zona / Ubicación *</label>
     <select id="zona" required style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:all 0.3s">
@@ -35,7 +35,7 @@ function valuacionPage() {
   </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:32px">
   <div>
     <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">m² de Construcción *</label>
     <input type="number" id="areaConst" min="50" max="10000" placeholder="Ej: 250" required style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:all 0.3s">
@@ -47,7 +47,7 @@ function valuacionPage() {
   </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:32px">
   <div>
     <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">Habitaciones *</label>
     <input type="number" id="cuartos" min="1" max="20" placeholder="Ej: 3" required style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:all 0.3s">
@@ -92,7 +92,7 @@ function valuacionPage() {
 <div id="resultado" style="display:none;margin-top:48px;background:linear-gradient(135deg,#f3f4f6 0%,#e5e7eb 100%);border-radius:16px;padding:40px;border-left:6px solid #ffa500">
   <h3 style="font-size:24px;font-weight:700;color:#1a2a4e;margin-bottom:24px">Valuación Estimada</h3>
   
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:32px">
     <div style="background:white;border-radius:12px;padding:24px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.05)">
       <p style="color:#666;font-size:12px;text-transform:uppercase;margin-bottom:8px;letter-spacing:1px">Valor Base</p>
       <p style="font-size:32px;font-weight:700;color:#1a2a4e;margin:0" id="valorBase">$0</p>
