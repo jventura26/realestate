@@ -69,17 +69,17 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 }
 /* HEADER RESPONSIVE */
 @media(max-width:768px){
-.logo img { height: 60px; }
-.logo-tag { font-size: 11px; margin-top: 2px; }
-.nav-inner { min-height: 70px; gap: 12px; padding: 8px 0; }
+.logo img { height: 60px !important; }
+.logo-tag { font-size: 11px !important; margin-top: 2px !important; }
+.nav-inner { min-height: 70px !important; gap: 12px !important; padding: 8px 0 !important; }
 }
 
 @media(max-width:480px){
-.logo img { height: 45px; }
-.logo-tag { font-size: 10px; margin-top: 1px; }
-.logo-name { font-size: 14px; }
-.nav-inner { min-height: 60px; gap: 8px; padding: 6px 0; }
-div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 12px; }
+.logo img { height: 45px !important; }
+.logo-tag { font-size: 10px !important; margin-top: 1px !important; }
+.logo-name { font-size: 14px !important; }
+.nav-inner { min-height: 60px !important; gap: 8px !important; padding: 6px 0 !important; }
+div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 12px !important; }
 }
 
 /* HERO */
