@@ -15,9 +15,11 @@ const body = `
   <div class="hero-tag">\u{1F947} Portal inmobiliario premium</div>
   <h1>Las mejores propiedades<br><span>en Guatemala</span></h1>
   <p>Donde las oportunidades inmobiliarias se conectan. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.</p>
-  <div class="search-main">
-    <input type="text" placeholder="Buscar por zona, tipo, precio...">
-    <button>Buscar</button>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;max-width:800px;margin:0 auto">
+    <a href="/herramientas/valuador.html" style="background:var(--white);color:var(--gray-900);padding:16px;border-radius:8px;font-weight:600;text-align:center;text-decoration:none;transition:all .2s;border:2px solid var(--white)" onmouseover="this.style.borderColor='var(--gold)';this.style.background='var(--gold)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--white)';this.style.background='var(--white)';this.style.color='var(--gray-900)'">🏠 Valuador</a>
+    <a href="/herramientas/calculadora-hipotecaria.html" style="background:var(--white);color:var(--gray-900);padding:16px;border-radius:8px;font-weight:600;text-align:center;text-decoration:none;transition:all .2s;border:2px solid var(--white)" onmouseover="this.style.borderColor='var(--gold)';this.style.background='var(--gold)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--white)';this.style.background='var(--white)';this.style.color='var(--gray-900)'">🧮 Calculadora</a>
+    <a href="/herramientas/simulador-inversion.html" style="background:var(--white);color:var(--gray-900);padding:16px;border-radius:8px;font-weight:600;text-align:center;text-decoration:none;transition:all .2s;border:2px solid var(--white)" onmouseover="this.style.borderColor='var(--gold)';this.style.background='var(--gold)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--white)';this.style.background='var(--white)';this.style.color='var(--gray-900)'">📈 Simulador</a>
+    <a href="/herramientas/guia-compra.html" style="background:var(--white);color:var(--gray-900);padding:16px;border-radius:8px;font-weight:600;text-align:center;text-decoration:none;transition:all .2s;border:2px solid var(--white)" onmouseover="this.style.borderColor='var(--gold)';this.style.background='var(--gold)';this.style.color='var(--white)'" onmouseout="this.style.borderColor='var(--white)';this.style.background='var(--white)';this.style.color='var(--gray-900)'">📚 Guía</a>
   </div>
 </section>
 <section style="padding:32px 6%;background:var(--gray-50);border-bottom:1px solid var(--border)">
