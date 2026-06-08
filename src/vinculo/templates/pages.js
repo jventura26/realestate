@@ -123,7 +123,7 @@ const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/sc
 return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
 }
 
-module.exports = { indexPage, catalogPage, zonaPage, detailPage };
+module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
 
 const { mortgageCalculator } = require('./mortgage-calculator');
 const { investmentSimulator } = require('./investment-simulator');
