@@ -164,35 +164,35 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 }
 
 /* FOOTER RESPONSIVE */
-footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding-bottom:0}
-.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;width:100%;box-sizing:border-box}
-.footer-col{display:flex;flex-direction:column}
+
+
+
 .footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;color:var(--gold)}
 .footer-col ul{list-style:none;margin:0;padding:0}
 .footer-col li{margin-bottom:10px}
 .footer-col a{color:rgba(255,255,255,0.7);font-size:14px;transition:all 0.3s;text-decoration:none;display:inline-block}
 .footer-col a:hover{color:var(--gold);transform:translateX(4px)}
-.footer-brand{min-width:250px}
+
 .footer-brand p{color:rgba(255,255,255,0.6);font-size:13px;line-height:1.7;margin:12px 0}
-.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding:20px 6%;text-align:center;color:rgba(255,255,255,0.4);font-size:12px}
+
 
 /* TABLET */
 @media(max-width:768px){
-.footer-content{padding:32px 4%;gap:32px;grid-template-columns:repeat(2,1fr)}
+
 .footer-col h4{font-size:12px;margin-bottom:16px}
 .footer-col a{font-size:13px}
-.footer-bottom{padding:16px 4%;font-size:11px}
+
 }
 
 /* MÓVIL */
 @media(max-width:480px){
-.footer-content{padding:24px 4%;gap:24px;grid-template-columns:1fr}
-.footer-brand{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+
+
 .footer-col h4{font-size:11px;margin-bottom:12px;letter-spacing:1px}
 .footer-col a{font-size:12px;margin-bottom:6px}
 .footer-col li{margin-bottom:8px}
 .footer-brand p{font-size:12px}
-.footer-bottom{padding:12px 4%}
+
 }
 
 
@@ -259,6 +259,34 @@ label { font-size: 12px; }
 [style*="padding:40px"] { padding: 16px !important; }
 }
 
+
+/* FOOTER SIMPLE Y RESPONSIVE */
+footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;width:100%;box-sizing:border-box}
+.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;width:100%;box-sizing:border-box;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;align-items:flex-start}
+.footer-col{display:flex;flex-direction:column;gap:0}
+.footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 16px 0;color:var(--gold)}
+.footer-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.footer-col li{margin:0;padding:0}
+.footer-col a{color:rgba(255,255,255,0.7);font-size:13px;transition:all 0.2s;text-decoration:none}
+.footer-col a:hover{color:var(--gold);margin-left:4px}
+.footer-brand h4{margin:0 0 12px 0}
+.footer-brand p{color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:12px 0 0 0}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding:16px 6%;text-align:center;color:rgba(255,255,255,0.4);font-size:11px;margin-top:20px}
+
+@media(max-width:768px){
+.footer-content{grid-template-columns:repeat(2,1fr);gap:32px;padding:32px 4%}
+.footer-col h4{font-size:12px;margin-bottom:12px}
+.footer-col a{font-size:12px}
+}
+
+@media(max-width:480px){
+.footer-content{grid-template-columns:1fr;gap:24px;padding:24px 4%}
+.footer-brand{margin-bottom:12px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.footer-col h4{font-size:11px;margin-bottom:10px}
+.footer-col a{font-size:11px}
+.footer-col ul{gap:6px}
+.footer-bottom{padding:12px 4%;font-size:10px}
+}
 </style>
 </head>
 <body>
@@ -280,14 +308,14 @@ label { font-size: 12px; }
 </div>
 </nav>
 ${body}
-<footer style="width:100%;overflow:hidden">
+<footer>
 <div class="footer-content">
 <div class="footer-col footer-brand">
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-<img src="${LOGO_BASE64}" alt="INMUHUB" style="height:50px;width:auto;">
-<div style="font-weight:800;font-size:16px">INMUHUB</div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+<img src="${LOGO_BASE64}" alt="INMUHUB" style="height:48px;width:auto;">
+<span style="font-weight:800;font-size:15px">INMUHUB</span>
 </div>
-<p>Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.</p>
+<p>Propiedades premium verificadas en las mejores zonas de Guatemala.</p>
 </div>
 
 <div class="footer-col">
@@ -315,7 +343,7 @@ ${body}
 <ul>
 <li><a href="/herramientas/calculadora-hipotecaria.html">🧮 Calculadora</a></li>
 <li><a href="/herramientas/simulador-inversion.html">📈 Simulador</a></li>
-<li><a href="/herramientas/guia-compra.html">📚 Guía Compra</a></li>
+<li><a href="/herramientas/guia-compra.html">📚 Guía</a></li>
 </ul>
 </div>
 
@@ -324,12 +352,12 @@ ${body}
 <ul>
 <li><a href="/">Inicio</a></li>
 <li><a href="/propiedades.html">Catálogo</a></li>
-<li><a href="/propiedades.html">Propiedades</a></li>
+<li><a href="/propiedades.html">Todas</a></li>
 </ul>
 </div>
 </div>
 <div class="footer-bottom">
-<p>&copy; ${new Date().getFullYear()} INMUHUB.COM · La red profesional inmobiliaria de Guatemala</p>
+<p>&copy; ${new Date().getFullYear()} INMUHUB.COM · Guatemala</p>
 </div>
 </footer>
 ${scripts}
