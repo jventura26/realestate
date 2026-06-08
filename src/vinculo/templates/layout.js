@@ -287,6 +287,20 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 .footer-col ul{gap:6px}
 .footer-bottom{padding:12px 4%;font-size:10px}
 }
+
+/* TÍTULOS ALINEADOS */
+.detail-content h1{font-size:32px;font-weight:700;color:#1a2a4e;margin:0 0 8px 0;line-height:1.2}
+.detail-price{font-size:28px;font-weight:600;color:#ffa500;margin:16px 0 24px 0;display:inline-block;padding:8px 16px;background:rgba(255,165,0,0.05);border-radius:8px}
+
+@media(max-width:768px){
+.detail-content h1{font-size:26px;margin-bottom:12px}
+.detail-price{font-size:22px;padding:6px 12px}
+}
+
+@media(max-width:480px){
+.detail-content h1{font-size:20px;margin-bottom:8px}
+.detail-price{font-size:18px;margin:12px 0 16px 0;padding:6px 10px}
+}
 </style>
 </head>
 <body>
