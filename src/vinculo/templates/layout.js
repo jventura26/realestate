@@ -181,6 +181,11 @@ nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
 <img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:80px;width:auto;margin-right:8px;">
 <span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
+<div style="display:flex;gap:12px;align-items:center;margin-left:auto">
+  <a href="/herramientas/calculadora-hipotecaria.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Calculadora</a>
+  <a href="/herramientas/simulador-inversion.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Simulador</a>
+  <a href="/herramientas/guia-compra.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Guía</a>
+</div>
 <div class="search-compact">
 <input type="text" id="navSearch" placeholder="Buscar propiedades...">
 <button aria-label="Filtros">âï¸</button>
@@ -222,6 +227,14 @@ ${body}
 </ul>
 </div>
 </div>
+</div>
+<div class="footer-col">
+  <h4>Herramientas</h4>
+  <ul>
+    <li><a href="/herramientas/calculadora-hipotecaria.html">Calculadora Hipotecaria</a></li>
+    <li><a href="/herramientas/simulador-inversion.html">Simulador de Inversión</a></li>
+    <li><a href="/herramientas/guia-compra.html">Guía de Compra</a></li>
+  </ul>
 </div>
 <div class="footer-bottom">
 <p>&copy; ${new Date().getFullYear()} INMUHUB.COM &nbsp;Â·&nbsp; Donde las oportunidades inmobiliarias se conectan &nbsp;Â·&nbsp; Guatemala</p>
