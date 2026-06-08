@@ -67,3 +67,7 @@ write(path.join(HERRAMIENTAS, 'valuador.html'), layout({ title: 'Valuador de Pro
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), layout({ title: 'Dashboard de Inversionistas', desc: 'Análisis de mercado y datos para inversionistas en Guatemala', canonical: '/herramientas/dashboard-inversionistas.html', body: dashboardInversionistasPage() })); console.log(' herramientas: dashboard-inversionistas.html');
 
 
+
+// Dashboard de Inversionistas
+const { dashboardInversionistasPage } = require('./templates/dashboard-inversionistas-page');
+write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), layout({ title: 'Dashboard de Inversionistas', desc: 'Análisis de mercado para inversionistas en Guatemala', canonical: '/herramientas/dashboard-inversionistas.html', body: dashboardInversionistasPage() })); console.log(' herramientas: dashboard-inversionistas.html');
