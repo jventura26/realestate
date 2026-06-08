@@ -1,5 +1,59 @@
-# Rutas especÃ­ficas - NO redirigir
-/admin                /admin.html          200
+# Old Wix URLs â new static URLs (301 permanent)
+/propiedades-1/sancristobal2    /propiedades/sancristobal2.html    301!
+/propiedades-1/sancristobal2/   /propiedades/sancristobal2.html    301!
+/propiedades-1/hacienda-nueva-1    /propiedades/hacienda-nueva-1.html    301!
+/propiedades-1/hacienda-nueva-1/   /propiedades/hacienda-nueva-1.html    301!
+/propiedades-1/elgin    /propiedades/elgin.html    301!
+/propiedades-1/elgin/   /propiedades/elgin.html    301!
+/propiedades-1/villas-de-alcala    /propiedades/villas-de-alcala.html    301!
+/propiedades-1/villas-de-alcala/   /propiedades/villas-de-alcala.html    301!
+/propiedades-1/bouganvilias-arrazola    /propiedades/bouganvilias-arrazola.html    301!
+/propiedades-1/bouganvilias-arrazola/   /propiedades/bouganvilias-arrazola.html    301!
+/propiedades-1/zona16    /propiedades/zona16.html    301!
+/propiedades-1/zona16/   /propiedades/zona16.html    301!
+/propiedades-1/sancristobal3    /propiedades/sancristobal3.html    301!
+/propiedades-1/sancristobal3/   /propiedades/sancristobal3.html    301!
+/propiedades-1/fraijanes-3    /propiedades/fraijanes-3.html    301!
+/propiedades-1/fraijanes-3/   /propiedades/fraijanes-3.html    301!
+/propiedades-1/santarosalia    /propiedades/santarosalia.html    301!
+/propiedades-1/santarosalia/   /propiedades/santarosalia.html    301!
+/propiedades-1/miralvalle    /propiedades/miralvalle.html    301!
+/propiedades-1/miralvalle/   /propiedades/miralvalle.html    301!
+/propiedades-1/alta-mar    /propiedades/alta-mar.html    301!
+/propiedades-1/alta-mar/   /propiedades/alta-mar.html    301!
+/propiedades-1/fontana-1    /propiedades/fontana-1.html    301!
+/propiedades-1/fontana-1/   /propiedades/fontana-1.html    301!
+/propiedades-1/puerta-del-mar-1    /propiedades/puerta-del-mar-1.html    301!
+/propiedades-1/puerta-del-mar-1/   /propiedades/puerta-del-mar-1.html    301!
+/propiedades-1/casa-en-el-puerto%2C-carretera-a-chulamar%2C--condominio-alta-mar%2C-puerto-de-san-jos%C3%A9%2C-escuintla.    /propiedades/casa-en-el-puerto%2C-carretera-a-chulamar%2C--condominio-alta-mar%2C-puerto-de-san-jos%C3%A9%2C-escuintla..html    301!
+/propiedades-1/casa-en-el-puerto%2C-carretera-a-chulamar%2C--condominio-alta-mar%2C-puerto-de-san-jos%C3%A9%2C-escuintla./   /propiedades/casa-en-el-puerto%2C-carretera-a-chulamar%2C--condominio-alta-mar%2C-puerto-de-san-jos%C3%A9%2C-escuintla..html    301!
+/propiedades-1/sancristobal3    /propiedades/sancristobal3.html    301!
+/propiedades-1/sancristobal3/   /propiedades/sancristobal3.html    301!
+/propiedades-1/campogrande    /propiedades/campogrande.html    301!
+/propiedades-1/campogrande/   /propiedades/campogrande.html    301!
+/propiedades-1/fincas-premium    /propiedades/fincas-premium.html    301!
+/propiedades-1/fincas-premium/   /propiedades/fincas-premium.html    301!
+/propiedades-1/arrazola-2    /propiedades/arrazola-2.html    301!
+/propiedades-1/arrazola-2/   /propiedades/arrazola-2.html    301!
+/propiedades-1/caes    /propiedades/caes.html    301!
+/propiedades-1/caes/   /propiedades/caes.html    301!
+/propiedades-1/zona10    /propiedades/zona10.html    301!
+/propiedades-1/zona10/   /propiedades/zona10.html    301!
+/propiedades-1/sanrafael    /propiedades/sanrafael.html    301!
+/propiedades-1/sanrafael/   /propiedades/sanrafael.html    301!
+/propiedades-1/zona-161    /propiedades/zona-161.html    301!
+/propiedades-1/zona-161/   /propiedades/zona-161.html    301!
+/propiedades-1/vizcaya    /propiedades/vizcaya.html    301!
+/propiedades-1/vizcaya/   /propiedades/vizcaya.html    301!
+/propiedades-1/zona15    /propiedades/zona15.html    301!
+/propiedades-1/zona15/   /propiedades/zona15.html    301!
+/propiedades-1/villa-pinabetes-1    /propiedades/villa-pinabetes-1.html    301!
+/propiedades-1/villa-pinabetes-1/   /propiedades/villa-pinabetes-1.html    301!
+/propiedades-1/sancristobal    /propiedades/sancristobal.html    301!
+/propiedades-1/sancristobal/   /propiedades/sancristobal.html    301!
+/propiedades-1/socorro    /propiedades/socorro.html    301!
+/propiedades-1/socorro/   /propiedades/socorro.html    301!
+/propiedades-1/   /propiedades.html   301!
+/propiedades-1    /propiedades.html   301!
 
-
-# Fallback para el resto
+/*   /index.html   200
