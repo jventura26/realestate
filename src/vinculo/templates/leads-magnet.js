@@ -1,94 +1,72 @@
 function leadsMagnet() {
   return `
-<section style="padding:80px 6%;background:linear-gradient(135deg,#1a2a4e 0%,#2d4069 100%);color:white">
-  <div style="max-width:700px;margin:0 auto;text-align:center">
-    <!-- Icono -->
-    <div style="font-size:64px;margin-bottom:24px">📚</div>
-    
-    <!-- Título -->
-    <h2 style="font-size:36px;font-weight:700;margin-bottom:16px">Guía Completa de Compra</h2>
-    <p style="font-size:18px;opacity:0.9;margin-bottom:40px;line-height:1.6">
-      Descarga nuestra guía premium: "Cómo invertir en real estate en Guatemala sin errores costosos"
-    </p>
-
-    <!-- Contenido preview -->
-    <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-bottom:40px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);text-align:left">
-      <p style="font-size:13px;opacity:0.8;text-transform:uppercase;margin-bottom:16px">Incluye:</p>
-      <ul style="list-style:none;margin:0;padding:0">
-        <li style="margin-bottom:12px;display:flex;align-items:center;gap:12px">
-          <span style="color:#ffa500">✓</span>
-          <span>Análisis de mercado actual en Guatemala</span>
-        </li>
-        <li style="margin-bottom:12px;display:flex;align-items:center;gap:12px">
-          <span style="color:#ffa500">✓</span>
-          <span>Guía paso a paso: desde búsqueda hasta cierre</span>
-        </li>
-        <li style="margin-bottom:12px;display:flex;align-items:center;gap:12px">
-          <span style="color:#ffa500">✓</span>
-          <span>Checklist de inspección profesional</span>
-        </li>
-        <li style="margin-bottom:12px;display:flex;align-items:center;gap:12px">
-          <span style="color:#ffa500">✓</span>
-          <span>Errores comunes (y cómo evitarlos)</span>
-        </li>
-        <li style="margin-bottom:12px;display:flex;align-items:center;gap:12px">
-          <span style="color:#ffa500">✓</span>
-          <span>Estrategias de inversión y financiamiento</span>
-        </li>
-        <li style="display:flex;align-items:center;gap:12px">
-          <span style="color:#ffa500">✓</span>
-          <span>Zonas premium recomendadas 2024-2025</span>
-        </li>
-      </ul>
+<section style="padding:60px 6%;background:linear-gradient(135deg,#1a2a4e 0%,#2d4069 100%);color:white">
+  <div style="max-width:900px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:50px">
+      <div style="font-size:64px;margin-bottom:24px">📚</div>
+      <h1 style="font-size:44px;font-weight:700;margin-bottom:16px">Guía Completa de Compra</h1>
+      <p style="font-size:18px;opacity:0.9;max-width:600px;margin:0 auto">
+        Tu guía premium: Cómo invertir en real estate en Guatemala sin errores costosos
+      </p>
     </div>
 
-    <!-- Formulario -->
-    <form id="leadForm" style="background:white;border-radius:12px;padding:32px;color:#1a2a4e">
-      <div style="margin-bottom:16px">
-        <input type="text" placeholder="Tu nombre completo" required style="width:100%;padding:14px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:14px;box-sizing:border-box;margin-bottom:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+      <!-- Contenido -->
+      <div>
+        <h2 style="font-size:28px;margin-bottom:20px">¿Qué incluye la guía?</h2>
+        <div style="line-height:2">
+          <p style="margin:12px 0">✓ Análisis de mercado actual en Guatemala</p>
+          <p style="margin:12px 0">✓ Cómo evaluar una propiedad profesionalmente</p>
+          <p style="margin:12px 0">✓ Estrategias de financiamiento inteligente</p>
+          <p style="margin:12px 0">✓ Checklist de inspección profesional</p>
+          <p style="margin:12px 0">✓ Errores comunes (y cómo evitarlos)</p>
+          <p style="margin:12px 0">✓ Zonas premium recomendadas 2026</p>
+          <p style="margin:12px 0">✓ Negociación y cierre de trato</p>
+          <p style="margin:12px 0">✓ Impuestos y documentación legal</p>
+        </div>
       </div>
 
-      <div style="margin-bottom:16px">
-        <input type="email" placeholder="Tu email" required style="width:100%;padding:14px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:14px;box-sizing:border-box;margin-bottom:12px">
+      <!-- CTA Descarga -->
+      <div style="background:white;border-radius:16px;padding:40px;color:#1a2a4e;box-shadow:0 10px 40px rgba(0,0,0,0.3)">
+        <div style="text-align:center;margin-bottom:30px">
+          <div style="font-size:72px;margin-bottom:20px">⬇️</div>
+          <h3 style="font-size:24px;font-weight:700;margin-bottom:12px">Descarga Gratis</h3>
+          <p style="color:#666;margin-bottom:25px">Acceso inmediato a la guía completa</p>
+        </div>
+
+        <button onclick="descargarGuia()" style="width:100%;background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);color:white;padding:18px;border:none;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          📥 Descargar PDF Ahora
+        </button>
+
+        <p style="font-size:12px;color:#666;margin-top:20px;text-align:center">
+          ✓ Sin formulario • ✓ 100% gratis • ✓ Descarga directa
+        </p>
+
+        <div style="margin-top:30px;padding:20px;background:#f0f0f0;border-radius:8px;text-align:center">
+          <p style="font-size:13px;color:#666;margin:0">
+            👥 Más de 2,000 inversores descargaron esta guía
+          </p>
+        </div>
       </div>
+    </div>
 
-      <div style="margin-bottom:24px">
-        <input type="tel" placeholder="Tu teléfono (WhatsApp)" required style="width:100%;padding:14px;border:1px solid #d1d5db;border-radius:8px;font-family:inherit;font-size:14px;box-sizing:border-box">
-      </div>
-
-      <button type="submit" style="width:100%;background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);color:white;padding:16px;border:none;border-radius:8px;font-weight:700;font-size:16px;cursor:pointer;transition:all 0.3s">
-        📥 Descargar Guía Gratis
-      </button>
-
-      <p style="font-size:12px;color:#666;margin-top:12px">
-        ✓ Sin spam • ✓ 100% privado • ✓ Acceso inmediato
-      </p>
-    </form>
-
-    <!-- Frase de confianza -->
-    <p style="margin-top:40px;font-size:14px;opacity:0.8">
-      👥 Más de 2,000 inversores ya descargaron esta guía
-    </p>
+    <!-- Vista Previa -->
+    <div style="margin-top:60px;text-align:center">
+      <h2 style="font-size:28px;margin-bottom:30px">Vista Previa del Documento</h2>
+      <iframe src="/files/INMUHUB-Reporte-Inversionistas-2026.pdf" style="width:100%;height:600px;border-radius:10px;border:none;box-shadow:0 4px 20px rgba(0,0,0,0.2)"></iframe>
+    </div>
   </div>
 </section>
 
 <script>
-document.getElementById('leadForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const name = this.querySelector('input[type="text"]').value;
-  const email = this.querySelector('input[type="email"]').value;
-  const phone = this.querySelector('input[type="tel"]').value;
-  
-  // Guardar en localStorage para rastrear
-  const leads = JSON.parse(localStorage.getItem('leads') || '[]');
-  leads.push({ name, email, phone, date: new Date().toISOString() });
-  localStorage.setItem('leads', JSON.stringify(leads));
-  
-  // Redirigir a WhatsApp con mensaje de confirmación
-  const msg = encodeURIComponent('Hola, acabo de descargar tu guía de compra. Me gustaría conocer más opciones de inversión.');
-  window.location.href = 'https://wa.me/502XXXXXXXX?text=' + msg;
-});
+function descargarGuia() {
+  const link = document.createElement('a');
+  link.href = '/files/INMUHUB-Reporte-Inversionistas-2026.pdf';
+  link.download = 'INMUHUB-Guia-Completa-de-Compra.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 </script>
 `;
 }
