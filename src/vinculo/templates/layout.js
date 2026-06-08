@@ -85,10 +85,15 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .card-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
 .card-price{font-size:19px;font-weight:700;color:var(--gold,#C9A96E);line-height:1;margin-bottom:7px;letter-spacing:-0.02em}
 .card-title{font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-specs{display:flex;align-items:center;gap:5px;padding-top:10px;border-top:0.5px solid var(--border);margin-top:auto}
-.cs-item{font-size:12px;color:var(--gray-600);font-weight:500}
-.cs-dot{color:var(--gray-300,#d1d5db);font-size:11px}
+.card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;display:flex;align-items:center;gap:4px;overflow:hidden}
+.card-loc svg{flex-shrink:0;opacity:.5}
+.card-loc span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-specs{display:flex;align-items:stretch;padding-top:10px;border-top:0.5px solid var(--border);margin-top:auto}
+.cs-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray-600);font-weight:500;flex:1;justify-content:center;padding:0 4px}
+.cs-item svg{opacity:.45;flex-shrink:0}
+.cs-item:first-child{justify-content:flex-start;padding-left:0}
+.cs-item:last-child{justify-content:flex-end;padding-right:0}
+.cs-sep{width:0.5px;background:var(--border);flex-shrink:0;align-self:stretch}
 /* DETAIL */
 .detail-container{max-width:1200px;margin:0 auto;padding:40px 6%}
 .detail-gallery{margin-bottom:40px}
