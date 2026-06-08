@@ -110,9 +110,9 @@ function formatPrice(priceStr) {
 
 function priceNumeric(priceStr) {
   if (!priceStr) return 0;
-  // Remover comas primero (separadores de miles), luego caracteres especiales
-  const num = String(priceStr).replace(/,/g, '').replace(/[^0-9.]/g, '');
-  return parseFloat(num) || 0;
+  // Remover TODO excepto números (comas y puntos son separadores, no los queremos)
+  const num = String(priceStr).replace(/[^0-9]/g, '');
+  return parseInt(num) || 0;
 }
 
 // ── Area cleaning ─────────────────────────────────────────────────────
