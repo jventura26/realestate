@@ -1,7 +1,7 @@
 {
   "name": "inmuhub-real-estate",
   "pages_build_config": {
-    "build_command": "npm install && npm run build:vinculo",
+    "build_command": "npm install "build_command": "npm install && npm run build:vinculo""build_command": "npm install && npm run build:vinculo" npm run build",
     "destination_dir": "dist/vinculo",
     "root_dir": "/"
   }
