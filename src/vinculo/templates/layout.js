@@ -50,10 +50,10 @@ img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:auto;min-height:clamp(55px,12vh,80px);gap:clamp(8px,1.5vw,20px);padding:clamp(4px,0.5vh,12px) 0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:auto;min-height:clamp(45px,10vh,80px);gap:clamp(6px,1vw,20px);padding:clamp(2px,0.2vh,12px) 0}
 .logo{display:flex;flex-direction:column;gap:2px;align-items:center;text-decoration:none;color:inherit}
 .logo-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
-.logo-tag{font-size:clamp(9px,2vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.3;margin-top:4px}
+.logo-tag{font-size:clamp(8px,1.5vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.2;margin-top:2px}
 .search-compact{display:flex;gap:8px;flex:1;max-width:320px;width:100%}
 .search-compact input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:14px;outline:none;min-width:0}
 .search-compact input::placeholder{color:var(--gray-400)}
@@ -84,10 +84,11 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 
 /* MOBILE HEADER COMPACT */
 @media(max-width:480px){
-.logo { gap: 2px; }
-.logo-tag { margin-top: 1px; }
-a.logo img { height: 35px !important; margin-right: 4px !important; }
-div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; }
+.logo { gap: 1px; }
+.logo-tag { margin-top: 0px; font-size: 8px !important; }
+a.logo img { height: 30px !important; margin-right: 2px !important; }
+div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
+.nav-inner { min-height: 45px !important; padding: 2px 0 !important; }
 }
 
 /* HERO */
@@ -486,7 +487,7 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 <nav>
 <div class="nav-inner">
 <a href="/" class="logo">
-<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(35px,8vw,100px);width:auto;margin-right:clamp(4px,1.5vw,12px);">
+<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(30px,6vw,100px);width:auto;margin-right:clamp(2px,1vw,12px);">
 <span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
 <div style="display:flex;gap:12px;align-items:center;margin-left:auto">
