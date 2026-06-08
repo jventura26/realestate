@@ -111,6 +111,11 @@ nav { padding: 0 6%; }
   margin-top: clamp(24px, 4vh, 48px);
 }
 
+/* Hide search from navbar */
+.search-compact {
+  display: none !important;
+}
+
 /* HERO */
 .hero-new{background:var(--gray-900);padding:72px 6%;text-align:center;position:relative;overflow:hidden}
 .hero-new::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.08) 0%,transparent 60%);pointer-events:none}
