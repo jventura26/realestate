@@ -153,7 +153,8 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px}
 .footer-brand h3 span{color:var(--gold)}
 .footer-brand .footer-slogan{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
 .footer-brand p{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7}
-.footer-links{display:grid;grid-template-columns:repeat(5,1fr);gap:48px}
+.footer-links{display:grid;grid-template-columns:repeat(5,1fr);gap:40px}
+.footer-links{display:grid;grid-template-columns:repeat(5,1fr);gap:40px}
 .footer-col h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;color:var(--gold)}
 .footer-col ul{list-style:none;margin:0;padding:0}.footer-col li{margin-bottom:8px}.footer-col a{color:rgba(255,255,255,.65);font-size:14px;transition:color .2s}.footer-col a:hover{color:var(--gold)}
 .footer-col ul{list-style:none}
