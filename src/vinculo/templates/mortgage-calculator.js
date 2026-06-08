@@ -5,7 +5,7 @@ function mortgageCalculator() {
     <!-- Título -->
     <div style="text-align:center;margin-bottom:48px">
       <h2 style="font-size:36px;font-weight:700;color:#1a2a4e;margin-bottom:12px">Calculadora Hipotecaria</h2>
-      <p style="font-size:16px;color:#666;max-width:600px;margin:0 auto">Simula el costo de tu hipoteca según el valor de la propiedad, plazo y tasa de interés</p>
+      <p style="font-size:16px;color:#666;max-width:600px;margin:0 auto">Simula el costo de tu hipoteca incluyendo la cuota inicial del 20% que pide el banco</p>
     </div>
 
     <!-- Calculadora -->
@@ -33,27 +33,60 @@ function mortgageCalculator() {
         <input type="range" id="rate" min="3" max="12" step="0.1" value="7.5" style="width:100%;height:8px;background:#e5e7eb;border-radius:4px;appearance:none;-webkit-appearance:none">
       </div>
 
-      <!-- Resultados -->
-      <div style="background:linear-gradient(135deg,#1a2a4e 0%,#2d4069 100%);border-radius:12px;padding:32px;color:white">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
-          <div>
-            <p style="font-size:13px;opacity:0.8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Cuota Mensual</p>
-            <p style="font-size:32px;font-weight:700;color:#ffa500" id="monthlyPayment">Q 3,850</p>
+      <!-- Grid de resultados -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px">
+        
+        <!-- Columna Izquierda: Cuota Inicial -->
+        <div style="background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);border-radius:12px;padding:32px;color:white">
+          <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.2)">
+            <p style="font-size:13px;opacity:0.9;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">⚠️ Cuota Inicial Requerida (20%)</p>
+            <p style="font-size:36px;font-weight:700" id="downPayment">Q 100,000</p>
           </div>
           <div>
-            <p style="font-size:13px;opacity:0.8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Total a Pagar</p>
-            <p style="font-size:32px;font-weight:700" id="totalPayment">Q 924,000</p>
+            <p style="font-size:12px;opacity:0.8;margin-bottom:4px">Monto a Financiar (80%)</p>
+            <p style="font-size:24px;font-weight:600" id="loanAmount">Q 400,000</p>
           </div>
         </div>
-        <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:16px">
-          <p style="font-size:13px;opacity:0.8;margin-bottom:4px">Intereses Totales</p>
-          <p style="font-size:20px;font-weight:600;color:#ffa500" id="totalInterest">Q 424,000</p>
+
+        <!-- Columna Derecha: Cuota Mensual -->
+        <div style="background:linear-gradient(135deg,#1a2a4e 0%,#2d4069 100%);border-radius:12px;padding:32px;color:white">
+          <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.2)">
+            <p style="font-size:13px;opacity:0.8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Cuota Mensual</p>
+            <p style="font-size:36px;font-weight:700;color:#ffa500" id="monthlyPayment">Q 3,081</p>
+          </div>
+          <div>
+            <p style="font-size:12px;opacity:0.8;margin-bottom:4px">Total a Pagar (sin cuota inicial)</p>
+            <p style="font-size:20px;font-weight:600" id="totalPayment">Q 739,584</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen completo -->
+      <div style="background:#f9fafb;border-radius:12px;padding:24px;border:1px solid #e5e7eb;margin-bottom:32px">
+        <h4 style="font-size:16px;font-weight:700;color:#1a2a4e;margin-bottom:16px">Resumen Financiero Completo</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:14px">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+            <span style="color:#666">Precio Propiedad:</span>
+            <span style="font-weight:600;color:#1a2a4e" id="summaryPrice">Q 500,000</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+            <span style="color:#666">Cuota Inicial (20%):</span>
+            <span style="font-weight:600;color:#ffa500" id="summaryDown">Q 100,000</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+            <span style="color:#666">Monto Financiado:</span>
+            <span style="font-weight:600;color:#1a2a4e" id="summaryLoan">Q 400,000</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+            <span style="color:#666">Intereses Totales:</span>
+            <span style="font-weight:600;color:#dc2626" id="totalInterest">Q 339,584</span>
+          </div>
         </div>
       </div>
 
       <!-- Botón CTA -->
-      <div style="margin-top:32px;text-align:center">
-        <a href="https://wa.me/502XXXXXXXX?text=Interesado%20en%20propiedades%20con%20financiamiento" target="_blank" style="display:inline-block;background:#ffa500;color:white;padding:16px 48px;border-radius:8px;font-weight:600;text-decoration:none;transition:all 0.3s">
+      <div style="text-align:center">
+        <a href="https://wa.me/502XXXXXXXX?text=Tengo%20el%2020%25%20inicial%20y%20quiero%20financiar%20una%20propiedad" target="_blank" style="display:inline-block;background:#1a2a4e;color:white;padding:16px 48px;border-radius:8px;font-weight:600;text-decoration:none;transition:all 0.3s" onmouseover="this.style.background='#2d4069'" onmouseout="this.style.background='#1a2a4e'">
           Contactar Asesor de Financiamiento →
         </a>
       </div>
@@ -67,21 +100,33 @@ function mortgageCalculator() {
   const rateInput = document.getElementById('rate');
   
   function formatNumber(n) { return n.toLocaleString('es-GT'); }
+  
   function calculateMortgage() {
-    const P = parseFloat(priceInput.value);
+    const price = parseFloat(priceInput.value);
+    const downPayment = price * 0.2; // 20% inicial
+    const principal = price * 0.8; // 80% a financiar
     const r = parseFloat(rateInput.value) / 100 / 12;
     const n = parseFloat(termInput.value) * 12;
     
-    const monthly = (P * r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+    const monthly = (principal * r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
     const total = monthly * n;
-    const interest = total - P;
+    const interest = total - principal;
     
-    document.getElementById('priceDisplay').textContent = formatNumber(Math.round(P));
+    // Actualizar displays
+    document.getElementById('priceDisplay').textContent = formatNumber(Math.round(price));
     document.getElementById('termDisplay').textContent = termInput.value;
     document.getElementById('rateDisplay').textContent = rateInput.value;
+    
+    document.getElementById('downPayment').textContent = 'Q ' + formatNumber(Math.round(downPayment));
+    document.getElementById('loanAmount').textContent = 'Q ' + formatNumber(Math.round(principal));
     document.getElementById('monthlyPayment').textContent = 'Q ' + formatNumber(Math.round(monthly));
     document.getElementById('totalPayment').textContent = 'Q ' + formatNumber(Math.round(total));
     document.getElementById('totalInterest').textContent = 'Q ' + formatNumber(Math.round(interest));
+    
+    // Resumen
+    document.getElementById('summaryPrice').textContent = 'Q ' + formatNumber(Math.round(price));
+    document.getElementById('summaryDown').textContent = 'Q ' + formatNumber(Math.round(downPayment));
+    document.getElementById('summaryLoan').textContent = 'Q ' + formatNumber(Math.round(principal));
   }
   
   priceInput.addEventListener('input', calculateMortgage);
