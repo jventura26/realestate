@@ -75,30 +75,7 @@ const dashboardHTML = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard de Inversionistas | INMUHUB</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a2a4e; }
-    .header { background: #fff; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 28px; font-weight: 700; color: #1a2a4e; }
-    .hero { background: linear-gradient(135deg, #1a2a4e 0%, #2d4a8a 100%); color: #fff; padding: 80px 20px; text-align: center; }
-    .hero h1 { font-size: 42px; margin-bottom: 15px; }
-    .hero p { font-size: 18px; opacity: 0.9; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 40px 0; }
-    .stat { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .stat-value { font-size: 36px; font-weight: 700; color: #ff9500; }
-    .stat-label { color: #666; margin-top: 10px; }
-    .section { background: #fff; padding: 40px; border-radius: 8px; margin: 30px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .section h2 { color: #1a2a4e; margin-bottom: 25px; font-size: 28px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th { background: #f5f7fa; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #ddd; }
-    td { padding: 15px; border-bottom: 1px solid #eee; }
-    tr:hover { background: #f9f9f9; }
-    .cta { background: #ff9500; color: #fff; padding: 40px; border-radius: 8px; text-align: center; margin: 30px 0; }
-    .cta h2 { margin-bottom: 20px; }
-    .btn { display: inline-block; background: #fff; color: #ff9500; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; }
-    .footer { background: #1a2a4e; color: #fff; padding: 40px 20px; text-align: center; margin-top: 40px; }
-  </style>
+  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#f8f9fb;color:#2c3e50;line-height:1.7}@media(max-width:768px){body{font-size:14px}}.header{background:linear-gradient(135deg,#1a2a4e 0%,#2d4a8a 100%);padding:clamp(15px,4vw,25px);display:flex;justify-content:space-between;align-items:center;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15)}.logo{font-size:clamp(20px,5vw,28px);font-weight:700;letter-spacing:-.5px}.subtitle{font-size:11px;opacity:.8;margin-top:5px}@media(max-width:480px){.subtitle{display:none}}.hero{background:linear-gradient(135deg,#1a2a4e 0%,#2d4a8a 100%);color:#fff;padding:clamp(40px,8vw,80px) 20px;text-align:center}.hero h1{font-size:clamp(28px,6vw,44px);margin-bottom:10px;font-weight:700}.hero p{font-size:clamp(13px,3vw,16px);opacity:.9;margin-bottom:5px}.hero .date{font-size:11px;opacity:.7}.container{max-width:1400px;margin:0 auto;padding:clamp(10px,3vw,20px)}.section{background:#fff;padding:clamp(20px,4vw,35px);border-radius:10px;margin:clamp(15px,4vw,30px) 0;box-shadow:0 2px 12px rgba(0,0,0,.08);border-left:5px solid #ff9500;overflow-x:auto}.section h2{color:#1a2a4e;margin-bottom:clamp(15px,4vw,25px);font-size:clamp(20px,5vw,26px);border-bottom:2px solid #f0f0f0;padding-bottom:15px}.section h3{color:#2c3e50;margin-top:15px;margin-bottom:15px;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#ff9500}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,40vw,280px),1fr));gap:clamp(10px,3vw,20px);margin:clamp(15px,4vw,30px) 0}.stat{background:linear-gradient(135deg,#f8f9fb 0%,#fff 100%);padding:clamp(15px,3vw,28px);border-radius:10px;border-left:5px solid #ff9500;box-shadow:0 2px 8px rgba(0,0,0,.05)}.stat-value{font-size:clamp(24px,5vw,36px);font-weight:700;color:#ff9500;margin-bottom:8px}.stat-label{color:#1a2a4e;font-weight:600;font-size:clamp(12px,3vw,15px);margin-bottom:5px}.stat-desc{color:#7f8c8d;font-size:clamp(11px,2.5vw,13px);line-height:1.5}.stat-change{color:#27ae60;font-size:11px;margin-top:8px;font-weight:600}table{width:100%;border-collapse:collapse;margin:clamp(15px,3vw,25px) 0;overflow-x:auto}.table-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:15px -20px 15px -20px;padding:0 20px}@media(max-width:768px){.table-wrapper{margin:15px -15px 15px -15px;padding:0 15px}}th{background:linear-gradient(135deg,#1a2a4e 0%,#2d4a8a 100%);color:#fff;padding:clamp(10px,2vw,15px);text-align:left;font-weight:600;font-size:clamp(11px,2.5vw,13px);letter-spacing:.5px}td{padding:clamp(8px,2vw,14px);border-bottom:1px solid #ecf0f1;font-size:clamp(12px,2.5vw,14px)}tr:hover{background:#f8f9fb}.row-label{font-weight:600;color:#1a2a4e;min-width:120px}.metric-positive{color:#27ae60;font-weight:600}.metric-neutral{color:#ff9500;font-weight:600}.cta{background:linear-gradient(135deg,#ff9500 0%,#e68a00 100%);color:#fff;padding:clamp(20px,5vw,45px);border-radius:10px;text-align:center;margin:clamp(20px,4vw,35px) 0;box-shadow:0 4px 15px rgba(255,149,0,.3)}.cta h2{font-size:clamp(20px,5vw,28px);margin-bottom:clamp(10px,3vw,15px)}.cta p{font-size:clamp(12px,3vw,15px);margin-bottom:clamp(15px,4vw,25px);opacity:.95}.btn{display:inline-block;background:#fff;color:#ff9500;padding:clamp(10px,2vw,14px) clamp(20px,4vw,35px);border-radius:6px;text-decoration:none;font-weight:700;font-size:clamp(12px,2.5vw,15px)}.footer{background:#1a2a4e;color:#fff;padding:clamp(20px,4vw,40px) 20px;text-align:center;margin-top:clamp(20px,5vw,50px)}.footer p{margin:clamp(5px,2vw,8px) 0;font-size:clamp(11px,2.5vw,13px)}</style>
 </head>
 <body>
   <div class="header">
