@@ -147,15 +147,9 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .info-item .label{font-size:12px;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .info-item .value{font-size:16px;font-weight:600;color:var(--gray-900)}
 /* FOOTER */
-footer{background:var(--gray-900);color:var(--white);margin-top:80px}
-.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:1.2fr repeat(4,1fr);gap:48px;align-items:start}
-.footer-links{display:contents}
-.footer-col{display:flex;flex-direction:column;gap:12px}
 .footer-brand h3{font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
 .footer-brand h3 span{color:var(--gold)}
-.footer-brand .footer-slogan{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
-.footer-brand{grid-column:1}
-.footer-brand p{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7}
+.footer-brand .footer-brand p{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7}
 
 .footer-col h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;color:var(--gold)}
 .footer-col ul{list-style:none;margin:0;padding:0}
@@ -163,18 +157,44 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px}
 .footer-col a{color:rgba(255,255,255,.65);font-size:14px;transition:color .2s;display:inline-block}
 .footer-col a:hover{color:var(--gold);padding-left:4px}
 }
-/* HERRAMIENTAS RESPONSIVE */
-section:has(> div > h3:contains("Herramientas")) { padding: 32px 6% !important; }
-@media(max-width:768px){
-  [style*="grid-template-columns:repeat(auto-fit"]{ grid-template-columns: 1fr !important; }
-  [style*="gap:32px"] { gap: 24px !important; }
-}
-@media(max-width:480px){
-  section { padding: 24px 4% !important; }
+
   section h3 { font-size: 22px !important; }
   [style*="gap:32px"] { gap: 16px !important; }
   [style*="padding:40px"][style*="border-radius"] { padding: 24px !important; }
 }
+
+/* FOOTER RESPONSIVE */
+footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding-bottom:0}
+.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px}
+.footer-col{display:flex;flex-direction:column}
+.footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;color:var(--gold)}
+.footer-col ul{list-style:none;margin:0;padding:0}
+.footer-col li{margin-bottom:10px}
+.footer-col a{color:rgba(255,255,255,0.7);font-size:14px;transition:all 0.3s;text-decoration:none;display:inline-block}
+.footer-col a:hover{color:var(--gold);transform:translateX(4px)}
+.footer-brand{min-width:250px}
+.footer-brand p{color:rgba(255,255,255,0.6);font-size:13px;line-height:1.7;margin:12px 0}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding:20px 6%;text-align:center;color:rgba(255,255,255,0.4);font-size:12px}
+
+/* TABLET */
+@media(max-width:768px){
+.footer-content{padding:32px 4%;gap:32px;grid-template-columns:repeat(2,1fr)}
+.footer-col h4{font-size:12px;margin-bottom:16px}
+.footer-col a{font-size:13px}
+.footer-bottom{padding:16px 4%;font-size:11px}
+}
+
+/* MÓVIL */
+@media(max-width:480px){
+.footer-content{padding:24px 4%;gap:24px;grid-template-columns:1fr}
+.footer-brand{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.footer-col h4{font-size:11px;margin-bottom:12px;letter-spacing:1px}
+.footer-col a{font-size:12px;margin-bottom:6px}
+.footer-col li{margin-bottom:8px}
+.footer-brand p{font-size:12px}
+.footer-bottom{padding:12px 4%}
+}
+
 </style>
 </head>
 <body>
@@ -198,12 +218,14 @@ section:has(> div > h3:contains("Herramientas")) { padding: 32px 6% !important; 
 ${body}
 <footer>
 <div class="footer-content">
-<div class="footer-brand">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="${LOGO_BASE64}" alt="INMUHUB" style="height:60px;width:auto;"><span style="font-size:18px;font-weight:800;">INMUHUB</span></div>
-<div class="footer-slogan">Donde las oportunidades inmobiliarias se conectan</div>
-<p>Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con información verificada en las mejores zonas.</p>
+<div class="footer-col footer-brand">
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+<img src="${LOGO_BASE64}" alt="INMUHUB" style="height:50px;width:auto;">
+<div style="font-weight:800;font-size:16px">INMUHUB</div>
 </div>
-<div class="footer-links">
+<p>Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.</p>
+</div>
+
 <div class="footer-col">
 <h4>Propiedades</h4>
 <ul>
@@ -213,31 +235,37 @@ ${body}
 <li><a href="/propiedades.html?tipo=Terreno">Terrenos</a></li>
 </ul>
 </div>
+
 <div class="footer-col">
 <h4>Zonas</h4>
 <ul>
-<li><a href="/propiedades.html?municipio=Zona%2010">Zona 10</a></li>
-<li><a href="/propiedades.html?municipio=Zona%2014">Zona 14</a></li>
-<li><a href="/propiedades.html?municipio=CayalÃ¡">CayalÃ¡</a></li>
+<li><a href="/propiedades.html?municipio=Mixco">Mixco</a></li>
+<li><a href="/propiedades.html?municipio=Guatemala">Guatemala</a></li>
 <li><a href="/propiedades.html?municipio=Fraijanes">Fraijanes</a></li>
+<li><a href="/propiedades.html?municipio=Cayalá">Cayalá</a></li>
 </ul>
 </div>
+
+<div class="footer-col">
+<h4>Herramientas</h4>
+<ul>
+<li><a href="/herramientas/calculadora-hipotecaria.html">🧮 Calculadora</a></li>
+<li><a href="/herramientas/simulador-inversion.html">📈 Simulador</a></li>
+<li><a href="/herramientas/guia-compra.html">📚 Guía Compra</a></li>
+</ul>
+</div>
+
 <div class="footer-col">
 <h4>Inmuhub</h4>
 <ul>
 <li><a href="/">Inicio</a></li>
 <li><a href="/propiedades.html">Catálogo</a></li>
+<li><a href="/propiedades.html">Propiedades</a></li>
 </ul>
 </div>
-
-  <ul>
-    <li><a href="/herramientas/calculadora-hipotecaria.html">Calculadora Hipotecaria</a></li>
-    <li><a href="/herramientas/simulador-inversion.html">Simulador de Inversión</a></li>
-    <li><a href="/herramientas/guia-compra.html">Guía de Compra</a></li>
-  </ul>
 </div>
 <div class="footer-bottom">
-<p>&copy; ${new Date().getFullYear()} INMUHUB.COM &nbsp;Â·&nbsp; Donde las oportunidades inmobiliarias se conectan &nbsp;Â·&nbsp; Guatemala</p>
+<p>&copy; ${new Date().getFullYear()} INMUHUB.COM · La red profesional inmobiliaria de Guatemala</p>
 </div>
 </footer>
 ${scripts}
