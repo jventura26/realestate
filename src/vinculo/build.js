@@ -55,6 +55,7 @@ console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length}
 // Generar páginas de herramientas
 const { mortgageCalcPage, investmentSimulatorPage, guiaCompraPage } = require('./templates/pages');
 const { valuacionPage } = require('./templates/valuacion-property');
+const { dashboardInversionistasPage } = require('./templates/dashboard-inversionistas-page');
 const { layout } = require('./templates/layout');
 const HERRAMIENTAS = path.join(OUT, 'herramientas');
 fs.mkdirSync(HERRAMIENTAS, { recursive: true });
@@ -63,5 +64,6 @@ write(path.join(HERRAMIENTAS, 'calculadora-hipotecaria.html'), mortgageCalcPage(
 write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), investmentSimulatorPage(props)); console.log(' herramientas: simulador-inversion.html');
 write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPage(props)); console.log(' herramientas: guia-compra.html');
 write(path.join(HERRAMIENTAS, 'valuador.html'), layout({ title: 'Valuador de Propiedades', desc: 'Calcula el valor estimado de tu propiedad en Guatemala', canonical: '/herramientas/valuador.html', body: valuacionPage() })); console.log(' herramientas: valuador.html');
+write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), layout({ title: 'Dashboard de Inversionistas', desc: 'Análisis de mercado y datos para inversionistas en Guatemala', canonical: '/herramientas/dashboard-inversionistas.html', body: dashboardInversionistasPage() })); console.log(' herramientas: dashboard-inversionistas.html');
 
 
