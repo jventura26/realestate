@@ -130,6 +130,22 @@ label[style*="display:flex"][style*="gap:8px"] {
 }
 }
 
+/* Desktop characteristics alignment */
+@media(min-width:769px){
+div[style*="display:block"] > div[style*="margin-bottom:8px"] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+div[style*="display:block"] > div[style*="margin-bottom:8px"] input[type="checkbox"] {
+  margin: 0 !important;
+  flex-shrink: 0;
+}
+div[style*="display:block"] > div[style*="margin-bottom:8px"] label {
+  margin: 0 !important;
+}
+}
+
 /* HERO */
 .hero-new{background:var(--gray-900);padding:72px 6%;text-align:center;position:relative;overflow:hidden}
 .hero-new::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.08) 0%,transparent 60%);pointer-events:none}
