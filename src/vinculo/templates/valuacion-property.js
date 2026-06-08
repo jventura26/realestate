@@ -100,13 +100,13 @@ function valuacionPage() {
 
 <div style="background:#f3f4f6;border-radius:12px;padding:24px;margin-bottom:32px;box-sizing:border-box">
 <p style="font-weight:600;color:#1a2a4e;margin-bottom:16px;font-size:14px">Características Adicionales</p>
-<div style="display:block">
-  <div style="margin-bottom:8px"><input type="checkbox" id="piscina" style="margin-right:8px"> <label for="piscina" style="cursor:pointer;color:#4b5563">Piscina (+5%)</label></div>
-  <div style="margin-bottom:8px"><input type="checkbox" id="gimnasio" style="margin-right:8px"> <label for="gimnasio" style="cursor:pointer;color:#4b5563">Gimnasio (+3%)</label></div>
-  <div style="margin-bottom:8px"><input type="checkbox" id="jardin" style="margin-right:8px"> <label for="jardin" style="cursor:pointer;color:#4b5563">Jardín (+2%)</label></div>
-  <div style="margin-bottom:8px"><input type="checkbox" id="garaje" style="margin-right:8px"> <label for="garaje" style="cursor:pointer;color:#4b5563">Garaje cubierto (+4%)</label></div>
-  <div style="margin-bottom:8px"><input type="checkbox" id="terraza" style="margin-right:8px"> <label for="terraza" style="cursor:pointer;color:#4b5563">Terraza/Balcón (+3%)</label></div>
-  <div style="margin-bottom:8px"><input type="checkbox" id="seguridad" style="margin-right:8px"> <label for="seguridad" style="cursor:pointer;color:#4b5563">Seguridad 24/7 (+2%)</label></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+  <label style="cursor:pointer;padding:8px 12px;border:2px solid #ddd;border-radius:20px;background:#f9f9f9;color:#4b5563;font-size:13px;transition:all 0.2s;user-select:none" onclick="this.style.background=this.style.background=='#fff8e1'?'#f9f9f9':'#fff8e1';this.style.borderColor=this.style.borderColor=='#ffa500'?'#ddd':'#ffa500'"><input type="checkbox" id="piscina" style="margin-right:6px;cursor:pointer"> Piscina (+5%)</label>
+  <label style="cursor:pointer;padding:8px 12px;border:2px solid #ddd;border-radius:20px;background:#f9f9f9;color:#4b5563;font-size:13px;transition:all 0.2s;user-select:none" onclick="this.style.background=this.style.background=='#fff8e1'?'#f9f9f9':'#fff8e1';this.style.borderColor=this.style.borderColor=='#ffa500'?'#ddd':'#ffa500'"><input type="checkbox" id="gimnasio" style="margin-right:6px;cursor:pointer"> Gimnasio (+3%)</label>
+  <label style="cursor:pointer;padding:8px 12px;border:2px solid #ddd;border-radius:20px;background:#f9f9f9;color:#4b5563;font-size:13px;transition:all 0.2s;user-select:none" onclick="this.style.background=this.style.background=='#fff8e1'?'#f9f9f9':'#fff8e1';this.style.borderColor=this.style.borderColor=='#ffa500'?'#ddd':'#ffa500'"><input type="checkbox" id="jardin" style="margin-right:6px;cursor:pointer"> Jardín (+2%)</label>
+  <label style="cursor:pointer;padding:8px 12px;border:2px solid #ddd;border-radius:20px;background:#f9f9f9;color:#4b5563;font-size:13px;transition:all 0.2s;user-select:none" onclick="this.style.background=this.style.background=='#fff8e1'?'#f9f9f9':'#fff8e1';this.style.borderColor=this.style.borderColor=='#ffa500'?'#ddd':'#ffa500'"><input type="checkbox" id="garaje" style="margin-right:6px;cursor:pointer"> Garaje cubierto (+4%)</label>
+  <label style="cursor:pointer;padding:8px 12px;border:2px solid #ddd;border-radius:20px;background:#f9f9f9;color:#4b5563;font-size:13px;transition:all 0.2s;user-select:none" onclick="this.style.background=this.style.background=='#fff8e1'?'#f9f9f9':'#fff8e1';this.style.borderColor=this.style.borderColor=='#ffa500'?'#ddd':'#ffa500'"><input type="checkbox" id="terraza" style="margin-right:6px;cursor:pointer"> Terraza/Balcón (+3%)</label>
+  <label style="cursor:pointer;padding:8px 12px;border:2px solid #ddd;border-radius:20px;background:#f9f9f9;color:#4b5563;font-size:13px;transition:all 0.2s;user-select:none" onclick="this.style.background=this.style.background=='#fff8e1'?'#f9f9f9':'#fff8e1';this.style.borderColor=this.style.borderColor=='#ffa500'?'#ddd':'#ffa500'"><input type="checkbox" id="seguridad" style="margin-right:6px;cursor:pointer"> Seguridad 24/7 (+2%)</label>
 </div>
 </div>
 
