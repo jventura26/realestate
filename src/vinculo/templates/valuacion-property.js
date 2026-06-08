@@ -3,7 +3,20 @@ function valuacionPage() {
 <div style="max-width:900px;margin:40px auto;padding:20px">
 
 <h2>Valuador de Propiedades</h2>
-<p style="color:#666;margin-bottom:30px">Calcula el valor estimado de tu propiedad en Guatemala - Precios 2026</p>
+<p style="color:#666;margin-bottom:20px">Calcula el valor estimado de tu propiedad en Guatemala - Precios 2026</p>
+
+<div style="background:#fff3cd;border:3px solid #ff9500;border-radius:8px;padding:20px;margin-bottom:30px">
+<h3 style="color:#856404;margin-top:0">⚠️ Advertencia Importante</h3>
+<p style="font-size:12px;color:#333;line-height:1.6;margin:10px 0">
+Los valores por metro cuadrado presentados en este reporte son <strong>referenciales</strong> y tienen fines exclusivamente informativos. Los precios pueden variar significativamente según factores como ubicación exacta, condominio, estado de conservación, antigüedad, acabados, amenidades, tamaño del terreno, vistas, accesibilidad, oferta y demanda del mercado, entre otros.
+</p>
+<p style="font-size:12px;color:#333;line-height:1.6;margin:10px 0">
+Esta información <strong>no constituye un avalúo profesional</strong> ni una valoración oficial de una propiedad específica. Para determinar el valor real de mercado de un inmueble se recomienda realizar un análisis comparativo de mercado (CMA) o solicitar un <strong>avalúo profesional</strong> efectuado por un valuador certificado.
+</p>
+<p style="font-size:12px;color:#333;line-height:1.6;margin:10px 0">
+Los valores aquí indicados representan rangos estimados del mercado inmobiliario del Departamento de Guatemala y pueden estar sujetos a cambios sin previo aviso debido a las condiciones económicas, financieras y comerciales vigentes.
+</p>
+</div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px">
 
@@ -108,17 +121,14 @@ Valor Base: US\$ <span id="valorBase">0</span> | Ajustes: <span id="ajustes">0%<
 
 <script>
 const precios = {
-  // Premium
   'cayala': { casa: [2200, 4000], apto: [2500, 4500] },
   'zona14': { casa: [2000, 3500], apto: [2200, 3800] },
   'zona15': { casa: [1800, 3200], apto: [2000, 3500] },
   'zona10': { casa: [1800, 3000], apto: [2000, 3200] },
-  // Residencial
   'zona4': { casa: [1500, 2500], apto: [1800, 3000] },
   'zona16': { casa: [1400, 2800], apto: [1600, 3000] },
   'zona13': { casa: [1300, 2300], apto: [1500, 2500] },
   'zona11': { casa: [1000, 1800], apto: [1100, 1900] },
-  // Municipios
   'carretera': { casa: [900, 2000], apto: [1100, 2000] },
   'santa-catarina': { casa: [1000, 2000], apto: [1100, 2000] },
   'san-cristobal': { casa: [900, 1800], apto: [1000, 1800] },
@@ -163,13 +173,11 @@ function calcular(){
   
   let ajuste = ajusteEstado[estado] || 0;
   
-  // Antigüedad
   const antiguedad = 2025 - anio;
   if (antiguedad > 30) ajuste -= 0.15;
   else if (antiguedad > 20) ajuste -= 0.10;
   else if (antiguedad > 10) ajuste -= 0.05;
   
-  // Características
   if (document.getElementById('piscina').checked) ajuste += 0.08;
   if (document.getElementById('gimnasio').checked) ajuste += 0.05;
   if (document.getElementById('jardin').checked) ajuste += 0.03;
