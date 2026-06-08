@@ -66,6 +66,21 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .search-compact button{padding:10px 8px;font-size:14px}
 .nav-inner{flex-wrap:wrap}
 }
+/* HEADER RESPONSIVE */
+@media(max-width:768px){
+.logo img { height: 60px; }
+.logo-tag { font-size: 11px; margin-top: 2px; }
+.nav-inner { min-height: 70px; gap: 12px; padding: 8px 0; }
+}
+
+@media(max-width:480px){
+.logo img { height: 45px; }
+.logo-tag { font-size: 10px; margin-top: 1px; }
+.logo-name { font-size: 14px; }
+.nav-inner { min-height: 60px; gap: 8px; padding: 6px 0; }
+div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 12px; }
+}
+
 /* HERO */
 .hero-new{background:var(--gray-900);padding:72px 6%;text-align:center;position:relative;overflow:hidden}
 .hero-new::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.08) 0%,transparent 60%);pointer-events:none}
