@@ -1,4 +1,5 @@
 const { escapeHtml } = require('../../shared/utils');
+const { LOGO_BASE64 } = require('../../shared/logo');
 
 const DOMAIN = 'https://inmuhub.com';
 
@@ -174,7 +175,7 @@ nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
 <nav>
 <div class="nav-inner">
 <a href="/" class="logo">
-<img src="./assets/logo.png" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:45px;width:auto;margin-right:8px;">
+<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:45px;width:auto;margin-right:8px;">
 <span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
 <div class="search-compact">
@@ -187,7 +188,7 @@ ${body}
 <footer>
 <div class="footer-content">
 <div class="footer-brand">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="./assets/logo.png" alt="INMUHUB" style="height:32px;width:auto;"><span style="font-size:18px;font-weight:800;">INMUHUB</span></div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="${LOGO_BASE64}" alt="INMUHUB" style="height:32px;width:auto;"><span style="font-size:18px;font-weight:800;">INMUHUB</span></div>
 <div class="footer-slogan">Donde las oportunidades inmobiliarias se conectan</div>
 <p>CatÃ¡logo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con informaciÃ³n verificada en las mejores zonas.</p>
 </div>
