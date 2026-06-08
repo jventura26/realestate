@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Hipotecaria | INMUHUB</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow-x: hidden; }
+body { font-family: -apple-system, sans-serif; background: #f0f2f5; color: #1a1a1a; }
+
+header { background: linear-gradient(135deg, #1a2a4e 0%, #2d3e6f 100%); color: #fff; padding: 15px; }
+.container { width: calc(100% - 30px); max-width: 900px; margin: 20px auto; }
+section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+h2 { color: #1a2a4e; margin-bottom: 15px; border-bottom: 3px solid #ff9500; padding-bottom: 10px; font-size: 18px; }
+
+.input-group { margin-bottom: 15px; }
+label { display: block; font-size: 12px; font-weight: 600; color: #1a2a4e; margin-bottom: 5px; }
+input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
+input:focus { outline: none; border-color: #ff9500; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+.result { background: linear-gradient(135deg, #fff9f0 0%, #ffeaa7 100%); padding: 15px; border-radius: 6px; border-left: 4px solid #ff9500; margin: 10px 0; }
+.result-title { font-size: 11px; color: #666; font-weight: 600; text-transform: uppercase; }
+.result-value { font-size: 24px; font-weight: 800; color: #ff9500; margin: 5px 0; }
+
+.bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.bank-card { border: 2px solid #ddd; padding: 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+.bank-card:hover { border-color: #ff9500; background: #fff9f0; }
+.bank-card input[type="radio"] { margin-right: 8px; }
+.bank-name { font-weight: 600; font-size: 13px; }
+.bank-rate { font-size: 11px; color: #666; }
+
+.tabs { display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 2px solid #eee; overflow-x: auto; }
+.tab-btn { padding: 10px 15px; background: none; border: none; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; color: #7f8c8d; white-space: nowrap; }
+.tab-btn.active { color: #ff9500; border-bottom-color: #ff9500; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+footer { background: #1a2a4e; color: #fff; text-align: center; padding: 15px; margin-top: 20px; font-size: 10px; }
+
+@media (max-width: 768px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .bank-grid { grid-template-columns: 1fr; }
+  .tabs { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<header><h1>💳 CALCULADORA HIPOTECARIA PREMIUM</h1></header>
+
+<div class="container">
+
+<section>
+<h2>📊 Datos de la Propiedad</h2>
+<div class="input-group">
+<label>Precio de la Propiedad (GTQ)</label>
+<input type="number" id="propertyPrice" placeholder="2500000" value="2500000">
+</div>
+<div class="grid-2">
+<div class="input-group">
+<label>Enganche (%)</label>
+<input type="number" id="downPaymentPercent" placeholder="30" value="30" min="10" max="80">
+</div>
+<div class="input-group">
+<label>Plazo (Años)</label>
+<input type="number" id="loanTerm" placeholder="20" value="20" min="5" max="30">
+</div>
+</div>
+</section>
+
+<section>
+<h2>🏦 Selecciona tu Banco</h2>
+<div class="bank-grid" id="banksContainer"></div>
+</section>
+
+<section>
+<h2>💰 Análisis Financiero</h2>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('mortgage')">Hipoteca</button>
+<button class="tab-btn" onclick="switchTab('taxes')">Impuestos & Gastos</button>
+<button class="tab-btn" onclick="switchTab('summary')">Resumen Total</button>
+</div>
+
+<div id="mortgage" class="tab-content active">
+<div class="result">
+<div class="result-title">Enganche Requerido</div>
+<div class="result-value" id="downPaymentAmount">GTQ 750,000</div>
+</div>
+<div class="result">
+<div class="result-title">Cantidad a Financiar</div>
+<div class="result-value" id="loanAmount">GTQ 1,750,000</div>
+</div>
+<div class="result">
+<div class="result-title">Tasa de Interés Anual</div>
+<div class="result-value" id="rateDisplay">7.0%</div>
+</div>
+<div class="result">
+<div class="result-title">Cuota Mensual</div>
+<div class="result-value" id="monthlyPayment">GTQ 10,500</div>
+</div>
+<div class="result">
+<div class="result-title">Total a Pagar (Vida del Crédito)</div>
+<div class="result-value" id="totalPayment">GTQ 2,520,000</div>
+</div>
+<div class="result">
+<div class="result-title">Intereses Totales</div>
+<div class="result-value" id="totalInterest">GTQ 770,000</div>
+</div>
+</div>
+
+<div id="taxes" class="tab-content">
+<div class="grid-3">
+<div class="result">
+<div class="result-title">IUSI Anual</div>
+<div class="result-value" id="usiAnnual">GTQ 3,000</div>
+<div style="font-size: 10px; margin-top: 5px; color: #666;">0.12% del valor</div>
+</div>
+<div class="result">
+<div class="result-title">Seguro Mensual</div>
+<div class="result-value" id="insuranceMonthly">GTQ 730</div>
+<div style="font-size: 10px; margin-top: 5px; color: #666;">0.35% anual</div>
+</div>
+<div class="result">
+<div class="result-title">Comisión Bancaria</div>
+<div class="result-value" id="bankFee">GTQ 8,750</div>
+<div style="font-size: 10px; margin-top: 5px; color: #666;">0.5% una sola vez</div>
+</div>
+</div>
+
+<div class="grid-3">
+<div class="result">
+<div class="result-title">Escritura & Registro</div>
+<div class="result-value" id="writingCost">GTQ 15,000</div>
+<div style="font-size: 10px; margin-top: 5px; color: #666;">Gastos legales</div>
+</div>
+<div class="result">
+<div class="result-title">Tasación Propiedad</div>
+<div class="result-value" id="appraisal">GTQ 5,000</div>
+<div style="font-size: 10px; margin-top: 5px; color: #666;">Valuación</div>
+</div>
+<div class="result">
+<div class="result-title">Gastos Iniciales</div>
+<div class="result-value" id="initialCosts">GTQ 28,750</div>
+<div style="font-size: 10px; margin-top: 5px; color: #666;">Total desembolso</div>
+</div>
+</div>
+</div>
+
+<div id="summary" class="tab-content">
+<div class="grid-2">
+<div class="result">
+<div class="result-title">Precio Propiedad</div>
+<div class="result-value" id="summaryPrice">GTQ 2,500,000</div>
+</div>
+<div class="result">
+<div class="result-title">Enganche + Gastos</div>
+<div class="result-value" id="summaryCash">GTQ 778,750</div>
+</div>
+</div>
+
+<div class="grid-2">
+<div class="result">
+<div class="result-title">Cuota Mensual + Extras</div>
+<div class="result-value" id="summaryMonthly">GTQ 11,230</div>
+</div>
+<div class="result">
+<div class="result-title">Total 20 Años</div>
+<div class="result-value" id="summaryTotal">GTQ 2,695,200</div>
+</div>
+</div>
+</div>
+
+</section>
+
+</div>
+
+<footer>
+<p><strong>INMUHUB - Calculadora Hipotecaria Premium</strong></p>
+<p>Tasas y datos actualizados a Junio 2026</p>
+<p>⚠️ Estos cálculos son referenciales. Consulta con tu banco para tasas exactas.</p>
+</footer>
+
+<script>
+const banks = [
+  { name: 'Banco G&T', rate: 7.0, term: '5-30 años' },
+  { name: 'Banco Agromercantil', rate: 7.2, term: '5-30 años' },
+  { name: 'Banco Industrial', rate: 7.5, term: '5-30 años' },
+  { name: 'Banco del Ahorro', rate: 7.3, term: '5-25 años' },
+  { name: 'Banco Santander', rate: 7.8, term: '5-20 años' }
+];
+
+let selectedBank = banks[0];
+
+function initBanks() {
+  const html = banks.map((b, i) => `
+    <label class="bank-card">
+      <input type="radio" name="bank" value="${i}" ${i === 0 ? 'checked' : ''} onchange="selectBank(${i})">
+      <div class="bank-name">${b.name}</div>
+      <div class="bank-rate">Tasa: ${b.rate}% | ${b.term}</div>
+    </label>
+  `).join('');
+  document.getElementById('banksContainer').innerHTML = html;
+}
+
+function selectBank(idx) {
+  selectedBank = banks[idx];
+  calculate();
+}
+
+function calculate() {
+  const price = parseFloat(document.getElementById('propertyPrice').value) || 2500000;
+  const downPercent = parseFloat(document.getElementById('downPaymentPercent').value) || 30;
+  const years = parseFloat(document.getElementById('loanTerm').value) || 20;
+  const rate = selectedBank.rate;
+  
+  const downPayment = price * (downPercent / 100);
+  const loanAmount = price - downPayment;
+  const monthlyRate = rate / 100 / 12;
+  const months = years * 12;
+  
+  const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+  const totalPayment = monthlyPayment * months;
+  const totalInterest = totalPayment - loanAmount;
+  
+  const usiAnnual = price * 0.0012;
+  const insuranceMonthly = price * 0.0035 / 12;
+  const bankFee = loanAmount * 0.005;
+  const writingCost = 15000;
+  const appraisal = 5000;
+  const initialCosts = bankFee + writingCost + appraisal;
+  
+  const cashDown = downPayment + initialCosts;
+  const monthlyTotal = monthlyPayment + insuranceMonthly + (usiAnnual / 12);
+  const totalAll = cashDown + monthlyTotal * months + (usiAnnual * (years - 1));
+  
+  const fmt = n => 'GTQ ' + Math.round(n).toLocaleString('es-ES');
+  
+  document.getElementById('downPaymentAmount').textContent = fmt(downPayment);
+  document.getElementById('loanAmount').textContent = fmt(loanAmount);
+  document.getElementById('rateDisplay').textContent = rate + '%';
+  document.getElementById('monthlyPayment').textContent = fmt(monthlyPayment);
+  document.getElementById('totalPayment').textContent = fmt(totalPayment);
+  document.getElementById('totalInterest').textContent = fmt(totalInterest);
+  
+  document.getElementById('usiAnnual').textContent = fmt(usiAnnual);
+  document.getElementById('insuranceMonthly').textContent = fmt(insuranceMonthly);
+  document.getElementById('bankFee').textContent = fmt(bankFee);
+  document.getElementById('writingCost').textContent = fmt(writingCost);
+  document.getElementById('appraisal').textContent = fmt(appraisal);
+  document.getElementById('initialCosts').textContent = fmt(initialCosts);
+  
+  document.getElementById('summaryPrice').textContent = fmt(price);
+  document.getElementById('summaryCash').textContent = fmt(cashDown);
+  document.getElementById('summaryMonthly').textContent = fmt(monthlyTotal);
+  document.getElementById('summaryTotal').textContent = fmt(totalAll);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+document.getElementById('propertyPrice').addEventListener('input', calculate);
+document.getElementById('downPaymentPercent').addEventListener('input', calculate);
+document.getElementById('loanTerm').addEventListener('input', calculate);
+
+initBanks();
+calculate();
+</script>
+
+</body>
+</html>
