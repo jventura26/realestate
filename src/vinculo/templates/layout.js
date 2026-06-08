@@ -36,6 +36,7 @@ return `<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Cache Breaker: 1780941103618 */
 /* Build: 2026-06-08T16:53:42.342Z - Mobile Fix */
 :root{
 --white:#FFFFFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;
