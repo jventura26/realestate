@@ -95,7 +95,6 @@ function detailPage(prop) {
 const gallery=(prop.gallery||[]).slice(0,8);
 const galleryHTML=gallery.length>0?`<div class="gallery-thumbs">${gallery.map(img=>`<button onclick="document.getElementById('mainImg').src='${escapeHtml(img)}'" title="Ver imagen"><img src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)} - foto galeria" loading="lazy" width="400" height="300"></button>`).join('')}</div>`:'';
 const specHTML=(()=>{const items=[];if(prop.habitaciones&&prop.habitaciones!=='0')items.push(`<li class="dspec-item"><svg width="16" height="14" viewBox="0 0 16 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="5.5" rx="1.5"/><path d="M1 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><rect x="4" y="4" width="3" height="2" rx=".5"/></svg><span class="dspec-label">Habitaciones</span><strong class="dspec-val">${prop.habitaciones}</strong></li>`);if(prop.banos&&prop.banos!=='0')items.push(`<li class="dspec-item"><svg width="15" height="14" viewBox="0 0 15 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 8h12v1.5a3.5 3.5 0 0 1-3.5 3H4A3.5 3.5 0 0 1 .5 9v-.5z"/><path d="M1.5 8V4A2.5 2.5 0 0 1 6.5 4"/></svg><span class="dspec-label">Ba\u00F1os</span><strong class="dspec-val">${prop.banos}</strong></li>`);if(prop.areaConst)items.push(`<li class="dspec-item"><svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="1.5"/><path d="M1 5h12M5 1v12"/></svg><span class="dspec-label">\u00C1rea construida</span><strong class="dspec-val">${prop.areaConst} m\u00B2</strong></li>`);return items.length?`<ul class="dspec-list">${items.join('')}</ul>`:'';})();const descHTML=(()=>{
-  if(!prop.description)return'';
   const raw=prop.description;
   const parts=raw.split(/([🀀-🫿☀-➿🌀-🧿✂-➰▲]+)/u).filter(Boolean);
   if(parts.length<3)return'<div class="description"><h2>Descripci\u00f3n</h2><p>'+escapeHtml(raw)+'</p></div>';
@@ -116,7 +115,6 @@ const specHTML=(()=>{const items=[];if(prop.habitaciones&&prop.habitaciones!=='0
   }
   return'<div class="description"><h2>Descripci\u00f3n</h2><ul class="desc-list">'+rows.join('')+'</ul></div>';
 })();
-if(!prop.description)return'';
 const raw=prop.description;
 const lines=raw.split(/\.(?=\s+[A-Z\u00C0-\u024F])|[|]/).map(s=>s.trim()).filter(s=>s.length>2);
 if(lines.length<2)return`<div class="description"><h2>Descripci\u00F3n</h2><p>${escapeHtml(raw)}</p></div>`;
