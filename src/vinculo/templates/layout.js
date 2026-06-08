@@ -118,6 +118,18 @@ nav { padding: 0 6%; }
   display: none !important;
 }
 
+/* Mobile characteristics fix */
+@media(max-width:480px){
+div[style*="grid-template-columns:1fr 1fr"] {
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+}
+label[style*="display:flex"][style*="gap:8px"] {
+  font-size: 13px !important;
+  padding: 6px !important;
+}
+}
+
 /* HERO */
 .hero-new{background:var(--gray-900);padding:72px 6%;text-align:center;position:relative;overflow:hidden}
 .hero-new::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.08) 0%,transparent 60%);pointer-events:none}
