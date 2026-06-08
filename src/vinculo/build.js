@@ -64,3 +64,4 @@ write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), investmentSimulatorPa
 write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPage(props)); console.log(' herramientas: guia-compra.html');
 write(path.join(HERRAMIENTAS, 'valuador.html'), layout({ title: 'Valuador de Propiedades', desc: 'Calcula el valor estimado de tu propiedad en Guatemala', canonical: '/herramientas/valuador.html', body: valuacionPage() })); console.log(' herramientas: valuador.html');
 
+
