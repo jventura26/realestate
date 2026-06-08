@@ -17,21 +17,60 @@ function valuacionPage() {
     <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">Zona / Ubicación *</label>
     <select id="zona" required style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:all 0.3s">
       <option value="">Selecciona una zona</option>
-      <option value="zona10">Zona 10 - Precios: $1,850/m²</option>
-      <option value="zona14">Zona 14 - Precios: $1,620/m²</option>
-      <option value="zona15">Zona 15 - Precios: $1,420/m²</option>
-      <option value="zona16">Zona 16 - Precios: $1,350/m²</option>
-      <option value="cayala">Cayalá - Precios: $1,900/m²</option>
-      <option value="fraijanes">Fraijanes - Precios: $980/m²</option>
-      <option value="carretera">Carretera a El Salvador - Precios: $850/m²</option>
-      <option value="mixco">Mixco - Precios: $1,100/m²</option>
-      <option value="san-jose">San José Pinula - Precios: $920/m²</option>
+      <optgroup label="Ciudad de Guatemala">
+      <option value="zona1">Zona 1 - $1,200/m²</option>
+      <option value="zona2">Zona 2 - $1,150/m²</option>
+      <option value="zona3">Zona 3 - $980/m²</option>
+      <option value="zona4">Zona 4 - $1,050/m²</option>
+      <option value="zona5">Zona 5 - $900/m²</option>
+      <option value="zona10">Zona 10 - $1,850/m²</option>
+      <option value="zona12">Zona 12 - $1,300/m²</option>
+      <option value="zona14">Zona 14 - $1,620/m²</option>
+      <option value="zona15">Zona 15 - $1,420/m²</option>
+      <option value="zona16">Zona 16 - $1,350/m²</option>
+      <option value="zona17">Zona 17 - $1,100/m²</option>
+      <option value="zona18">Zona 18 - $950/m²</option>
+      <option value="zona19">Zona 19 - $850/m²</option>
+      <option value="zona21">Zona 21 - $1,180/m²</option>
+      </optgroup>
+      <optgroup label="Municipios">
+      <option value="cayala">Cayalá - $1,900/m²</option>
+      <option value="fraijanes">Fraijanes - $980/m²</option>
+      <option value="san-jose">San José Pinula - $920/m²</option>
+      <option value="mixco">Mixco - $1,100/m²</option>
+      <option value="santa-catarina">Santa Catarina Pinula - $1,050/m²</option>
+      <option value="san-pedro">San Pedro Sacatepéquez - $880/m²</option>
+      <option value="carretera">Carretera a El Salvador - $850/m²</option>
+      </optgroup>
     </select>
   </div>
   
   <div>
     <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">Año de Construcción *</label>
     <input type="number" id="anio" min="1950" max="2025" placeholder="Ej: 2015" required style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:all 0.3s">
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-bottom:32px">
+  <div>
+    <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">Tipo de Construcción</label>
+    <select id="tipo" style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;">
+      <option value="moderna">Moderna</option>
+      <option value="colonial">Colonial</option>
+      <option value="minimalista">Minimalista</option>
+      <option value="tradicional">Tradicional</option>
+    </select>
+  </div>
+  
+  <div>
+    <label style="display:block;font-weight:600;color:#1a2a4e;margin-bottom:12px;font-size:14px">Estado de la Propiedad</label>
+    <select id="estado" style="width:100%;padding:12px;border:2px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;">
+      <option value="nueva">Nueva</option>
+      <option value="excelente">Excelente</option>
+      <option value="buen">Buen estado</option>
+      <option value="regular">Regular</option>
+      <option value="requiere">Requiere reparación</option>
+    </select>
   </div>
 </div>
 
@@ -61,7 +100,7 @@ function valuacionPage() {
 
 <div style="background:#f3f4f6;border-radius:12px;padding:24px;margin-bottom:32px">
 <p style="font-weight:600;color:#1a2a4e;margin-bottom:16px;font-size:14px">Características Adicionales</p>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
   <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:#4b5563">
     <input type="checkbox" id="piscina" style="width:16px;height:16px;cursor:pointer"> Piscina (+5%)
   </label>
