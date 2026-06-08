@@ -130,19 +130,18 @@ label[style*="display:flex"][style*="gap:8px"] {
 }
 }
 
-/* Desktop characteristics alignment */
-@media(min-width:769px){
+
+
+/* Characteristics alignment */
+@media(max-width:768px){
 div[style*="display:block"] > div[style*="margin-bottom:8px"] {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 div[style*="display:block"] > div[style*="margin-bottom:8px"] input[type="checkbox"] {
   margin: 0 !important;
   flex-shrink: 0;
-}
-div[style*="display:block"] > div[style*="margin-bottom:8px"] label {
-  margin: 0 !important;
 }
 }
 
