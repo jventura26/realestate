@@ -3,7 +3,7 @@
   "version": "2.0.1",
   "description": "Two static real estate sites from one Wix CSV — vinculoinmobiliario.com + zona-innmueble.com",
   "scripts": {
-    "build:vinculo": "node src/vinculo/build.js",
+    "build:vinculo": "node src/vinculo/build.js && node copy-assets.js",
     "build:zona": "node src/zona/build.js",
     "build": "npm run build:vinculo && npm run build:zona",
     "dev:vinculo": "npm run build:vinculo && npx serve dist/vinculo -p 3001",
@@ -16,4 +16,3 @@
     "node": ">=18"
   }
 }
-// Deploy: Mon Jun  8 13:50:39 UTC 2026
