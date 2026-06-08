@@ -49,10 +49,10 @@ img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
-.logo{display:flex;flex-direction:column;gap:0px;align-items:center;text-decoration:none;color:inherit}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:auto;min-height:80px;gap:20px;padding:12px 0}
+.logo{display:flex;flex-direction:column;gap:2px;align-items:center;text-decoration:none;color:inherit}
 .logo-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
-.logo-tag{font-size:9px;font-weight:400;color:var(--gray-600);letter-spacing:0.08em;text-transform:none;line-height:1.2;margin-top:2px}
+.logo-tag{font-size:13px;font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.3;margin-top:4px}
 .search-compact{display:flex;gap:8px;flex:1;max-width:320px;width:100%}
 .search-compact input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:14px;outline:none;min-width:0}
 .search-compact input::placeholder{color:var(--gray-400)}
@@ -210,8 +210,9 @@ body { font-size: 15px; }
 /* NAVBAR */
 nav { padding: 0 3%; }
 .nav-inner { height: 48px; gap: 8px; }
-.logo img { height: 40px; }
-.logo-tag { display: none; }
+.logo img { height: 50px; }
+.logo-tag { display: block; font-size: 11px; }
+.logo { gap: 2px; }
 .nav-inner > div:last-child { gap: 4px; font-size: 11px; }
 
 /* HERO */
@@ -461,7 +462,7 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 <nav>
 <div class="nav-inner">
 <a href="/" class="logo">
-<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:80px;width:auto;margin-right:8px;">
+<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:100px;width:auto;margin-right:12px;">
 <span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
 <div style="display:flex;gap:12px;align-items:center;margin-left:auto">
