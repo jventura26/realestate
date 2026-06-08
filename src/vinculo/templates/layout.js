@@ -514,7 +514,7 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 <nav>
 <div class="nav-inner">
 <a href="/" class="logo">
-<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(30px,8vw,140px);width:auto;margin-right:clamp(4px,1.5vw,16px);">
+<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(30px,10vw,200px);width:auto;margin-right:clamp(4px,1.5vw,16px);">
 <span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
 <div style="display:flex;gap:12px;align-items:center;margin-left:auto">
