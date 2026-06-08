@@ -149,6 +149,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 /* FOOTER */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px}
 .footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:1fr 2fr;gap:48px}
+.footer-col{display:flex;flex-direction:column}
 .footer-brand h3{font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
 .footer-brand h3 span{color:var(--gold)}
 .footer-brand .footer-slogan{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
@@ -172,6 +173,7 @@ nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
 .hero-new{padding:56px 4%}.prop-grid{grid-template-columns:1fr;padding:20px 4%}
 .filter-bar{padding:14px 4%}.detail-container{padding:24px 4%}
 .footer-content{grid-template-columns:1fr;gap:32px}
+.footer-col{display:flex;flex-direction:column}
 .specs-grid{grid-template-columns:1fr}
 }
 </style>
