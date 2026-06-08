@@ -3,6 +3,10 @@ const mortgageCalculator = () => `
 
 <h2>Simulación Hipotecaria Avanzada</h2>
 
+<div style="background:#fff3cd;border:1px solid #ffc107;padding:15px;border-radius:6px;margin-bottom:20px;font-size:12px;color:#333">
+<strong>⚠️ Importante:</strong> Las tasas pueden variar según perfil crediticio, enganche, plazo, tipo de propiedad y condiciones vigentes de cada institución financiera. Recomendamos realizar una precalificación bancaria para obtener una cotización personalizada.
+</div>
+
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0">
 
 <div>
