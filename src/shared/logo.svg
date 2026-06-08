@@ -1,0 +1,33 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo negro -->
+  <rect width="1024" height="1024" fill="#000000"/>
+  
+  <!-- Grupo del ícono geométrico -->
+  <g transform="translate(280, 290)">
+    <!-- Líneas principales del pentágono/red -->
+    <line x1="140" y1="0" x2="50" y2="90" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="140" y1="0" x2="230" y2="90" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="50" y1="90" x2="100" y2="200" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="230" y1="90" x2="180" y2="200" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="50" y1="90" x2="230" y2="90" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="100" y1="200" x2="180" y2="200" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="100" y1="200" x2="140" y2="0" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="180" y1="200" x2="140" y2="0" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="100" y1="200" x2="180" y2="90" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    <line x1="180" y1="200" x2="100" y2="90" stroke="#1a5f9e" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- Puntos -->
+    <circle cx="140" cy="0" r="18" fill="#ffa500"/>
+    <circle cx="50" cy="90" r="12" fill="#1a5f9e"/>
+    <circle cx="230" cy="90" r="12" fill="#1a5f9e"/>
+    <circle cx="100" cy="200" r="12" fill="#1a5f9e"/>
+    <circle cx="180" cy="200" r="12" fill="#1a5f9e"/>
+  </g>
+  
+  <!-- Texto INMUHUB -->
+  <text x="520" y="420" font-family="Arial, sans-serif" font-size="180" font-weight="bold" fill="#1a5f9e">INMU</text>
+  <text x="780" y="420" font-family="Arial, sans-serif" font-size="180" font-weight="bold" fill="#ffa500">HUB</text>
+  
+  <!-- Tagline -->
+  <text x="280" y="570" font-family="Arial, sans-serif" font-size="50" font-weight="400" fill="#999999">La Red Profesional Inmobiliaria</text>
+</svg>
