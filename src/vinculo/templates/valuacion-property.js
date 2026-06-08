@@ -100,13 +100,13 @@ function valuacionPage() {
 
 <div style="background:#f3f4f6;border-radius:12px;padding:24px;margin-bottom:32px">
 <p style="font-weight:600;color:#1a2a4e;margin-bottom:16px;font-size:14px">Características Adicionales</p>
-<div style="display:block;width:100%">
-  <div style="margin-bottom:10px"><input type="checkbox" id="piscina"> <label for="piscina" style="cursor:pointer;color:#4b5563">Piscina (+5%)</label></div>
-  <div style="margin-bottom:10px"><input type="checkbox" id="gimnasio"> <label for="gimnasio" style="cursor:pointer;color:#4b5563">Gimnasio (+3%)</label></div>
-  <div style="margin-bottom:10px"><input type="checkbox" id="jardin"> <label for="jardin" style="cursor:pointer;color:#4b5563">Jardín (+2%)</label></div>
-  <div style="margin-bottom:10px"><input type="checkbox" id="garaje"> <label for="garaje" style="cursor:pointer;color:#4b5563">Garaje cubierto (+4%)</label></div>
-  <div style="margin-bottom:10px"><input type="checkbox" id="terraza"> <label for="terraza" style="cursor:pointer;color:#4b5563">Terraza/Balcón (+3%)</label></div>
-  <div style="margin-bottom:10px"><input type="checkbox" id="seguridad"> <label for="seguridad" style="cursor:pointer;color:#4b5563">Seguridad 24/7 (+2%)</label></div>
+<div style="display:block;width:100%;text-align:left">
+  <div style="margin-bottom:12px;padding:0;display:flex;align-items:center;gap:10px"><input type="checkbox" id="piscina" style="width:18px;height:18px;margin:0;flex-shrink:0"> <label for="piscina" style="cursor:pointer;color:#4b5563;margin:0">Piscina (+5%)</label></div>
+  <div style="margin-bottom:12px;padding:0;display:flex;align-items:center;gap:10px"><input type="checkbox" id="gimnasio" style="width:18px;height:18px;margin:0;flex-shrink:0"> <label for="gimnasio" style="cursor:pointer;color:#4b5563;margin:0">Gimnasio (+3%)</label></div>
+  <div style="margin-bottom:12px;padding:0;display:flex;align-items:center;gap:10px"><input type="checkbox" id="jardin" style="width:18px;height:18px;margin:0;flex-shrink:0"> <label for="jardin" style="cursor:pointer;color:#4b5563;margin:0">Jardín (+2%)</label></div>
+  <div style="margin-bottom:12px;padding:0;display:flex;align-items:center;gap:10px"><input type="checkbox" id="garaje" style="width:18px;height:18px;margin:0;flex-shrink:0"> <label for="garaje" style="cursor:pointer;color:#4b5563;margin:0">Garaje cubierto (+4%)</label></div>
+  <div style="margin-bottom:12px;padding:0;display:flex;align-items:center;gap:10px"><input type="checkbox" id="terraza" style="width:18px;height:18px;margin:0;flex-shrink:0"> <label for="terraza" style="cursor:pointer;color:#4b5563;margin:0">Terraza/Balcón (+3%)</label></div>
+  <div style="margin-bottom:12px;padding:0;display:flex;align-items:center;gap:10px"><input type="checkbox" id="seguridad" style="width:18px;height:18px;margin:0;flex-shrink:0"> <label for="seguridad" style="cursor:pointer;color:#4b5563;margin:0">Seguridad 24/7 (+2%)</label></div>
 </div>
 </div>
 
