@@ -148,13 +148,15 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .info-item .value{font-size:16px;font-weight:600;color:var(--gray-900)}
 /* FOOTER */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px}
-.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:1fr 1.5fr;gap:48px;align-items:start}
-.footer-col{display:flex;flex-direction:column}
+.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:1.2fr repeat(4,1fr);gap:48px;align-items:start}
+.footer-links{display:contents}
+.footer-col{display:flex;flex-direction:column;gap:12px}
 .footer-brand h3{font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
 .footer-brand h3 span{color:var(--gold)}
 .footer-brand .footer-slogan{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
+.footer-brand{grid-column:1}
 .footer-brand p{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7}
-.footer-links{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+
 .footer-col h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;color:var(--gold)}
 .footer-col ul{list-style:none;margin:0;padding:0}
 .footer-col li{margin-bottom:8px;transition:all 0.2s}
@@ -227,10 +229,7 @@ ${body}
 <li><a href="/propiedades.html">Catálogo</a></li>
 </ul>
 </div>
-</div>
-</div>
-<div class="footer-col">
-  <h4>Herramientas</h4>
+
   <ul>
     <li><a href="/herramientas/calculadora-hipotecaria.html">Calculadora Hipotecaria</a></li>
     <li><a href="/herramientas/simulador-inversion.html">Simulador de Inversión</a></li>
