@@ -19,6 +19,8 @@ return `<!DOCTYPE html>
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<meta name="theme-color" content="#1a2a4e">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${pageTitle}">
 <meta property="og:description" content="${metaDesc}">
@@ -43,9 +45,9 @@ a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
-.logo{display:flex;flex-direction:column;gap:2px}
+.logo{display:flex;flex-direction:column;gap:0px;align-items:center;text-decoration:none;color:inherit}
 .logo-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
-.logo-tag{font-size:10px;font-weight:500;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;line-height:1}
+.logo-tag{font-size:9px;font-weight:400;color:var(--gray-600);letter-spacing:0.08em;text-transform:none;line-height:1.2;margin-top:2px}
 .search-compact{display:flex;gap:8px;flex:1;max-width:320px}
 .search-compact input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:14px;outline:none}
 .search-compact input::placeholder{color:var(--gray-400)}
@@ -172,7 +174,7 @@ nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
 <nav>
 <div class="nav-inner">
 <a href="/" class="logo">
-<span class="logo-name">INMUHUB<span style="color:var(--gold)">.</span>COM</span>
+<img src="/assets/logo.png" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:45px;width:auto;margin-right:8px;">
 <span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
 <div class="search-compact">
@@ -185,7 +187,7 @@ ${body}
 <footer>
 <div class="footer-content">
 <div class="footer-brand">
-<h3>INMUHUB<span>.</span>COM</h3>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="/assets/logo.png" alt="INMUHUB" style="height:32px;width:auto;"><span style="font-size:18px;font-weight:800;">INMUHUB</span></div>
 <div class="footer-slogan">Donde las oportunidades inmobiliarias se conectan</div>
 <p>CatÃ¡logo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con informaciÃ³n verificada en las mejores zonas.</p>
 </div>
