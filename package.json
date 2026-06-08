@@ -1,13 +1,13 @@
 {
   "name": "real-estate-sites",
   "version": "2.0.1",
-  "description": "Two static real estate sites from one Wix CSV — vinculoinmobiliario.com + zona-innmueble.com",
+  "description": "Two static real estate sites from one Wix CSV",
   "scripts": {
-    "build:vinculo": "node src/vinculo/build.js "build:vinculo": "node src/vinculo/build.js && node copy-assets.js""build:vinculo": "node src/vinculo/build.js && node copy-assets.js" node copy-assets.js && bash /tmp/copy_dashboard.sh",
+    "build:vinculo": "node src/vinculo/build.js && node copy-assets.js",
     "build:zona": "node src/zona/build.js",
     "build": "npm run build:vinculo && npm run build:zona",
     "dev:vinculo": "npm run build:vinculo && npx serve dist/vinculo -p 3001",
-    "dev:zona": "npm run build:zona    && npx serve dist/zona    -p 3002"
+    "dev:zona": "npm run build:zona && npx serve dist/zona -p 3002"
   },
   "dependencies": {
     "csv-parse": "^5.6.0"
