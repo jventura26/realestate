@@ -5,7 +5,7 @@
   "scripts": {
     "build:vinculo": "node src/vinculo/build.js && node copy-assets.js",
     "build:zona": "node src/zona/build.js",
-    "build": "npm run build:vinculo "build": "npm run build:vinculo && npm run build:zona""build": "npm run build:vinculo && npm run build:zona" npm run build:zona "build": "npm run build:vinculo && npm run build:zona""build": "npm run build:vinculo && npm run build:zona" node post-build.js",
+    "build": "npm run build:vinculo "build": "npm run build:vinculo && npm run build:zona && node post-build.js""build": "npm run build:vinculo && npm run build:zona" npm run build:zona "build": "npm run build:vinculo && npm run build:zona""build": "npm run build:vinculo && npm run build:zona" node post-build.js",
     "dev:vinculo": "npm run build:vinculo && npx serve dist/vinculo -p 3001",
     "dev:zona": "npm run build:zona && npx serve dist/zona -p 3002"
   },
