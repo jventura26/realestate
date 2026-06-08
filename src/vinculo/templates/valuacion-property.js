@@ -11,15 +11,31 @@ function valuacionPage() {
 <label><strong>Zona / Ubicación</strong></label>
 <select id="zona" onchange="calcular()" style="width:100%;padding:10px;margin:10px 0;border:1px solid #ddd">
   <option value="">Selecciona una zona</option>
+  <optgroup label="Zona de Guatemala">
+  <option value="zona1">Zona 1 - $1,200/m²</option>
+  <option value="zona2">Zona 2 - $1,150/m²</option>
+  <option value="zona3">Zona 3 - $980/m²</option>
+  <option value="zona4">Zona 4 - $1,050/m²</option>
+  <option value="zona5">Zona 5 - $900/m²</option>
   <option value="zona10">Zona 10 - $1,850/m²</option>
+  <option value="zona12">Zona 12 - $1,300/m²</option>
   <option value="zona14">Zona 14 - $1,620/m²</option>
   <option value="zona15">Zona 15 - $1,420/m²</option>
   <option value="zona16">Zona 16 - $1,350/m²</option>
+  <option value="zona17">Zona 17 - $1,100/m²</option>
+  <option value="zona18">Zona 18 - $950/m²</option>
+  <option value="zona19">Zona 19 - $850/m²</option>
+  <option value="zona21">Zona 21 - $1,180/m²</option>
+  </optgroup>
+  <optgroup label="Municipios">
   <option value="cayala">Cayalá - $1,900/m²</option>
   <option value="fraijanes">Fraijanes - $980/m²</option>
   <option value="san-jose">San José Pinula - $920/m²</option>
   <option value="mixco">Mixco - $1,100/m²</option>
+  <option value="santa-catarina">Santa Catarina Pinula - $1,050/m²</option>
+  <option value="san-pedro">San Pedro Sacatepéquez - $880/m²</option>
   <option value="carretera">Carretera a El Salvador - $850/m²</option>
+  </optgroup>
 </select>
 </div>
 
@@ -80,15 +96,27 @@ Valor Base: Q <span id="valorBase">0</span> | Ajustes: <span id="ajustes">0%</sp
 
 <script>
 const precios = {
-  'zona10': { nombre: 'Zona 10', precio: 1850 },
-  'zona14': { nombre: 'Zona 14', precio: 1620 },
-  'zona15': { nombre: 'Zona 15', precio: 1420 },
-  'zona16': { nombre: 'Zona 16', precio: 1350 },
-  'cayala': { nombre: 'Cayalá', precio: 1900 },
-  'fraijanes': { nombre: 'Fraijanes', precio: 980 },
-  'san-jose': { nombre: 'San José Pinula', precio: 920 },
-  'mixco': { nombre: 'Mixco', precio: 1100 },
-  'carretera': { nombre: 'Carretera a El Salvador', precio: 850 }
+  'zona1': 1200,
+  'zona2': 1150,
+  'zona3': 980,
+  'zona4': 1050,
+  'zona5': 900,
+  'zona10': 1850,
+  'zona12': 1300,
+  'zona14': 1620,
+  'zona15': 1420,
+  'zona16': 1350,
+  'zona17': 1100,
+  'zona18': 950,
+  'zona19': 850,
+  'zona21': 1180,
+  'cayala': 1900,
+  'fraijanes': 980,
+  'san-jose': 920,
+  'mixco': 1100,
+  'santa-catarina': 1050,
+  'san-pedro': 880,
+  'carretera': 850
 };
 
 const ajusteEstado = {
@@ -112,7 +140,7 @@ function calcular(){
     return;
   }
   
-  const precioM2 = precios[zona].precio;
+  const precioM2 = precios[zona];
   const valorBase = area * precioM2;
   
   let ajuste = ajusteEstado[estado] || 0;
