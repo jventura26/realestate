@@ -17,12 +17,9 @@ const mortgageCalculator = () => `
 
 <label>Selecciona Banco</label>
 <select id="banco" style="width:100%;padding:10px;margin:10px 0">
-  <option value="6.9">Banco G&T (6.9%)</option>
-  <option value="7.15">Banco Agromercantil (7.15%)</option>
-  <option value="7.25">Banco Industrial (7.25%)</option>
-  <option value="7.5">Banco Santander (7.5%)</option>
-  <option value="6.95">BAC Guatemala (6.95%)</option>
-  <option value="7.35">Banco del Ahorro (7.35%)</option>
+  <option value="6.90">G&T Continental (6.90%)</option>
+  <option value="8.50">BAC Guatemala (8.50%)</option>
+  <option value="8.50">Banco Industrial (8.50%)</option>
 </select>
 
 <button onclick="calcular()" style="width:100%;padding:12px;background:#ff9500;color:#fff;border:none;cursor:pointer;font-weight:600;margin-top:20px">CALCULAR</button>
@@ -54,7 +51,7 @@ function calcular(){
   const precio = parseFloat(document.getElementById('precio').value) || 2500000;
   const enganchePct = parseFloat(document.getElementById('enganche').value) || 30;
   const plazo = parseFloat(document.getElementById('plazo').value) || 20;
-  const tasa = parseFloat(document.getElementById('banco').value) || 6.95;
+  const tasa = parseFloat(document.getElementById('banco').value) || 6.90;
   
   const enganche = precio * (enganchePct / 100);
   const aFinanciar = precio - enganche;
