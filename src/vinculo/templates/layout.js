@@ -161,6 +161,18 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px}
 .footer-col a{color:rgba(255,255,255,.65);font-size:14px;transition:color .2s;display:inline-block}
 .footer-col a:hover{color:var(--gold);padding-left:4px}
 }
+/* HERRAMIENTAS RESPONSIVE */
+section:has(> div > h3:contains("Herramientas")) { padding: 32px 6% !important; }
+@media(max-width:768px){
+  [style*="grid-template-columns:repeat(auto-fit"]{ grid-template-columns: 1fr !important; }
+  [style*="gap:32px"] { gap: 24px !important; }
+}
+@media(max-width:480px){
+  section { padding: 24px 4% !important; }
+  section h3 { font-size: 22px !important; }
+  [style*="gap:32px"] { gap: 16px !important; }
+  [style*="padding:40px"][style*="border-radius"] { padding: 24px !important; }
+}
 </style>
 </head>
 <body>
