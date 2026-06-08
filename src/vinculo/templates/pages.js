@@ -100,6 +100,12 @@ const body=`<div class="detail-container"><div style="margin-bottom:32px"><div c
 <div style="max-width:1200px;margin:0 auto">
 <h3 style="font-size:28px;font-weight:700;color:#1a2a4e;margin-bottom:40px;text-align:center">Herramientas para Invertir</h3>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">
+<a href="/herramientas/valuador.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
+<div style="font-size:48px;margin-bottom:20px">🏠</div>
+<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Valuador de Propiedades</h4>
+<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Calcula el valor estimado de tu propiedad en Guatemala</p>
+<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Valuador →</div>
+</a>
 <a href="/herramientas/simulador-inversion.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
 <div style="font-size:48px;margin-bottom:20px">📈</div>
 <h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Simulador de Inversión</h4>
