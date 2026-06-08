@@ -165,7 +165,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 
 /* FOOTER RESPONSIVE */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding-bottom:0}
-.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px}
+.footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;width:100%;box-sizing:border-box}
 .footer-col{display:flex;flex-direction:column}
 .footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;color:var(--gold)}
 .footer-col ul{list-style:none;margin:0;padding:0}
@@ -280,7 +280,7 @@ label { font-size: 12px; }
 </div>
 </nav>
 ${body}
-<footer>
+<footer style="width:100%;overflow:hidden">
 <div class="footer-content">
 <div class="footer-col footer-brand">
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
