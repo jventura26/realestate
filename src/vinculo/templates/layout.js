@@ -7,7 +7,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
 const pageTitle = title
 ? `${escapeHtml(title)} | INMUHUB.COM`
 : 'INMUHUB.COM | Donde las oportunidades inmobiliarias se conectan';
-const metaDesc = escapeHtml(desc || 'CatÃ¡logo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.');
+const metaDesc = escapeHtml(desc || 'Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.');
 const ogImg = ogImage || `${DOMAIN}/assets/og.jpg`;
 const canon = `${DOMAIN}${canonical || '/'}`;
 
@@ -153,8 +153,9 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px}
 .footer-brand h3 span{color:var(--gold)}
 .footer-brand .footer-slogan{color:var(--gold);font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
 .footer-brand p{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7}
-.footer-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:32px}
+.footer-links{display:grid;grid-template-columns:repeat(5,1fr);gap:48px}
 .footer-col h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;color:var(--gold)}
+.footer-col ul{list-style:none;margin:0;padding:0}.footer-col li{margin-bottom:8px}.footer-col a{color:rgba(255,255,255,.65);font-size:14px;transition:color .2s}.footer-col a:hover{color:var(--gold)}
 .footer-col ul{list-style:none}
 .footer-col ul li{margin-bottom:8px}
 .footer-col a{color:rgba(255,255,255,.6);font-size:14px;transition:color .2s}
@@ -188,7 +189,7 @@ nav{padding:0 4%}.nav-inner{height:56px}.search-compact{display:none}
 </div>
 <div class="search-compact">
 <input type="text" id="navSearch" placeholder="Buscar propiedades...">
-<button aria-label="Filtros">âï¸</button>
+<button aria-label="Búsqueda" style="display:flex;align-items:center;justify-content:center;font-size:16px;opacity:0.7">🔍</button>
 </div>
 </div>
 </nav>
@@ -198,7 +199,7 @@ ${body}
 <div class="footer-brand">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="${LOGO_BASE64}" alt="INMUHUB" style="height:60px;width:auto;"><span style="font-size:18px;font-weight:800;">INMUHUB</span></div>
 <div class="footer-slogan">Donde las oportunidades inmobiliarias se conectan</div>
-<p>CatÃ¡logo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con informaciÃ³n verificada en las mejores zonas.</p>
+<p>Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos con información verificada en las mejores zonas.</p>
 </div>
 <div class="footer-links">
 <div class="footer-col">
@@ -223,7 +224,7 @@ ${body}
 <h4>Inmuhub</h4>
 <ul>
 <li><a href="/">Inicio</a></li>
-<li><a href="/propiedades.html">CatÃ¡logo</a></li>
+<li><a href="/propiedades.html">Catálogo</a></li>
 </ul>
 </div>
 </div>
