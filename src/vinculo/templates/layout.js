@@ -195,6 +195,70 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding-bot
 .footer-bottom{padding:12px 4%}
 }
 
+
+/* MOBILE OPTIMIZATIONS */
+@media(max-width:640px){
+/* GENERAL */
+body { font-size: 15px; }
+* { max-width: 100%; }
+
+/* NAVBAR */
+nav { padding: 0 3%; }
+.nav-inner { height: 48px; gap: 8px; }
+.logo img { height: 40px; }
+.logo-tag { display: none; }
+.nav-inner > div:last-child { gap: 4px; font-size: 11px; }
+
+/* HERO */
+.hero-new { padding: 32px 3%; min-height: auto; }
+.hero-new h1 { font-size: 24px; line-height: 1.2; margin-bottom: 16px; }
+.hero-new p { font-size: 13px; }
+
+/* CARDS */
+.prop-card { border-radius: 12px; overflow: hidden; }
+.prop-card img { height: 200px; object-fit: cover; }
+.prop-card-body { padding: 16px; }
+.prop-card-title { font-size: 14px; }
+.prop-price { font-size: 16px; }
+
+/* GRID */
+.prop-grid { grid-template-columns: 1fr; gap: 16px; padding: 16px 3%; }
+
+/* DETAIL PAGE */
+.detail-container { padding: 16px 3%; }
+.detail-gallery { margin-bottom: 24px; gap: 8px; }
+.gallery-main img { height: 300px; object-fit: cover; border-radius: 12px; }
+.gallery-thumbs { max-height: 70px; gap: 6px; }
+.gallery-thumbs img { width: 60px; height: 60px; }
+
+/* DETAIL CONTENT */
+.detail-content h1 { font-size: 22px; margin-bottom: 12px; }
+.detail-price { font-size: 22px; padding: 8px 12px; }
+.specs-grid { grid-template-columns: repeat(2,1fr); gap: 12px; }
+.spec-value { font-size: 18px; }
+.spec-label { font-size: 10px; }
+
+/* CALCULATOR */
+section[style*="padding:48px"] { padding: 28px 3% !important; }
+section h3 { font-size: 20px !important; margin-bottom: 24px !important; }
+[style*="padding:40px"][style*="border-radius"] { padding: 24px !important; }
+[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 16px !important; }
+[style*="font-size:32px"] { font-size: 24px !important; }
+input[type="number"], input[type="range"] { width: 100%; padding: 10px; }
+label { font-size: 12px; }
+
+/* FOOTER */
+.footer-bottom p { word-break: break-word; }
+}
+
+@media(max-width:380px){
+.logo img { height: 35px; }
+.hero-new h1 { font-size: 20px; }
+.detail-content h1 { font-size: 18px; }
+.specs-grid { grid-template-columns: 1fr; }
+[style*="padding:40px"] { padding: 16px !important; }
+}
+
 </style>
 </head>
 <body>
