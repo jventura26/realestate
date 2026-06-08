@@ -100,12 +100,8 @@ function extractSlug(itemPath, title) {
 
 // ── Price formatting ──────────────────────────────────────────────────
 function formatPrice(priceStr) {
-  if (!priceStr || priceStr.trim() === '') return 'Consultar';
-  const s = priceStr.trim();
-  // Already formatted strings from Wix
-  if (s.startsWith('Q.') || s.startsWith('Q ')) return s;
-  if (s.startsWith('$'))  return s.replace('$ ', '$').replace('$  ', '$');
-  return s;
+  if (!priceStr || priceStr.trim() === "") return "Consultar";
+  return priceStr.trim();
 }
 
 function priceNumeric(priceStr) {
