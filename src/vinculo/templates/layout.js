@@ -102,10 +102,10 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .cs-sep{width:0.5px;background:var(--border);flex-shrink:0;align-self:stretch}
 /* DETAIL */
 .detail-container{max-width:1200px;margin:0 auto;padding:40px 6%}
-.detail-gallery{margin-bottom:40px}
-.gallery-main{width:100%;aspect-ratio:16/10;background:var(--gray-100);border-radius:12px;overflow:hidden;margin-bottom:12px}
+
+
 .gallery-main img{width:100%;height:100%;object-fit:cover}
-.gallery-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+
 .gallery-thumbs button{aspect-ratio:1;border:2px solid var(--gray-200);border-radius:8px;overflow:hidden;cursor:pointer;background:none;padding:0;transition:border-color .2s}
 .gallery-thumbs button:hover{border-color:var(--blue)}
 .gallery-thumbs img{width:100%;height:100%;object-fit:cover}
@@ -301,6 +301,19 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 .detail-content h1{font-size:20px;margin-bottom:8px}
 .detail-price{font-size:18px;margin:12px 0 16px 0;padding:6px 10px}
 }
+
+/* DETAIL PAGE - ESTRUCTURA */
+.detail-container{max-width:1200px;margin:0 auto;padding:40px 6%;position:relative;z-index:1}
+.detail-gallery{margin-bottom:40px;position:relative;z-index:1;width:100%;display:block}
+.gallery-main{width:100%;aspect-ratio:16/10;background:var(--gray-100);border-radius:12px;overflow:hidden;margin-bottom:12px;display:block;position:relative}
+.gallery-main img{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:1}
+.gallery-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;position:relative;z-index:1}
+.gallery-thumbs button{aspect-ratio:1;border:2px solid var(--gray-200);border-radius:8px;overflow:hidden;cursor:pointer;background:none;padding:0;transition:border-color .2s;position:relative;z-index:1}
+.gallery-thumbs button:hover{border-color:var(--blue)}
+.gallery-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.detail-content{position:relative;z-index:2;margin-top:32px;padding-top:32px}
+.detail-content h1{position:relative;z-index:2;margin:0 0 8px 0}
+.detail-price{position:relative;z-index:2;display:block}
 </style>
 </head>
 <body>
