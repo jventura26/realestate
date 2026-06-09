@@ -52,8 +52,8 @@ img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
-.nav-inner{display:flex;align-items:flex-start;justify-content:space-between;height:auto;min-height:auto;gap:clamp(6px,1vw,20px);padding:0px 0}
-.logo{display:flex;flex-direction:column;gap:2px;align-items:center;text-decoration:none;color:inherit}
+.nav-inner{display:flex;align-items:flex-start;justify-content:space-between;height:auto;min-height:auto !important;padding:0px 0}
+.logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-decoration:none;color:inherit}
 .logo-name{font-size:clamp(14px,2vw,22px);font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
 .logo-tag{font-size:clamp(8px,1.5vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.2;margin-top:2px}
 .search-compact{display:flex;gap:8px;flex:1;max-width:320px;width:100%}
@@ -73,14 +73,14 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 @media(max-width:768px){
 .logo img { height: 75px !important; }
 .logo-tag { font-size: 11px !important; margin-top: 2px !important; }
-.nav-inner { min-height: 70px !important; gap: 12px !important; padding: 8px 0 !important; }
+.nav-inner { min-height:auto !important; }
 }
 
 @media(max-width:480px){
 .logo img { height: 100px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
-.nav-inner { min-height: 60px !important; gap: 8px !important; padding: 6px 0 !important; }
+.nav-inner { min-height:auto !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 12px !important; }
 }
 
@@ -90,7 +90,7 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 .logo-tag { margin-top: 0px; font-size: 8px !important; }
 a.logo img { height: 90px !important; margin-right: 2px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
-.nav-inner { min-height: 45px !important; padding: 2px 0 !important; }
+.nav-inner { min-height:auto !important; }
 }
 
 /* MOBILE NAVBAR - Hide links */
@@ -159,7 +159,7 @@ label[style*="display:flex"][style*="gap:8px"] {
 .property-card:hover .card-img-wrap img{transform:scale(1.04)}
 .card-img-wrap{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--gray-100)}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;display:block}
-.card-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .card-tipo{background:rgba(0,0,0,0.52);color:#fff;font-size:10px;font-weight:600;letter-spacing:.06em;padding:4px 10px;border-radius:20px;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .card-cinta{font-size:10px;font-weight:700;letter-spacing:.05em;padding:4px 10px;border-radius:20px;text-transform:uppercase;margin-left:auto}
 .card-cinta--nueva,.card-cinta--precio-reducido{background:var(--gold,#C9A96E);color:#2d2416}
@@ -168,11 +168,11 @@ label[style*="display:flex"][style*="gap:8px"] {
 .card-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
 .card-price{font-size:19px;font-weight:700;color:var(--gold,#C9A96E);line-height:1;margin-bottom:7px;letter-spacing:-0.02em}
 .card-title{font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;display:flex;align-items:center;gap:4px;overflow:hidden}
+.card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;display:flex;align-items:flex-start;gap:4px;overflow:hidden}
 .card-loc svg{flex-shrink:0;opacity:.5}
 .card-loc span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-specs{display:flex;align-items:stretch;padding-top:10px;border-top:0.5px solid var(--border);margin-top:auto}
-.cs-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray-600);font-weight:500;flex:1;justify-content:center;padding:0 4px}
+.cs-item{display:flex;align-items:flex-start;gap:5px;font-size:11px;color:var(--gray-600);font-weight:500;flex:1;justify-content:center;padding:0 4px}
 .cs-item svg{opacity:.45;flex-shrink:0}
 .cs-item:first-child{justify-content:flex-start;padding-left:0}
 .cs-item:last-child{justify-content:flex-end;padding-right:0}
@@ -190,23 +190,23 @@ label[style*="display:flex"][style*="gap:8px"] {
 .detail-price{font-size:28px;font-weight:700;color:var(--blue);margin-bottom:24px}
 
 .dspec-list{list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:0;border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
-.dspec-item{display:flex;align-items:center;gap:12px;padding:14px 18px;font-size:14px;border-bottom:0.5px solid var(--border);background:var(--white)}
+.dspec-item{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;font-size:14px;border-bottom:0.5px solid var(--border);background:var(--white)}
 .dspec-item:last-child{border-bottom:none}
 .dspec-item svg{color:var(--gold);flex-shrink:0;opacity:.75}
 .dspec-label{flex:1;color:var(--gray-500);font-size:13px;font-weight:500}
 .dspec-val{font-weight:700;color:var(--gray-900);font-size:15px}
 .dinfo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
-.dinfo-item{display:flex;align-items:center;gap:12px;padding:13px 18px;font-size:14px;border-bottom:0.5px solid var(--border);background:var(--white)}
+.dinfo-item{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;font-size:14px;border-bottom:0.5px solid var(--border);background:var(--white)}
 .dinfo-item:last-child{border-bottom:none}
 .dinfo-item svg{color:var(--gold);flex-shrink:0;opacity:.65}
 .dinfo-label{color:var(--gray-500);font-size:12px;font-weight:500;min-width:76px}
 .dinfo-val{color:var(--gray-900);font-weight:600;font-size:14px}
 .desc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
-.desc-item{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:0.5px solid var(--border);font-size:14px;color:var(--gray-700);line-height:1.6}
+.desc-item{display:flex;align-items:flex-start;gap:12px;padding:0px 0 !important;line-height:1.6}
 .desc-item:last-child{border-bottom:none}
 .desc-bullet{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:7px;opacity:.85}
 .desc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
-.desc-item{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:0.5px solid var(--border);font-size:14px;color:var(--gray-700);line-height:1.6}
+.desc-item{display:flex;align-items:flex-start;gap:12px;padding:0px 0 !important;line-height:1.6}
 .desc-item:last-child{border-bottom:none}
 .desc-bullet{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:7px;opacity:.85}
 
@@ -532,7 +532,7 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 <a href="/" class="logo">
 <img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(80px,14vw,220px);width:auto;margin-right:clamp(4px,1.5vw,16px);">
 </a>
-<div style="display:flex;gap:12px;align-items:center;margin-left:auto">
+<div style="display:flex;gap:12px;align-items:flex-start;margin-left:auto">
   <a href="/herramientas/valuador.html" style="font-size:14px;font-weight:500;color:#1a2a4e;padding:8px 12px;border-radius:6px;transition:all 0.2s">Valuador</a>
 <a href="/herramientas/calculadora-hipotecaria.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Calculadora</a>
   <a href="/herramientas/simulador-inversion.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Simulador</a>
@@ -540,7 +540,7 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 </div>
 <div class="search-compact">
 <input type="text" id="navSearch" placeholder="Buscar propiedades...">
-<button aria-label="Búsqueda" style="display:flex;align-items:center;justify-content:center;font-size:16px;opacity:0.7">🔍</button>
+<button aria-label="Búsqueda" style="display:flex;align-items:flex-start;justify-content:center;font-size:16px;opacity:0.7">🔍</button>
 </div>
 </div>
 </nav>
@@ -548,7 +548,7 @@ ${body}
 <footer>
 <div class="footer-content">
 <div class="footer-col footer-brand">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
 <img src="${LOGO_BASE64}" alt="INMUHUB" style="height:48px;width:auto;">
 <span style="font-weight:800;font-size:15px">INMUHUB</span>
 </div>
