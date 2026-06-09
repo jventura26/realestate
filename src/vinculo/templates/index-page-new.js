@@ -168,7 +168,7 @@ function indexPageNew(props) {
             </ul>
           </div>
           <a href="/herramientas/dashboard-inversionistas.html" style="display:block;background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white;padding:14px;border-radius:8px;text-align:center;text-decoration:none;font-weight:700;transition:opacity 0.2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-            Acceder a Dashboard →
+            Inversionistas →
           </a>
         </div>
       </div>
