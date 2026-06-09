@@ -146,7 +146,7 @@ label[style*="display:flex"][style*="gap:8px"] {
 .search-main button{background:var(--gray-900);color:var(--white);border:none;border-radius:7px;padding:12px 24px;font-weight:600;cursor:pointer;transition:all .2s;font-size:14px}
 .search-main button:hover{background:var(--blue)}
 /* FILTERS */
-.filter-bar{background:var(--gray-50);padding:10px 6%;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filter-bar{background:var(--gray-50);padding:10px 6%;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
 .filter-bar select,.filter-bar input{background:var(--white);border:1px solid var(--border);color:var(--gray-900);padding:8px 12px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;min-width:120px}
 .filter-bar select:focus,.filter-bar input:focus{border-color:var(--blue)}
 #clearF,#cl{background:none;border:1px solid var(--border);color:var(--gray-600);padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s}
@@ -576,7 +576,7 @@ ${body}
       
       <!-- BRAND -->
       <div>
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+        <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:20px">
           <img src="${LOGO_BASE64}" alt="INMUHUB" style="height:56px;width:auto;">
           <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px">INMUHUB</div>
         </div>
