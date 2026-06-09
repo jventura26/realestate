@@ -548,76 +548,87 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 </div>
 </nav>
 ${body}
-<footer style="background:#1a2a4e;color:white;margin-top:80px">
-<div style="max-width:1300px;margin:0 auto;padding:60px 6%">
-  <!-- GRID PRINCIPAL -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:48px;margin-bottom:60px">
+<footer style="background:#1a2a4e;color:white;margin-top:120px;padding-bottom:0">
+  <!-- MAIN CONTENT -->
+  <div style="max-width:1400px;margin:0 auto;padding:80px 6%;border-bottom:1px solid rgba(255,255,255,0.1)">
     
-    <!-- BRAND -->
-    <div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-        <img src="${LOGO_BASE64}" alt="INMUHUB" style="height:56px;width:auto;">
-        <div>
-          <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px">INMUHUB</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px">Real Estate Premium</div>
+    <!-- GRID DE 5 COLUMNAS -->
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:60px;margin-bottom:40px">
+      
+      <!-- COLUMN 1: BRAND & DESCRIPTION -->
+      <div>
+        <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:24px">
+          <img src="${LOGO_BASE64}" alt="INMUHUB" style="height:64px;width:auto;flex-shrink:0;">
+          <div>
+            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;line-height:1">INMUHUB</div>
+            <div style="font-size:12px;color:#ffa500;margin-top:6px;font-weight:600;letter-spacing:1px">REAL ESTATE PREMIUM</div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:rgba(255,255,255,0.75);line-height:1.8;margin:0;max-width:280px">
+          Plataforma de inversión inmobiliaria premium especializada en propiedades de alto valor en Guatemala. Herramientas profesionales, datos verificados y asesoría experta.
+        </p>
+      </div>
+
+      <!-- COLUMN 2: HERRAMIENTAS -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ffa500;margin:0 0 24px;line-height:1">Herramientas</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px">
+          <li><a href="/herramientas/calculadora-hipotecaria.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Calculadora</a></li>
+          <li><a href="/herramientas/valuador.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Valuador</a></li>
+          <li><a href="/herramientas/guia-compra.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Guía</a></li>
+          <li><a href="/herramientas/dashboard-inversionistas.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Dashboard</a></li>
+        </ul>
+      </div>
+
+      <!-- COLUMN 3: PROPIEDADES -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ffa500;margin:0 0 24px;line-height:1">Propiedades</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px">
+          <li><a href="/propiedades.html?tipo=Casa" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Casas</a></li>
+          <li><a href="/propiedades.html?tipo=Apartamento" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Apartamentos</a></li>
+          <li><a href="/propiedades.html?tipo=Fincas" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Fincas</a></li>
+          <li><a href="/propiedades.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Ver todas</a></li>
+        </ul>
+      </div>
+
+      <!-- COLUMN 4: ZONAS -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ffa500;margin:0 0 24px;line-height:1">Zonas Premium</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px">
+          <li><a href="/zonas/zona-10.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Zona 10</a></li>
+          <li><a href="/zonas/zona-14.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Zona 14</a></li>
+          <li><a href="/zonas/cayala.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Cayalá</a></li>
+          <li><a href="/propiedades.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Todas las zonas</a></li>
+        </ul>
+      </div>
+
+      <!-- COLUMN 5: COMPAÑÍA -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ffa500;margin:0 0 24px;line-height:1">Compañía</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px">
+          <li><a href="/" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Inicio</a></li>
+          <li><a href="/propiedades.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">→ Catálogo</a></li>
+          <li style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.15)"><a href="mailto:compartiendo.ideas@gmail.com" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;transition:all 0.2s;display:inline-block" onmouseover="this.style.color='#ffa500';this.style.paddingLeft='4px'" onmouseout="this.style.color='rgba(255,255,255,0.75)';this.style.paddingLeft='0'">📧 Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER BOTTOM -->
+  <div style="background:rgba(0,0,0,0.3);padding:32px 6%;border-top:1px solid rgba(255,255,255,0.1)">
+    <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px">
+      <div style="font-size:12px;color:rgba(255,255,255,0.6)">
+        <p style="margin:0 0 4px">&copy; ${new Date().getFullYear()} INMUHUB.COM. Todos los derechos reservados.</p>
+        <p style="margin:0">Especialistas en Inversión Inmobiliaria Premium en Guatemala</p>
+      </div>
+      <div style="display:flex;gap:24px;font-size:12px;color:rgba(255,255,255,0.6)">
+        <div style="text-align:right">
+          <p style="margin:0;color:#ffa500;font-weight:600">📍 Ubicación</p>
+          <p style="margin:4px 0 0">Guatemala City, Guatemala</p>
         </div>
       </div>
-      <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.6;margin:16px 0 24px">
-        Plataforma premium para inversión inmobiliaria en Guatemala. Propiedades verificadas, herramientas profesionales y asesoría especializada.
-      </p>
-      <div style="display:flex;gap:12px">
-      </div>
-    </div>
-
-    <!-- HERRAMIENTAS -->
-    <div>
-      <h4 style="font-size:16px;font-weight:700;margin:0 0 20px;color:#ffa500">Herramientas</h4>
-      <ul style="list-style:none;padding:0;margin:0">
-        <li style="margin-bottom:12px"><a href="/herramientas/calculadora-hipotecaria.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🧮 Calculadora Hipotecaria</a></li>
-        <li style="margin-bottom:12px"><a href="/herramientas/valuador.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏠 Valuador Profesional</a></li>
-        <li style="margin-bottom:12px"><a href="/herramientas/guia-compra.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📚 Guía de Compra</a></li>
-        <li><a href="/herramientas/dashboard-inversionistas.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📊 Dashboard</a></li>
-      </ul>
-    </div>
-
-    <!-- EXPLORAR -->
-    <div>
-      <h4 style="font-size:16px;font-weight:700;margin:0 0 20px;color:#ffa500">Explorar</h4>
-      <ul style="list-style:none;padding:0;margin:0">
-        <li style="margin-bottom:12px"><a href="/propiedades.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏘️ Todas las Propiedades</a></li>
-        <li style="margin-bottom:12px"><a href="/propiedades.html?tipo=Casa" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏠 Casas</a></li>
-        <li style="margin-bottom:12px"><a href="/propiedades.html?tipo=Apartamento" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏢 Apartamentos</a></li>
-        <li><a href="/propiedades.html?tipo=Fincas" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🌳 Fincas</a></li>
-      </ul>
-    </div>
-
-    <!-- ZONAS PREMIUM -->
-    <div>
-      <h4 style="font-size:16px;font-weight:700;margin:0 0 20px;color:#ffa500">Zonas Premium</h4>
-      <ul style="list-style:none;padding:0;margin:0">
-        <li style="margin-bottom:12px"><a href="/zonas/zona-10.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Zona 10</a></li>
-        <li style="margin-bottom:12px"><a href="/zonas/zona-14.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Zona 14</a></li>
-        <li style="margin-bottom:12px"><a href="/zonas/cayala.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Cayalá</a></li>
-        <li><a href="/propiedades.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Ver todas</a></li>
-      </ul>
     </div>
   </div>
-
-  <!-- DIVIDER -->
-  <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:32px"></div>
-
-  <!-- BOTTOM -->
-  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:12px;color:rgba(255,255,255,0.5)">
-    <div>
-      <p style="margin:0">&copy; ${new Date().getFullYear()} INMUHUB.COM · Plataforma Premium de Real Estate</p>
-      <p style="margin:4px 0 0">Especialistas en Inversión Inmobiliaria Premium en Guatemala</p>
-    </div>
-    <div style="text-align:right">
-      <p style="margin:0">Desarrollado con <span style="color:#ffa500">❤️</span> para inversores profesionales</p>
-      <p style="margin:4px 0 0">Zona 10, Guatemala City</p>
-    </div>
-  </div>
-</div>
 </footer>
 ${scripts}
 </body>
