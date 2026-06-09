@@ -1,6 +1,6 @@
 {
   "name": "real-estate-sites",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Two static real estate sites from one Wix CSV",
   "scripts": {
     "build:vinculo": "node src/vinculo/build.js && node copy-assets.js",
