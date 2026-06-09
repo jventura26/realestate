@@ -556,7 +556,7 @@ footer > div:last-child > div { text-align: center !important; }
 <a href="/" class="logo">
 <img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(80px,14vw,220px);width:auto;margin-right:clamp(4px,1.5vw,16px);">
 </a>
-<div style="display:flex;gap:12px;align-items:flex-start;margin-left:auto">
+<div style="display:flex;gap:12px;align-items:flex-end;margin-left:auto;padding-bottom:5px">
   <a href="/herramientas/valuador.html" style="font-size:14px;font-weight:500;color:#1a2a4e;padding:8px 12px;border-radius:6px;transition:all 0.2s">Valuador</a>
 <a href="/herramientas/calculadora-hipotecaria.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Calculadora</a>
   <a href="/herramientas/simulador-inversion.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Simulador</a>
