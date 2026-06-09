@@ -77,7 +77,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 }
 
 @media(max-width:480px){
-.logo img { height: 70px !important; }
+.logo img { height: 85px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
 .nav-inner { min-height: 60px !important; gap: 8px !important; padding: 6px 0 !important; }
@@ -88,7 +88,7 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 @media(max-width:480px){
 .logo { gap: 1px; }
 .logo-tag { margin-top: 0px; font-size: 8px !important; }
-a.logo img { height: 60px !important; margin-right: 2px !important; }
+a.logo img { height: 75px !important; margin-right: 2px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
 .nav-inner { min-height: 45px !important; padding: 2px 0 !important; }
 }
@@ -322,7 +322,7 @@ label { font-size: 12px; }
 }
 
 @media(max-width:380px){
-.logo img { height: 55px; }
+.logo img { height: 70px; }
 .hero-new h1 { font-size: 20px; }
 .detail-content h1 { font-size: 18px; }
 
@@ -531,7 +531,6 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 <div class="nav-inner">
 <a href="/" class="logo">
 <img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(70px,12vw,200px);width:auto;margin-right:clamp(4px,1.5vw,16px);">
-<span class="logo-tag">Propiedades premium en Guatemala</span>
 </a>
 <div style="display:flex;gap:12px;align-items:center;margin-left:auto">
   <a href="/herramientas/valuador.html" style="font-size:14px;font-weight:500;color:#1a2a4e;padding:8px 12px;border-radius:6px;transition:all 0.2s">Valuador</a>
