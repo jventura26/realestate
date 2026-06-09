@@ -49,7 +49,7 @@ const tiposOptions=tipos.map(t=>`<option>${escapeHtml(t)}</option>`).join('');
 const ciudadesOptions=ciudades.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
 const cintasOptions=cintas.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
 const body = `
-<div style="background:var(--gray-50);padding:40px 6%;border-bottom:1px solid var(--border)">
+<div style="background:var(--gray-50);padding:16px 6%;border-bottom:1px solid var(--border)">
 <h1 style="font-size:32px;font-weight:700;color:var(--gray-900);margin:0">Catalogo de propiedades</h1>
 </div>
 <div class="filter-bar">
