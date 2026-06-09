@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { parseProperties } = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
-const { indexPage, catalogPage, detailPage, zonaPage } = require('./templates/pages');
+const { catalogPage, detailPage, zonaPage } = require('./templates/pages');
+const { indexPageNew: indexPage } = require('./templates/index-page-new');
 
 const DOMAIN = 'https://inmuhub.com';
 const CSV = path.resolve(__dirname, '../../data/propiedades.csv');
@@ -21,7 +22,7 @@ fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
 fs.mkdirSync(ZONAS, { recursive:true });
 
-write(path.join(OUT,'index.html'), indexPage(props)); console.log(' index.html');
+write(path.join(OUT,'index.html'), indexPage(props)); console.log(' ✨ index.html (PÁGINA MEJORADA)');
 write(path.join(OUT,'propiedades.html'), catalogPage(props)); console.log(' propiedades.html');
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
@@ -54,30 +55,26 @@ write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.lo
 
 console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
 
-// Generar páginas de herramientas CON META TAGS Y SCHEMA
+// Generar páginas de herramientas
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
 const { valuacionPage } = require('./templates/valuacion-page');
 const { guiaCompraPae } = require('./templates/guia-compra-page');
+const { dashboardInversionistasPage } = require('./templates/dashboard-inversionistas-page');
 const HERRAMIENTAS = path.join(OUT, 'herramientas');
 fs.mkdirSync(HERRAMIENTAS, { recursive: true });
 
 write(path.join(HERRAMIENTAS, 'calculadora-hipotecaria.html'), mortgageCalculatorPage()); 
-console.log(' herramientas: calculadora-hipotecaria.html (CON META TAGS)');
+console.log(' herramientas: calculadora-hipotecaria.html ✅');
 
 write(path.join(HERRAMIENTAS, 'valuador.html'), valuacionPage()); 
-console.log(' herramientas: valuador.html (CON META TAGS)');
+console.log(' herramientas: valuador.html ✅');
 
 write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPae()); 
-console.log(' herramientas: guia-compra.html (CON META TAGS)');
+console.log(' herramientas: guia-compra.html ✅');
 
-// Dashboard de Inversionistas
-const { dashboardInversionistasPage } = require('./templates/dashboard-inversionistas-page');
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
-console.log(' herramientas: dashboard-inversionistas.html (CON META TAGS)');
+console.log(' herramientas: dashboard-inversionistas.html ✅');
 
-console.log('\n✅ INMUHUB.COM BUILD COMPLETE\n');
-console.log(' Herramientas con Meta Tags y Schema Markup:');
-console.log('  • Calculadora Hipotecaria (SEO + OG Tags + Schema)');
-console.log('  • Valuador Profesional (SEO + OG Tags + Schema)');
-console.log('  • Guía de Compra (SEO + OG Tags + Schema)');
-console.log('  • Dashboard Inversionistas (SEO + OG Tags + Schema)\n');
+console.log('\n✨ INMUHUB.COM BUILD COMPLETE\n');
+console.log(' Página Principal: MEJORADA CON 3 TOOLS DESTACADOS');
+console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
