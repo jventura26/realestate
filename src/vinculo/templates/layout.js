@@ -524,6 +524,9 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
   border-top: 1px solid var(--border);
   width: 100%;
 }
+/* Footer logo responsive */
+@media(max-width:768px){.footer-content img { height:64px !important; }}
+@media(max-width:480px){.footer-content img { height:72px !important; }}
 </style>
 </head>
 <body>
