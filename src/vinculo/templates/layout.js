@@ -538,6 +538,16 @@ footer a { font-size: 12px !important; }
 footer > div:last-child { flex-direction: column !important; gap: 16px !important; text-align: center !important; }
 footer > div:last-child > div:last-child { text-align: center !important; }
 }
+/* FOOTER MOBILE FIX */
+@media(max-width:768px){
+footer [style*="grid-template-columns"] { grid-template-columns: 1fr 1fr !important; gap: 40px !important; }
+}
+@media(max-width:480px){
+footer [style*="grid-template-columns"] { grid-template-columns: 1fr !important; gap: 32px !important; }
+footer h4 { font-size: 11px !important; }
+footer > div:last-child { padding: 24px 6% !important; }
+footer > div:last-child > div { text-align: center !important; }
+}
 </style>
 </head>
 <body>
@@ -564,7 +574,7 @@ ${body}
   <div style="max-width:1400px;margin:0 auto;padding:80px 6%;border-bottom:1px solid rgba(255,255,255,0.1)">
     
     <!-- GRID DE 5 COLUMNAS -->
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:60px;margin-bottom:40px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:clamp(30px,5vw,60px);margin-bottom:40px">
       
       <!-- COLUMN 1: BRAND & DESCRIPTION -->
       <div>
