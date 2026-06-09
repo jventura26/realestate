@@ -149,6 +149,29 @@ function indexPageNew(props) {
       </a>
       <a href="/herramientas/guia-compra.html" style="background:rgba(255,255,255,0.2);color:white;padding:16px 32px;border-radius:8px;font-weight:700;text-decoration:none;border:2px solid white;transition:all 0.2s" onmouseover="this.style.background='white';this.style.color='#1a2a4e'" onmouseout="this.style.background='rgba(255,255,255,0.2)';this.style.color='white'">
         Descargar Guía →
+
+      <!-- DASHBOARD -->
+      <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.08);transition:all 0.3s;cursor:pointer" onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.08)'">
+        <div style="background:linear-gradient(135deg,#9b59b6,#8e44ad);padding:40px 20px;text-align:center;color:white">
+          <div style="font-size:48px;margin-bottom:12px">📊</div>
+          <h3 style="margin:0;font-size:22px;font-weight:700">Dashboard Inversionistas</h3>
+        </div>
+        <div style="padding:32px 24px">
+          <p style="color:#666;margin:0 0 24px;line-height:1.6">Análisis profesional del mercado inmobiliario con datos reales y rentabilidad por zona.</p>
+          <div style="background:#f8f9fb;border-radius:12px;padding:16px;margin-bottom:24px">
+            <div style="font-size:12px;color:#999;margin-bottom:6px">Incluye:</div>
+            <ul style="margin:8px 0;padding-left:20px;color:#555;font-size:13px">
+              <li>Análisis de mercado actualizado</li>
+              <li>ROI por zona (real estate)</li>
+              <li>Datos de rentabilidad 2026</li>
+              <li>Estrategias de inversión</li>
+            </ul>
+          </div>
+          <a href="/herramientas/dashboard-inversionistas.html" style="display:block;background:linear-gradient(135deg,#9b59b6,#8e44ad);color:white;padding:14px;border-radius:8px;text-align:center;text-decoration:none;font-weight:700;transition:opacity 0.2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            Acceder a Dashboard →
+          </a>
+        </div>
+      </div>
       </a>
     </div>
   </div>
