@@ -77,7 +77,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 }
 
 @media(max-width:480px){
-.logo img { height: 45px !important; }
+.logo img { height: 70px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
 .nav-inner { min-height: 60px !important; gap: 8px !important; padding: 6px 0 !important; }
@@ -88,7 +88,7 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 @media(max-width:480px){
 .logo { gap: 1px; }
 .logo-tag { margin-top: 0px; font-size: 8px !important; }
-a.logo img { height: 30px !important; margin-right: 2px !important; }
+a.logo img { height: 60px !important; margin-right: 2px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
 .nav-inner { min-height: 45px !important; padding: 2px 0 !important; }
 }
@@ -322,7 +322,7 @@ label { font-size: 12px; }
 }
 
 @media(max-width:380px){
-.logo img { height: 35px; }
+.logo img { height: 55px; }
 .hero-new h1 { font-size: 20px; }
 .detail-content h1 { font-size: 18px; }
 
