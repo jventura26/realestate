@@ -71,13 +71,13 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 }
 /* HEADER RESPONSIVE */
 @media(max-width:768px){
-.logo img { height: 75px !important; }
+.logo img { height: 95px !important; }
 .logo-tag { font-size: 11px !important; margin-top: 2px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
 }
 
 @media(max-width:480px){
-.logo img { height: 100px !important; }
+.logo img { height: 130px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
@@ -88,7 +88,7 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 @media(max-width:480px){
 .logo { gap: 1px; }
 .logo-tag { margin-top: 0px; font-size: 8px !important; }
-a.logo img { height: 90px !important; margin-right: 2px !important; }
+a.logo img { height: 115px !important; margin-right: 2px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
 }
@@ -278,7 +278,7 @@ body { font-size: 15px; }
 /* NAVBAR */
 nav { padding: 0 3%; }
 .nav-inner { align-items:flex-start !important;  gap: 8px; }
-.logo img { height: 65px; }
+.logo img { height: 85px; }
 .logo-tag { display: block; font-size: 11px; }
 .logo { gap: 2px; }
 .nav-inner > div:last-child { gap: 4px; font-size: 11px; }
@@ -300,8 +300,8 @@ nav { padding: 0 3%; }
 
 
 .gallery-main img { height: 300px; object-fit: cover; border-radius: 12px; }
-.gallery-thumbs { max-height: 70px; gap: 6px; }
-.gallery-thumbs img { width: 60px; height: 60px; }
+.gallery-thumbs { max-height: 95px; gap: 6px; }
+.gallery-thumbs img { width: 60px; height: 80px; }
 
 
 
@@ -322,7 +322,7 @@ label { font-size: 12px; }
 }
 
 @media(max-width:380px){
-.logo img { height: 85px; }
+.logo img { height: 110px; }
 .hero-new h1 { font-size: 20px; }
 .detail-content h1 { font-size: 18px; }
 
