@@ -52,7 +52,7 @@ img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:auto;min-height:clamp(70px,16vh,100px);gap:clamp(6px,1vw,20px);padding:clamp(2px,0.3vh,8px) 0}
+.nav-inner{display:flex;align-items:flex-start;justify-content:space-between;height:auto;min-height:auto;gap:clamp(6px,1vw,20px);padding:0px 0}
 .logo{display:flex;flex-direction:column;gap:2px;align-items:center;text-decoration:none;color:inherit}
 .logo-name{font-size:clamp(14px,2vw,22px);font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
 .logo-tag{font-size:clamp(8px,1.5vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.2;margin-top:2px}
