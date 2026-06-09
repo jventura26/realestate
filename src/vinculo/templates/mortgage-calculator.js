@@ -1,4 +1,5 @@
-const mortgageCalculator = () => `
+const mortgageCalculator = () => {
+  const html = `
 <div style="max-width:900px;margin:0 auto;padding:20px">
 
 <div style="background:#fff3cd;border:1px solid #ffc107;padding:12px;border-radius:6px;margin-bottom:20px;font-size:11px;color:#333">
@@ -24,7 +25,7 @@ const mortgageCalculator = () => `
   <option value="8.50">Banco Industrial (8.50%)</option>
 </select>
 
-<button onclick="calcular()" style="width:100%;padding:12px;background:#ff9500;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;margin-top:20px;font-size:14px">CALCULAR</button>
+<button onclick="calcularHipoteca()" style="width:100%;padding:12px;background:#ff9500;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;margin-top:20px;font-size:14px">CALCULAR</button>
 </div>
 
 <div style="display:flex;flex-direction:column;gap:12px">
@@ -50,9 +51,9 @@ const mortgageCalculator = () => `
 </div>
 
 </div>
-`;
 
-const calcular = () => {
+<script>
+function calcularHipoteca() {
   const precio = parseFloat(document.getElementById('precio').value) || 0;
   const enganche = parseFloat(document.getElementById('enganche').value) || 0;
   const plazo = parseFloat(document.getElementById('plazo').value) || 1;
@@ -76,9 +77,17 @@ const calcular = () => {
   document.getElementById('res-financiar').textContent = fmt(aFinanciar);
   document.getElementById('res-cuota').textContent = fmt(cuotaMensual);
   document.getElementById('res-intereses').textContent = fmt(totalIntereses);
-};
+}
 
-window.calcular = calcular;
-calcular();
+// Calcular al cargar
+calcularHipoteca();
+document.getElementById('precio').addEventListener('change', calcularHipoteca);
+document.getElementById('enganche').addEventListener('change', calcularHipoteca);
+document.getElementById('plazo').addEventListener('change', calcularHipoteca);
+document.getElementById('banco').addEventListener('change', calcularHipoteca);
+</script>
+`;
+  return html;
+};
 
 module.exports = { mortgageCalculator };
