@@ -545,56 +545,77 @@ footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;w
 </div>
 </nav>
 ${body}
-<footer>
-<div class="footer-content">
-<div class="footer-col footer-brand">
-<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
-<img src="${LOGO_BASE64}" alt="INMUHUB" style="height:48px;width:auto;">
-<span style="font-weight:800;font-size:15px">INMUHUB</span>
-</div>
-<p>Propiedades premium verificadas en las mejores zonas de Guatemala.</p>
-</div>
+<footer style="background:#1a2a4e;color:white;margin-top:80px">
+<div style="max-width:1300px;margin:0 auto;padding:60px 6%">
+  <!-- GRID PRINCIPAL -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:48px;margin-bottom:60px">
+    
+    <!-- BRAND -->
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <img src="${LOGO_BASE64}" alt="INMUHUB" style="height:56px;width:auto;">
+        <div>
+          <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px">INMUHUB</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px">Real Estate Premium</div>
+        </div>
+      </div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.6;margin:16px 0 24px">
+        Plataforma premium para inversión inmobiliaria en Guatemala. Propiedades verificadas, herramientas profesionales y asesoría especializada.
+      </p>
+      <div style="display:flex;gap:12px">
+        <a href="https://wa.me/50245542088" target="_blank" style="background:#25D366;color:white;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;transition:opacity 0.2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">💬 WhatsApp</a>
+        <a href="mailto:compartiendo.ideas@gmail.com" style="background:rgba(255,255,255,0.2);color:white;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📧 Email</a>
+      </div>
+    </div>
 
-<div class="footer-col">
-<h4>Propiedades</h4>
-<ul>
-<li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
-<li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
-<li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
-<li><a href="/propiedades.html?tipo=Terreno">Terrenos</a></li>
-</ul>
-</div>
+    <!-- HERRAMIENTAS -->
+    <div>
+      <h4 style="font-size:16px;font-weight:700;margin:0 0 20px;color:#ffa500">Herramientas</h4>
+      <ul style="list-style:none;padding:0;margin:0">
+        <li style="margin-bottom:12px"><a href="/herramientas/calculadora-hipotecaria.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🧮 Calculadora Hipotecaria</a></li>
+        <li style="margin-bottom:12px"><a href="/herramientas/valuador.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏠 Valuador Profesional</a></li>
+        <li style="margin-bottom:12px"><a href="/herramientas/guia-compra.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📚 Guía de Compra</a></li>
+        <li><a href="/herramientas/dashboard-inversionistas.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📊 Dashboard</a></li>
+      </ul>
+    </div>
 
-<div class="footer-col">
-<h4>Zonas</h4>
-<ul>
-<li><a href="/propiedades.html?municipio=Mixco">Mixco</a></li>
-<li><a href="/propiedades.html?municipio=Guatemala">Guatemala</a></li>
-<li><a href="/propiedades.html?municipio=Fraijanes">Fraijanes</a></li>
-<li><a href="/propiedades.html?municipio=Cayalá">Cayalá</a></li>
-</ul>
-</div>
+    <!-- EXPLORAR -->
+    <div>
+      <h4 style="font-size:16px;font-weight:700;margin:0 0 20px;color:#ffa500">Explorar</h4>
+      <ul style="list-style:none;padding:0;margin:0">
+        <li style="margin-bottom:12px"><a href="/propiedades.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏘️ Todas las Propiedades</a></li>
+        <li style="margin-bottom:12px"><a href="/propiedades.html?tipo=Casa" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏠 Casas</a></li>
+        <li style="margin-bottom:12px"><a href="/propiedades.html?tipo=Apartamento" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🏢 Apartamentos</a></li>
+        <li><a href="/propiedades.html?tipo=Fincas" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🌳 Fincas</a></li>
+      </ul>
+    </div>
 
-<div class="footer-col">
-<h4>Herramientas</h4>
-<ul>
-<li><a href="/herramientas/calculadora-hipotecaria.html">🧮 Calculadora</a></li>
-<li><a href="/herramientas/simulador-inversion.html">📈 Simulador</a></li>
-<li><a href="/herramientas/guia-compra.html">📚 Guía</a></li>
-</ul>
-</div>
+    <!-- ZONAS PREMIUM -->
+    <div>
+      <h4 style="font-size:16px;font-weight:700;margin:0 0 20px;color:#ffa500">Zonas Premium</h4>
+      <ul style="list-style:none;padding:0;margin:0">
+        <li style="margin-bottom:12px"><a href="/zonas/zona-10.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Zona 10</a></li>
+        <li style="margin-bottom:12px"><a href="/zonas/zona-14.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Zona 14</a></li>
+        <li style="margin-bottom:12px"><a href="/zonas/cayala.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Cayalá</a></li>
+        <li><a href="/propiedades.html" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">📍 Ver todas</a></li>
+      </ul>
+    </div>
+  </div>
 
-<div class="footer-col">
-<h4>Inmuhub</h4>
-<ul>
-<li><a href="/">Inicio</a></li>
-<li><a href="/propiedades.html">Catálogo</a></li>
-<li><a href="/propiedades.html">Todas</a></li>
-</ul>
-</div>
-</div>
-<div class="footer-bottom">
-<p>&copy; ${new Date().getFullYear()} INMUHUB.COM · Guatemala</p>
+  <!-- DIVIDER -->
+  <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:32px"></div>
+
+  <!-- BOTTOM -->
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:12px;color:rgba(255,255,255,0.5)">
+    <div>
+      <p style="margin:0">&copy; ${new Date().getFullYear()} INMUHUB.COM · Plataforma Premium de Real Estate</p>
+      <p style="margin:4px 0 0">Especialistas en Inversión Inmobiliaria Premium en Guatemala</p>
+    </div>
+    <div style="text-align:right">
+      <p style="margin:0">Desarrollado con <span style="color:#ffa500">❤️</span> para inversores profesionales</p>
+      <p style="margin:4px 0 0">Zona 10, Guatemala City</p>
+    </div>
+  </div>
 </div>
 </footer>
 ${scripts}
