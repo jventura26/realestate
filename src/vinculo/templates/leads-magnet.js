@@ -34,15 +34,19 @@ function leadsMagnet() {
           <p style="color:#666;margin-bottom:25px">Acceso inmediato a la guía completa</p>
         </div>
 
-        <button onclick="descargarGuia()" style="width:100%;background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);color:white;padding:18px;border:none;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <button onclick="descargarGuia()" style="width:100%;background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);color:white;padding:18px;border:none;border-radius:10px;font-weight:700;font-size:16px;cursor:pointer;transition:transform 0.2s;margin-bottom:15px" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
           📥 Descargar PDF Ahora
         </button>
 
-        <p style="font-size:12px;color:#666;margin-top:20px;text-align:center">
+        <a href="https://wa.me/50245542088?text=Hola,%20descargué%20tu%20guía%20de%20compra.%20Quiero%20conocer%20más%20opciones%20de%20inversión%20inmobiliaria" target="_blank" style="display:block;background:#25D366;color:white;padding:14px;border-radius:8px;text-decoration:none;font-weight:600;text-align:center;margin-bottom:15px;transition:background 0.2s" onmouseover="this.style.background='#20BA5C'" onmouseout="this.style.background='#25D366'">
+          💬 Contactar por WhatsApp
+        </a>
+
+        <p style="font-size:12px;color:#666;margin-top:15px;text-align:center">
           ✓ Sin formulario • ✓ 100% gratis • ✓ Descarga directa
         </p>
 
-        <div style="margin-top:30px;padding:20px;background:#f0f0f0;border-radius:8px;text-align:center">
+        <div style="margin-top:25px;padding:15px;background:#f0f0f0;border-radius:8px;text-align:center">
           <p style="font-size:13px;color:#666;margin:0">
             👥 Más de 2,000 inversores descargaron esta guía
           </p>
