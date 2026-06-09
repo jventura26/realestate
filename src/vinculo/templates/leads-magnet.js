@@ -54,10 +54,30 @@ function leadsMagnet() {
       </div>
     </div>
 
-    <!-- Vista Previa -->
-    <div style="margin-top:60px;text-align:center">
-      <h2 style="font-size:28px;margin-bottom:30px">Vista Previa del Documento</h2>
-      <iframe src="/files/INMUHUB-Reporte-Inversionistas-2026.pdf" style="width:100%;height:600px;border-radius:10px;border:none;box-shadow:0 4px 20px rgba(0,0,0,0.2)"></iframe>
+    <!-- Contenido Preview -->
+    <div style="margin-top:60px;padding:40px;background:rgba(255,255,255,0.1);border-radius:10px;border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(10px)">
+      <h2 style="text-align:center;margin-top:0;margin-bottom:30px">Contenido de la Guía</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+        <div>
+          <h4 style="color:#ffa500;margin-top:0">Sección 1: Mercado</h4>
+          <p>Análisis actual del mercado inmobiliario guatemalteco, zonas premium, tendencias 2026, oportunidades de inversión y proyecciones económicas.</p>
+        </div>
+        <div>
+          <h4 style="color:#ffa500">Sección 2: Evaluación</h4>
+          <p>Cómo inspeccionar una propiedad, calcular ROI real, analizar comparables, identificar riesgos y evaluar potencial de revalorización.</p>
+        </div>
+        <div>
+          <h4 style="color:#ffa500">Sección 3: Financiamiento</h4>
+          <p>Estrategias de hipotecas, tasas bancarias 2026, cálculos de capacidad de pago, impuestos, gastos y planificación financiera.</p>
+        </div>
+        <div>
+          <h4 style="color:#ffa500">Sección 4: Cierre</h4>
+          <p>Pasos legales, documentación requerida, negociación, inspecciones finales, checklist de cierre y protección de tu inversión.</p>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:30px;color:#ffa500;font-weight:600">
+        Descarga ahora para acceder al documento completo con tablas, gráficos y análisis detallado
+      </p>
     </div>
   </div>
 </section>
