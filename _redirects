@@ -1,0 +1,17 @@
+# Redirects para Cloudflare Pages
+
+# Redirect HTTP a HTTPS (Cloudflare lo maneja automáticamente)
+
+# Propiedades sin extension -> con .html
+/propiedades/*  /propiedades/:splat.html  200
+
+# Redirect old URLs si existen
+/catalogo       /propiedades.html         301
+/buscar         /propiedades.html         301
+/search         /propiedades.html         301
+
+# Singular a plural
+/propiedad/*    /propiedades/:splat       301
+
+# Catch-all para 404
+/*              /                         200
