@@ -96,30 +96,37 @@ section{padding:88px 6%}
 /* FOOTER */
 footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 
-@media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1024px){
+  .prop-grid{grid-template-columns:repeat(2,1fr)}
+  .det-body{grid-template-columns:1fr}
+}
+
 @media(max-width:768px){
-  section{padding:48px 5%}
-  .nav-inner{padding:0 3%}
+  nav{padding:0 3%}
+  .nav-inner{height:56px}
   .nav-links{display:none}
   .nav-cta{padding:7px 16px;font-size:.58rem}
   .logo img{height:40px}
   
+  section{padding:48px 5%}
+  
   /* HERO */
   .hero{min-height:70vh;padding:0 5%}
-  h1{font-size:clamp(1.8rem,5vw,2.4rem);margin-bottom:14px;line-height:1.15}
-  .subtitle{font-size:.77rem;margin-bottom:24px;max-width:100%}
+  h1{font-size:clamp(1.8rem,4vw,2.2rem);margin-bottom:14px;line-height:1.15}
+  .subtitle{font-size:.77rem;margin-bottom:24px;max-width:100%;line-height:1.6}
   .cta-group{gap:8px}
   .btn{padding:10px 18px;font-size:.6rem}
   
   /* SEARCH */
-  .search-hero{padding:40px 5%;border-top:1px solid var(--gl)}
+  .search-hero{padding:40px 5%}
   .search-container{max-width:100%}
   .search-title{font-size:1.4rem;margin-bottom:20px}
   .search-grid{grid-template-columns:1fr;gap:10px}
   .search-label{font-size:.6rem;margin-bottom:6px}
-  .search-input,.search-select{padding:9px 10px;font-size:.7rem}
+  .search-input,.search-select{padding:9px 10px;font-size:.7rem;width:100%}
   .search-actions{gap:6px;flex-wrap:wrap}
-  .btn-search,.btn-clear{padding:9px 14px;font-size:.6rem}
+  .btn-search{width:100%;padding:9px 14px;font-size:.6rem}
+  .btn-clear{padding:9px 14px;font-size:.6rem}
   
   /* FEATURED */
   .st{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:10px}
@@ -140,31 +147,29 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .wa-float{width:48px;height:48px;bottom:14px;right:14px;font-size:20px}
   .wa-btn{padding:10px 14px;font-size:.6rem;gap:6px}
   
-  /* SECTION */
-  section{padding:40px 5% !important}
-  
-  /* FOOTER */
   footer{padding:40px 5% 20px}
 }
 
 @media(max-width:480px){
-  section{padding:36px 4%}
-  .nav-inner{height:56px;padding:0 2%}
+  nav{padding:0 2%}
+  .nav-inner{height:52px}
   .nav-cta{padding:6px 12px;font-size:.54rem}
-  .logo img{height:36px}
+  .logo img{height:34px}
   
-  h1{font-size:clamp(1.5rem,4.5vw,2rem);margin-bottom:10px}
+  section{padding:32px 4%}
+  
+  h1{font-size:clamp(1.4rem,3.5vw,1.8rem);margin-bottom:10px;line-height:1.15}
   .subtitle{font-size:.73rem;margin-bottom:16px;line-height:1.6}
   .cta-group{gap:6px;flex-direction:column}
   .btn{width:100%;padding:10px 12px;font-size:.58rem;justify-content:center}
   
-  .search-hero{padding:32px 4%;border-top:1px solid var(--gl)}
+  .search-hero{padding:32px 4%}
   .search-title{font-size:1.2rem;margin-bottom:16px}
-  .search-grid{gap:8px}
+  .search-grid{grid-template-columns:1fr;gap:8px}
   .search-label{font-size:.56rem;margin-bottom:5px}
-  .search-input,.search-select{padding:8px 8px;font-size:.65rem}
-  .btn-search{width:100%;padding:8px 10px}
-  .btn-clear{padding:8px 12px}
+  .search-input,.search-select{padding:8px 8px;font-size:.65rem;width:100%}
+  .btn-search{width:100%;padding:8px 10px;font-size:.6rem}
+  .btn-clear{width:100%;padding:8px 10px;font-size:.6rem}
   
   .st{font-size:clamp(1.2rem,3.2vw,1.6rem)}
   .ey{font-size:.5rem;margin-bottom:8px}
@@ -178,7 +183,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .pc-meta{font-size:.52rem;margin-bottom:4px;gap:6px}
   .pc-price{font-size:.6rem}
   
-  .wa-float{width:44px;height:44px;bottom:12px;right:12px;font-size:18px}
+  .wa-float{width:40px;height:40px;bottom:10px;right:10px;font-size:16px}
   .wa-btn{padding:8px 10px;font-size:.56rem;gap:4px}
   
   footer{padding:32px 4% 16px;font-size:.75rem}
@@ -189,7 +194,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo" style="display:flex;align-items:center"><img src="/assets/images/logo.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
+    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="Zona INNmueble"></a>
     <ul class="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
