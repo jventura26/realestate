@@ -49,12 +49,12 @@ function indexPage(props) {
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.97) 0%,rgba(13,27,62,.68) 55%,rgba(20,34,64,.9) 100%),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70') center/cover no-repeat"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.65) 0%,transparent 40%)"></div>
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
-    <div class="ey">Guatemala · Premium Real Estate</div>
+    <div class="ey">Guatemala · Patrimonio Inmobiliario</div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.4rem);font-weight:300;line-height:1.06;margin-bottom:22px">
-      Hay propiedades que simplemente se sienten <em style="color:var(--or);font-style:italic">diferentes.</em>
+      En Guatemala, la diferencia entre una casa y una <em style="color:var(--or);font-style:italic">residencia exclusiva</em> está en cada detalle.
     </h1>
     <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
-      Residencias exclusivas, apartamentos y oportunidades de inversión en Guatemala. Asesoría privada y personalizada.
+      31 propiedades verificadas, oportunidades de inversión y un equipo que entiende que cada propiedad cuenta una historia. Asesoría privada para quienes saben qué buscan.
     </p>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
       <a href="/propiedades.html" class="btn-or">Ver Propiedades</a>
@@ -78,8 +78,12 @@ function indexPage(props) {
 <!-- FEATURED -->
 <section style="padding:80px 0 0;background:var(--ink2)">
   <div style="padding:0 6% 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px">
-    <div><div class="ey">Portafolio Selectivo</div><h2 class="st">Propiedades que <em>inspiran</em> decisiones.</h2></div>
-    <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or)">Ver todo →</a>
+    <div>
+      <div class="ey">Propiedades Verificadas</div>
+      <h2 class="st">Cada detalle <em>cuenta una historia</em></h2>
+      <p style="font-size:.8rem;color:var(--sv);max-width:400px;margin-top:12px;line-height:1.7">31 propiedades cuidadosamente seleccionadas en las zonas más exclusivas de Guatemala.</p>
+    </div>
+    <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or);transition:all .3s" onmouseover="this.style.color='var(--or2)'" onmouseout="this.style.color='var(--or)'">Ver todas →</a>
   </div>
   <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
   <div style="text-align:center;padding:44px 6%">
@@ -90,15 +94,15 @@ function indexPage(props) {
 <!-- TYPES -->
 <section style="background:var(--ink)">
   <div style="max-width:560px;margin-bottom:52px">
-    <div class="ey">Lo Que Encontrarás</div>
+    <div class="ey">Encuentra Tu Tipo Ideal</div>
     <h2 class="st">Un portafolio para <em>cada visión</em> de vida.</h2>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--bd)">
     ${[
-      ['🏠','Residencias Premium','Casas en Zona 10, 14, 15, 16 y Cayalá. Privacidad y plusvalía.'],
-      ['🏙️','Apartamentos','Penthouse y apartamentos de alto nivel con alto retorno de inversión.'],
-      ['🌿','Fincas & Terrenos','Propiedades rurales con potencial para desarrollo e inversión.'],
-      ['📈','Inversión','Identificamos oportunidades antes que el mercado las descubra.'],
+      ['🏠','Residencias Premium','Casas diseñadas para vivir. Zona 10, 14, 15, 16 y Cayalá. Privacidad, acceso y plusvalía.'],
+      ['🏙️','Apartamentos Selectos','Penthouse y apartamentos de alto nivel. Ubicaciones estratégicas con retorno de inversión potencial.'],
+      ['🌿','Fincas & Terrenos','Propiedades rurales con potencial. Espacio, naturaleza y oportunidades de desarrollo.'],
+      ['📈','Inversión Inteligente','Identificamos oportunidades antes que el mercado. Asesoría con análisis de retorno real.'],
     ].map(([ic,nm,ds])=>`<div style="background:var(--ink2);padding:38px 30px;border-top:2px solid transparent;transition:all .4s;cursor:pointer" onmouseover="this.style.background='var(--ink3)';this.style.borderTopColor='var(--or)'" onmouseout="this.style.background='var(--ink2)';this.style.borderTopColor='transparent'">
       <div style="font-size:1.7rem;margin-bottom:18px">${ic}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:10px">${nm}</div>
