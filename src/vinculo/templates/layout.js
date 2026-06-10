@@ -1,5 +1,4 @@
 const { escapeHtml } = require('../../shared/utils');
-const { LOGO_BASE64 } = require('../../shared/logo');
 
 const DOMAIN = 'https://inmuhub.com';
 
@@ -563,7 +562,7 @@ footer > div:last-child > div { text-align: center !important; }
 <nav>
 <div class="nav-inner">
 <a href="/" class="logo">
-<img src="${LOGO_BASE64}" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(80px,14vw,220px);width:auto;margin-right:clamp(4px,1.5vw,16px);">
+<img src="/assets/logo.png" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(80px,14vw,220px);width:auto;margin-right:clamp(4px,1.5vw,16px);" loading="lazy">
 </a>
 <div style="display:flex;gap:12px;align-items:flex-end;margin-left:auto;padding-bottom:20px">
   <a href="/herramientas/valuador.html" style="font-size:14px;font-weight:500;color:#1a2a4e;padding:8px 12px;border-radius:6px;transition:all 0.2s">Valuador</a>
@@ -586,7 +585,7 @@ ${body}
       <!-- BRAND -->
       <div>
         <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:20px">
-          <img src="${LOGO_BASE64}" alt="INMUHUB" style="height:56px;width:auto;">
+          <img src="/assets/logo.png" alt="INMUHUB" style="height:56px;width:auto;" loading="lazy">
           <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px">INMUHUB</div>
         </div>
         <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin:0">
