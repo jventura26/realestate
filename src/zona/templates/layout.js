@@ -176,7 +176,8 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   section[style*="display:flex;align-items:center"]{display:block!important;align-items:unset!important;justify-content:unset!important;flex-direction:unset!important}
   section[style*="min-height:93vh"]{min-height:auto!important;display:block!important;padding:0 4%!important;align-items:unset!important;justify-content:unset!important}
   section[style*="min-height:93vh"] > div[style*="position:relative;z-index"]{padding:150px 0 20px!important;position:relative!important;max-width:100%!important;width:100%!important}
-  section[style*="min-height:93vh"] div[style*="display:flex;gap:14px"]{margin-top:30px!important;width:100%!important}
+  section[style*="min-height:93vh"] p[style*="margin-bottom:44px"]{margin-bottom:80px!important}
+  section[style*="min-height:93vh"] div[style*="display:flex;gap:14px"]{margin-top:0!important;width:100%!important}
   .ey,.label{font-size:.56rem!important;margin-bottom:2px!important}
   h1{font-size:clamp(1.4rem,3.5vw,1.8rem)!important;line-height:1.15!important;margin-bottom:8px!important;margin-top:0!important}
   h2{font-size:clamp(1.2rem,3.2vw,1.5rem)!important;margin-bottom:8px!important}
