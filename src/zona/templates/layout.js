@@ -161,12 +161,14 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 /* RESPONSIVE */
 @media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}.det-body{grid-template-columns:1fr}}
 @media(max-width:768px){
+  nav{position:sticky;top:0;z-index:200}
+  .nav-inner{height:60px!important}
   .hamburger{display:flex}
   .nav-cta{display:none}
-  .nav-links{position:absolute;top:40px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199}
+  .nav-links{position:absolute;top:60px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199}
   .nav-links.active{display:flex}
   .nav-links li{padding:0}
-  .nav-links a{display:block;padding:12px 6%;border-bottom:1px solid var(--bd)}
+  .nav-links a{display:block;padding:14px 6%;border-bottom:1px solid var(--bd);font-size:.7rem}
   section{padding:18px 5%}
   .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
   .ft{grid-template-columns:1fr;gap:32px}
@@ -176,11 +178,11 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 }
 @media(max-width:480px){
   html,body{width:100%!important;overflow-x:hidden!important;margin:0!important;padding:0!important}
-  nav{padding:0 3%!important;margin:0!important;width:100%!important}
-  .nav-inner{height:38px!important;padding:0!important;margin:0!important}
-  .nav-inner img{height:36px!important}
+  nav{padding:0 3%!important;margin:0!important;width:100%!important;position:sticky!important;top:0!important;z-index:200!important}
+  .nav-inner{height:60px!important;padding:0!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important}
+  .nav-inner img{height:40px!important}
   .nav-links{gap:12px!important}
-  .nav-links a{font-size:.55rem!important}
+  .nav-links a{font-size:.6rem!important}
   section{padding:12px 4%!important;margin:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;min-height:auto!important;height:auto!important;display:block!important}
   section[style*="min-height"]{min-height:auto!important;height:auto!important;display:block!important}
   section[style*="display:flex"]{display:block!important;align-items:unset!important}
