@@ -11,21 +11,38 @@ const PROPS  = path.join(OUT, 'propiedades');
 
 function write(p, c) { fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeFileSync(p,c,'utf-8'); }
 function copyAssets() {
-  const srcDir = path.join(__dirname, '../../public/assets');
   const dstDir = path.join(OUT, 'assets');
-  if (!fs.existsSync(srcDir)) return;
   fs.mkdirSync(dstDir, { recursive: true });
+  
+  // Copiar desde public/assets (logo, icon)
+  const publicDir = path.join(__dirname, '../../public/assets');
   const fileMappings = {
     'InmuHub sin fondo 1_1.png': 'logo.png',
     'InmuHub Ícono.png': 'icon.png'
   };
-  Object.entries(fileMappings).forEach(([src, dst]) => {
-    const srcPath = path.join(srcDir, src);
-    const dstPath = path.join(dstDir, dst);
-    if (fs.existsSync(srcPath)) {
-      fs.copyFileSync(srcPath, dstPath);
-    }
-  });
+  if (fs.existsSync(publicDir)) {
+    Object.entries(fileMappings).forEach(([src, dst]) => {
+      const srcPath = path.join(publicDir, src);
+      const dstPath = path.join(dstDir, dst);
+      if (fs.existsSync(srcPath)) {
+        fs.copyFileSync(srcPath, dstPath);
+      }
+    });
+  }
+  
+  // Copiar favicon desde src/zona/assets
+  const zonaFaviconSrc = path.join(__dirname, 'assets/favicon.png');
+  const zonaFaviconDst = path.join(dstDir, 'favicon.png');
+  if (fs.existsSync(zonaFaviconSrc)) {
+    fs.copyFileSync(zonaFaviconSrc, zonaFaviconDst);
+  }
+  
+  // Copiar images/ si existe
+  const imagesDir = path.join(__dirname, 'assets/images');
+  const dstImagesDir = path.join(dstDir, 'images');
+  if (fs.existsSync(imagesDir)) {
+    fs.cpSync(imagesDir, dstImagesDir, { recursive: true });
+  }
 }
 
 console.log('\n⚡  Building Zona INNmueble…\n');

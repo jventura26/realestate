@@ -13,6 +13,24 @@ const ZONAS = path.join(OUT, 'zonas');
 
 function write(p, c) { fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeFileSync(p,c,'utf-8'); }
 function slugZona(z) { return z.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function copyAssets() {
+  const dstDir = path.join(OUT, 'assets');
+  fs.mkdirSync(dstDir, { recursive: true });
+  
+  // Copiar favicon desde src/vinculo/assets
+  const faviconSrc = path.join(__dirname, 'assets/favicon.png');
+  const faviconDst = path.join(dstDir, 'favicon.png');
+  if (fs.existsSync(faviconSrc)) {
+    fs.copyFileSync(faviconSrc, faviconDst);
+  }
+  
+  // Copiar logo desde src/vinculo/assets
+  const logoSrc = path.join(__dirname, 'assets/logo.png');
+  const logoDst = path.join(dstDir, 'logo.png');
+  if (fs.existsSync(logoSrc)) {
+    fs.copyFileSync(logoSrc, logoDst);
+  }
+}
 
 console.log('\n Building INMUHUB.COM\n');
 const props = parseProperties(CSV);
@@ -78,3 +96,6 @@ console.log(' herramientas: dashboard-inversionistas.html ✅');
 console.log('\n✨ INMUHUB.COM BUILD COMPLETE\n');
 console.log(' Página Principal: MEJORADA CON 3 TOOLS DESTACADOS');
 console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
+
+// Copiar assets
+copyAssets(); console.log(' Assets copiados (favicon, logo)\n');
