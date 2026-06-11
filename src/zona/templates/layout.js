@@ -67,6 +67,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-fil
 .nav-links a:hover{color:var(--or)}
 .nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s}
 .nav-cta:hover{background:var(--or);color:var(--ink);border-color:var(--or)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:8px;z-index:201}
+.hamburger span{width:20px;height:2px;background:var(--or);transition:all .3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(10px,10px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
 /* SHARED */
 section{padding:20px 6%}
 .ey{display:flex;align-items:center;gap:12px;margin-bottom:4px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
@@ -156,7 +161,13 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 /* RESPONSIVE */
 @media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}.det-body{grid-template-columns:1fr}}
 @media(max-width:768px){
-  .nav-links{display:none}section{padding:18px 5%}
+  .hamburger{display:flex}
+  .nav-cta{display:none}
+  .nav-links{position:absolute;top:40px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199}
+  .nav-links.active{display:flex}
+  .nav-links li{padding:0}
+  .nav-links a{display:block;padding:12px 6%;border-bottom:1px solid var(--bd)}
+  section{padding:18px 5%}
   .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
   .ft{grid-template-columns:1fr;gap:32px}
   .det-body{padding:30px 5%;gap:32px}.gal-mini{grid-template-columns:repeat(4,1fr)}
@@ -238,7 +249,8 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 <nav>
   <div class="nav-inner">
     <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
-    <ul class="nav-links">
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
@@ -383,6 +395,32 @@ async function subscribeNewsletter(email) {
     console.error('Newsletter error:', error);
     return { success: false, message: 'Error de conexión. Intenta de nuevo.' };
   }
+}
+
+// HAMBURGER MENU
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+if(hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  });
+  
+  // Cerrar menú al hacer click en un link
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      hamburger.classList.remove('active');
+    });
+  });
+  
+  // Cerrar menú al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if(!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+      navLinks.classList.remove('active');
+      hamburger.classList.remove('active');
+    }
+  });
 }
 
 // Newsletter forms listener
