@@ -150,6 +150,24 @@ function indexPage(props) {
   </div>
 </section>
 
+<!-- NEWSLETTER BANNER (NUEVO) -->
+<section style="padding:80px 6%;background:linear-gradient(135deg,var(--ink3),var(--ink2));border-top:1px solid var(--gl);border-bottom:1px solid var(--gl)">
+  <div style="max-width:700px;margin:0 auto;text-align:center">
+    <div class="ey" style="justify-content:center;margin-bottom:12px">MANTENTE ACTUALIZADO</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:300;margin-bottom:20px;color:var(--wh)">
+      Suscríbete y recibe oportunidades premium antes que nadie
+    </h2>
+    <p style="font-size:.95rem;color:var(--sv);margin-bottom:35px;line-height:1.8">
+      Nuevas propiedades, market insights y oportunidades exclusivas de inversión. Directamente en tu inbox.
+    </p>
+    <form class="newsletter-form" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <input type="email" placeholder="tu-email@example.com" required style="flex:1;min-width:250px;max-width:400px;padding:14px 18px;background:rgba(255,255,255,.08);border:1px solid var(--gl);color:var(--wh);font-family:'Montserrat',sans-serif;font-size:.9rem;border-radius:4px;transition:all .3s">
+      <button type="submit" style="padding:14px 32px;background:var(--or);color:var(--ink);border:none;font-size:.8rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all .3s;font-family:'Montserrat',sans-serif">Suscribirse</button>
+    </form>
+    <p style="font-size:.75rem;color:var(--mt);margin-top:18px">Respetamos tu privacidad. Baja frecuencia, solo contenido de valor.</p>
+  </div>
+</section>
+
 <!-- TYPES -->
 <section style="background:var(--ink)">
   <div style="max-width:560px;margin-bottom:52px">
