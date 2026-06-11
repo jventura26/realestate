@@ -91,6 +91,65 @@ function indexPage(props) {
   </div>
 </section>
 
+<!-- TESTIMONIOS (FASE 1) -->
+<section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">
+      Lo que dicen nuestros clientes
+    </h2>
+    
+    <div class="testimonials-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px">
+      <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Zona INNmueble me ayudó a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo con mis necesidades. Altamente recomendado."</p>
+        <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">MC</div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">María Castillo</div><div style="color:var(--mt);font-size:.8rem">Empresaria</div></div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Excelente asesoría para mi inversión inmobiliaria. Entendieron mi visión y me ofrecieron opciones que superaron mis expectativas."</p>
+        <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">CG</div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Carlos García</div><div style="color:var(--mt);font-size:.8rem">Inversionista</div></div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"El servicio es impecable. Desde la búsqueda hasta la finalización, todo fue smooth y profesional. Definitivamente mi opción número uno."</p>
+        <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">SL</div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Sandra López</div><div style="color:var(--mt);font-size:.8rem">Ejecutiva</div></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- TRUST BADGES -->
+    <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:60px 0 0;border-top:1px solid var(--gl);margin-top:60px">
+      <div style="text-align:center;flex:1;min-width:120px">
+        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">31 Propiedades</div>
+      </div>
+      <div style="text-align:center;flex:1;min-width:120px">
+        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">100% Verificadas</div>
+      </div>
+      <div style="text-align:center;flex:1;min-width:120px">
+        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">10+ Años</div>
+      </div>
+      <div style="text-align:center;flex:1;min-width:120px">
+        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">Soporte 24/7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- TYPES -->
 <section style="background:var(--ink)">
   <div style="max-width:560px;margin-bottom:52px">
