@@ -172,7 +172,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .nav-links a{font-size:.55rem!important}
   section{padding:12px 4%!important;margin:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;min-height:auto!important}
   section > div:first-child{padding:0!important}
-  section div[style*="padding:100px"]{padding:20px 0!important}
+  section div[style*="padding:100px"]{padding:40px 0!important}
   .ey,.label{font-size:.56rem!important;margin-bottom:2px!important}
   h1{font-size:clamp(1.4rem,3.5vw,1.8rem)!important;line-height:1.15!important;margin-bottom:8px!important;margin-top:0!important}
   h2{font-size:clamp(1.2rem,3.2vw,1.5rem)!important;margin-bottom:8px!important}
