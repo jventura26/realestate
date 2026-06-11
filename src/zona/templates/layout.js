@@ -68,10 +68,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-fil
 .nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s}
 .nav-cta:hover{background:var(--or);color:var(--ink);border-color:var(--or)}
 /* SHARED */
-section{padding:60px 6%}
-.ey{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
+section{padding:40px 6%}
+.ey{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
 .ey::before{content:'';width:26px;height:1px;background:var(--or)}
-.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:20px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
+.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:12px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
 .st em{font-style:italic;color:var(--or)}
 .ss{font-size:1.1rem;font-weight:300;line-height:2;letter-spacing:.02em;color:var(--sv);line-height:1.9;max-width:500px;font-weight:300}
 .description-premium{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;line-height:1.8;color:var(--wh);margin-bottom:24px;letter-spacing:.01em}
@@ -156,7 +156,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 /* RESPONSIVE */
 @media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}.det-body{grid-template-columns:1fr}}
 @media(max-width:768px){
-  .nav-links{display:none}section{padding:62px 5%}
+  .nav-links{display:none}section{padding:38px 5%}
   .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
   .ft{grid-template-columns:1fr;gap:32px}
   .det-body{padding:30px 5%;gap:32px}.gal-mini{grid-template-columns:repeat(4,1fr)}
@@ -170,7 +170,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .nav-inner img{height:36px!important}
   .nav-links{gap:12px!important}
   .nav-links a{font-size:.55rem!important}
-  section{padding:32px 4%!important;margin:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  section{padding:24px 4%!important;margin:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important}
   .ey,.label{font-size:.56rem!important}
   h1{font-size:clamp(1.4rem,3.5vw,1.8rem)!important;line-height:1.15!important}
   h2{font-size:clamp(1.2rem,3.2vw,1.5rem)!important}
