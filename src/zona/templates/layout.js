@@ -58,7 +58,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);o
 img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gl);padding:0 6%}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:48px}
 .logo{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:baseline;gap:0}
 .logo em{font-style:normal;color:var(--or)}
 .logo sub{font-size:.48rem;font-weight:400;letter-spacing:.24em;color:var(--sv);margin-left:8px;font-family:'Montserrat',sans-serif}
@@ -68,7 +68,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-fil
 .nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s}
 .nav-cta:hover{background:var(--or);color:var(--ink);border-color:var(--or)}
 /* SHARED */
-section{padding:88px 6%}
+section{padding:60px 6%}
 .ey{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
 .ey::before{content:'';width:26px;height:1px;background:var(--or)}
 .st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:20px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
@@ -166,7 +166,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 @media(max-width:480px){
   html,body{width:100%!important;overflow-x:hidden!important;margin:0!important;padding:0!important}
   nav{padding:0 3%!important;margin:0!important;width:100%!important}
-  .nav-inner{height:52px!important;padding:0!important;margin:0!important}
+  .nav-inner{height:44px!important;padding:0!important;margin:0!important}
   .nav-inner img{height:36px!important}
   .nav-links{gap:12px!important}
   .nav-links a{font-size:.55rem!important}
