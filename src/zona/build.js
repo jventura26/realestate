@@ -55,6 +55,18 @@ fs.mkdirSync(PROPS, { recursive:true });
 write(path.join(OUT,'index.html'),        indexPage(props));   console.log('   ✔  index.html');
 write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   ✔  propiedades.html');
 
+// Copiar FAQ y About
+const faqSrc = path.join(__dirname, 'faq.html');
+const aboutSrc = path.join(__dirname, 'about.html');
+if(fs.existsSync(faqSrc)) {
+  fs.copyFileSync(faqSrc, path.join(OUT, 'faq.html'));
+  console.log('   ✔  faq.html');
+}
+if(fs.existsSync(aboutSrc)) {
+  fs.copyFileSync(aboutSrc, path.join(OUT, 'about.html'));
+  console.log('   ✔  about.html');
+}
+
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(`   ✔  ${props.length} detail pages`);
 
@@ -70,4 +82,4 @@ write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.
 // Copiar assets
 copyAssets(); console.log('   ✔  assets copied');
 
-console.log(`\n✅  Zona → dist/zona/  (${props.length + 2} HTML pages)\n`);
+console.log(`\n✅  Zona → dist/zona/  (${props.length + 4} HTML pages)\n`);
