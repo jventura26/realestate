@@ -1,8 +1,8 @@
 {
-  "name": "inmuhub-real-estate",
+  "name": "zona-innmueble-pages",
   "pages_build_config": {
-    "build_command": "npm install && npm run build",
-    "destination_dir": "dist/vinculo",
+    "build_command": "npm install && npm run build:zona",
+    "destination_dir": "dist/zona",
     "root_dir": "/"
   }
 }
