@@ -163,6 +163,29 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .specs{grid-template-columns:1fr}.wa-float{right:14px;bottom:14px;width:48px;height:48px}
   .related{padding:52px 5%}
 }
+@media(max-width:480px){
+  html,body{width:100%!important;overflow-x:hidden!important;margin:0!important;padding:0!important}
+  nav{padding:0 3%!important;margin:0!important;width:100%!important}
+  .nav-inner{height:52px!important;padding:0!important;margin:0!important}
+  .nav-inner img{height:36px!important}
+  .nav-links{gap:12px!important}
+  .nav-links a{font-size:.55rem!important}
+  section{padding:32px 4%!important;margin:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  .ey,.label{font-size:.56rem!important}
+  h1{font-size:clamp(1.4rem,3.5vw,1.8rem)!important;line-height:1.15!important}
+  h2{font-size:clamp(1.2rem,3.2vw,1.5rem)!important}
+  .prop-grid{grid-template-columns:1fr!important;gap:2px!important}
+  .prop-card{aspect-ratio:4/5!important}
+  .filter-bar{padding:12px 4%!important;flex-direction:column!important}
+  .filter-bar select,.filter-bar input{width:100%!important;min-width:100%!important}
+  .det-header{padding:20px 4% 0!important}
+  .det-body{padding:20px 4%!important;grid-template-columns:1fr!important;gap:16px!important}
+  .related{padding:28px 4%!important}
+  footer{padding:28px 4% 14px!important}
+  .ft{grid-template-columns:1fr!important;gap:20px!important}
+  .btn-or,.btn-ol,.wa-btn{width:100%!important;padding:11px 16px!important}
+  .wa-float{width:48px!important;height:48px!important;right:12px!important;bottom:12px!important}
+}
 </style>
 </head>
 <body>
