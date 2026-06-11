@@ -58,6 +58,11 @@ write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   �
 // Copiar FAQ y About
 const faqSrc = path.join(__dirname, 'faq.html');
 const aboutSrc = path.join(__dirname, 'about.html');
+const blogSrc = path.join(__dirname, 'blog.html');
+const art1Src = path.join(__dirname, 'guia-inversion-real-estate-2026.html');
+const art2Src = path.join(__dirname, 'zona-10-vs-zona-14.html');
+const art3Src = path.join(__dirname, 'senales-alerta-comprar-propiedad.html');
+
 if(fs.existsSync(faqSrc)) {
   fs.copyFileSync(faqSrc, path.join(OUT, 'faq.html'));
   console.log('   ✔  faq.html');
@@ -65,6 +70,22 @@ if(fs.existsSync(faqSrc)) {
 if(fs.existsSync(aboutSrc)) {
   fs.copyFileSync(aboutSrc, path.join(OUT, 'about.html'));
   console.log('   ✔  about.html');
+}
+if(fs.existsSync(blogSrc)) {
+  fs.copyFileSync(blogSrc, path.join(OUT, 'blog.html'));
+  console.log('   ✔  blog.html');
+}
+if(fs.existsSync(art1Src)) {
+  fs.copyFileSync(art1Src, path.join(OUT, 'guia-inversion-real-estate-2026.html'));
+  console.log('   ✔  blog/art1.html');
+}
+if(fs.existsSync(art2Src)) {
+  fs.copyFileSync(art2Src, path.join(OUT, 'zona-10-vs-zona-14.html'));
+  console.log('   ✔  blog/art2.html');
+}
+if(fs.existsSync(art3Src)) {
+  fs.copyFileSync(art3Src, path.join(OUT, 'senales-alerta-comprar-propiedad.html'));
+  console.log('   ✔  blog/art3.html');
 }
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
@@ -82,4 +103,4 @@ write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.
 // Copiar assets
 copyAssets(); console.log('   ✔  assets copied');
 
-console.log(`\n✅  Zona → dist/zona/  (${props.length + 4} HTML pages)\n`);
+console.log(`\n✅  Zona → dist/zona/  (${props.length + 10} HTML pages)\n`);

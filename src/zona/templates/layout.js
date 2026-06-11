@@ -255,6 +255,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
+      <li><a href="/blog.html">Blog</a></li>
       <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
