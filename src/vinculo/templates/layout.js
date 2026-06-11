@@ -28,10 +28,7 @@ fbq('track','PageView');
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
-<link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
-<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
-<link rel="shortcut icon" href="./assets/favicon.ico">
-<link rel="icon" type="image/png" href="./assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <meta name="theme-color" content="#1a2a4e">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${pageTitle}">

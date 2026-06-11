@@ -31,6 +31,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
 <meta property="og:locale"      content="es_GT">
 <meta name="twitter:card"       content="summary_large_image">
 <meta name="theme-color"        content="#0D1B3E">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 
 <!-- Google Analytics 4 — replace G-XXXXXXXXXX in Netlify env -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=${ga4Id}"></script>
