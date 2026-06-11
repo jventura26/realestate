@@ -190,7 +190,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .related{padding:20px 4%!important}
   footer{padding:20px 4% 12px!important}
   .ft{grid-template-columns:1fr!important;gap:16px!important}
-  .btn-or,.btn-ol,.wa-btn{width:100%!important;padding:10px 14px!important;margin-bottom:0!important}
+  .btn-or,.btn-ol,.wa-btn{width:100%!important;padding:8px 12px!important;margin-bottom:4px!important;font-size:.6rem!important}
   .wa-float{width:48px!important;height:48px!important;right:10px!important;bottom:10px!important}
 }
 </style>
