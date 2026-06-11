@@ -197,6 +197,41 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .btn-or,.btn-ol,.wa-btn{width:100%!important;padding:8px 12px!important;margin-bottom:4px!important;font-size:.6rem!important}
   .wa-float{width:48px!important;height:48px!important;right:10px!important;bottom:10px!important}
 }
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* FASE 1: ANIMACIONES PREMIUM + TESTIMONIOS + VIDEO HERO              */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.testimonial-card {
+  transition: all .4s cubic-bezier(.22,1,.36,1);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: var(--or) !important;
+  background: linear-gradient(135deg, rgba(245,130,13,.05), rgba(245,130,13,0)) !important;
+}
+
+.btn-or:hover, .btn-ol:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(245,130,13,.2);
+}
+
+.counter {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
 </style>
 </head>
 <body>
@@ -234,7 +269,73 @@ ${body}
   </div>
 </footer>
 ${scripts}
-</body>
+
+<!-- FASE 1: ANIMACIONES COUNTER + TESTIMONIOS -->
+<script>
+// Counter Animation
+function animateCounters() {
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-target'));
+    if(!target || counter.dataset.animated) return;
+    counter.dataset.animated = '1';
+    
+    let current = 0;
+    const increment = target / 30;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        counter.textContent = target;
+        clearInterval(timer);
+      } else {
+        counter.textContent = Math.floor(current);
+      }
+    }, 50);
+  });
+}
+
+// Testimonials Fade In
+function animateTestimonials() {
+  const testimonials = document.querySelectorAll('.testimonial-card');
+  testimonials.forEach((el, index) => {
+    setTimeout(() => {
+      el.style.transform = 'translateY(0)';
+      el.style.opacity = '1';
+    }, 100 + index * 150);
+  });
+}
+
+// Intersection Observer para animations
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const parent = entry.target.parentElement;
+      if (parent && parent.classList.contains('stats-container')) {
+        animateCounters();
+        observer.unobserve(entry.target);
+      }
+      if (parent && parent.classList.contains('testimonials-container')) {
+        animateTestimonials();
+        observer.unobserve(entry.target);
+      }
+    }
+  });
+}, observerOptions);
+
+// Initialize on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    animateCounters();
+    animateTestimonials();
+  }, 300);
+});
+
+// Observe counters
+document.querySelectorAll('.counter').forEach(el => {
+  if(el.parentElement) observer.observe(el.parentElement);
+});
+</script>
 </html>`;
 }
 
