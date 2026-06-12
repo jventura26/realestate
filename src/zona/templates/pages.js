@@ -272,7 +272,7 @@ function catalogPage(props) {
 </div>`;
 
   return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} propiedades premium en Guatemala. Casas, apartamentos, fincas e inversiones con asesoría.`, canonical: '/propiedades.html', body, scripts: filterJS + `
-<script src="/assets/dynamic-grid.js"></script>` });
+<script src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"></script>` });
 }
 
 // ── DETAIL ────────────────────────────────────────────────────────────
