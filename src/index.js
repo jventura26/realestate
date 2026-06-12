@@ -339,19 +339,32 @@ let editingId = null;
 async function doLogin() {
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
-  const res = await fetch('/api/login', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({user: u, pass: p})
-  });
-  if (res.ok) {
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('adminShell').style.display = 'block';
-    loadProps();
-  } else {
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = 'Verificando...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({user: u, pass: p})
+    });
+    if (res.ok) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('adminShell').style.display = 'block';
+      loadProps();
+    } else {
+      const err = document.getElementById('loginErr');
+      err.textContent = 'Usuario o contraseña incorrectos.';
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 3000);
+    }
+  } catch(e) {
     const err = document.getElementById('loginErr');
+    err.textContent = 'Error de conexión: ' + e.message;
     err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 3000);
+  } finally {
+    btn.textContent = 'Ingresar al panel';
+    btn.disabled = false;
   }
 }
 
