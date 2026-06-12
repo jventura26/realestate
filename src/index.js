@@ -1,72 +1,8 @@
 export default {
   async fetch(request, env) {
-    return new Response(getHTML(), {
+    const html = '<!DOCTYPE html><html><head><meta charset=UTF-8><title>Admin</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#0D1B3E;color:#333}input,button{font-family:Arial,sans-serif}.hidden{display:none}.login{display:flex;justify-content:center;align-items:center;height:100vh;background:#0D1B3E}.login-box{background:white;padding:50px;border-radius:8px;width:350px;box-shadow:0 10px 40px rgba(0,0,0,0.3)}.login-box h1{color:#0D1B3E;margin-bottom:30px;font-size:24px}.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:5px;color:#0D1B3E;font-weight:600;font-size:12px}.form-group input{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.btn-login{width:100%;padding:12px;background:#0D1B3E;color:white;border:none;border-radius:4px;cursor:pointer;font-weight:700;transition:all 0.3s}.btn-login:hover{background:#1a2850}.error{color:#d32f2f;background:#ffebee;padding:10px;border-radius:4px;margin-top:10px;display:none;font-size:12px}.admin{display:none;background:#0D1B3E;min-height:100vh}.navbar{background:white;padding:20px 30px;box-shadow:0 2px 5px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center}.navbar h2{color:#0D1B3E;margin:0}.navbar-brand{color:#F5820D;font-weight:700}.btn-logout{background:#d32f2f;color:white;padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-weight:700}.content{padding:30px;max-width:1200px;margin:0 auto}.content h1{color:white;margin-bottom:20px}.content p{color:#ccc}</style></head><body><div id=loginPage class=login><div class=login-box><h1>Admin Panel</h1><div class=form-group><label>Usuario</label><input type=text id=user value=admin></div><div class=form-group><label>Contrasena</label><input type=password id=pass value=admin1203></div><button class=btn-login onclick="return doLogin()">Ingresar</button><div class=error id=err></div></div></div><div id=adminPage class=admin><div class=navbar><h2><span class=navbar-brand>Zona</span>-Admin</h2><button class=btn-logout onclick="doLogout()">Salir</button></div><div class=content><h1>Bienvenido</h1><p>Admin panel funcional</p></div></div><script>function doLogin(){var u=document.getElementById("user").value;var p=document.getElementById("pass").value;if(u==="admin"&&p==="admin1203"){localStorage.setItem("auth","1");location.reload();return false}else{document.getElementById("err").style.display="block";return false}}function doLogout(){localStorage.removeItem("auth");location.reload()}function checkAuth(){if(localStorage.getItem("auth")==="1"){document.getElementById("loginPage").style.display="none";document.getElementById("adminPage").style.display="block"}}window.addEventListener("load",checkAuth)<\/script></body></html>';
+    return new Response(html, {
       headers: { 'Content-Type': 'text/html; charset=utf-8' }
     });
   }
 };
-
-function getHTML() {
-  const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Admin Zona-INNmueble</title>
-<style>
-* { margin: 0; padding: 0; }
-body { font-family: Arial; background: #0D1B3E; }
-.hidden { display: none; }
-.login { display: flex; justify-content: center; align-items: center; height: 100vh; }
-.box { background: white; padding: 40px; border-radius: 8px; width: 350px; }
-input, button { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
-button { background: #0D1B3E; color: white; border: none; cursor: pointer; font-weight: bold; }
-.admin { display: none; }
-.navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; }
-.content { padding: 20px; }
-</style>
-</head>
-<body>
-<div id="loginPage" class="login">
-  <div class="box">
-    <h1>Admin Panel</h1>
-    <input type="text" id="user" value="admin">
-    <input type="password" id="pass" value="admin1203">
-    <button onclick="login()">Ingresar</button>
-  </div>
-</div>
-
-<div id="adminPage" class="admin">
-  <div class="navbar">
-    <h2>Admin</h2>
-    <button onclick="logout()">Salir</button>
-  </div>
-  <div class="content">
-    <h1>Bienvenido</h1>
-  </div>
-</div>
-
-<script>
-function login() {
-  if (document.getElementById('user').value === 'admin' && document.getElementById('pass').value === 'admin1203') {
-    localStorage.setItem('logged', '1');
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('adminPage').classList.remove('hidden');
-  } else {
-    alert('Incorrecto');
-  }
-}
-
-function logout() {
-  localStorage.removeItem('logged');
-  location.reload();
-}
-
-if (localStorage.getItem('logged') === '1') {
-  document.getElementById('loginPage').classList.add('hidden');
-  document.getElementById('adminPage').classList.remove('hidden');
-}
-</script>
-</body>
-</html>`;
-  return html;
-}
