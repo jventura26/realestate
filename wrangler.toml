@@ -1,4 +1,4 @@
-name = "zona-admin"
+name = "kv-get-started"
 type = "service"
 main = "src/index_kv.js"
 compatibility_date = "2024-01-01"
