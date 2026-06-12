@@ -1,8 +1,12 @@
-name = "zona-inmu"
+name = "zona-admin-worker"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
 
+# KV Namespace para datos del admin
 [[kv_namespaces]]
 binding = "DB"
 id = "5ea66b6b4c7c45cb908111fa3259862c"
 preview_id = "5ea66b6b4c7c45cb908111fa3259862c"
+
+# NO incluir [build] — Cloudflare Workers despliega src/index.js directamente
+# Si usas Cloudflare Pages para los sitios estáticos, ese es un proyecto SEPARADO
