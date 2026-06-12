@@ -47,7 +47,7 @@ return layout({ title: null, desc: `Casas, apartamentos, fincas y terrenos en Gu
       props=await r.json();
       try{localStorage.setItem('kv_props',JSON.stringify(props));localStorage.setItem('kv_ts',Date.now().toString());}catch(e){}
     }
-    var grid=document.querySelector('.prop-grid');
+    var grid=document.getElementById('g')||document.querySelector('.prop-grid,.property-grid');
     if(!grid)return;
     var featured=props.slice(0,9);
     grid.innerHTML=featured.map(function(p){
