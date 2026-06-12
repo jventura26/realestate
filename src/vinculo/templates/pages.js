@@ -65,7 +65,8 @@ const body = `
 <div class="prop-grid" id="g">${props.map(p=>card(p)).join('')}</div>
 <div class="no-res" id="nr" style="display:none"><p>No se encontraron propiedades</p><small>Intenta ajustar los filtros</small></div>
 ${filterJS}`;
-return layout({ title: 'Propiedades en Guatemala', desc: 'Catalogo completo de casas, apartamentos, fincas y terrenos en Guatemala. Filtra por zona, tipo y precio. INMUHUB.COM', canonical: '/propiedades.html', body });
+return layout({ title: 'Propiedades en Guatemala', desc: 'Catalogo completo de casas, apartamentos, fincas y terrenos en Guatemala. Filtra por zona, tipo y precio. INMUHUB.COM', canonical: '/propiedades.html', body, scripts: `
+<script src="/assets/dynamic-grid.js"></script>` });
 }
 
 function zonaPage(props, zona) {
