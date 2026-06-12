@@ -8,7 +8,7 @@ const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'admin1203';
 const SESSION_TTL = 60 * 60 * 8; // 8 horas
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ----------------------------------------
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -42,7 +42,7 @@ function generateToken() {
   return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// ── Admin HTML ────────────────────────────────────────────────────────────────
+// ----------------------------------------
 
 function getAdminHTML() {
   return `<!DOCTYPE html>
@@ -335,7 +335,7 @@ function getAdminHTML() {
 let props = [];
 let editingId = null;
 
-// ── Auth ─────────────────────────────────────────────────────────────────────
+// ----------------------------------------
 async function doLogin() {
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
@@ -382,7 +382,7 @@ async function checkSession() {
   }
 }
 
-// ── Propiedades ───────────────────────────────────────────────────────────────
+// ----------------------------------------
 async function loadProps() {
   const res = await fetch('/api/propiedades');
   if (res.ok) {
@@ -439,7 +439,7 @@ function renderTable() {
   \`;
 }
 
-// ── Modal ────────────────────────────────────────────────────────────────────
+// ----------------------------------------
 function openModal(prop) {
   editingId = prop ? prop.id : null;
   document.getElementById('modalTitle').textContent = prop ? 'Editar propiedad' : 'Nueva propiedad';
@@ -505,7 +505,7 @@ async function deleteProp(id) {
   else showToast('Error al eliminar.', 'error');
 }
 
-// ── Toast ────────────────────────────────────────────────────────────────────
+// ----------------------------------------
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -514,7 +514,7 @@ function showToast(msg, type = 'success') {
 }
 
 
-// ── CSV Importer ─────────────────────────────────────────────────────────────
+// ----------------------------------------
 let parsedProps = [];
 
 function toggleImport() {
@@ -712,7 +712,7 @@ checkSession();
 </html>`;
 }
 
-// ── Router ────────────────────────────────────────────────────────────────────
+// ----------------------------------------
 
 export default {
   async fetch(request, env) {
@@ -731,12 +731,12 @@ export default {
       });
     }
 
-    // ── Admin UI ──
+    // ----------------------------------------
     if (path === '/' || path === '/admin' || path === '/admin/') {
       return html(getAdminHTML());
     }
 
-    // ── Login ──
+    // ----------------------------------------
     if (path === '/api/login' && method === 'POST') {
       const { user, pass } = await request.json();
       if (user === ADMIN_USER && pass === ADMIN_PASS) {
@@ -753,7 +753,7 @@ export default {
       return json({ error: 'Credenciales incorrectas' }, 401);
     }
 
-    // ── Logout ──
+    // ----------------------------------------
     if (path === '/api/logout' && method === 'POST') {
       const cookie = request.headers.get('Cookie') || '';
       const match = cookie.match(/session=([^;]+)/);
@@ -766,14 +766,14 @@ export default {
       });
     }
 
-    // ── Check session ──
+    // ----------------------------------------
     if (path === '/api/me') {
       const authed = await requireAuth(request, env);
       return authed ? json({ ok: true }) : json({ error: 'No autorizado' }, 401);
     }
 
 
-    // ── API PÚBLICA — sin auth, usada por los sitios ──
+    // ----------------------------------------
     if (path === '/api/public/propiedades' && method === 'GET') {
       const raw = await env.DB.get('propiedades');
       const data = raw ? JSON.parse(raw) : [];
@@ -802,7 +802,7 @@ export default {
       });
     }
 
-    // ── Propiedades API (requiere auth) ──
+    // ----------------------------------------
     const authed = await requireAuth(request, env);
     if (!authed) return json({ error: 'No autorizado' }, 401);
 
