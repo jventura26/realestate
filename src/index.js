@@ -572,11 +572,11 @@ function parseWixCSV(text) {
     return cols;
   }
 
-  const lines = text.replace(/\r/g, '').split('\n').filter(l => l.trim());
+  const lines = text.replace(new RegExp('\r','g'), '').split('\n').filter(l => l.trim());
   if (lines.length < 2) return [];
 
   // Limpiar BOM
-  lines[0] = lines[0].replace(/^\uFEFF/, '');
+  lines[0] = lines[0].replace(new RegExp('^\uFEFF'), '');
   const headers = parseRow(lines[0]);
 
   function col(row, ...names) {
@@ -590,13 +590,13 @@ function parseWixCSV(text) {
   function wixImg(uri) {
     if (!uri) return '';
     if (uri.startsWith('http')) return uri;
-    const m = uri.match(/wix:image:\/\/v1\/([^/~]+)/);
+    const m = uri.match(new RegExp('wix:image://v1/([^/~]+)'));
     return m ? 'https://static.wixstatic.com/media/' + m[1] : '';
   }
 
   function fmtPrice(p) {
     if (!p) return '';
-    const n = parseFloat(p.replace(/[^0-9.]/g, ''));
+    const n = parseFloat(p.replace(new RegExp('[^0-9.]','g'), ''));
     if (isNaN(n)) return p;
     const sym = p.includes('$') ? '$' : 'Q';
     return sym + ' ' + n.toLocaleString('es-GT');
@@ -607,7 +607,7 @@ function parseWixCSV(text) {
       const parts = itemPath.split('/');
       return parts[parts.length - 1];
     }
-    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return title.toLowerCase().replace(new RegExp('[^a-z0-9]+','g'), '-').replace(new RegExp('^-|-$','g'), '');
   }
 
   const props = [];
@@ -629,7 +629,7 @@ function parseWixCSV(text) {
       titulo,
       precio,
       priceFormatted: fmtPrice(precio),
-      priceNumeric:   parseFloat((precio||'').replace(/[^0-9.]/g, '')) || 0,
+      priceNumeric:   parseFloat((precio||'').replace(new RegExp('[^0-9.]','g'), '')) || 0,
       tipo:           col(row, 'tipo de propiedad', 'tipo', 'type') || 'Casa',
       cinta:          col(row, 'cinta', 'badge'),
       operacion:      col(row, 'cinta', 'operacion') || 'Venta',
