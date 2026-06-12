@@ -47,33 +47,35 @@ return layout({ title: null, desc: `Casas, apartamentos, fincas y terrenos en Gu
       props=await r.json();
       try{localStorage.setItem('kv_props',JSON.stringify(props));localStorage.setItem('kv_ts',Date.now().toString());}catch(e){}
     }
-    // Actualizar grid del home
     var grid=document.querySelector('.prop-grid');
     if(!grid)return;
-    var featured=props.slice(0,6);
+    var featured=props.slice(0,9);
     grid.innerHTML=featured.map(function(p){
-      var img=p.mainImageThumb||p.imagen||'';
-      var badge=p.cinta||p.operacion||'';
-      return '<a class="prop-card" href="/propiedades/'+(p.slug||p.id)+'.html"'
-        +' data-tipo="'+(p.tipo||'')+'" data-ciudad="'+(p.municipio||'')+'"'
-        +' data-cinta="'+(p.cinta||'')+'" data-precio="'+(p.priceNumeric||0)+'">'
+      var img=p.mainImageThumb||p.imagen||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=70';
+      var tipo=p.tipo||'';
+      var cinta=p.cinta||'';
+      var loc=p.locationFull||p.zona||'';
+      var specs='';
+      if(p.habitaciones&&p.habitaciones!=='0') specs+='<span class="cs-item"><span>'+p.habitaciones+' hab.</span></span>';
+      if(p.banos&&p.banos!=='0') specs+='<span class="cs-item"><span>'+p.banos+' ba.</span></span>';
+      if(p.areaConst) specs+='<span class="cs-item"><span>'+p.areaConst+' m&sup2;</span></span>';
+      return '<a class="property-card" href="/propiedades/'+(p.slug||p.id)+'.html"'
+        +' data-tipo="'+tipo+'" data-ciudad="'+(p.municipio||'')+'"'
+        +' data-cinta="'+cinta+'" data-precio="'+(p.priceNumeric||0)+'">'
+        +'<div class="card-img-wrap">'
         +'<img referrerpolicy="no-referrer" src="'+img+'" alt="'+(p.titulo||'')+'" loading="lazy">'
-        +'<div class="pc-ov"></div>'
-        +(badge?'<span class="pc-badge">'+badge+'</span>':'')
-        +'<div class="pc-info">'
-        +'<div class="pc-tipo">'+(p.tipo||'')+' &middot; '+(p.municipio||p.zona||'')+'</div>'
-        +'<div class="pc-title">'+(p.titulo||'')+'</div>'
-        +'<div class="pc-price">'+(p.priceFormatted||p.precio||'')+'</div>'
-        +'<span class="pc-arr">&rarr;</span>'
+        +'<div class="card-badges">'
+        +(tipo?'<span class="card-tipo">'+tipo+'</span>':'')
+        +(cinta?'<span class="card-cinta">'+cinta+'</span>':'')
+        +'</div></div>'
+        +'<div class="card-body">'
+        +'<div class="card-price">'+(p.priceFormatted||p.precio||'')+'</div>'
+        +'<h3 class="card-title">'+(p.titulo||'')+'</h3>'
+        +'<p class="card-loc"><span>'+loc+'</span></p>'
+        +(specs?'<div class="card-specs">'+specs+'</div>':'')
         +'</div></a>';
     }).join('');
-    // Actualizar contador
-    document.querySelectorAll('p,span,div').forEach(function(el){
-      if(el.children.length===0&&el.textContent.match(/\d+ propiedades/)){
-        el.textContent=el.textContent.replace(/\d+/,props.length);
-      }
-    });
-  }catch(e){console.warn('[KV Home]',e.message);}
+  }catch(e){console.warn('[KV Home InmuHub]',e.message);}
 })();
 </script>` });
 }
@@ -167,34 +169,7 @@ if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop
 if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
 const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
 const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
-return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd+`<script>
-(async function(){
-  try{
-    var slug=location.pathname.split('/').pop().replace('.html','');
-    var ts=parseInt(localStorage.getItem('kv_ts')||'0');
-    var props=Date.now()-ts<60000?JSON.parse(localStorage.getItem('kv_props')||'null'):null;
-    if(!props){
-      var r=await fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades');
-      props=await r.json();
-      try{localStorage.setItem('kv_props',JSON.stringify(props));localStorage.setItem('kv_ts',Date.now().toString());}catch(e){}
-    }
-    var prop=props.find(function(p){return p.slug===slug;});
-    if(!prop)return;
-    // Titulo
-    var h1=document.querySelector('h1');
-    if(h1&&prop.titulo)h1.textContent=prop.titulo;
-    // Precio
-    document.querySelectorAll('.detail-price,.pc-price,[class*="price"]').forEach(function(el){
-      if(prop.priceFormatted&&el.children.length===0)el.textContent=prop.priceFormatted;
-    });
-    // Descripcion
-    var desc=document.querySelector('.detail-desc,.prop-desc,[class*="desc"]');
-    if(desc&&prop.descripcion)desc.textContent=prop.descripcion;
-    // Titulo de la pagina
-    if(prop.titulo)document.title=prop.titulo+' - Zona INNmueble';
-  }catch(e){console.warn('[KV Detail]',e.message);}
-})();
-</script>`,body});
+return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
 }
 
 module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
