@@ -30,6 +30,16 @@ function copyAssets() {
     });
   }
   
+  // Copiar archivos JS de src/zona/assets
+  const jsAssetsDir = path.join(__dirname, 'assets');
+  if (fs.existsSync(jsAssetsDir)) {
+    fs.readdirSync(jsAssetsDir).forEach(file => {
+      if (file.endsWith('.js')) {
+        fs.copyFileSync(path.join(jsAssetsDir, file), path.join(dstDir, file));
+      }
+    });
+  }
+
   // Copiar favicon desde src/zona/assets
   const zonaFaviconSrc = path.join(__dirname, 'assets/favicon.png');
   const zonaFaviconDst = path.join(dstDir, 'favicon.png');
