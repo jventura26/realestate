@@ -4,7 +4,7 @@
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy: default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; script-src 'self' https: 'unsafe-inline' www.googletagmanager.com; img-src 'self' https: data:; style-src 'self' https: 'unsafe-inline' fonts.googleapis.com;
+  Content-Security-Policy: default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; style-src 'self' https: 'unsafe-inline'; connect-src 'self' https:;
   Cache-Control: public, max-age=3600, must-revalidate
 
 /
@@ -12,7 +12,7 @@
   X-Robots-Tag: index, follow
 
 /propiedades.html
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: no-cache, must-revalidate
   X-Robots-Tag: index, follow
 
 /assets/*
