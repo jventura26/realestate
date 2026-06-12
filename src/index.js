@@ -65,7 +65,7 @@ function getAdminHTML() {
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--navy); color: var(--text); }
   input, button, select, textarea { font-family: inherit; }
 
-  /* ── Login ── */
+  /* -- Login -- */
   .login-wrap { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
   .login-card { background: white; border-radius: 12px; padding: 48px 40px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
   .login-logo { color: var(--navy); font-size: 22px; font-weight: 800; margin-bottom: 8px; }
@@ -79,7 +79,7 @@ function getAdminHTML() {
   .btn-primary:hover { background: #1a2850; }
   .err-msg { background: #fef2f2; color: #b91c1c; border-radius: 6px; padding: 10px 14px; font-size: 13px; margin-top: 14px; display: none; }
 
-  /* ── Shell ── */
+  /* -- Shell -- */
   .shell { display: none; min-height: 100vh; background: #f0f2f5; }
   .topbar { background: var(--navy); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .topbar-brand { color: white; font-weight: 800; font-size: 16px; }
@@ -94,7 +94,7 @@ function getAdminHTML() {
   .btn-danger { background: #ef4444; color: white; }
   .btn-edit { background: var(--steel); color: white; }
 
-  /* ── Stats ── */
+  /* -- Stats -- */
   .main { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
   .stat-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
@@ -102,7 +102,7 @@ function getAdminHTML() {
   .stat-value { font-size: 32px; font-weight: 800; color: var(--navy); }
   .stat-value.orange { color: var(--orange); }
 
-  /* ── Table ── */
+  /* -- Table -- */
   .table-card { background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); overflow: hidden; }
   .table-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; }
   .table-title { font-size: 16px; font-weight: 700; color: var(--navy); }
@@ -123,7 +123,7 @@ function getAdminHTML() {
   .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
   .empty-icon { font-size: 40px; margin-bottom: 12px; }
 
-  /* ── Modal ── */
+  /* -- Modal -- */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; justify-content: center; align-items: flex-start; padding: 40px 20px; z-index: 200; overflow-y: auto; }
   .modal-overlay.open { display: flex; }
   .modal { background: white; border-radius: 12px; width: 100%; max-width: 580px; padding: 32px; }
@@ -141,9 +141,9 @@ function getAdminHTML() {
   .btn-save { background: var(--navy); color: white; padding: 11px 24px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 13px; }
   .btn-save:hover { background: #1a2850; }
 
-  /* ── Toast ── */
+  /* -- Toast -- */
 
-  /* ── Import Panel ── */
+  /* -- Import Panel -- */
   .import-panel { background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 28px; margin-bottom: 24px; display: none; }
   .import-panel.open { display: block; }
   .import-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
@@ -180,7 +180,7 @@ function getAdminHTML() {
     </div>
     <div class="field">
       <label>Contraseña</label>
-      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="password" id="loginPass" placeholder="********" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <button class="btn-primary" onclick="doLogin()">Ingresar al panel</button>
     <div class="err-msg" id="loginErr">Usuario o contraseña incorrectos.</div>
@@ -193,7 +193,7 @@ function getAdminHTML() {
     <div class="topbar-brand"><span>Zona</span>-INNmueble Admin</div>
     <div class="topbar-right">
       <span class="topbar-user">Administrador</span>
-      <button class="btn-sm" style="background:#3A6186;color:white" onclick="toggleImport()">↑ Importar CSV</button>
+      <button class="btn-sm" style="background:#3A6186;color:white" onclick="toggleImport()">^ Importar CSV</button>
       <button class="btn-sm btn-add" onclick="openModal()">+ Nueva propiedad</button>
       <button class="btn-sm btn-logout" onclick="doLogout()">Salir</button>
     </div>
@@ -208,7 +208,7 @@ function getAdminHTML() {
            ondragover="event.preventDefault();this.classList.add('drag')"
            ondragleave="this.classList.remove('drag')"
            ondrop="handleDrop(event)">
-        <div class="drop-icon">📂</div>
+        <div class="drop-icon"></div>
         <div class="drop-text"><strong>Click para seleccionar</strong> o arrastra el CSV aquí</div>
         <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
       </div>
@@ -408,7 +408,7 @@ function renderTable() {
   );
 
   if (!filtered.length) {
-    document.getElementById('tableWrap').innerHTML = '<div class="empty-state"><div class="empty-icon">🏠</div><div>No hay propiedades. Agrega la primera.</div></div>';
+    document.getElementById('tableWrap').innerHTML = '<div class="empty-state"><div class="empty-icon"></div><div>No hay propiedades. Agrega la primera.</div></div>';
     return;
   }
 
