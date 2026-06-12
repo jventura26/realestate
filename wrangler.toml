@@ -1,17 +1,14 @@
-name = "inmuhub-admin"
-main = "src/worker.js"
+name = "zona-admin"
+type = "service"
+main = "src/index_kv.js"
 compatibility_date = "2024-01-01"
-account_id = "cf3bba94e40a7a9012f4b0b075464317"
+account_id = "5ea66b6b4c7c45cb908111fa3259862c"
+zone_id = "cf3bba94e40a7a9012f4b0b075464317"
+
+[[kv_namespaces]]
+binding = "PROPIEDADES"
+id = "AQUI_PEGA_TU_ID_REAL"           # ← REEMPLAZA CON ID DE PASO 1
+preview_id = "AQUI_PEGA_PREVIEW_ID"   # ← REEMPLAZA CON ID PREVIEW
 
 [env.production]
-routes = [
-  { pattern = "inmuhub.com/api/*", zone_id = "cf3bba94e40a7a9012f4b0b075464317" }
-]
-
-[[durable_objects.bindings]]
-name = "PROPERTIES_DB"
-class_name = "PropertiesDatabase"
-
-[[migrations]]
-tag = "v1"
-new_classes = ["PropertiesDatabase"]
+vars = { ADMIN_PASSWORD = "admin1203" }
