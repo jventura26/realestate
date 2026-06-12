@@ -17,6 +17,16 @@ function copyAssets() {
   const dstDir = path.join(OUT, 'assets');
   fs.mkdirSync(dstDir, { recursive: true });
   
+  // Copiar archivos JS de src/vinculo/assets
+  const jsAssetsDir = path.join(__dirname, 'assets');
+  if (fs.existsSync(jsAssetsDir)) {
+    fs.readdirSync(jsAssetsDir).forEach(file => {
+      if (file.endsWith('.js')) {
+        fs.copyFileSync(path.join(jsAssetsDir, file), path.join(dstDir, file));
+      }
+    });
+  }
+
   // Copiar favicon desde src/vinculo/assets
   const faviconSrc = path.join(__dirname, 'assets/favicon.png');
   const faviconDst = path.join(dstDir, 'favicon.png');
