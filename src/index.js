@@ -142,6 +142,25 @@ function getAdminHTML() {
   .btn-save:hover { background: #1a2850; }
 
   /* ── Toast ── */
+
+  /* ── Import Panel ── */
+  .import-panel { background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 28px; margin-bottom: 24px; display: none; }
+  .import-panel.open { display: block; }
+  .import-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .import-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .drop-zone { border: 2px dashed #d0d5dd; border-radius: 8px; padding: 40px; text-align: center; cursor: pointer; transition: all .2s; background: #fafafa; }
+  .drop-zone:hover, .drop-zone.drag { border-color: var(--navy); background: #f0f3ff; }
+  .drop-icon { font-size: 32px; margin-bottom: 10px; }
+  .drop-text { font-size: 14px; color: var(--muted); }
+  .drop-text strong { color: var(--navy); }
+  .import-preview { margin-top: 20px; display: none; }
+  .preview-info { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .preview-info span { font-size: 13px; color: #0369a1; font-weight: 600; }
+  .import-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .progress-wrap { margin-top: 14px; display: none; }
+  .progress-bar-bg { background: #e5e7eb; border-radius: 99px; height: 8px; overflow: hidden; }
+  .progress-bar { background: var(--orange); height: 8px; border-radius: 99px; width: 0%; transition: width .3s; }
+  .progress-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
   .toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; transform: translateY(80px); opacity: 0; transition: all .3s; z-index: 300; }
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast.success { border-left: 4px solid #22c55e; }
@@ -174,12 +193,41 @@ function getAdminHTML() {
     <div class="topbar-brand"><span>Zona</span>-INNmueble Admin</div>
     <div class="topbar-right">
       <span class="topbar-user">Administrador</span>
+      <button class="btn-sm" style="background:#3A6186;color:white" onclick="toggleImport()">↑ Importar CSV</button>
       <button class="btn-sm btn-add" onclick="openModal()">+ Nueva propiedad</button>
       <button class="btn-sm btn-logout" onclick="doLogout()">Salir</button>
     </div>
   </div>
 
   <div class="main">
+    <!-- IMPORT PANEL -->
+    <div class="import-panel" id="importPanel">
+      <div class="import-title">Importar propiedades desde CSV</div>
+      <div class="import-sub">Sube el archivo <strong>propiedades.csv</strong> exportado de Wix. Las propiedades existentes serán reemplazadas.</div>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvFile').click()"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <div class="drop-icon">📂</div>
+        <div class="drop-text"><strong>Click para seleccionar</strong> o arrastra el CSV aquí</div>
+        <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">
+      </div>
+      <div class="import-preview" id="importPreview">
+        <div class="preview-info">
+          <span id="previewText">0 propiedades listas para importar</span>
+          <span id="previewFile" style="color:var(--muted);font-weight:400"></span>
+        </div>
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="progress-label" id="progressLabel">Importando...</div>
+        </div>
+        <div class="import-actions">
+          <button class="btn-cancel" onclick="cancelImport()">Cancelar</button>
+          <button class="btn-save" id="btnImport" onclick="doImport()">Importar al KV</button>
+        </div>
+      </div>
+    </div>
+
     <div class="stats">
       <div class="stat-card">
         <div class="stat-label">Propiedades</div>
@@ -452,6 +500,198 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+
+// ── CSV Importer ─────────────────────────────────────────────────────────────
+let parsedProps = [];
+
+function toggleImport() {
+  const p = document.getElementById('importPanel');
+  p.classList.toggle('open');
+}
+
+function cancelImport() {
+  parsedProps = [];
+  document.getElementById('importPreview').style.display = 'none';
+  document.getElementById('dropZone').style.display = 'block';
+  document.getElementById('csvFile').value = '';
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+}
+
+function handleFile(file) {
+  if (!file || !file.name.endsWith('.csv')) {
+    showToast('Selecciona un archivo .csv válido', 'error');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    parsedProps = parseWixCSV(text);
+    if (!parsedProps.length) {
+      showToast('No se encontraron propiedades en el CSV', 'error');
+      return;
+    }
+    document.getElementById('previewText').textContent = parsedProps.length + ' propiedades listas para importar';
+    document.getElementById('previewFile').textContent = file.name;
+    document.getElementById('importPreview').style.display = 'block';
+    document.getElementById('dropZone').style.display = 'none';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function parseWixCSV(text) {
+  // Parser CSV simple que maneja comillas y comas dentro de campos
+  function parseRow(line) {
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; continue; }
+      cur += ch;
+    }
+    cols.push(cur.trim());
+    return cols;
+  }
+
+  const lines = text.replace(/\r/g, '').split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+
+  // Limpiar BOM
+  lines[0] = lines[0].replace(/^\uFEFF/, '');
+  const headers = parseRow(lines[0]);
+
+  function col(row, ...names) {
+    for (const n of names) {
+      const i = headers.findIndex(h => h.toLowerCase().includes(n.toLowerCase()));
+      if (i >= 0 && row[i]) return row[i].trim();
+    }
+    return '';
+  }
+
+  function wixImg(uri) {
+    if (!uri) return '';
+    if (uri.startsWith('http')) return uri;
+    const m = uri.match(/wix:image:\/\/v1\/([^/~]+)/);
+    return m ? 'https://static.wixstatic.com/media/' + m[1] : '';
+  }
+
+  function fmtPrice(p) {
+    if (!p) return '';
+    const n = parseFloat(p.replace(/[^0-9.]/g, ''));
+    if (isNaN(n)) return p;
+    const sym = p.includes('$') ? '$' : 'Q';
+    return sym + ' ' + n.toLocaleString('es-GT');
+  }
+
+  function slug(title, itemPath) {
+    if (itemPath) {
+      const parts = itemPath.split('/');
+      return parts[parts.length - 1];
+    }
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  const props = [];
+  for (let i = 1; i < lines.length; i++) {
+    const row = parseRow(lines[i]);
+    const titulo = col(row, 'titulo', 'title');
+    if (!titulo) continue;
+
+    // Filtrar no publicados
+    const status = col(row, 'status', 'estado');
+    if (status && status.toLowerCase() === 'draft') continue;
+
+    const imgRaw = col(row, 'imagen', 'image');
+    const mainImage = wixImg(imgRaw);
+    const precio = col(row, 'precio', 'price');
+
+    props.push({
+      id:             Date.now().toString() + i,
+      titulo,
+      precio,
+      priceFormatted: fmtPrice(precio),
+      priceNumeric:   parseFloat((precio||'').replace(/[^0-9.]/g, '')) || 0,
+      tipo:           col(row, 'tipo de propiedad', 'tipo', 'type') || 'Casa',
+      cinta:          col(row, 'cinta', 'badge'),
+      operacion:      col(row, 'cinta', 'operacion') || 'Venta',
+      zona:           col(row, 'lugar', 'zona', 'location'),
+      municipio:      col(row, 'municipio', 'city'),
+      locationFull:   col(row, 'lugar', 'municipio', 'location'),
+      area:           col(row, 'area de construccion', 'area'),
+      areaConst:      col(row, 'area de construccion', 'area'),
+      terreno:        col(row, 'tamaño del terreno', 'terreno'),
+      habitaciones:   col(row, 'numero de dormitorios', 'dormitorios', 'habitaciones'),
+      banos:          col(row, 'numero de baños', 'baños', 'banos'),
+      parqueos:       col(row, 'garaje', 'parqueo', 'parking'),
+      imagen:         mainImage,
+      mainImage,
+      mainImageThumb: mainImage,
+      gallery:        [mainImage].filter(Boolean),
+      descripcion:    col(row, 'description', 'descripcion'),
+      slug:           slug(titulo, col(row, 'propiedades (item)', 'item')),
+      codigo:         col(row, 'codigo', 'code', 'id'),
+      estado:         'Activa',
+      createdAt:      new Date().toISOString(),
+    });
+  }
+  return props;
+}
+
+async function doImport() {
+  if (!parsedProps.length) return;
+  const btn = document.getElementById('btnImport');
+  const pw  = document.getElementById('progressWrap');
+  const pb  = document.getElementById('progressBar');
+  const pl  = document.getElementById('progressLabel');
+
+  btn.disabled = true;
+  pw.style.display = 'block';
+
+  // Simular progreso mientras sube
+  let pct = 0;
+  const ticker = setInterval(() => {
+    pct = Math.min(pct + 8, 85);
+    pb.style.width = pct + '%';
+    pl.textContent = 'Subiendo propiedades al KV...';
+  }, 120);
+
+  try {
+    const res = await fetch('/api/propiedades/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(parsedProps),
+    });
+
+    clearInterval(ticker);
+
+    if (res.ok) {
+      pb.style.width = '100%';
+      pl.textContent = '✅ ' + parsedProps.length + ' propiedades importadas correctamente';
+      showToast(parsedProps.length + ' propiedades cargadas al KV', 'success');
+      setTimeout(() => {
+        document.getElementById('importPanel').classList.remove('open');
+        cancelImport();
+        loadProps();
+      }, 1800);
+    } else {
+      pl.textContent = '❌ Error al importar';
+      showToast('Error al importar', 'error');
+      btn.disabled = false;
+    }
+  } catch(e) {
+    clearInterval(ticker);
+    pl.textContent = '❌ ' + e.message;
+    showToast('Error de conexión', 'error');
+    btn.disabled = false;
+  }
+}
+
 // Init
 checkSession();
 </script>
@@ -519,9 +759,53 @@ export default {
       return authed ? json({ ok: true }) : json({ error: 'No autorizado' }, 401);
     }
 
+
+    // ── API PÚBLICA — sin auth, usada por los sitios ──
+    if (path === '/api/public/propiedades' && method === 'GET') {
+      const raw = await env.DB.get('propiedades');
+      const data = raw ? JSON.parse(raw) : [];
+      // Solo propiedades activas, sin datos internos
+      const pub = data
+        .filter(p => !p.estado || p.estado === 'Activa')
+        .map(({ id, titulo, precio, tipo, operacion, zona, area,
+                habitaciones, banos, imagen, descripcion,
+                slug, mainImage, mainImageThumb, gallery,
+                priceFormatted, priceNumeric, cinta, municipio,
+                locationFull, amenities, areaConst, terreno,
+                parqueos, codigo }) => ({
+          id, titulo, precio, tipo, operacion, zona, area,
+          habitaciones, banos, imagen, descripcion,
+          slug, mainImage, mainImageThumb, gallery,
+          priceFormatted, priceNumeric, cinta, municipio,
+          locationFull, amenities, areaConst, terreno,
+          parqueos, codigo
+        }));
+      return new Response(JSON.stringify(pub), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=60',
+        },
+      });
+    }
+
     // ── Propiedades API (requiere auth) ──
     const authed = await requireAuth(request, env);
     if (!authed) return json({ error: 'No autorizado' }, 401);
+
+
+    // POST /api/propiedades/import — reemplaza todo el KV con el CSV importado
+    if (path === '/api/propiedades/import' && method === 'POST') {
+      const data = await request.json();
+      if (!Array.isArray(data)) return json({ error: 'Se esperaba un array' }, 400);
+      // Reasignar IDs únicos por si acaso
+      const normalized = data.map((p, i) => ({
+        ...p,
+        id: p.id || (Date.now() + i).toString(),
+      }));
+      await env.DB.put('propiedades', JSON.stringify(normalized));
+      return json({ ok: true, count: normalized.length }, 201);
+    }
 
     // GET /api/propiedades
     if (path === '/api/propiedades' && method === 'GET') {
