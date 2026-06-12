@@ -203,7 +203,33 @@ function indexPage(props) {
   </div>
 </section>`;
 
-  return layout({ title: null, desc: `Propiedades premium en Guatemala. ${props.length} propiedades disponibles. Asesoría personalizada.`, canonical: '/', body });
+  return layout({ title: null, desc: `Propiedades premium en Guatemala. ${props.length} propiedades disponibles. Asesoría personalizada.`, canonical: '/', body, scripts: `
+<script>
+(async function() {
+  try {
+    var cached = null;
+    try {
+      var ts = parseInt(localStorage.getItem('kv_ts')||'0');
+      if (Date.now()-ts < 60000) cached = JSON.parse(localStorage.getItem('kv_props')||'null');
+    } catch(e){}
+    var props = cached;
+    if (!props) {
+      var res = await fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades');
+      props = await res.json();
+      try { localStorage.setItem('kv_props', JSON.stringify(props)); localStorage.setItem('kv_ts', Date.now().toString()); } catch(e){}
+    }
+    // Actualizar contador en el hero
+    var countEls = document.querySelectorAll('[data-kv-count]');
+    countEls.forEach(function(el){ el.textContent = '+' + props.length; });
+    // Actualizar texto "31 propiedades" en el subtitulo
+    document.querySelectorAll('p').forEach(function(el){
+      if (el.textContent.includes('propiedades cuidadosamente')) {
+        el.textContent = el.textContent.replace(/\d+/, props.length);
+      }
+    });
+  } catch(e) { console.warn('[KV Home]', e.message); }
+})();
+</script>` });
 }
 
 // ── CATALOG ───────────────────────────────────────────────────────────
@@ -271,8 +297,7 @@ function catalogPage(props) {
   </div>
 </div>`;
 
-  return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} propiedades premium en Guatemala. Casas, apartamentos, fincas e inversiones con asesoría.`, canonical: '/propiedades.html', body, scripts: filterJS + `
-<script src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"></script>` });
+  return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} propiedades premium en Guatemala. Casas, apartamentos, fincas e inversiones con asesoría.`, canonical: '/propiedades.html', body, scripts: filterJS });
 }
 
 // ── DETAIL ────────────────────────────────────────────────────────────
@@ -374,7 +399,36 @@ ${relHtml}
 <style>@media(max-width:768px){#mobileWa{display:block!important;margin-top:24px}}</style>`;
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
-  return layout({ title: prop.title, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body });
+  return layout({ title: prop.title, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body, scripts: `
+<script>
+(async function() {
+  try {
+    var slug = location.pathname.split('/').pop().replace('.html','');
+    var cached = null;
+    try {
+      var ts = parseInt(localStorage.getItem('kv_ts')||'0');
+      if (Date.now()-ts < 60000) cached = JSON.parse(localStorage.getItem('kv_props')||'null');
+    } catch(e){}
+    var props = cached;
+    if (!props) {
+      var res = await fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades');
+      props = await res.json();
+      try { localStorage.setItem('kv_props', JSON.stringify(props)); localStorage.setItem('kv_ts', Date.now().toString()); } catch(e){}
+    }
+    var prop = props.find(function(p){ return p.slug === slug; });
+    if (!prop) return;
+    // Actualizar titulo
+    var h1 = document.querySelector('h1');
+    if (h1 && prop.titulo) h1.textContent = prop.titulo;
+    // Actualizar precio
+    document.querySelectorAll('.detail-price, .pc-price, [class*="price"]').forEach(function(el){
+      if (prop.priceFormatted) el.textContent = prop.priceFormatted;
+    });
+    // Actualizar titulo de la pagina
+    if (prop.titulo) document.title = prop.titulo + ' - Zona INNmueble';
+  } catch(e) { console.warn('[KV Detail]', e.message); }
+})();
+</script>` });
 }
 
 module.exports = { indexPage, catalogPage, detailPage };
