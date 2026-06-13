@@ -519,7 +519,7 @@ export default {
       +(specs?'<div class="card-specs">'+specs+'</div>':'')+'</div></a>';
   }
   function run(props){
-    var isZona=location.hostname.includes('zona-innmueble');
+    var isZona=location.hostname.toLowerCase().includes('zona-innmueble');
     var fn=isZona?cardZona:cardInmu;
     var grid=document.getElementById('g');
     if(grid){
@@ -549,20 +549,24 @@ export default {
         var slug=location.pathname.split('/').pop().replace('.html','');
         var prop=props.find(function(p){return p.slug===slug;});
         if(prop){
-          // Actualizar titulo
+          function applyDetail(){
+            var t=document.querySelector('.det-title,h1');
+            if(t&&prop.titulo&&t.textContent!==prop.titulo)t.textContent=prop.titulo;
+            var pr=document.querySelector('.det-price');
+            if(pr&&prop.priceFormatted&&pr.textContent!==prop.priceFormatted)pr.textContent=prop.priceFormatted;
+            var desc=document.querySelector('.det-desc');
+            if(desc&&prop.descripcion)desc.textContent=prop.descripcion;
+            if(prop.titulo)document.title=prop.titulo+' - Zona INNmueble';
+            var img=document.getElementById('mi');
+            if(img&&prop.mainImage)img.src=prop.mainImage;
+          }
+          applyDetail();
+          // MutationObserver para ganarle a cualquier script que sobreescriba el titulo
+          var observer=new MutationObserver(function(){applyDetail();});
           var t=document.querySelector('.det-title,h1');
-          if(t&&prop.titulo)t.textContent=prop.titulo;
-          // Actualizar precio
-          var pr=document.querySelector('.det-price');
-          if(pr&&prop.priceFormatted)pr.textContent=prop.priceFormatted;
-          // Actualizar descripcion
-          var desc=document.querySelector('.det-desc');
-          if(desc&&prop.descripcion)desc.textContent=prop.descripcion;
-          // Actualizar titulo pagina
-          if(prop.titulo)document.title=prop.titulo+' - Zona INNmueble';
-          // Actualizar imagen principal
-          var img=document.getElementById('mi');
-          if(img&&prop.mainImage)img.src=prop.mainImage;
+          if(t)observer.observe(t,{childList:true,characterData:true,subtree:true});
+          // Detener el observer despues de 5 segundos
+          setTimeout(function(){observer.disconnect();},5000);
         }
       } else {
         run(props);
