@@ -1,4 +1,42 @@
 const fs = require('fs');
+const https = require('https');
+
+function fetchKV() {
+  return new Promise((resolve) => {
+    https.get('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades', (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const props = JSON.parse(data);
+          if (Array.isArray(props) && props.length > 0) {
+            resolve(props);
+          } else {
+            resolve(null);
+          }
+        } catch(e) { resolve(null); }
+      });
+    }).on('error', () => resolve(null));
+  });
+}
+
+function normalizeKV(kvProps) {
+  return kvProps.map(p => ({
+    ...p,
+    title: p.titulo || p.title || '',
+    description: p.descripcion || p.description || '',
+    priceFormatted: p.priceFormatted || p.precio || '',
+    priceNumeric: p.priceNumeric || 0,
+    locationFull: p.locationFull || p.zona || '',
+    mainImage: p.mainImage || p.imagen || '',
+    mainImageThumb: p.mainImageThumb || p.imagen || '',
+    gallery: p.gallery && p.gallery.length ? p.gallery : (p.imagen ? [p.imagen] : []),
+    slug: p.slug || (p.titulo||'').toLowerCase().replace(/[^a-z0-9]+/g,'-'),
+    amenities: p.amenities || [],
+    estado: p.estado || 'Activa',
+  }));
+}
+
 const path = require('path');
 const { parseProperties } = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
@@ -33,9 +71,10 @@ function copyAssets() {
 }
 
 console.log('\n Building INMUHUB.COM\n');
-const kvData = await fetchFromKV();
-const props = kvData ? normalizeKVProps(kvData) : parseProperties(CSV);
-console.log(` ${props.length} propiedades cargadas`);
+fetchKV().then(kvData => {
+const props = kvData ? normalizeKV(kvData) : parseProperties(CSV);
+console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
+
 
 fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
@@ -72,8 +111,8 @@ write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
 write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
 
-(async () => {
 console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
+}).catch(e => { console.error('Build error:', e); process.exit(1); });
 
 // Generar páginas de herramientas
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
@@ -101,5 +140,3 @@ console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
 
 // Copiar assets
 copyAssets(); console.log(' Assets copiados (favicon, logo)\n');
-
-})().catch(console.error);
