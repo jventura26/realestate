@@ -535,7 +535,7 @@ async function doImport(){
   }catch(e){clearInterval(ticker);pl.textContent='Error: '+e.message;btn.disabled=false;}
 }
 checkSession();
-<\/script>
+</script>
 </body>
 </html>`;
 }
