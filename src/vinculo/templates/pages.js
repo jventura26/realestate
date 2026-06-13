@@ -37,47 +37,7 @@ const body = `
 <a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:12px 32px;border-radius:6px;font-weight:600;display:inline-block;transition:opacity .2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">Explorar todas las propiedades \u2192</a>
 </div>
 </section>`;
-return layout({ title: null, desc: `Casas, apartamentos, fincas y terrenos en Guatemala. ${props.length} propiedades en Zona 10, Zona 14, Cayala, Fraijanes y mas.`, canonical: '/', body, scripts: `<script>
-(async function(){
-  try{
-    var ts=parseInt(localStorage.getItem('kv_ts')||'0');
-    var props=Date.now()-ts<60000?JSON.parse(localStorage.getItem('kv_props')||'null'):null;
-    if(!props){
-      var r=await fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades');
-      props=await r.json();
-      try{localStorage.setItem('kv_props',JSON.stringify(props));localStorage.setItem('kv_ts',Date.now().toString());}catch(e){}
-    }
-    var grid=document.getElementById('g')||document.querySelector('.prop-grid,.property-grid');
-    if(!grid)return;
-    var featured=props.slice(0,9);
-    grid.innerHTML=featured.map(function(p){
-      var img=p.mainImageThumb||p.imagen||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=70';
-      var tipo=p.tipo||'';
-      var cinta=p.cinta||'';
-      var loc=p.locationFull||p.zona||'';
-      var specs='';
-      if(p.habitaciones&&p.habitaciones!=='0') specs+='<span class="cs-item"><span>'+p.habitaciones+' hab.</span></span>';
-      if(p.banos&&p.banos!=='0') specs+='<span class="cs-item"><span>'+p.banos+' ba.</span></span>';
-      if(p.areaConst) specs+='<span class="cs-item"><span>'+p.areaConst+' m&sup2;</span></span>';
-      return '<a class="property-card" href="/propiedades/'+(p.slug||p.id)+'.html"'
-        +' data-tipo="'+tipo+'" data-ciudad="'+(p.municipio||'')+'"'
-        +' data-cinta="'+cinta+'" data-precio="'+(p.priceNumeric||0)+'">'
-        +'<div class="card-img-wrap">'
-        +'<img referrerpolicy="no-referrer" src="'+img+'" alt="'+(p.titulo||'')+'" loading="lazy">'
-        +'<div class="card-badges">'
-        +(tipo?'<span class="card-tipo">'+tipo+'</span>':'')
-        +(cinta?'<span class="card-cinta">'+cinta+'</span>':'')
-        +'</div></div>'
-        +'<div class="card-body">'
-        +'<div class="card-price">'+(p.priceFormatted||p.precio||'')+'</div>'
-        +'<h3 class="card-title">'+(p.titulo||'')+'</h3>'
-        +'<p class="card-loc"><span>'+loc+'</span></p>'
-        +(specs?'<div class="card-specs">'+specs+'</div>':'')
-        +'</div></a>';
-    }).join('');
-  }catch(e){console.warn('[KV Home InmuHub]',e.message);}
-})();
-</script>` });
+return layout({ title: null, desc: `Casas, apartamentos, fincas y terrenos en Guatemala. ${props.length} propiedades en Zona 10, Zona 14, Cayala, Fraijanes y mas.`, canonical: '/', body, scripts: '<script src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"></script>' });
 }
 
 function catalogPage(props) {
@@ -105,7 +65,7 @@ const body = `
 <div class="prop-grid" id="g">${props.map(p=>card(p)).join('')}</div>
 <div class="no-res" id="nr" style="display:none"><p>No se encontraron propiedades</p><small>Intenta ajustar los filtros</small></div>
 ${filterJS}`;
-return layout({ title: 'Propiedades en Guatemala', desc: 'Catalogo completo de casas, apartamentos, fincas y terrenos en Guatemala. Filtra por zona, tipo y precio. INMUHUB.COM', canonical: '/propiedades.html', body });
+return layout({ title: 'Propiedades en Guatemala', desc: 'Catalogo completo de casas, apartamentos, fincas y terrenos en Guatemala. Filtra por zona, tipo y precio. INMUHUB.COM', canonical: '/propiedades.html', body, scripts: '<script src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"></script>' });
 }
 
 function zonaPage(props, zona) {
@@ -169,7 +129,7 @@ if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop
 if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
 const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
 const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
-return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
+return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd+'<script src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"></script>',body});
 }
 
 module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
