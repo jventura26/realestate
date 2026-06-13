@@ -17,16 +17,6 @@ function copyAssets() {
   const dstDir = path.join(OUT, 'assets');
   fs.mkdirSync(dstDir, { recursive: true });
   
-  // Copiar archivos JS de src/vinculo/assets
-  const jsAssetsDir = path.join(__dirname, 'assets');
-  if (fs.existsSync(jsAssetsDir)) {
-    fs.readdirSync(jsAssetsDir).forEach(file => {
-      if (file.endsWith('.js')) {
-        fs.copyFileSync(path.join(jsAssetsDir, file), path.join(dstDir, file));
-      }
-    });
-  }
-
   // Copiar favicon desde src/vinculo/assets
   const faviconSrc = path.join(__dirname, 'assets/favicon.png');
   const faviconDst = path.join(dstDir, 'favicon.png');
@@ -43,8 +33,9 @@ function copyAssets() {
 }
 
 console.log('\n Building INMUHUB.COM\n');
-const props = parseProperties(CSV);
-console.log(` ${props.length} properties parsed`);
+const kvData = await fetchFromKV();
+const props = kvData ? normalizeKVProps(kvData) : parseProperties(CSV);
+console.log(` ${props.length} propiedades cargadas`);
 
 fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
@@ -81,6 +72,7 @@ write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
 write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
 
+(async () => {
 console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
 
 // Generar páginas de herramientas
@@ -109,3 +101,5 @@ console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
 
 // Copiar assets
 copyAssets(); console.log(' Assets copiados (favicon, logo)\n');
+
+})().catch(console.error);
