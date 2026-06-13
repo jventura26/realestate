@@ -5,6 +5,20 @@
  */
 
 const ADMIN_USER = 'admin';
+const HOOK_ZONA = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/8105bd67-0276-4485-a0e0-50dcdb0e525d';
+const HOOK_INMU = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/8a9c31c6-547b-4bef-b8d4-d7661fcda2f6';
+
+async function triggerRebuild() {
+  try {
+    await Promise.all([
+      fetch(HOOK_ZONA, { method: 'POST' }),
+      fetch(HOOK_INMU, { method: 'POST' }),
+    ]);
+    console.log('[Admin] Rebuild disparado en ambos sitios');
+  } catch(e) {
+    console.warn('[Admin] Error disparando rebuild:', e.message);
+  }
+}
 const ADMIN_PASS = 'admin1203';
 const SESSION_TTL = 60 * 60 * 8; // 8 horas
 
@@ -551,9 +565,9 @@ export default {
         if(prop){
           function applyDetail(){
             var t=document.querySelector('.det-title,h1');
-            if(t&&prop.titulo&&t.textContent!==prop.titulo)t.textContent=prop.titulo;
+            if(t&&prop.titulo)t.textContent=prop.titulo;
             var pr=document.querySelector('.det-price');
-            if(pr&&prop.priceFormatted&&pr.textContent!==prop.priceFormatted)pr.textContent=prop.priceFormatted;
+            if(pr&&prop.priceFormatted)pr.textContent=prop.priceFormatted;
             var desc=document.querySelector('.det-desc');
             if(desc&&prop.descripcion)desc.textContent=prop.descripcion;
             if(prop.titulo)document.title=prop.titulo+' - Zona INNmueble';
@@ -561,12 +575,16 @@ export default {
             if(img&&prop.mainImage)img.src=prop.mainImage;
           }
           applyDetail();
-          // MutationObserver para ganarle a cualquier script que sobreescriba el titulo
-          var observer=new MutationObserver(function(){applyDetail();});
+          // MutationObserver permanente - se reconecta si alguien lo desconecta
+          var _titulo=prop.titulo;
+          var observer=new MutationObserver(function(mutations){
+            var t=document.querySelector('.det-title,h1');
+            if(t&&t.textContent!==_titulo){t.textContent=_titulo;}
+          });
           var t=document.querySelector('.det-title,h1');
-          if(t)observer.observe(t,{childList:true,characterData:true,subtree:true});
-          // Detener el observer despues de 5 segundos
-          setTimeout(function(){observer.disconnect();},5000);
+          if(t){
+            observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+          }
         }
       } else {
         run(props);
@@ -655,6 +673,7 @@ export default {
       newProp.createdAt = new Date().toISOString();
       data.push(newProp);
       await env.DB.put('propiedades', JSON.stringify(data));
+      await triggerRebuild();
       return json(newProp, 201);
     }
 
@@ -668,6 +687,7 @@ export default {
       const updates = await request.json();
       data[idx] = { ...data[idx], ...updates, id };
       await env.DB.put('propiedades', JSON.stringify(data));
+      await triggerRebuild();
       return json(data[idx]);
     }
 
@@ -678,6 +698,7 @@ export default {
       const data = raw ? JSON.parse(raw) : [];
       const filtered = data.filter(p => p.id !== id);
       await env.DB.put('propiedades', JSON.stringify(filtered));
+      await triggerRebuild();
       return json({ ok: true });
     }
 
