@@ -540,7 +540,35 @@ export default {
     }
     window.__KV_PROPS__=props;
   }
-  async function init(){try{run(await getProps());}catch(e){console.warn('[KV]',e.message);}}
+  async function init(){
+    try{
+      var props=await getProps();
+      // Detectar si es pagina de detalle
+      var isDetail=location.pathname.includes('/propiedades/') && location.pathname.endsWith('.html');
+      if(isDetail){
+        var slug=location.pathname.split('/').pop().replace('.html','');
+        var prop=props.find(function(p){return p.slug===slug;});
+        if(prop){
+          // Actualizar titulo
+          var t=document.querySelector('.det-title,h1');
+          if(t&&prop.titulo)t.textContent=prop.titulo;
+          // Actualizar precio
+          var pr=document.querySelector('.det-price');
+          if(pr&&prop.priceFormatted)pr.textContent=prop.priceFormatted;
+          // Actualizar descripcion
+          var desc=document.querySelector('.det-desc');
+          if(desc&&prop.descripcion)desc.textContent=prop.descripcion;
+          // Actualizar titulo pagina
+          if(prop.titulo)document.title=prop.titulo+' - Zona INNmueble';
+          // Actualizar imagen principal
+          var img=document.getElementById('mi');
+          if(img&&prop.mainImage)img.src=prop.mainImage;
+        }
+      } else {
+        run(props);
+      }
+    }catch(e){console.warn('[KV]',e.message);}
+  }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();`;
       return new Response(js, {
