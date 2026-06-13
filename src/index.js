@@ -407,6 +407,7 @@ function openModal(prop) {
   document.getElementById('fImagen').value = prop?.imagen || '';
   document.getElementById('fDescripcion').value = prop?.descripcion || '';
   document.getElementById('fEstado').value = prop?.estado || 'Activa';
+  setCheckedChars(prop ? prop.caracteristicas || [] : []);
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -431,6 +432,7 @@ async function saveProp() {
     imagen: document.getElementById('fImagen').value,
     descripcion: document.getElementById('fDescripcion').value,
     estado: document.getElementById('fEstado').value,
+    caracteristicas: getCheckedChars(),
   };
 
   const method = editingId ? 'PUT' : 'POST';
@@ -467,6 +469,33 @@ function showToast(msg, type = 'success') {
 }
 
 // Init
+
+function getCheckedChars(){
+  var checked=[];
+  document.querySelectorAll('#charsSection input[type=checkbox]:checked').forEach(function(cb){
+    checked.push(cb.value);
+  });
+  return checked;
+}
+function setCheckedChars(chars){
+  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){
+    cb.closest('.char-item').classList.remove('checked');
+    cb.checked=false;
+  });
+  if(!chars||!chars.length)return;
+  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){
+    if(chars.indexOf(cb.value)>=0){
+      cb.checked=true;
+      cb.closest('.char-item').classList.add('checked');
+    }
+  });
+}
+// Marcar visualmente al hacer click
+document.addEventListener('change',function(e){
+  if(e.target.matches('#charsSection input[type=checkbox]')){
+    e.target.closest('.char-item').classList.toggle('checked',e.target.checked);
+  }
+});
 checkSession();
 </script>
 </body>
