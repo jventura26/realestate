@@ -588,6 +588,21 @@ export default {
       return authed ? json({ ok: true }) : json({ error: 'No autorizado' }, 401);
     }
 
+
+    // API publica para los sitios - sin auth
+    if (path === '/api/public/propiedades' && method === 'GET') {
+      const raw = await env.DB.get('propiedades');
+      const data = raw ? JSON.parse(raw) : [];
+      const pub = data.filter(p => !p.estado || p.estado === 'Activa');
+      return new Response(JSON.stringify(pub), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, max-age=60',
+        },
+      });
+    }
+
     // ── Propiedades API (requiere auth) ──
     const authed = await requireAuth(request, env);
     if (!authed) return json({ error: 'No autorizado' }, 401);
