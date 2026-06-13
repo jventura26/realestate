@@ -128,6 +128,186 @@ const DYNAMIC_GRID_JS = `(async function(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();`;
 
+const ADMIN_JS = `var props=[],editingId=null,parsedProps=[],gUrls=[];
+
+function triggerFileInput(){document.getElementById('csvFile').click();}
+
+async function doLogin(){
+  var u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;
+  var btn=document.getElementById('loginBtn');
+  btn.textContent='Verificando...';btn.disabled=true;
+  try{
+    var r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:u,pass:p})});
+    if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminShell').style.display='block';loadProps();}
+    else{var e=document.getElementById('loginErr');e.style.display='block';setTimeout(function(){e.style.display='none'},3000);}
+  }catch(e){var er=document.getElementById('loginErr');er.textContent='Error: '+e.message;er.style.display='block';}
+  finally{btn.textContent='Ingresar al panel';btn.disabled=false;}
+}
+document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+async function doLogout(){await fetch('/api/logout',{method:'POST'});location.reload();}
+async function checkSession(){var r=await fetch('/api/me');if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminShell').style.display='block';loadProps();}}
+async function loadProps(){var r=await fetch('/api/propiedades');if(r.ok){props=await r.json();updateStats();renderTable();}}
+function updateStats(){
+  document.getElementById('statTotal').textContent=props.length;
+  document.getElementById('statActivas').textContent=props.filter(function(p){return p.estado==='Activa';}).length;
+  document.getElementById('statVenta').textContent=props.filter(function(p){return p.operacion==='Venta'||p.operacion==='Venta/Renta';}).length;
+  document.getElementById('statRenta').textContent=props.filter(function(p){return p.operacion==='Renta'||p.operacion==='Venta/Renta';}).length;
+}
+function renderTable(){
+  var q=document.getElementById('searchInput').value.toLowerCase();
+  var filtered=props.filter(function(p){return(p.titulo||'').toLowerCase().includes(q)||(p.zona||'').toLowerCase().includes(q)||(p.tipo||'').toLowerCase().includes(q);});
+  if(!filtered.length){document.getElementById('tableWrap').innerHTML='<div style="text-align:center;padding:48px;color:var(--muted)">No hay propiedades.</div>';return;}
+  var rows=filtered.map(function(p){
+    var badge=p.estado==='Activa'?'badge-green':'badge-blue';
+    return '<tr><td><div class="prop-title">'+(p.titulo||'-')+'</div></td>'
+      +'<td class="prop-price">'+(p.precio||'-')+'</td>'
+      +'<td>'+(p.zona||'-')+'</td>'
+      +'<td><span class="badge badge-blue">'+(p.tipo||'-')+'</span></td>'
+      +'<td><span class="badge badge-orange">'+(p.operacion||'-')+'</span></td>'
+      +'<td><span class="badge '+badge+'">'+(p.estado||'-')+'</span></td>'
+      +'<td><div class="actions">'
+      +'<button class="btn-sm btn-edit" onclick="editProp(\''+p.id+'\')">Editar</button>'
+      +'<button class="btn-sm btn-danger" onclick="deleteProp(\''+p.id+'\')">Eliminar</button>'
+      +'</div></td></tr>';
+  }).join('');
+  document.getElementById('tableWrap').innerHTML='<table><thead><tr><th>Titulo</th><th>Precio</th><th>Zona</th><th>Tipo</th><th>Operacion</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function addImg(){
+  if(gUrls.length>=50){showToast('Maximo 50 imagenes','error');return;}
+  var u=prompt('URL de la imagen:');
+  if(u&&u.startsWith('http')){gUrls.push(u);renderGallery();}
+}
+function removeImg(i){gUrls.splice(i,1);renderGallery();}
+function renderGallery(){
+  var w=document.getElementById('gWrap');if(!w)return;
+  var h='';
+  for(var i=0;i<gUrls.length;i++){
+    h+='<div class="gi"><img src="'+gUrls[i]+'" onerror="this.style.opacity=.3"><button class="gi-rm" onclick="removeImg('+i+')">x</button></div>';
+  }
+  w.innerHTML=h;
+}
+
+function getCheckedChars(){
+  var c=[];
+  document.querySelectorAll('#charsSection input[type=checkbox]:checked').forEach(function(cb){c.push(cb.value);});
+  return c;
+}
+function setCheckedChars(chars){
+  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){
+    cb.checked=false;
+    cb.closest('.char-item').classList.remove('on');
+  });
+  if(!chars||!chars.length)return;
+  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){
+    if(chars.indexOf(cb.value)>=0){cb.checked=true;cb.closest('.char-item').classList.add('on');}
+  });
+}
+document.addEventListener('change',function(e){
+  if(e.target.matches('#charsSection input[type=checkbox]')){
+    e.target.closest('.char-item').classList.toggle('on',e.target.checked);
+  }
+});
+
+function openModal(prop){
+  editingId=prop?prop.id:null;
+  document.getElementById('modalTitle').textContent=prop?'Editar propiedad':'Nueva propiedad';
+  document.getElementById('fTitulo').value=prop?prop.titulo||'':'';
+  document.getElementById('fPrecio').value=prop?prop.precio||'':'';
+  document.getElementById('fTipo').value=prop?prop.tipo||'Casa':'Casa';
+  document.getElementById('fOperacion').value=prop?prop.operacion||'Venta':'Venta';
+  document.getElementById('fZona').value=prop?prop.zona||'':'';
+  document.getElementById('fArea').value=prop?prop.area||'':'';
+  document.getElementById('fHabitaciones').value=prop?prop.habitaciones||'':'';
+  document.getElementById('fBanos').value=prop?prop.banos||'':'';
+  document.getElementById('fImagen').value=prop?prop.imagen||'':'';
+  document.getElementById('fDescripcion').value=prop?prop.descripcion||'':'';
+  document.getElementById('fEstado').value=prop?prop.estado||'Activa':'Activa';
+  gUrls=prop&&prop.gallery?prop.gallery.filter(function(u){return u&&u!==prop.imagen;}).slice(0,50):[];
+  renderGallery();
+  setCheckedChars(prop?prop.caracteristicas||[]:[]);
+  var chZ=document.getElementById('sZona'),chI=document.getElementById('sInmu');
+  if(prop&&prop.sitios){chZ.checked=prop.sitios.indexOf('zona')>=0;chI.checked=prop.sitios.indexOf('inmu')>=0;}
+  else{chZ.checked=true;chI.checked=true;}
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');editingId=null;}
+async function saveProp(){
+  var titulo=document.getElementById('fTitulo').value.trim();
+  var precio=document.getElementById('fPrecio').value.trim();
+  if(!titulo||!precio){showToast('Titulo y precio son obligatorios.','error');return;}
+  var imgM=document.getElementById('fImagen').value;
+  var allG=imgM?[imgM].concat(gUrls):gUrls.slice();
+  var sits=[];
+  if(document.getElementById('sZona').checked)sits.push('zona');
+  if(document.getElementById('sInmu').checked)sits.push('inmu');
+  var data={titulo:titulo,precio:precio,tipo:document.getElementById('fTipo').value,operacion:document.getElementById('fOperacion').value,zona:document.getElementById('fZona').value,area:document.getElementById('fArea').value,habitaciones:document.getElementById('fHabitaciones').value,banos:document.getElementById('fBanos').value,imagen:imgM,mainImage:imgM,mainImageThumb:imgM,gallery:allG,descripcion:document.getElementById('fDescripcion').value,estado:document.getElementById('fEstado').value,sitios:sits,caracteristicas:getCheckedChars()};
+  var method=editingId?'PUT':'POST';
+  var url=editingId?'/api/propiedades/'+editingId:'/api/propiedades';
+  var res=await fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  if(res.ok){closeModal();showToast(editingId?'Propiedad actualizada.':'Propiedad creada.','success');loadProps();}
+  else showToast('Error al guardar.','error');
+}
+function editProp(id){var p=props.find(function(x){return x.id===id;});if(p)openModal(p);}
+async function deleteProp(id){
+  if(!confirm('Eliminar esta propiedad?'))return;
+  var res=await fetch('/api/propiedades/'+id,{method:'DELETE'});
+  if(res.ok){showToast('Propiedad eliminada.','success');loadProps();}
+  else showToast('Error al eliminar.','error');
+}
+function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'success')+' show';setTimeout(function(){t.classList.remove('show');},3000);}
+function toggleImport(){document.getElementById('importPanel').classList.toggle('open');}
+function cancelImport(){parsedProps=[];document.getElementById('importPreview').style.display='none';document.getElementById('dropZone').style.display='block';document.getElementById('csvFile').value='';}
+function handleFile(file){
+  if(!file||!file.name.endsWith('.csv')){showToast('Selecciona un .csv','error');return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    parsedProps=parseWixCSV(e.target.result);
+    if(!parsedProps.length){showToast('No se encontraron propiedades','error');return;}
+    document.getElementById('previewText').textContent=parsedProps.length+' propiedades listas';
+    document.getElementById('previewFile').textContent=file.name;
+    document.getElementById('importPreview').style.display='block';
+    document.getElementById('dropZone').style.display='none';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function parseWixCSV(text){
+  function parseRow(line){var cols=[],cur='',inQ=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;continue;}if(ch===','&&!inQ){cols.push(cur.trim());cur='';continue;}cur+=ch;}cols.push(cur.trim());return cols;}
+  var lines=text.split('\\n').filter(function(l){return l.trim();});
+  if(lines.length<2)return[];
+  lines[0]=lines[0].replace(new RegExp('^\\uFEFF'),'');
+  var headers=parseRow(lines[0]);
+  function col(row,names){for(var n=0;n<names.length;n++){var idx=headers.findIndex(function(h){return h.toLowerCase().includes(names[n].toLowerCase());});if(idx>=0&&row[idx])return row[idx].trim();}return'';}
+  function wixImg(uri){if(!uri)return'';if(uri.startsWith('http'))return uri;var parts=uri.split('/');for(var i=0;i<parts.length;i++){if(parts[i]==='v1'&&parts[i+1]){var f=parts[i+1].split('~')[0];return'https://static.wixstatic.com/media/'+f;}}return'';}
+  var result=[];
+  for(var i=1;i<lines.length;i++){
+    var row=parseRow(lines[i]);
+    var titulo=col(row,['titulo','title']);
+    if(!titulo)continue;
+    var status=col(row,['status']);if(status&&status.toLowerCase()==='draft')continue;
+    var imgRaw=col(row,['imagen','image']),img=wixImg(imgRaw);
+    var precio=col(row,['precio','price']);
+    var itemPath=col(row,['propiedades (item)','item']);
+    var slugParts=itemPath?itemPath.split('/'):[];
+    var slug=slugParts.length?slugParts[slugParts.length-1]:titulo.toLowerCase().replace(new RegExp('[^a-z0-9]+','g'),'-');
+    result.push({id:String(Date.now()+i),titulo:titulo,precio:precio,tipo:col(row,['tipo de propiedad','tipo'])||'Casa',cinta:col(row,['cinta']),operacion:col(row,['cinta','operacion'])||'Venta',zona:col(row,['lugar','zona']),municipio:col(row,['municipio']),area:col(row,['area de construccion','area']),areaConst:col(row,['area de construccion','area']),habitaciones:col(row,['numero de dormitorios','dormitorios']),banos:col(row,['numero de banos','banos']),imagen:img,mainImage:img,mainImageThumb:img,gallery:[img].filter(Boolean),descripcion:col(row,['description','descripcion']),slug:slug,codigo:col(row,['codigo']),estado:'Activa',sitios:['zona','inmu'],caracteristicas:[],createdAt:new Date().toISOString()});
+  }
+  return result;
+}
+async function doImport(){
+  if(!parsedProps.length)return;
+  var btn=document.getElementById('btnImport'),pw=document.getElementById('progressWrap'),pb=document.getElementById('progressBar'),pl=document.getElementById('progressLabel');
+  btn.disabled=true;pw.style.display='block';
+  var pct=0,ticker=setInterval(function(){pct=Math.min(pct+8,85);pb.style.width=pct+'%';},120);
+  try{
+    var res=await fetch('/api/propiedades/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsedProps)});
+    clearInterval(ticker);
+    if(res.ok){pb.style.width='100%';pl.textContent='OK - '+parsedProps.length+' propiedades importadas';showToast(parsedProps.length+' propiedades cargadas','success');setTimeout(function(){document.getElementById('importPanel').classList.remove('open');cancelImport();loadProps();},1800);}
+    else{pl.textContent='Error al importar';showToast('Error al importar','error');btn.disabled=false;}
+  }catch(e){clearInterval(ticker);pl.textContent='Error: '+e.message;btn.disabled=false;}
+}
+checkSession();`;
+
 function getAdminHTML() {
   return `<!DOCTYPE html>
 <html lang="es">
@@ -355,187 +535,7 @@ tr:hover td{background:#fafbff;}
 </div>
 <div class="toast" id="toast"></div>
 
-<script>
-var props=[],editingId=null,parsedProps=[],gUrls=[];
-
-function triggerFileInput(){document.getElementById('csvFile').click();}
-
-async function doLogin(){
-  var u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;
-  var btn=document.getElementById('loginBtn');
-  btn.textContent='Verificando...';btn.disabled=true;
-  try{
-    var r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:u,pass:p})});
-    if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminShell').style.display='block';loadProps();}
-    else{var e=document.getElementById('loginErr');e.style.display='block';setTimeout(function(){e.style.display='none'},3000);}
-  }catch(e){var er=document.getElementById('loginErr');er.textContent='Error: '+e.message;er.style.display='block';}
-  finally{btn.textContent='Ingresar al panel';btn.disabled=false;}
-}
-document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
-async function doLogout(){await fetch('/api/logout',{method:'POST'});location.reload();}
-async function checkSession(){var r=await fetch('/api/me');if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminShell').style.display='block';loadProps();}}
-async function loadProps(){var r=await fetch('/api/propiedades');if(r.ok){props=await r.json();updateStats();renderTable();}}
-function updateStats(){
-  document.getElementById('statTotal').textContent=props.length;
-  document.getElementById('statActivas').textContent=props.filter(function(p){return p.estado==='Activa';}).length;
-  document.getElementById('statVenta').textContent=props.filter(function(p){return p.operacion==='Venta'||p.operacion==='Venta/Renta';}).length;
-  document.getElementById('statRenta').textContent=props.filter(function(p){return p.operacion==='Renta'||p.operacion==='Venta/Renta';}).length;
-}
-function renderTable(){
-  var q=document.getElementById('searchInput').value.toLowerCase();
-  var filtered=props.filter(function(p){return(p.titulo||'').toLowerCase().includes(q)||(p.zona||'').toLowerCase().includes(q)||(p.tipo||'').toLowerCase().includes(q);});
-  if(!filtered.length){document.getElementById('tableWrap').innerHTML='<div style="text-align:center;padding:48px;color:var(--muted)">No hay propiedades.</div>';return;}
-  var rows=filtered.map(function(p){
-    var badge=p.estado==='Activa'?'badge-green':'badge-blue';
-    return '<tr><td><div class="prop-title">'+(p.titulo||'-')+'</div></td>'
-      +'<td class="prop-price">'+(p.precio||'-')+'</td>'
-      +'<td>'+(p.zona||'-')+'</td>'
-      +'<td><span class="badge badge-blue">'+(p.tipo||'-')+'</span></td>'
-      +'<td><span class="badge badge-orange">'+(p.operacion||'-')+'</span></td>'
-      +'<td><span class="badge '+badge+'">'+(p.estado||'-')+'</span></td>'
-      +'<td><div class="actions">'
-      +'<button class="btn-sm btn-edit" onclick="editProp(\''+p.id+'\')">Editar</button>'
-      +'<button class="btn-sm btn-danger" onclick="deleteProp(\''+p.id+'\')">Eliminar</button>'
-      +'</div></td></tr>';
-  }).join('');
-  document.getElementById('tableWrap').innerHTML='<table><thead><tr><th>Titulo</th><th>Precio</th><th>Zona</th><th>Tipo</th><th>Operacion</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>'+rows+'</tbody></table>';
-}
-
-function addImg(){
-  if(gUrls.length>=50){showToast('Maximo 50 imagenes','error');return;}
-  var u=prompt('URL de la imagen:');
-  if(u&&u.startsWith('http')){gUrls.push(u);renderGallery();}
-}
-function removeImg(i){gUrls.splice(i,1);renderGallery();}
-function renderGallery(){
-  var w=document.getElementById('gWrap');if(!w)return;
-  var h='';
-  for(var i=0;i<gUrls.length;i++){
-    h+='<div class="gi"><img src="'+gUrls[i]+'" onerror="this.style.opacity=.3"><button class="gi-rm" onclick="removeImg('+i+')">x</button></div>';
-  }
-  w.innerHTML=h;
-}
-
-function getCheckedChars(){
-  var c=[];
-  document.querySelectorAll('#charsSection input[type=checkbox]:checked').forEach(function(cb){c.push(cb.value);});
-  return c;
-}
-function setCheckedChars(chars){
-  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){
-    cb.checked=false;
-    cb.closest('.char-item').classList.remove('on');
-  });
-  if(!chars||!chars.length)return;
-  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){
-    if(chars.indexOf(cb.value)>=0){cb.checked=true;cb.closest('.char-item').classList.add('on');}
-  });
-}
-document.addEventListener('change',function(e){
-  if(e.target.matches('#charsSection input[type=checkbox]')){
-    e.target.closest('.char-item').classList.toggle('on',e.target.checked);
-  }
-});
-
-function openModal(prop){
-  editingId=prop?prop.id:null;
-  document.getElementById('modalTitle').textContent=prop?'Editar propiedad':'Nueva propiedad';
-  document.getElementById('fTitulo').value=prop?prop.titulo||'':'';
-  document.getElementById('fPrecio').value=prop?prop.precio||'':'';
-  document.getElementById('fTipo').value=prop?prop.tipo||'Casa':'Casa';
-  document.getElementById('fOperacion').value=prop?prop.operacion||'Venta':'Venta';
-  document.getElementById('fZona').value=prop?prop.zona||'':'';
-  document.getElementById('fArea').value=prop?prop.area||'':'';
-  document.getElementById('fHabitaciones').value=prop?prop.habitaciones||'':'';
-  document.getElementById('fBanos').value=prop?prop.banos||'':'';
-  document.getElementById('fImagen').value=prop?prop.imagen||'':'';
-  document.getElementById('fDescripcion').value=prop?prop.descripcion||'':'';
-  document.getElementById('fEstado').value=prop?prop.estado||'Activa':'Activa';
-  gUrls=prop&&prop.gallery?prop.gallery.filter(function(u){return u&&u!==prop.imagen;}).slice(0,50):[];
-  renderGallery();
-  setCheckedChars(prop?prop.caracteristicas||[]:[]);
-  var chZ=document.getElementById('sZona'),chI=document.getElementById('sInmu');
-  if(prop&&prop.sitios){chZ.checked=prop.sitios.indexOf('zona')>=0;chI.checked=prop.sitios.indexOf('inmu')>=0;}
-  else{chZ.checked=true;chI.checked=true;}
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal(){document.getElementById('modalOverlay').classList.remove('open');editingId=null;}
-async function saveProp(){
-  var titulo=document.getElementById('fTitulo').value.trim();
-  var precio=document.getElementById('fPrecio').value.trim();
-  if(!titulo||!precio){showToast('Titulo y precio son obligatorios.','error');return;}
-  var imgM=document.getElementById('fImagen').value;
-  var allG=imgM?[imgM].concat(gUrls):gUrls.slice();
-  var sits=[];
-  if(document.getElementById('sZona').checked)sits.push('zona');
-  if(document.getElementById('sInmu').checked)sits.push('inmu');
-  var data={titulo:titulo,precio:precio,tipo:document.getElementById('fTipo').value,operacion:document.getElementById('fOperacion').value,zona:document.getElementById('fZona').value,area:document.getElementById('fArea').value,habitaciones:document.getElementById('fHabitaciones').value,banos:document.getElementById('fBanos').value,imagen:imgM,mainImage:imgM,mainImageThumb:imgM,gallery:allG,descripcion:document.getElementById('fDescripcion').value,estado:document.getElementById('fEstado').value,sitios:sits,caracteristicas:getCheckedChars()};
-  var method=editingId?'PUT':'POST';
-  var url=editingId?'/api/propiedades/'+editingId:'/api/propiedades';
-  var res=await fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  if(res.ok){closeModal();showToast(editingId?'Propiedad actualizada.':'Propiedad creada.','success');loadProps();}
-  else showToast('Error al guardar.','error');
-}
-function editProp(id){var p=props.find(function(x){return x.id===id;});if(p)openModal(p);}
-async function deleteProp(id){
-  if(!confirm('Eliminar esta propiedad?'))return;
-  var res=await fetch('/api/propiedades/'+id,{method:'DELETE'});
-  if(res.ok){showToast('Propiedad eliminada.','success');loadProps();}
-  else showToast('Error al eliminar.','error');
-}
-function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'success')+' show';setTimeout(function(){t.classList.remove('show');},3000);}
-function toggleImport(){document.getElementById('importPanel').classList.toggle('open');}
-function cancelImport(){parsedProps=[];document.getElementById('importPreview').style.display='none';document.getElementById('dropZone').style.display='block';document.getElementById('csvFile').value='';}
-function handleFile(file){
-  if(!file||!file.name.endsWith('.csv')){showToast('Selecciona un .csv','error');return;}
-  var reader=new FileReader();
-  reader.onload=function(e){
-    parsedProps=parseWixCSV(e.target.result);
-    if(!parsedProps.length){showToast('No se encontraron propiedades','error');return;}
-    document.getElementById('previewText').textContent=parsedProps.length+' propiedades listas';
-    document.getElementById('previewFile').textContent=file.name;
-    document.getElementById('importPreview').style.display='block';
-    document.getElementById('dropZone').style.display='none';
-  };
-  reader.readAsText(file,'UTF-8');
-}
-function parseWixCSV(text){
-  function parseRow(line){var cols=[],cur='',inQ=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;continue;}if(ch===','&&!inQ){cols.push(cur.trim());cur='';continue;}cur+=ch;}cols.push(cur.trim());return cols;}
-  var lines=text.split('\\n').filter(function(l){return l.trim();});
-  if(lines.length<2)return[];
-  lines[0]=lines[0].replace(new RegExp('^\\uFEFF'),'');
-  var headers=parseRow(lines[0]);
-  function col(row,names){for(var n=0;n<names.length;n++){var idx=headers.findIndex(function(h){return h.toLowerCase().includes(names[n].toLowerCase());});if(idx>=0&&row[idx])return row[idx].trim();}return'';}
-  function wixImg(uri){if(!uri)return'';if(uri.startsWith('http'))return uri;var parts=uri.split('/');for(var i=0;i<parts.length;i++){if(parts[i]==='v1'&&parts[i+1]){var f=parts[i+1].split('~')[0];return'https://static.wixstatic.com/media/'+f;}}return'';}
-  var result=[];
-  for(var i=1;i<lines.length;i++){
-    var row=parseRow(lines[i]);
-    var titulo=col(row,['titulo','title']);
-    if(!titulo)continue;
-    var status=col(row,['status']);if(status&&status.toLowerCase()==='draft')continue;
-    var imgRaw=col(row,['imagen','image']),img=wixImg(imgRaw);
-    var precio=col(row,['precio','price']);
-    var itemPath=col(row,['propiedades (item)','item']);
-    var slugParts=itemPath?itemPath.split('/'):[];
-    var slug=slugParts.length?slugParts[slugParts.length-1]:titulo.toLowerCase().replace(new RegExp('[^a-z0-9]+','g'),'-');
-    result.push({id:String(Date.now()+i),titulo:titulo,precio:precio,tipo:col(row,['tipo de propiedad','tipo'])||'Casa',cinta:col(row,['cinta']),operacion:col(row,['cinta','operacion'])||'Venta',zona:col(row,['lugar','zona']),municipio:col(row,['municipio']),area:col(row,['area de construccion','area']),areaConst:col(row,['area de construccion','area']),habitaciones:col(row,['numero de dormitorios','dormitorios']),banos:col(row,['numero de banos','banos']),imagen:img,mainImage:img,mainImageThumb:img,gallery:[img].filter(Boolean),descripcion:col(row,['description','descripcion']),slug:slug,codigo:col(row,['codigo']),estado:'Activa',sitios:['zona','inmu'],caracteristicas:[],createdAt:new Date().toISOString()});
-  }
-  return result;
-}
-async function doImport(){
-  if(!parsedProps.length)return;
-  var btn=document.getElementById('btnImport'),pw=document.getElementById('progressWrap'),pb=document.getElementById('progressBar'),pl=document.getElementById('progressLabel');
-  btn.disabled=true;pw.style.display='block';
-  var pct=0,ticker=setInterval(function(){pct=Math.min(pct+8,85);pb.style.width=pct+'%';},120);
-  try{
-    var res=await fetch('/api/propiedades/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsedProps)});
-    clearInterval(ticker);
-    if(res.ok){pb.style.width='100%';pl.textContent='OK - '+parsedProps.length+' propiedades importadas';showToast(parsedProps.length+' propiedades cargadas','success');setTimeout(function(){document.getElementById('importPanel').classList.remove('open');cancelImport();loadProps();},1800);}
-    else{pl.textContent='Error al importar';showToast('Error al importar','error');btn.disabled=false;}
-  }catch(e){clearInterval(ticker);pl.textContent='Error: '+e.message;btn.disabled=false;}
-}
-checkSession();
-</script>
+<script src="?js=admin"><\/script>
 </body>
 </html>`;
 }
@@ -556,6 +556,12 @@ export default {
       });
     }
 
+
+    if (path === '/' && url.searchParams.get('js') === 'admin') {
+      return new Response(ADMIN_JS, {
+        headers: { 'Content-Type': 'application/javascript; charset=utf-8' },
+      });
+    }
     if (path === '/dynamic-grid.js') {
       return new Response(DYNAMIC_GRID_JS, {
         headers: { 'Content-Type': 'application/javascript', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-cache' },
