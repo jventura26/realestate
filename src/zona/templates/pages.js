@@ -1,6 +1,39 @@
 const { layout, WA }       = require('./layout');
 const { escapeHtml, uniqueValues, getRelated } = require('../../shared/utils');
 
+function renderCaracteristicas(chars) {
+  if (!chars || !chars.length) return '';
+  const grupos = {
+    'Ubicacion': ['Ubicacion privilegiada','Sobre carretera','Entorno natural y vistas','Cerca de servicios','Zona residencial','Acceso pavimentado'],
+    'Terreno': ['Amplio espacio','Topografia aprovechable','Acceso a servicios','Vista al valle','Terreno plano','Con jardin'],
+    'Ideal para': ['Casa de descanso','Proyecto agricola','Desarrollo habitacional','Hotel ecologico','Inversion','Vivienda familiar'],
+    'Amenidades': ['Piscina','Jardin','Pergola','Chimenea','Jacuzzi','Churrasquera','Terraza','Estudio','Cuarto de servicio','Bodega'],
+    'Inversion': ['Alta plusvalia','Zona en crecimiento','Papeleria en orden','Sin gravamenes','Financiamiento disponible','Negociable'],
+  };
+  const emojis = {
+    'Ubicacion privilegiada':'📍','Sobre carretera':'🚗','Entorno natural y vistas':'🌄','Cerca de servicios':'🏙️','Zona residencial':'🏘️','Acceso pavimentado':'🛣️',
+    'Amplio espacio':'📏','Topografia aprovechable':'🌳','Acceso a servicios':'💧','Vista al valle':'🌅','Terreno plano':'⬜','Con jardin':'🌿',
+    'Casa de descanso':'🏡','Proyecto agricola':'🌱','Desarrollo habitacional':'🏘️','Hotel ecologico':'🏢','Inversion':'📈','Vivienda familiar':'👨‍👩‍👧',
+    'Piscina':'🏊','Jardin':'🌿','Pergola':'⛺','Chimenea':'🔥','Jacuzzi':'🛁','Churrasquera':'🍖','Terraza':'🌇','Estudio':'💼','Cuarto de servicio':'🛏','Bodega':'📦',
+    'Alta plusvalia':'📈','Zona en crecimiento':'🚀','Papeleria en orden':'📄','Sin gravamenes':'✅','Financiamiento disponible':'🏦','Negociable':'🤝',
+  };
+  let html = '<div style="margin-top:32px"><div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Caracteristicas</div>';
+  Object.entries(grupos).forEach(([grupo, items]) => {
+    const activos = items.filter(i => chars.includes(i));
+    if (!activos.length) return;
+    html += '<div style="margin-bottom:16px">';
+    html += '<div style="font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:8px">' + grupo + '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
+    activos.forEach(item => {
+      const emoji = emojis[item] || 'v';
+      html += '<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:20px;font-size:.75rem;color:var(--sv)">' + emoji + ' ' + item + '</span>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderDesc(desc) {
   if (!desc) return '';
   const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Descripcion</div>';
@@ -387,6 +420,7 @@ function detailPage(prop, all) {
       <div class="det-price">${escapeHtml(prop.priceFormatted)}</div>
       <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
       ${renderDesc(prop.description)}
+      ${renderCaracteristicas(prop.caracteristicas||prop.amenities||[])}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
     </div>
     <!-- MOBILE WA (hidden on desktop) -->
