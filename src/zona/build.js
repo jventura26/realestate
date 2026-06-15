@@ -20,6 +20,15 @@ function fetchKV() {
   });
 }
 
+
+function cleanArea(area) {
+  if (!area) return '';
+  // Quitar apostrofes, guiones solos, ceros solos
+  const s = String(area).trim();
+  if (s === '0' || s === "'-" || s === "'--" || s === "'---" || s === "0 v²" || s === "0 m²" || s === "0v²") return '';
+  // Quitar el apostrofe inicial
+  return s.replace(/^'+/, '').trim();
+}
 function normalizeKV(kvProps) {
   return kvProps.map(p => ({
     ...p,
@@ -34,6 +43,8 @@ function normalizeKV(kvProps) {
     slug: p.slug || (p.titulo||'').toLowerCase().replace(/[^a-z0-9]+/g,'-'),
     amenities: p.amenities || [],
     estado: p.estado || 'Activa',
+    area: cleanArea(p.area || p.areaConst || ''),
+    areaConst: cleanArea(p.areaConst || p.area || ''),
   }));
 }
 
