@@ -61,7 +61,7 @@ img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%;backdrop-filter:blur(10px);}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;min-height:72px;padding:0;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:80px;min-height:80px;padding:0;}
 .logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-decoration:none;color:inherit}
 .logo-name{font-size:clamp(14px,2vw,22px);font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
 .logo-tag{font-size:clamp(8px,1.5vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.2;margin-top:2px}
@@ -286,10 +286,11 @@ body { font-size: 15px; }
 
 /* NAVBAR */
 nav { padding: 0 3%; }
-.nav-inner { align-items:flex-start !important;  gap: 8px; }
-.logo img { height: 44px !important; }
+.nav-inner { align-items:center !important; gap: 8px; height:80px !important; }
+.logo img { height: 38px !important; max-width:160px !important; object-fit:contain !important; }
 .logo-tag { display: block; font-size: 11px; }
-.logo { gap: 2px; }
+.logo { gap: 2px; flex-shrink:0; }
+.nav-inner > div:nth-child(2) { display:none !important; }
 .nav-inner > div:last-child { gap: 4px; font-size: 11px; }
 
 /* HERO */
@@ -563,7 +564,7 @@ footer > div:last-child > div { text-align: center !important; }
 <nav>
 <div class="nav-inner">
   <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
-    <img src="/assets/logo-horizontal.png" alt="INMUHUB - Conecta tu inversion inmobiliaria" style="height:44px;width:auto;" loading="lazy">
+    <img src="/assets/logo-horizontal.png" alt="INMUHUB - Conecta tu inversion inmobiliaria" style="height:50px;width:auto;" loading="lazy">
   </a>
   <div style="display:flex;align-items:center;gap:4px;margin:0 auto;padding:0 32px">
     <a href="/propiedades.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Propiedades</a>
@@ -638,10 +639,14 @@ ${body}
     @media(max-width:768px){
       .footer-grid{grid-template-columns:1fr 1fr !important;}
       .footer-brand{grid-column:1/-1;}
+      footer > div:first-child { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+      footer > div:first-child > div:first-child { grid-column: 1/-1; }
     }
     @media(max-width:480px){
       .footer-grid{grid-template-columns:1fr !important;}
-      .nav-inner{height:auto !important;min-height:60px !important;padding:12px 0 !important;}
+      footer > div:first-child { grid-template-columns: 1fr !important; gap: 24px !important; }
+      footer > div:first-child { padding: 40px 5% 0 !important; }
+      .nav-inner{height:auto !important;min-height:80px !important;padding:12px 0 !important;}
       .nav-inner > div:nth-child(2){display:none !important;}
     }
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
