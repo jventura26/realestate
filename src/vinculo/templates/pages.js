@@ -1,6 +1,6 @@
 const { layout } = require('./layout');
 const { card } = require('./card');
-
+const { escapeHtml, uniqueValues } = require('../../shared/utils');
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
   const grupos = {
@@ -10,80 +10,35 @@ function renderCaracteristicas(chars) {
     'Amenidades': ['Piscina','Jardin','Pergola','Chimenea','Jacuzzi','Churrasquera','Terraza','Estudio','Cuarto de servicio','Bodega'],
     'Inversion': ['Alta plusvalia','Zona en crecimiento','Papeleria en orden','Sin gravamenes','Financiamiento disponible','Negociable'],
   };
-  const emojis = {
-    'Ubicacion privilegiada':'📍','Sobre carretera':'🚗','Entorno natural y vistas':'🌄','Cerca de servicios':'🏙️','Zona residencial':'🏘️','Acceso pavimentado':'🛣️',
-    'Amplio espacio':'📏','Topografia aprovechable':'🌳','Acceso a servicios':'💧','Vista al valle':'🌅','Terreno plano':'⬜','Con jardin':'🌿',
-    'Casa de descanso':'🏡','Proyecto agricola':'🌱','Desarrollo habitacional':'🏘️','Hotel ecologico':'🏢','Inversion':'📈','Vivienda familiar':'👨‍👩‍👧',
-    'Piscina':'🏊','Jardin':'🌿','Pergola':'⛺','Chimenea':'🔥','Jacuzzi':'🛁','Churrasquera':'🍖','Terraza':'🌇','Estudio':'💼','Cuarto de servicio':'🛏','Bodega':'📦',
-    'Alta plusvalia':'📈','Zona en crecimiento':'🚀','Papeleria en orden':'📄','Sin gravamenes':'✅','Financiamiento disponible':'🏦','Negociable':'🤝',
-  };
-  let html = '<div style="margin-top:32px"><div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Caracteristicas</div>';
+  const emojis = {'Ubicacion privilegiada':'📍','Sobre carretera':'🚗','Entorno natural y vistas':'🌄','Cerca de servicios':'🏙️','Zona residencial':'🏘️','Acceso pavimentado':'🛣️','Amplio espacio':'📏','Topografia aprovechable':'🌳','Acceso a servicios':'💧','Vista al valle':'🌅','Terreno plano':'⬜','Con jardin':'🌿','Casa de descanso':'🏡','Proyecto agricola':'🌱','Desarrollo habitacional':'🏘️','Hotel ecologico':'🏢','Inversion':'📈','Vivienda familiar':'👨‍👩‍👧','Piscina':'🏊','Jardin':'🌿','Pergola':'⛺','Chimenea':'🔥','Jacuzzi':'🛁','Churrasquera':'🍖','Terraza':'🌇','Estudio':'💼','Cuarto de servicio':'🛏','Bodega':'📦','Alta plusvalia':'📈','Zona en crecimiento':'🚀','Papeleria en orden':'📄','Sin gravamenes':'✅','Financiamiento disponible':'🏦','Negociable':'🤝'};
+  let html = '<div style="margin-top:32px"><div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:16px">Caracteristicas</div>';
   Object.entries(grupos).forEach(([grupo, items]) => {
     const activos = items.filter(i => chars.includes(i));
     if (!activos.length) return;
-    html += '<div style="margin-bottom:16px">';
-    html += '<div style="font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:8px">' + grupo + '</div>';
-    html += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
-    activos.forEach(item => {
-      const emoji = emojis[item] || 'v';
-      html += '<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:20px;font-size:.75rem;color:var(--sv)">' + emoji + ' ' + item + '</span>';
-    });
+    html += '<div style="margin-bottom:16px"><div style="font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px">' + grupo + '</div><div style="display:flex;flex-wrap:wrap;gap:8px">';
+    activos.forEach(item => { html += '<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#f8f9fb;border:1.5px solid #e2e8f0;border-radius:20px;font-size:.78rem;color:#1a2a4e;font-weight:500">' + (emojis[item]||'') + ' ' + item + '</span>'; });
     html += '</div></div>';
   });
-  html += '</div>';
-  return html;
+  return html + '</div>';
 }
 
 function renderDesc(desc) {
   if (!desc) return '';
   const label = '<h2 style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:16px">Descripcion</h2>';
-
-  // Si es JSON de Wix, extraer texto limpio
   if (desc.trim().startsWith('{') || desc.includes('"nodes"')) {
     try {
-      const texts = [];
-      let m;
-      const re = /"text":"([^"]+)"/g;
-      while ((m = re.exec(desc)) !== null) {
-        const t = m[1].trim();
-        if (t && t.length > 1) texts.push(t);
-      }
+      const texts = []; let m; const re = /"text":"([^"]+)"/g;
+      while ((m = re.exec(desc)) !== null) { const t = m[1].trim(); if (t && t.length > 1) texts.push(t); }
       const clean = texts.join(' ');
       return clean ? '<div class="description">' + label + '<p>' + escapeHtml(clean) + '</p></div>' : '';
     } catch(e) { return ''; }
   }
-
-  // Texto con emojis — separar por emoji
-  const emojiRegex = /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu;
-  const hasEmojis = emojiRegex.test(desc);
-
-  if (hasEmojis) {
-    const parts = desc.split(/(?=\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu)
-      .map(s => s.trim()).filter(s => s.length > 0);
-
-    if (parts.length > 1) {
-      const html = parts.map(part => {
-        const emojiMatch = part.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic}[️⃣]?)\s*/u);
-        const emoji = emojiMatch ? emojiMatch[0].trim() : '';
-        const text = part.replace(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic}[️⃣]?)\s*/u, '').trim();
-        if (!text && !emoji) return '';
-        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;margin-bottom:6px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--gold)">'
-          + '<span style="font-size:1.1rem;flex-shrink:0;margin-top:1px">' + emoji + '</span>'
-          + '<span style="font-size:.84rem;line-height:1.65">' + escapeHtml(text) + '</span>'
-          + '</div>';
-      }).filter(Boolean).join('');
-      return '<div class="description">' + label + '<div>' + html + '</div></div>';
-    }
-  }
-
-  // Texto plano
   const lines = desc.split('\n').map(l => l.trim()).filter(l => l);
-  const html = lines.map(l =>
-    '<p style="font-size:.84rem;line-height:1.7;margin-bottom:8px">' + escapeHtml(l) + '</p>'
-  ).join('');
+  if (!lines.length) return '';
+  const html = lines.map(l => '<p style="font-size:.84rem;line-height:1.7;margin-bottom:8px;color:#374151">' + escapeHtml(l) + '</p>').join('');
   return '<div class="description">' + label + html + '</div>';
 }
-const { escapeHtml, uniqueValues } = require('../../shared/utils');
+
 
 function indexPage(props) {
 const featured = props.slice(0, 9);
@@ -141,31 +96,7 @@ const body = `
   </div>
 </section>
 
-<section style="padding:72px 6%;background:white;border-bottom:1px solid #eef0f3">
-  <div style="max-width:1200px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:48px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Por que elegirnos</div>
-      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:#0a1628;margin:0">La diferencia que <em style="font-style:italic">realmente importa</em></h2>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px">
-      <div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.07)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width:64px;height:64px;background:linear-gradient(135deg,#0a1628,#1a2a4e);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem">✅</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Propiedades verificadas</h3>
-        <p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Cada propiedad pasa por un proceso de verificacion riguroso. Papeleria en orden, precios reales y sin sorpresas.</p>
-      </div>
-      <div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.07)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width:64px;height:64px;background:linear-gradient(135deg,#c9a96e,#e6c06a);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem">🤝</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Asesoria personalizada</h3>
-        <p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Un asesor dedicado te acompana desde la busqueda hasta el cierre. Tu inversion, nuestra prioridad.</p>
-      </div>
-      <div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.07)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width:64px;height:64px;background:linear-gradient(135deg,#25d366,#1da851);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem">⚡</div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Respuesta en 1 hora</h3>
-        <p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Contestamos por WhatsApp en menos de 60 minutos. Porque las mejores oportunidades no esperan.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<section style="padding:72px 6%;background:white;border-bottom:1px solid #eef0f3"><div style="max-width:1200px;margin:0 auto"><div style="text-align:center;margin-bottom:48px"><div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Por que elegirnos</div><h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:#0a1628;margin:0">La diferencia que <em style="font-style:italic">realmente importa</em></h2></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px"><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#0a1628,#1a2a4e);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem">✅</div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Propiedades verificadas</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Cada propiedad pasa por verificacion rigurosa. Papeleria en orden y precios reales.</p></div><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#c9a96e,#e6c06a);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem">🤝</div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Asesoria personalizada</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Un asesor dedicado desde la busqueda hasta el cierre. Tu inversion, nuestra prioridad.</p></div><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#25d366,#1da851);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem">⚡</div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Respuesta en 1 hora</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Contestamos por WhatsApp en menos de 60 minutos. Las mejores oportunidades no esperan.</p></div></div></div></section>
 <section style="padding:80px 6%;background:#f8f9fb">
   <div style="max-width:1200px;margin:0 auto">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px">
@@ -249,22 +180,18 @@ function detailPage(prop) {
 const gallery=(prop.gallery||[]).slice(0,8);
 const galleryHTML=(function(){
   if(!gallery.length) return '';
-  var thumbs = gallery.map(function(img,i){
-    return '<button onclick="openLightbox(this.dataset.src)" data-src="'+escapeHtml(img)+'" title="Ver imagen" style="border:2px solid transparent;padding:0;cursor:pointer;border-radius:6px;overflow:hidden;flex-shrink:0;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'transparent\'">'
-      +'<img src="'+escapeHtml(img)+'" alt="'+escapeHtml(prop.title)+' foto '+(i+1)+'" loading="lazy" style="width:80px;height:60px;object-fit:cover;display:block"></button>';
+  var t = gallery.map(function(img,i){
+    var s=escapeHtml(img);
+    return '<div style="flex-shrink:0;cursor:pointer;border-radius:6px;overflow:hidden;border:2.5px solid transparent;transition:border-color .2s" onclick="document.getElementById(\'mainImg\').src=\''+s+'\'" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'transparent\'">'
+      +'<img src="'+s+'" alt="foto '+(i+1)+'" loading="lazy" style="width:80px;height:60px;object-fit:cover;display:block"></div>';
   }).join('');
-  return '<div class="gallery-thumbs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+thumbs+'</div>'
-    +'<div id="lightbox" onclick="this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out">'
-    +'<img id="lbImg" src="" alt="Foto" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px">'
-    +'<button onclick="document.getElementById(\'lightbox\').style.display=\'none\'" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:none;color:white;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer">&times;</button>'
-    +'</div>';
+  return '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+t+'</div>';
 })();
 const specHTML=`${prop.habitaciones&&prop.habitaciones!=='0'?`<div class="spec"><div class="spec-value">${prop.habitaciones}</div><div class="spec-label">Habitaciones</div></div>`:''}${prop.banos&&prop.banos!=='0'?`<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">Banos</div></div>`:''}${prop.areaConst?`<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">m2 Construccion</div></div>`:''}`;
 const descHTML=renderDesc(prop.description);
-const charsHTML=renderCaracteristicas(prop.caracteristicas||prop.amenities||[]);
+const charsHTML=renderCaracteristicas(prop.caracteristicas||prop.amenities||[]);;
 const infoHTML=`<div class="info-item"><span class="label">Ubicacion</span><span class="value">${escapeHtml(prop.locationFull)}</span></div>${prop.codigoInmueble?`<div class="info-item"><span class="label">Codigo</span><span class="value">${escapeHtml(prop.codigoInmueble)}</span></div>`:''}${prop.tipo?`<div class="info-item"><span class="label">Tipo</span><span class="value">${escapeHtml(prop.tipo)}</span></div>`:''}`;
-const lbScript='<scr'+'ipt>function openLightbox(src){var lb=document.getElementById("lightbox");document.getElementById("lbImg").src=src;lb.style.display="flex";}</'+'script>';
-const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main" style="position:relative;border-radius:12px;overflow:hidden;cursor:zoom-in" onclick="openLightbox(this.querySelector('img').src)"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} en ${escapeHtml(prop.locationFull)} - INMUHUB.COM" loading="eager" width="1200" height="700" style="width:100%;height:auto;min-height:400px;object-fit:cover;display:block;transition:transform .4s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div style="position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.6);color:white;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;backdrop-filter:blur(4px)">🔍 Click para ampliar</div></div>${galleryHTML}</div><div class="detail-content"><h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div><div class="specs-grid">${specHTML}</div>${descHTML}${charsHTML}<div class="info-card">${infoHTML}</div>` + `` + `<section style="padding:48px 6%;background:white">
+const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main" style="border-radius:12px;overflow:hidden"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} - INMUHUB.COM" loading="eager" width="1200" height="700" style="width:100%;height:auto;min-height:380px;object-fit:cover;display:block;cursor:zoom-in" onclick="window.open(this.src,'_blank')"></div>${galleryHTML}</div><div class="detail-content"><h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div><div class="specs-grid">${specHTML}</div>${descHTML}${charsHTML}<div class="info-card">${infoHTML}</div>` + `` + `<section style="padding:48px 6%;background:white">
 <div style="max-width:1200px;margin:0 auto">
 <h3 style="font-size:28px;font-weight:700;color:#1a2a4e;margin-bottom:40px;text-align:center">Herramientas para Invertir</h3>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">
