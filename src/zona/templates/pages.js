@@ -112,7 +112,7 @@ function indexPage(props) {
 </section>
 
 <!-- FEATURED -->
-<section style="padding:80px 0 0;background:var(--ink2)">
+<section style="padding:80px 0 0;background:var(--ink2)" class="fade-in-up">
   <div style="padding:0 6% 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px">
     <div>
       <div class="ey">Propiedades Verificadas</div>
@@ -128,6 +128,20 @@ function indexPage(props) {
 </section>
 
 <!-- TESTIMONIOS (FASE 1) -->
+
+<!-- CTA INTERMEDIO -->
+<div class="cta-banner fade-in-up">
+  <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:var(--wh);margin-bottom:16px;line-height:1.2">
+    ¿No encontraste lo que buscas?
+  </h2>
+  <p style="font-size:.85rem;color:var(--sv);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8">
+    Cuéntanos qué necesitas y nuestro equipo te presenta opciones exclusivas que no están publicadas.
+  </p>
+  <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, busco una propiedad específica y quisiera asesoría privada.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;justify-content:center;padding:14px 32px;font-size:.72rem">
+    ${WA_SVG} Escribir al asesor
+  </a>
+</div>
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
@@ -189,7 +203,7 @@ function indexPage(props) {
 
 
 <!-- TYPES -->
-<section style="background:var(--ink)">
+<section style="background:var(--ink)" class="fade-in-up">
   <div style="max-width:560px;margin-bottom:52px">
     <div class="ey">Encuentra Tu Tipo Ideal</div>
     <h2 class="st">Un portafolio para <em>cada visión</em> de vida.</h2>
@@ -209,6 +223,26 @@ function indexPage(props) {
 </section>
 
 <!-- CTA -->
+
+<!-- SECCION ASESOR -->
+<section style="padding:80px 6%;background:var(--ink)" class="fade-in-up">
+  <div style="max-width:860px;margin:0 auto">
+    <div class="ey" style="margin-bottom:12px">Tu asesor personal</div>
+    <h2 class="st" style="margin-bottom:44px">Un equipo que conoce <em>cada propiedad</em></h2>
+    <div class="asesor-card">
+      <div class="asesor-avatar">ZI</div>
+      <div style="flex:1">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:6px">Equipo Zona INNmueble</div>
+        <div style="font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Asesores Inmobiliarios · Guatemala</div>
+        <p style="font-size:.82rem;color:var(--sv);line-height:1.8;margin-bottom:22px;max-width:480px">Más de 10 años conectando familias e inversionistas con las mejores propiedades en Guatemala. Te acompañamos desde la búsqueda hasta el cierre.</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <div style="display:flex;align-items:center;gap:6px"><span class="live"></span><span style="font-size:.75rem;color:var(--sv)">Disponible Lun–Vie 8:00–18:00</span></div>
+          <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;padding:10px 20px;font-size:.68rem;margin-bottom:0">${WA_SVG} Contactar ahora</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <section id="contacto" style="background:var(--ink2);position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=40') center/cover no-repeat;opacity:.03"></div>
   <div style="position:relative;z-index:1;max-width:620px;margin:0 auto;text-align:center">
@@ -401,6 +435,20 @@ module.exports = { indexPage, catalogPage, detailPage };
 // ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
 function testimonialsSection() {
   return `
+
+<!-- CTA INTERMEDIO -->
+<div class="cta-banner fade-in-up">
+  <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:var(--wh);margin-bottom:16px;line-height:1.2">
+    ¿No encontraste lo que buscas?
+  </h2>
+  <p style="font-size:.85rem;color:var(--sv);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8">
+    Cuéntanos qué necesitas y nuestro equipo te presenta opciones exclusivas que no están publicadas.
+  </p>
+  <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, busco una propiedad específica y quisiera asesoría privada.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;justify-content:center;padding:14px 32px;font-size:.72rem">
+    ${WA_SVG} Escribir al asesor
+  </a>
+</div>
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
