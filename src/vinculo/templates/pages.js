@@ -247,22 +247,23 @@ return layout({
 
 function detailPage(prop) {
 const gallery=(prop.gallery||[]).slice(0,8);
-const galleryHTML=gallery.length>0?`
-<div class="gallery-thumbs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-  ${gallery.map((img,i)=>`<button onclick="openLightbox('${escapeHtml(img)}')" title="Ver imagen" style="border:none;padding:0;cursor:pointer;border-radius:6px;overflow:hidden;flex-shrink:0;border:2px solid transparent;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='transparent'">
-    <img src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)} foto ${i+1}" loading="lazy" style="width:80px;height:60px;object-fit:cover;display:block">
-  </button>`).join('')}
-</div>
-<div id="lightbox" onclick="this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out">
-  <img id="lbImg" src="" alt="Foto" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px;box-shadow:0 0 80px rgba(0,0,0,.8)">
-  <button onclick="document.getElementById('lightbox').style.display='none'" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:none;color:white;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center">&times;</button>
-</div>
-<script>function openLightbox(src){var lb=document.getElementById('lightbox');document.getElementById('lbImg').src=src;lb.style.display='flex';}<\/script>
-`:
+const galleryHTML=(function(){
+  if(!gallery.length) return '';
+  var thumbs = gallery.map(function(img,i){
+    return '<button onclick="openLightbox(this.dataset.src)" data-src="'+escapeHtml(img)+'" title="Ver imagen" style="border:2px solid transparent;padding:0;cursor:pointer;border-radius:6px;overflow:hidden;flex-shrink:0;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'transparent\'">'
+      +'<img src="'+escapeHtml(img)+'" alt="'+escapeHtml(prop.title)+' foto '+(i+1)+'" loading="lazy" style="width:80px;height:60px;object-fit:cover;display:block"></button>';
+  }).join('');
+  return '<div class="gallery-thumbs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+thumbs+'</div>'
+    +'<div id="lightbox" onclick="this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out">'
+    +'<img id="lbImg" src="" alt="Foto" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px">'
+    +'<button onclick="document.getElementById(\'lightbox\').style.display=\'none\'" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:none;color:white;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer">&times;</button>'
+    +'</div>';
+})();
 const specHTML=`${prop.habitaciones&&prop.habitaciones!=='0'?`<div class="spec"><div class="spec-value">${prop.habitaciones}</div><div class="spec-label">Habitaciones</div></div>`:''}${prop.banos&&prop.banos!=='0'?`<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">Banos</div></div>`:''}${prop.areaConst?`<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">m2 Construccion</div></div>`:''}`;
 const descHTML=renderDesc(prop.description);
 const charsHTML=renderCaracteristicas(prop.caracteristicas||prop.amenities||[]);
 const infoHTML=`<div class="info-item"><span class="label">Ubicacion</span><span class="value">${escapeHtml(prop.locationFull)}</span></div>${prop.codigoInmueble?`<div class="info-item"><span class="label">Codigo</span><span class="value">${escapeHtml(prop.codigoInmueble)}</span></div>`:''}${prop.tipo?`<div class="info-item"><span class="label">Tipo</span><span class="value">${escapeHtml(prop.tipo)}</span></div>`:''}`;
+const lbScript='<scr'+'ipt>function openLightbox(src){var lb=document.getElementById("lightbox");document.getElementById("lbImg").src=src;lb.style.display="flex";}</'+'script>';
 const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main" style="position:relative;border-radius:12px;overflow:hidden;cursor:zoom-in" onclick="openLightbox(this.querySelector('img').src)"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} en ${escapeHtml(prop.locationFull)} - INMUHUB.COM" loading="eager" width="1200" height="700" style="width:100%;height:auto;min-height:400px;object-fit:cover;display:block;transition:transform .4s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"><div style="position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.6);color:white;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;backdrop-filter:blur(4px)">🔍 Click para ampliar</div></div>${galleryHTML}</div><div class="detail-content"><h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div><div class="specs-grid">${specHTML}</div>${descHTML}${charsHTML}<div class="info-card">${infoHTML}</div>` + `` + `<section style="padding:48px 6%;background:white">
 <div style="max-width:1200px;margin:0 auto">
 <h3 style="font-size:28px;font-weight:700;color:#1a2a4e;margin-bottom:40px;text-align:center">Herramientas para Invertir</h3>
