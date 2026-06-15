@@ -111,10 +111,7 @@ write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
 write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
 
-console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
-}).catch(e => { console.error('Build error:', e); process.exit(1); });
-
-// Generar páginas de herramientas
+// Generar páginas de herramientas DENTRO del then para que no las borre rmSync
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
 const { valuacionPage } = require('./templates/valuacion-page');
 const { guiaCompraPae } = require('./templates/guia-compra-page');
@@ -134,9 +131,12 @@ console.log(' herramientas: guia-compra.html ✅');
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
 console.log(' herramientas: dashboard-inversionistas.html ✅');
 
+console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
 console.log('\n✨ INMUHUB.COM BUILD COMPLETE\n');
 console.log(' Página Principal: MEJORADA CON 3 TOOLS DESTACADOS');
 console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
 
 // Copiar assets
 copyAssets(); console.log(' Assets copiados (favicon, logo)\n');
+
+}).catch(e => { console.error('Build error:', e); process.exit(1); });
