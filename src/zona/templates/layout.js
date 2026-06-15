@@ -420,7 +420,7 @@ ${body}
     </div>
   </div>
   <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
-    <span style="font-size:.72rem;color:var(--mt)">© ${new Date().getFullYear()} Zona INNmueble Real Estate · Guatemala</span>
+    <span style="font-size:.72rem;color:var(--mt)">© 2026 Zona INNmueble Real Estate · Guatemala</span>
     <span style="font-size:.72rem;color:var(--mt)">Premium Real Estate · Propiedades verificadas</span>
   </div>
   <style>
