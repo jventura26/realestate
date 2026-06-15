@@ -1,3 +1,4 @@
+function ca(a){if(!a)return "";var s=String(a).trim().replace(/^'+/,"");if(!s||s==="0"||s==="-"||/^0\s*(v²|m²)?$/.test(s))return "";return s;}
 const { escapeHtml } = require('../../shared/utils');
 
 const ICON_BED  = '<svg width="14" height="12" viewBox="0 0 16 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="5.5" rx="1.5"/><path d="M1 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><rect x="4" y="4" width="3" height="2" rx=".5"/></svg>';
@@ -15,7 +16,7 @@ function card(p) {
   const specs = [];
   if (p.habitaciones && p.habitaciones !== '0') specs.push(`<span class="cs-item">${ICON_BED}<span>${p.habitaciones} hab.</span></span>`);
   if (p.banos && p.banos !== '0') specs.push(`<span class="cs-item">${ICON_BATH}<span>${p.banos} ba.</span></span>`);
-  if (p.areaConst && p.areaConst !== "0" && p.areaConst.trim()) specs.push(`<span class="cs-item">${ICON_AREA}<span>${p.areaConst}</span></span>`);
+  if (ca(p.areaConst)) specs.push(`<span class="cs-item">${ICON_AREA}<span>${ca(p.areaConst)}</span></span>`);
 
   const specsHTML = specs.length > 0
     ? `<div class="card-specs">${specs.join('<span class="cs-sep"></span>')}</div>`
