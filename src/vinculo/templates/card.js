@@ -15,7 +15,7 @@ function card(p) {
   const specs = [];
   if (p.habitaciones && p.habitaciones !== '0') specs.push(`<span class="cs-item">${ICON_BED}<span>${p.habitaciones} hab.</span></span>`);
   if (p.banos && p.banos !== '0') specs.push(`<span class="cs-item">${ICON_BATH}<span>${p.banos} ba.</span></span>`);
-  if (p.areaConst) specs.push(`<span class="cs-item">${ICON_AREA}<span>${p.areaConst} m²</span></span>`);
+  if (p.areaConst && p.areaConst !== "0" && p.areaConst.trim()) specs.push(`<span class="cs-item">${ICON_AREA}<span>${p.areaConst}</span></span>`);
 
   const specsHTML = specs.length > 0
     ? `<div class="card-specs">${specs.join('<span class="cs-sep"></span>')}</div>`
