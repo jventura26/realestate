@@ -57,15 +57,15 @@ html{scroll-behavior:smooth}
 body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,27,62,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gl);padding:0;width:100%;height:40px;display:flex;align-items:stretch}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,27,62,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--gl);padding:0;width:100%;height:68px;display:flex;align-items:stretch}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%;width:100%;padding:0 6%;flex:1}
 .logo{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:baseline;gap:0}
 .logo em{font-style:normal;color:var(--or)}
 .logo sub{font-size:.48rem;font-weight:400;letter-spacing:.24em;color:var(--sv);margin-left:8px;font-family:'Montserrat',sans-serif}
 .nav-links{display:flex;gap:26px;list-style:none}
-.nav-links a{font-size:.66rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--sv);transition:color .3s}
+.nav-links a{font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--sv);transition:color .3s}
 .nav-links a:hover{color:var(--or)}
-.nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s}
+.nav-cta{border:1px solid var(--or);color:var(--or);padding:10px 22px;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;transition:all .3s;border-radius:4px}
 .nav-cta:hover{background:var(--or);color:var(--ink);border-color:var(--or)}
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:8px;z-index:201}
 .hamburger span{width:20px;height:2px;background:var(--or);transition:all .3s}
@@ -161,13 +161,13 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 /* RESPONSIVE */
 @media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}.det-body{grid-template-columns:1fr}}
 @media(max-width:768px){
-  body{padding-top:60px}
-  nav{position:fixed;top:0;left:0;right:0;z-index:200;width:100%!important;height:60px!important;padding:0!important;display:flex!important;align-items:center!important}
-  .nav-inner{height:60px!important;width:100%!important;padding:0 5%!important;display:flex!important;align-items:center!important;justify-content:space-between!important}
+  body{padding-top:68px}
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;width:100%!important;height:68px!important;padding:0!important;display:flex!important;align-items:center!important}
+  .nav-inner{height:68px!important;width:100%!important;padding:0 5%!important;display:flex!important;align-items:center!important;justify-content:space-between!important}
   .logo{margin-right:auto;flex-shrink:0}
   .hamburger{display:flex;margin-left:auto;flex-shrink:0}
   .nav-cta{display:none}
-  .nav-links{position:fixed;top:60px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199;max-height:calc(100vh - 60px);overflow-y:auto}
+  .nav-links{position:fixed;top:68px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199;max-height:calc(100vh - 60px);overflow-y:auto}
   .nav-links.active{display:flex}
   .nav-links li{padding:0}
   .nav-links a{display:block;padding:14px 6%;border-bottom:1px solid var(--bd);font-size:.7rem}
@@ -180,8 +180,8 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 }
 @media(max-width:480px){
   html,body{width:100%!important;overflow-x:hidden!important;margin:0!important;padding:0!important;padding-top:60px!important}
-  nav{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:200!important;width:100%!important;margin:0!important;height:60px!important;padding:0!important;display:flex!important;align-items:center!important}
-  .nav-inner{height:60px!important;width:100%!important;padding:0 3%!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important}
+  nav{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:200!important;width:100%!important;margin:0!important;height:68px!important;padding:0!important;display:flex!important;align-items:center!important}
+  .nav-inner{height:68px!important;width:100%!important;padding:0 3%!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important}
   .logo{margin-right:auto;flex-shrink:0}
   .hamburger{display:flex!important;margin-left:auto;flex-shrink:0;gap:4px;padding:8px}
   .hamburger span{width:20px;height:2px;background:var(--or)}
@@ -255,7 +255,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
+    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
@@ -277,30 +277,57 @@ ${body}
   <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
-<!-- NEWSLETTER FOOTER -->
-<section style="padding:44px 6%;background:var(--ink2);border-bottom:1px solid var(--gl)">
-  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:44px;align-items:center">
-    <div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;margin-bottom:12px">Mantente en el Loop</div>
-      <p style="font-size:.9rem;color:var(--sv);line-height:1.7">Recibe las mejores oportunidades inmobiliarias premium directamente en tu email.</p>
-    </div>
-    <form class="newsletter-form" style="display:flex;gap:10px">
-      <input type="email" placeholder="tu-email@example.com" required style="flex:1;min-width:200px;padding:12px 16px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-family:'Montserrat',sans-serif;font-size:.85rem;border-radius:3px;transition:all .3s">
-      <button type="submit" style="padding:12px 24px;background:var(--or);color:var(--ink);border:none;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .3s;font-family:'Montserrat',sans-serif;white-space:nowrap">Suscribirse</button>
-    </form>
-  </div>
-</section>
 
-<footer>
-  <div class="ft">
-    <div><div class="ft-brand"><em>ZONA</em> INNMUEBLE</div><p class="ft-tag">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p></div>
-    <div class="ft-col"><h4>Propiedades</h4><ul><li>Residencias</li><li>Apartamentos</li><li>Fincas</li><li>Inversión</li></ul></div>
-    <div class="ft-col"><h4>Zonas</h4><ul><li>Zona 10 · Zona 14</li><li>Zona 15 · Zona 16</li><li>Cayalá · Fraijanes</li><li>Carretera al Salvador</li></ul></div>
+<footer style="background:var(--ink);border-top:1px solid var(--gl)">
+  <div style="max-width:1200px;margin:0 auto;padding:60px 6% 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--wh);margin-bottom:16px"><em style="color:var(--or);font-style:normal">ZONA</em> INNmueble</div>
+      <p style="font-size:.82rem;color:var(--sv);line-height:1.8;max-width:280px;margin-bottom:24px">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
+      <a href="https://wa.me/${WA}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;font-size:.75rem;font-weight:700;padding:10px 18px;border-radius:6px;text-decoration:none;letter-spacing:.04em">
+        ${WA_SVG} WhatsApp +502 4554-2088
+      </a>
+    </div>
+    <div>
+      <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Propiedades</h4>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+        <li><a href="/propiedades.html?tipo=Casa" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Residencias</a></li>
+        <li><a href="/propiedades.html?tipo=Apartamento" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Apartamentos</a></li>
+        <li><a href="/propiedades.html?tipo=Finca" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fincas</a></li>
+        <li><a href="/propiedades.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Ver todas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Zonas</h4>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+        <li><a href="/propiedades.html?ciudad=Guatemala" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 10 · Zona 14</a></li>
+        <li><a href="/propiedades.html?ciudad=Guatemala" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 15 · Zona 16</a></li>
+        <li><a href="/propiedades.html?ciudad=Fraijanes" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fraijanes · Cayalá</a></li>
+        <li><a href="/propiedades.html?ciudad=Santa+Catarina+Pinula" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Carretera El Salvador</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Contacto</h4>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+        <li style="font-size:.8rem;color:var(--sv)">📍 Guatemala City</li>
+        <li style="font-size:.8rem;color:var(--sv)">📞 +502 4554-2088</li>
+        <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
+        <li><a href="/about.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Nosotros</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="ft-bot">
-    <span>© ${new Date().getFullYear()} Zona INNmueble Real Estate · Guatemala</span>
-    <span>+502 4554-2088 · WhatsApp</span>
+  <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
+    <span style="font-size:.72rem;color:var(--mt)">© ${new Date().getFullYear()} Zona INNmueble Real Estate · Guatemala</span>
+    <span style="font-size:.72rem;color:var(--mt)">Premium Real Estate · Propiedades verificadas</span>
   </div>
+  <style>
+    @media(max-width:768px){
+      footer > div:first-child{grid-template-columns:1fr 1fr !important;}
+      footer > div:first-child > div:first-child{grid-column:1/-1;}
+    }
+    @media(max-width:480px){
+      footer > div:first-child{grid-template-columns:1fr !important;}
+    }
+  </style>
 </footer>
 ${scripts}
 
