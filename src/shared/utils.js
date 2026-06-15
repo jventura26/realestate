@@ -32,12 +32,12 @@ function generateRedirects(properties, siteBase) {
   const lines = ['# Old Wix URLs â new static URLs (301 permanent)'];
   for (const p of properties) {
     if (!p.wixPath || !p.wixPath.includes('/propiedades-1/')) continue;
-    lines.push(`${p.wixPath}    /propiedades/${p.slug}.html    301!`);
-    lines.push(`${p.wixPath}/   /propiedades/${p.slug}.html    301!`);
+    lines.push(`${p.wixPath}    /propiedades/${p.slug}.html    301`);
+    lines.push(`${p.wixPath}/   /propiedades/${p.slug}.html    301`);
   }
   // Also redirect old catalog
-  lines.push('/propiedades-1/   /propiedades.html   301!');
-  lines.push('/propiedades-1    /propiedades.html   301!');
+  lines.push('/propiedades-1/   /propiedades.html   301');
+  lines.push('/propiedades-1    /propiedades.html   301');
   lines.push('');
   // No wildcard redirect - assets deben servirse directo
   return lines.join('\n');
