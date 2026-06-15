@@ -216,6 +216,48 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .wa-float{width:48px!important;height:48px!important;right:10px!important;bottom:10px!important}
 }
 
+/* ── RESPONSIVE NUEVOS ELEMENTOS ─────────────────────────────────── */
+@media(max-width:768px){
+  /* Tipos de propiedad - 2 columnas en tablet */
+  section[style*="background:var(--ink)"] > div[style*="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))"],
+  div[style*="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  /* Asesor card - vertical */
+  .asesor-card { flex-direction: column; gap: 20px; padding: 28px 20px; }
+  .asesor-avatar { width: 70px; height: 70px; font-size: 1.5rem; }
+  /* Footer - 2 columnas */
+  footer > div:first-child { grid-template-columns: 1fr 1fr !important; }
+  footer > div:first-child > div:first-child { grid-column: 1/-1; }
+  /* CTA banner */
+  .cta-banner { padding: 48px 5%; }
+  /* Testimonios - 1 columna */
+  .testimonials-container { grid-template-columns: 1fr !important; }
+}
+
+@media(max-width:480px){
+  /* Tipos - 1 columna */
+  div[style*="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Tipos altura minima */
+  div[style*="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))"] > a {
+    min-height: 240px !important;
+  }
+  /* Asesor */
+  .asesor-card { padding: 20px 16px; }
+  /* Footer - 1 columna */
+  footer > div:first-child { grid-template-columns: 1fr !important; }
+  /* Stats bar del hero - 2 columnas */
+  div[style*="justify-content:center;flex-wrap:wrap"] > div[style*="padding:20px 44px"] {
+    min-width: 45% !important;
+    padding: 14px 10px !important;
+  }
+  /* CTA banner */
+  .cta-banner { padding: 40px 4%; }
+  .cta-banner h2 { font-size: 1.6rem !important; }
+}
+
 /* ═══════════════════════════════════════════════════════════════════ */
 /* FASE 1: ANIMACIONES PREMIUM + TESTIMONIOS + VIDEO HERO              */
 /* ═══════════════════════════════════════════════════════════════════ */
