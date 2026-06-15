@@ -562,8 +562,8 @@ footer > div:last-child > div { text-align: center !important; }
 <body>
 <nav>
 <div class="nav-inner">
-  <a href="/" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
-    <img src="/assets/logo.png" alt="INMUHUB" style="height:40px;width:auto;" loading="lazy">
+  <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
+    <img src="/assets/logo-horizontal.png" alt="INMUHUB - Conecta tu inversion inmobiliaria" style="height:44px;width:auto;" loading="lazy">
   </a>
   <div style="display:flex;align-items:center;gap:4px;margin:0 auto;padding:0 32px">
     <a href="/propiedades.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Propiedades</a>
@@ -577,7 +577,6 @@ footer > div:last-child > div { text-align: center !important; }
       <input type="text" id="navSearch" placeholder="Buscar..." style="border:none;background:transparent;padding:8px 12px;font-size:13px;width:160px;outline:none;color:#1a2a4e">
       <button aria-label="Buscar" style="background:none;border:none;padding:8px 12px;cursor:pointer;font-size:14px;color:#4a5568">🔍</button>
     </div>
-    <a href="https://wa.me/50245542088" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:#0f1b2e;color:white;font-size:12px;font-weight:700;letter-spacing:.05em;padding:9px 18px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#1a2a4e'" onmouseout="this.style.background='#0f1b2e'">Asesoría WA</a>
   </div>
 </div>
 </nav>
