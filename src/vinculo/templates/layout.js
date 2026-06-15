@@ -23,8 +23,8 @@ fbq('track','PageView');
 <!-- End Meta Pixel Code -->
 
 <meta charset="UTF-8">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
-<link rel="apple-touch-icon" href="/assets/favicon.png">
+<link rel="icon" type="image/png" href="/assets/favicon2.png">
+<link rel="apple-touch-icon" href="/assets/favicon2.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -32,7 +32,7 @@ fbq('track','PageView');
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="icon" type="image/png" href="/assets/favicon2.png">
 <meta name="theme-color" content="#1a2a4e">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${pageTitle}">
