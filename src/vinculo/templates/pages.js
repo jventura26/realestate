@@ -187,7 +187,7 @@ const galleryHTML=(function(){
   }).join('');
   return '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+t+'</div>';
 })();
-const specHTML=`${prop.habitaciones&&prop.habitaciones!=='0'?`<div class="spec"><div class="spec-value">${prop.habitaciones}</div><div class="spec-label">Habitaciones</div></div>`:''}${prop.banos&&prop.banos!=='0'?`<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">Banos</div></div>`:''}${prop.areaConst?`<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">m2 Construccion</div></div>`:''}`;
+const specHTML=`${prop.habitaciones&&prop.habitaciones!=='0'?`<div class="spec"><div class="spec-value">${prop.habitaciones}</div><div class="spec-label">Habitaciones</div></div>`:''}${prop.banos&&prop.banos!=='0'?`<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">Banos</div></div>`:''}${prop.areaConst?`<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">Area</div></div>`:''}`;
 const descHTML=renderDesc(prop.description);
 const charsHTML=renderCaracteristicas(prop.caracteristicas||prop.amenities||[]);;
 const infoHTML=`<div class="info-item"><span class="label">Ubicacion</span><span class="value">${escapeHtml(prop.locationFull)}</span></div>${prop.codigoInmueble?`<div class="info-item"><span class="label">Codigo</span><span class="value">${escapeHtml(prop.codigoInmueble)}</span></div>`:''}${prop.tipo?`<div class="info-item"><span class="label">Tipo</span><span class="value">${escapeHtml(prop.tipo)}</span></div>`:''}`;
