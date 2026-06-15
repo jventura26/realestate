@@ -220,6 +220,68 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 /* FASE 1: ANIMACIONES PREMIUM + TESTIMONIOS + VIDEO HERO              */
 /* ═══════════════════════════════════════════════════════════════════ */
 
+
+/* Fade in al scroll */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in-up.delay-1 { transition-delay: .1s; }
+.fade-in-up.delay-2 { transition-delay: .2s; }
+.fade-in-up.delay-3 { transition-delay: .3s; }
+
+/* Hover mejorado en prop-card */
+.prop-card {
+  transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s;
+}
+.prop-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  z-index: 2;
+}
+.prop-card:hover .pc-info { transform: translateY(-4px); }
+.pc-info { transition: transform .4s cubic-bezier(.22,1,.36,1); }
+
+/* CTA banner intermedio */
+.cta-banner {
+  background: linear-gradient(135deg, var(--ink3) 0%, var(--ink2) 100%);
+  border-top: 1px solid var(--gl);
+  border-bottom: 1px solid var(--gl);
+  padding: 60px 6%;
+  text-align: center;
+}
+
+/* Asesor card */
+.asesor-card {
+  background: var(--ink2);
+  border: 1px solid var(--gl);
+  border-radius: 4px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+.asesor-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--or), var(--or2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  color: var(--ink);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -459,6 +521,23 @@ if(hamburger && navLinks) {
 }
 
 // Newsletter forms listener
+
+// Fade in al scroll con Intersection Observer
+const fadeEls = document.querySelectorAll('.fade-in-up');
+if (fadeEls.length && 'IntersectionObserver' in window) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  fadeEls.forEach(el => obs.observe(el));
+} else {
+  fadeEls.forEach(el => el.classList.add('visible'));
+}
+
 document.querySelectorAll('.newsletter-form').forEach(form => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
