@@ -14,4 +14,4 @@
 /propiedad/*    /propiedades/:splat       301
 
 # Catch-all para 404
-/*              /                         200
+
