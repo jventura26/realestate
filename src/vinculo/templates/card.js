@@ -34,6 +34,7 @@ function card(p) {
   <div class="card-img-wrap" style="overflow:hidden;position:relative;aspect-ratio:4/3">
     <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${altText}" loading="lazy" width="600" height="375" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
     <div class="card-badges" style="position:absolute;top:12px;left:12px;display:flex;gap:6px">${tipoBadge}${cintaBadge}</div>
+    ${p.gallery && p.gallery.length > 1 ? `<div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:white;font-size:11px;font-weight:600;padding:4px 8px;border-radius:5px;backdrop-filter:blur(4px)">📷 ${p.gallery.length}</div>` : ''}
     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.4) 0%,transparent 50%)"></div>
   </div>
   <div class="card-body" style="padding:20px 22px 24px">
