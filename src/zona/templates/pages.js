@@ -412,14 +412,34 @@ function detailPage(prop, all) {
     ? `<section class="related"><div class="ey">Relacionadas</div><h2 class="st">También te puede <em>interesar</em></h2><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></section>` : '';
 
   // JSON-LD structured data
+  const cleanDesc = (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
   const jsonLd = JSON.stringify({
-    "@context":"https://schema.org","@type":"RealEstateListing",
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
     "name": prop.title,
-    "description": prop.description?.substring(0,200) || '',
+    "description": cleanDesc || prop.title,
     "url": propUrl,
     "image": prop.mainImage || '',
-    "offers": { "@type":"Offer", "price": prop.priceNumeric || 0, "priceCurrency": prop.precio?.includes('$')?'USD':'GTQ' },
-    "address": { "@type":"PostalAddress", "addressLocality": prop.municipio, "addressCountry":"GT" },
+    "numberOfRooms": prop.habitaciones || undefined,
+    "floorSize": prop.areaConst ? { "@type":"QuantitativeValue", "value": prop.areaConst } : undefined,
+    "offers": {
+      "@type": "Offer",
+      "price": prop.priceNumeric || 0,
+      "priceCurrency": (prop.priceFormatted||'').includes('$') ? 'USD' : 'GTQ',
+      "availability": "https://schema.org/InStock"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": prop.municipio || 'Guatemala',
+      "addressRegion": "Guatemala",
+      "addressCountry": "GT"
+    },
+    "seller": {
+      "@type": "RealEstateAgent",
+      "name": "Zona INNmueble",
+      "url": "https://zona-innmueble.com",
+      "telephone": "+50245542088"
+    }
   });
 
   const body = `
@@ -463,6 +483,17 @@ function detailPage(prop, all) {
       <div style="text-align:center;font-size:.63rem;color:var(--mt);line-height:1.65">
         <strong style="display:block;color:var(--sv);margin-bottom:4px">+502 4554-2088</strong>
         Lun–Vie 8:00–18:00 · Sáb 9:00–14:00
+      </div>
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--gl)">
+        <div style="font-size:.57rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">O deja tus datos</div>
+        <form id="lead-form-${prop.slug}" onsubmit="var f=this;var t='Nuevo lead - '+f.propiedad.value+'%0ANombre: '+f.nombre.value+'%0ATelefono: '+f.telefono.value+'%0AMensaje: '+(f.mensaje.value||'Sin mensaje')+'%0AURL: ${propUrl}';window.open('https://wa.me/50245542088?text='+encodeURIComponent(t),'_blank');f.nextElementSibling.style.display='block';f.reset();return false;" style="display:flex;flex-direction:column;gap:8px">
+          <input type="hidden" name="propiedad" value="${escapeHtml(prop.title)}">
+          <input type="text" name="nombre" placeholder="Tu nombre" required style="padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--gl)'">
+          <input type="tel" name="telefono" placeholder="Tu teléfono" required style="padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--gl)'">
+          <textarea name="mensaje" placeholder="¿Qué deseas saber?" rows="2" style="padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;resize:none;font-family:inherit" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--gl)'"></textarea>
+          <button type="submit" style="padding:10px;background:var(--or);color:var(--ink);border:none;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;font-family:inherit">Solicitar información</button>
+        </form>
+        <p style="display:none;font-size:.75rem;color:#4ade80;text-align:center;margin:8px 0 0">✓ Enviado. Te contactamos pronto.</p>
       </div>
     </div>
     <div style="margin-top:10px;background:var(--ink2);border:1px solid var(--bd);padding:18px 20px">
