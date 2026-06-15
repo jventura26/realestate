@@ -86,8 +86,8 @@ section{padding:20px 6%}
 .btn-ol{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--wh);border:1px solid rgba(255,255,255,.22);padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;transition:all .3s}
 .btn-ol:hover{border-color:var(--gl);color:var(--or)}
 /* WA BUTTONS */
-.wa-btn{display:flex;align-items:center;gap:10px;background:var(--wa);color:var(--wh);padding:12px 18px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;width:100%;margin-bottom:8px}
-.wa-btn:hover{background:var(--wa2);transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,211,102,.3)}
+.wa-btn{display:flex;align-items:center;gap:10px;background:var(--ink3);color:var(--wh);border:1px solid var(--gl);padding:12px 18px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;width:100%;margin-bottom:8px}
+.wa-btn:hover{background:var(--or);color:var(--ink);border-color:var(--or);transform:translateY(-1px);box-shadow:0 8px 22px rgba(245,130,13,.25)}
 /* CARDS */
 .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
 .prop-card{position:relative;overflow:hidden;aspect-ratio:4/5;display:block;cursor:pointer}
@@ -137,8 +137,8 @@ section{padding:20px 6%}
 @keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 .div-line{height:1px;background:var(--bd);margin:16px 0}
 /* FLOAT WA */
-.wa-float{position:fixed;bottom:26px;right:26px;z-index:300;width:52px;height:52px;background:var(--wa);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:all .3s;animation:wfp 3s ease-in-out infinite}
-.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.6)}
+.wa-float{position:fixed;bottom:26px;right:26px;z-index:300;width:52px;height:52px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(245,130,13,.4);transition:all .3s;animation:wfp 3s ease-in-out infinite}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(245,130,13,.5)}
 @keyframes wfp{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.07)}}
 .wa-float svg{width:24px;height:24px;fill:white}
 /* NO RESULTS */
@@ -387,7 +387,7 @@ ${body}
     <div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--wh);margin-bottom:16px"><em style="color:var(--or);font-style:normal">ZONA</em> INNmueble</div>
       <p style="font-size:.82rem;color:var(--sv);line-height:1.8;max-width:280px;margin-bottom:24px">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
-      <a href="https://wa.me/${WA}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;font-size:.75rem;font-weight:700;padding:10px 18px;border-radius:6px;text-decoration:none;letter-spacing:.04em">
+      <a href="https://wa.me/${WA}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--or);color:var(--ink);font-size:.75rem;font-weight:700;padding:10px 18px;border-radius:4px;text-decoration:none;letter-spacing:.04em;transition:all .3s" onmouseover="this.style.background='var(--or2)'" onmouseout="this.style.background='var(--or)'">
         ${WA_SVG} WhatsApp +502 4554-2088
       </a>
     </div>
