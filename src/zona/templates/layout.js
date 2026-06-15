@@ -18,6 +18,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="google-site-verification" content="24850a801f739dec">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${pageTitle}</title>
 <meta name="description" content="${metaDesc}">
