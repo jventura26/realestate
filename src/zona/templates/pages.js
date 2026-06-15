@@ -17,7 +17,7 @@ function card(p) {
   const meta = [];
   if (p.habitaciones && p.habitaciones !== '0') meta.push(`${p.habitaciones} Hab.`);
   if (p.banos        && p.banos        !== '0') meta.push(`${p.banos} Baños`);
-  if (p.areaConst)                              meta.push(p.areaConst);
+  if (p.areaConst && p.areaConst !== '0' && !p.areaConst.startsWith("'") && p.areaConst !== '0 v²' && p.areaConst !== '0 m²') meta.push(p.areaConst);
 
   return `<a class="prop-card" href="/propiedades/${p.slug}.html"
   data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
@@ -391,7 +391,7 @@ function detailPage(prop, all) {
     prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones', v: prop.habitaciones } : null,
     prop.banos&&prop.banos!=='0'               ? { l:'Baños',        v: prop.banos }        : null,
     prop.parqueos&&prop.parqueos!=='No'        ? { l:'Garaje',       v: prop.parqueos }     : null,
-    prop.areaConst                             ? { l:'Construcción', v: prop.areaConst }    : null,
+    (prop.areaConst && prop.areaConst !== '0' && !prop.areaConst.startsWith("'") && prop.areaConst !== '0 v²') ? { l:'Area', v: prop.areaConst } : null,
     prop.terreno                               ? { l:'Terreno',      v: prop.terreno }      : null,
     prop.codigo                                ? { l:'Código',       v: prop.codigo }       : null,
   ].filter(Boolean);
