@@ -80,13 +80,13 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 }
 /* HEADER RESPONSIVE */
 @media(max-width:768px){
-.logo img { height: 95px !important; }
+.logo img { height: 44px !important; }
 .logo-tag { font-size: 11px !important; margin-top: 2px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
 }
 
 @media(max-width:480px){
-.logo img { height: 130px !important; }
+.logo img { height: 40px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
@@ -97,7 +97,7 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 @media(max-width:480px){
 .logo { gap: 1px; }
 .logo-tag { margin-top: 0px; font-size: 8px !important; }
-a.logo img { height: 115px !important; margin-right: 2px !important; }
+a.logo img { height: 38px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
 }
@@ -581,64 +581,82 @@ footer > div:last-child > div { text-align: center !important; }
 </div>
 </nav>
 ${body}
-<footer style="background:#0f1b2e;color:white;margin-top:120px;padding:0">
-  <!-- MAIN FOOTER -->
-  <div style="max-width:1400px;margin:0 auto;padding:clamp(40px,8vw,80px) 6%">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(40px,5vw,60px);margin-bottom:clamp(40px,5vw,60px)">
-      
-      <!-- BRAND -->
-      <div>
-        <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:20px">
-          <img src="/assets/logo.png" alt="INMUHUB" style="height:56px;width:auto;" loading="lazy">
-          <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px">INMUHUB</div>
-        </div>
-        <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin:0">
-          Plataforma premium de inversión inmobiliaria en Guatemala. Propiedades verificadas y herramientas profesionales.
-        </p>
-      </div>
-
-      <!-- HERRAMIENTAS -->
-      <div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#ffa500;margin:0 0 20px">Herramientas</h4>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-          <li><a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Calculadora</a></li>
-          <li><a href="/herramientas/valuador.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Valuador</a></li>
-          <li><a href="/herramientas/guia-compra.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Guía de Compra</a></li>
-          <li><a href="/herramientas/dashboard-inversionistas.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Dashboard</a></li>
-        </ul>
-      </div>
-
-      <!-- PROPIEDADES -->
-      <div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#ffa500;margin:0 0 20px">Propiedades</h4>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-          <li><a href="/propiedades.html?tipo=Casa" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Casas</a></li>
-          <li><a href="/propiedades.html?tipo=Apartamento" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Apartamentos</a></li>
-          <li><a href="/propiedades.html?tipo=Fincas" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Fincas</a></li>
-          <li><a href="/propiedades.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Ver todas</a></li>
-        </ul>
-      </div>
-
-      <!-- ZONAS -->
-      <div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#ffa500;margin:0 0 20px">Zonas Premium</h4>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-          <li><a href="/zonas/zona-10.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Zona 10</a></li>
-          <li><a href="/zonas/zona-14.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Zona 14</a></li>
-          <li><a href="/zonas/cayala.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Cayalá</a></li>
-          <li><a href="/propiedades.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Todas</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- DIVIDER -->
-    <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:clamp(30px,5vw,40px)"></div>
-
-    <!-- BOTTOM -->
-    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5)">
-      <p style="margin:0">&copy; ${new Date().getFullYear()} INMUHUB.COM · Plataforma Premium de Real Estate Guatemala</p>
+<footer style="background:#060e1c;color:white;margin-top:0;padding:0;border-top:1px solid rgba(255,255,255,.06)">
+  <!-- CTA STRIP -->
+  <div style="background:linear-gradient(135deg,#0a1628 0%,#1a2a4e 100%);padding:56px 6%;text-align:center;border-bottom:1px solid rgba(201,169,110,.15)">
+    <div style="max-width:600px;margin:0 auto">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Asesoria sin costo</div>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:white;margin-bottom:20px;line-height:1.2">Tu propiedad ideal esta <em style="font-style:italic;color:var(--gold)">a un mensaje</em></h2>
+      <p style="font-size:.9rem;color:rgba(255,255,255,.55);margin-bottom:32px;line-height:1.7">Contactanos por WhatsApp y un asesor te responde en menos de 1 hora.</p>
+      <a href="https://wa.me/50245542088" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:white;font-size:14px;font-weight:700;padding:14px 32px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='#1da851'" onmouseout="this.style.background='#25d366'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribir por WhatsApp
+      </a>
     </div>
   </div>
+  <!-- MAIN FOOTER -->
+  <div style="max-width:1200px;margin:0 auto;padding:64px 6% 0">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px">
+      <!-- BRAND -->
+      <div>
+        <img src="/assets/logo-horizontal.png" alt="INMUHUB" style="height:36px;width:auto;margin-bottom:20px;filter:brightness(0) invert(1)" loading="lazy">
+        <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin:0 0 24px;max-width:280px">Conectamos compradores e inversionistas con las mejores propiedades en Guatemala. Verificadas, asesoradas y sin sorpresas.</p>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;background:#25d366;border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>
+          <span style="font-size:12px;color:rgba(255,255,255,.4)">Disponibles Lun-Vie 8:00-18:00</span>
+        </div>
+      </div>
+      <!-- PROPIEDADES -->
+      <div>
+        <h4 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 20px">Propiedades</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="/propiedades.html?tipo=Casa" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Casas</a></li>
+          <li><a href="/propiedades.html?tipo=Apartamento" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Apartamentos</a></li>
+          <li><a href="/propiedades.html?tipo=Finca" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Fincas</a></li>
+          <li><a href="/propiedades.html?tipo=Terreno" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Terrenos</a></li>
+          <li><a href="/propiedades.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Ver todas</a></li>
+        </ul>
+      </div>
+      <!-- HERRAMIENTAS -->
+      <div>
+        <h4 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 20px">Herramientas</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="/herramientas/valuador.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Valuador</a></li>
+          <li><a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Calculadora</a></li>
+          <li><a href="/herramientas/simulador-inversion.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Simulador</a></li>
+          <li><a href="/herramientas/guia-compra.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Guia de Compra</a></li>
+        </ul>
+      </div>
+      <!-- ZONAS -->
+      <div>
+        <h4 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 20px">Zonas Premium</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="/propiedades.html?ciudad=Guatemala" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Guatemala</a></li>
+          <li><a href="/propiedades.html?ciudad=Mixco" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Mixco</a></li>
+          <li><a href="/propiedades.html?ciudad=Fraijanes" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Fraijanes</a></li>
+          <li><a href="/propiedades.html?ciudad=Santa+Catarina+Pinula" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Santa Catarina</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- BOTTOM BAR -->
+    <div style="border-top:1px solid rgba(255,255,255,.06);padding:24px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">&copy; \${new Date().getFullYear()} INMUHUB.COM — Todos los derechos reservados</p>
+      <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">Guatemala City, Guatemala &middot; +502 4554-2088</p>
+    </div>
+  </div>
+  <!-- MOBILE RESPONSIVE -->
+  <style>
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr !important;}
+      .footer-brand{grid-column:1/-1;}
+    }
+    @media(max-width:480px){
+      .footer-grid{grid-template-columns:1fr !important;}
+      .nav-inner{height:auto !important;min-height:60px !important;padding:12px 0 !important;}
+      .nav-inner > div:nth-child(2){display:none !important;}
+    }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  </style>
 </footer>
 ${scripts}
 </body>
