@@ -630,7 +630,7 @@ ${body}
     </div>
     <!-- BOTTOM BAR -->
     <div style="border-top:1px solid rgba(255,255,255,.06);padding:24px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-      <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">&copy; \${new Date().getFullYear()} INMUHUB.COM — Todos los derechos reservados</p>
+      <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">&copy; 2026 INMUHUB.COM — Todos los derechos reservados</p>
       <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">Guatemala City, Guatemala &middot; +502 4554-2088</p>
     </div>
   </div>
