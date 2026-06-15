@@ -39,6 +39,38 @@ function card(p) {
 }
 
 // ── INDEX ─────────────────────────────────────────────────────────────
+function renderCaracteristicas(chars) {
+  if (!chars || !chars.length) return '';
+  const grupos = {
+    'Ubicacion': ['Ubicacion privilegiada','Sobre carretera','Entorno natural y vistas','Cerca de servicios','Zona residencial','Acceso pavimentado'],
+    'Terreno': ['Amplio espacio','Topografia aprovechable','Acceso a servicios','Vista al valle','Terreno plano','Con jardin'],
+    'Ideal para': ['Casa de descanso','Proyecto agricola','Desarrollo habitacional','Hotel ecologico','Inversion','Vivienda familiar'],
+    'Amenidades': ['Piscina','Jardin','Pergola','Chimenea','Jacuzzi','Churrasquera','Terraza','Estudio','Cuarto de servicio','Bodega'],
+    'Inversion': ['Alta plusvalia','Zona en crecimiento','Papeleria en orden','Sin gravamenes','Financiamiento disponible','Negociable'],
+  };
+  const emojis = {
+    'Ubicacion privilegiada':'📍','Sobre carretera':'🚗','Entorno natural y vistas':'🌄','Cerca de servicios':'🏙️','Zona residencial':'🏘️','Acceso pavimentado':'🛣️',
+    'Amplio espacio':'📏','Topografia aprovechable':'🌳','Acceso a servicios':'💧','Vista al valle':'🌅','Terreno plano':'⬜','Con jardin':'🌿',
+    'Casa de descanso':'🏡','Proyecto agricola':'🌱','Desarrollo habitacional':'🏘️','Hotel ecologico':'🏢','Inversion':'📈','Vivienda familiar':'👨‍👩‍👧',
+    'Piscina':'🏊','Jardin':'🌿','Pergola':'⛺','Chimenea':'🔥','Jacuzzi':'🛁','Churrasquera':'🍖','Terraza':'🌇','Estudio':'💼','Cuarto de servicio':'🛏','Bodega':'📦',
+    'Alta plusvalia':'📈','Zona en crecimiento':'🚀','Papeleria en orden':'📄','Sin gravamenes':'✅','Financiamiento disponible':'🏦','Negociable':'🤝',
+  };
+  let html = '<div style="margin-top:32px"><div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Caracteristicas</div>';
+  Object.entries(grupos).forEach(([grupo, items]) => {
+    const activos = items.filter(i => chars.includes(i));
+    if (!activos.length) return;
+    html += '<div style="margin-bottom:14px"><div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:8px">' + grupo + '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
+    activos.forEach(item => {
+      const emoji = emojis[item] || '';
+      html += '<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(255,255,255,.05);border:1px solid var(--gl);border-radius:20px;font-size:.72rem;color:var(--sv)">' + emoji + ' ' + item + '</span>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderDesc(desc) {
   if (!desc) return '';
   const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripcion</div>';
@@ -150,30 +182,36 @@ function indexPage(props) {
     </h2>
     
     <div class="testimonials-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px">
-      <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
-        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Zona INNmueble me ayudó a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo con mis necesidades. Altamente recomendado."</p>
-        <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">MC</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">María Castillo</div><div style="color:var(--mt);font-size:.8rem">Empresaria</div></div>
+      <div class="testimonial-card fade-in-up" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
+        <div style="display:flex;gap:3px;margin-bottom:20px">
+          ${'★'.repeat(5).split('').map(s=>'<span style="color:var(--or);font-size:1.1rem">'+s+'</span>').join('')}
+        </div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Zona INNmueble me ayudó a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo con mis necesidades. Altamente recomendado."</p>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#1a2a4e,var(--navy));border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">MC</div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">María Castillo</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Empresaria · Zona 10</div></div>
         </div>
       </div>
       
-      <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
-        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Excelente asesoría para mi inversión inmobiliaria. Entendieron mi visión y me ofrecieron opciones que superaron mis expectativas."</p>
-        <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">CG</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Carlos García</div><div style="color:var(--mt);font-size:.8rem">Inversionista</div></div>
+      <div class="testimonial-card fade-in-up delay-1" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
+        <div style="display:flex;gap:3px;margin-bottom:20px">
+          ${'★'.repeat(5).split('').map(s=>'<span style="color:var(--or);font-size:1.1rem">'+s+'</span>').join('')}
+        </div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Excelente asesoría para mi inversión inmobiliaria. Entendieron mi visión y me ofrecieron opciones que superaron mis expectativas. El proceso fue transparente y profesional."</p>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#0d3d2a,#1a6b4a);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">CG</div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Carlos García</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Inversionista · Fraijanes</div></div>
         </div>
       </div>
       
-      <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
-        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"El servicio es impecable. Desde la búsqueda hasta la finalización, todo fue smooth y profesional. Definitivamente mi opción número uno."</p>
-        <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">SL</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Sandra López</div><div style="color:var(--mt);font-size:.8rem">Ejecutiva</div></div>
+      <div class="testimonial-card fade-in-up delay-2" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
+        <div style="display:flex;gap:3px;margin-bottom:20px">
+          ${'★'.repeat(5).split('').map(s=>'<span style="color:var(--or);font-size:1.1rem">'+s+'</span>').join('')}
+        </div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"El servicio es impecable. Desde la búsqueda hasta la finalización, todo fue smooth y profesional. Definitivamente mi opción número uno para propiedades premium."</p>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#2d1a4e,#4a2d7a);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">SL</div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Sandra López</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Ejecutiva · Zona 14</div></div>
         </div>
       </div>
     </div>
@@ -203,6 +241,7 @@ function indexPage(props) {
 
 
 <!-- TYPES -->
+<style>.tipo-bg{transform:scale(1)}.tipo-line{height:28px}a:hover .tipo-bg{transform:scale(1.06)}a:hover .tipo-line{height:44px}</style>
 <section style="background:var(--ink)" class="fade-in-up">
   <div style="max-width:560px;margin-bottom:52px">
     <div class="ey">Encuentra Tu Tipo Ideal</div>
@@ -210,15 +249,20 @@ function indexPage(props) {
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--bd)">
     ${[
-      ['🏠','Residencias Premium','Casas diseñadas para vivir. Zona 10, 14, 15, 16 y Cayalá. Privacidad, acceso y plusvalía.'],
-      ['🏙️','Apartamentos Selectos','Penthouse y apartamentos de alto nivel. Ubicaciones estratégicas con retorno de inversión potencial.'],
-      ['🌿','Fincas & Terrenos','Propiedades rurales con potencial. Espacio, naturaleza y oportunidades de desarrollo.'],
-      ['📈','Inversión Inteligente','Identificamos oportunidades antes que el mercado. Asesoría con análisis de retorno real.'],
-    ].map(([ic,nm,ds])=>`<div style="background:var(--ink2);padding:38px 30px;border-top:2px solid transparent;transition:all .4s;cursor:pointer" onmouseover="this.style.background='var(--ink3)';this.style.borderTopColor='var(--or)'" onmouseout="this.style.background='var(--ink2)';this.style.borderTopColor='transparent'">
-      <div style="font-size:1.7rem;margin-bottom:18px">${ic}</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:10px">${nm}</div>
-      <p style="font-size:.73rem;color:var(--sv);line-height:1.8;font-weight:300">${ds}</p>
-    </div>`).join('')}
+      ['Residencias Premium','Casas diseñadas para vivir. Zona 10, 14, 15, 16 y Cayalá. Privacidad, acceso y plusvalía.','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70','/propiedades.html?tipo=Casa'],
+      ['Apartamentos Selectos','Penthouse y apartamentos de alto nivel. Ubicaciones estratégicas con retorno de inversión potencial.','https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=70','/propiedades.html?tipo=Apartamento'],
+      ['Fincas & Terrenos','Propiedades rurales con potencial. Espacio, naturaleza y oportunidades de desarrollo.','https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=70','/propiedades.html?tipo=Finca'],
+      ['Inversión Inteligente','Identificamos oportunidades antes que el mercado. Asesoría con análisis de retorno real.','https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=70','/propiedades.html'],
+    ].map(([nm,ds,img,href])=>`<a href="${href}" style="position:relative;overflow:hidden;cursor:pointer;display:block;text-decoration:none;min-height:320px;display:flex;align-items:flex-end">
+      <div style="position:absolute;inset:0;background:url('${img}') center/cover no-repeat;transition:transform .6s cubic-bezier(.22,1,.36,1)" class="tipo-bg"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.97) 0%,rgba(13,27,62,.4) 60%,rgba(13,27,62,.1) 100%);transition:all .4s"></div>
+      <div style="position:relative;z-index:2;padding:32px 28px;width:100%">
+        <div style="width:2px;height:28px;background:var(--or);margin-bottom:16px;transition:height .3s" class="tipo-line"></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:10px">${nm}</div>
+        <p style="font-size:.72rem;color:rgba(255,255,255,.65);line-height:1.8;font-weight:300;margin-bottom:16px">${ds}</p>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Ver propiedades →</span>
+      </div>
+    </a>`).join('')}
   </div>
 </section>
 
@@ -388,6 +432,7 @@ function detailPage(prop, all) {
       <div class="det-price">${escapeHtml(prop.priceFormatted)}</div>
       <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
       ${renderDesc(prop.description)}
+      ${renderCaracteristicas(prop.caracteristicas||[])}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
     </div>
     <!-- MOBILE WA (hidden on desktop) -->
