@@ -1,92 +1,6 @@
 const { layout, WA }       = require('./layout');
 const { escapeHtml, uniqueValues, getRelated } = require('../../shared/utils');
 
-function renderCaracteristicas(chars) {
-  if (!chars || !chars.length) return '';
-  const grupos = {
-    'Ubicacion': ['Ubicacion privilegiada','Sobre carretera','Entorno natural y vistas','Cerca de servicios','Zona residencial','Acceso pavimentado'],
-    'Terreno': ['Amplio espacio','Topografia aprovechable','Acceso a servicios','Vista al valle','Terreno plano','Con jardin'],
-    'Ideal para': ['Casa de descanso','Proyecto agricola','Desarrollo habitacional','Hotel ecologico','Inversion','Vivienda familiar'],
-    'Amenidades': ['Piscina','Jardin','Pergola','Chimenea','Jacuzzi','Churrasquera','Terraza','Estudio','Cuarto de servicio','Bodega'],
-    'Inversion': ['Alta plusvalia','Zona en crecimiento','Papeleria en orden','Sin gravamenes','Financiamiento disponible','Negociable'],
-  };
-  const emojis = {
-    'Ubicacion privilegiada':'📍','Sobre carretera':'🚗','Entorno natural y vistas':'🌄','Cerca de servicios':'🏙️','Zona residencial':'🏘️','Acceso pavimentado':'🛣️',
-    'Amplio espacio':'📏','Topografia aprovechable':'🌳','Acceso a servicios':'💧','Vista al valle':'🌅','Terreno plano':'⬜','Con jardin':'🌿',
-    'Casa de descanso':'🏡','Proyecto agricola':'🌱','Desarrollo habitacional':'🏘️','Hotel ecologico':'🏢','Inversion':'📈','Vivienda familiar':'👨‍👩‍👧',
-    'Piscina':'🏊','Jardin':'🌿','Pergola':'⛺','Chimenea':'🔥','Jacuzzi':'🛁','Churrasquera':'🍖','Terraza':'🌇','Estudio':'💼','Cuarto de servicio':'🛏','Bodega':'📦',
-    'Alta plusvalia':'📈','Zona en crecimiento':'🚀','Papeleria en orden':'📄','Sin gravamenes':'✅','Financiamiento disponible':'🏦','Negociable':'🤝',
-  };
-  let html = '<div style="margin-top:32px"><div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Caracteristicas</div>';
-  Object.entries(grupos).forEach(([grupo, items]) => {
-    const activos = items.filter(i => chars.includes(i));
-    if (!activos.length) return;
-    html += '<div style="margin-bottom:16px">';
-    html += '<div style="font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:8px">' + grupo + '</div>';
-    html += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
-    activos.forEach(item => {
-      const emoji = emojis[item] || 'v';
-      html += '<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:20px;font-size:.75rem;color:var(--sv)">' + emoji + ' ' + item + '</span>';
-    });
-    html += '</div></div>';
-  });
-  html += '</div>';
-  return html;
-}
-
-function renderDesc(desc) {
-  if (!desc) return '';
-  const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Descripcion</div>';
-
-  // Si es JSON de Wix, extraer texto limpio
-  if (desc.trim().startsWith('{') || desc.includes('"nodes"')) {
-    try {
-      const texts = [];
-      let m;
-      const re = /"text":"([^"]+)"/g;
-      while ((m = re.exec(desc)) !== null) {
-        const t = m[1].trim();
-        if (t && t.length > 1) texts.push(t);
-      }
-      const clean = texts.join(' ');
-      return clean ? label + '<p class="det-desc">' + escapeHtml(clean) + '</p>' : '';
-    } catch(e) { return ''; }
-  }
-
-  // Texto con emojis — separar por emoji al inicio de cada segmento
-  // Detectar si tiene emojis usando regex unicode
-  const emojiRegex = /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu;
-  const hasEmojis = emojiRegex.test(desc);
-
-  if (hasEmojis) {
-    // Separar por emojis — cada emoji inicia un nuevo item
-    const parts = desc.split(/(?=\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu)
-      .map(s => s.trim()).filter(s => s.length > 0);
-
-    if (parts.length > 1) {
-      const html = parts.map(part => {
-        // Extraer el emoji inicial y el texto
-        const emojiMatch = part.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic}[️⃣]?)\s*/u);
-        const emoji = emojiMatch ? emojiMatch[0].trim() : '';
-        const text = part.replace(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic}[️⃣]?)\s*/u, '').trim();
-        if (!text && !emoji) return '';
-        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;margin-bottom:6px;background:rgba(255,255,255,.04);border-radius:6px;border-left:2px solid var(--or)">'
-          + '<span style="font-size:1.1rem;flex-shrink:0;margin-top:1px">' + emoji + '</span>'
-          + '<span style="font-size:.84rem;color:var(--sv);line-height:1.65">' + escapeHtml(text) + '</span>'
-          + '</div>';
-      }).filter(Boolean).join('');
-      return label + '<div class="det-desc-list">' + html + '</div>';
-    }
-  }
-
-  // Texto plano sin emojis — mostrar como parrafo
-  const lines = desc.split('\n').map(l => l.trim()).filter(l => l);
-  const html = lines.map(l =>
-    '<p style="font-size:.84rem;color:var(--sv);line-height:1.7;margin-bottom:8px">' + escapeHtml(l) + '</p>'
-  ).join('');
-  return label + '<div class="det-desc">' + html + '</div>';
-}
-
 const DOMAIN = 'https://zona-innmueble.com';
 
 const WA_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
@@ -140,7 +54,7 @@ function indexPage(props) {
       En Guatemala, la diferencia entre una casa y una <em style="color:var(--or);font-style:italic">residencia exclusiva</em> está en cada detalle.
     </h1>
     <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
-      31 propiedades verificadas, oportunidades de inversión y un equipo que entiende que cada propiedad cuenta una historia. Asesoría privada para quienes saben qué buscan.
+      ${props.length} propiedades verificadas, oportunidades de inversión y un equipo que entiende que cada propiedad cuenta una historia. Asesoría privada para quienes saben qué buscan.
     </p>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
       <a href="/propiedades.html" class="btn-or">Ver Propiedades</a>
@@ -150,7 +64,7 @@ function indexPage(props) {
   <!-- Stats bar -->
   <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.8);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap">
     ${[
-      [`+${props.length}`,'Propiedades'],
+      [props.length+'+'  ,'Propiedades'],
       ['10+','Años en el Mercado'],
       ['5','Zonas Premium'],
       ['100%','Asesoría Personal'],
@@ -167,7 +81,7 @@ function indexPage(props) {
     <div>
       <div class="ey">Propiedades Verificadas</div>
       <h2 class="st">Cada detalle <em>cuenta una historia</em></h2>
-      <p style="font-size:.8rem;color:var(--sv);max-width:400px;margin-top:12px;line-height:1.7">31 propiedades cuidadosamente seleccionadas en las zonas más exclusivas de Guatemala.</p>
+      <p style="font-size:.8rem;color:var(--sv);max-width:400px;margin-top:12px;line-height:1.7">${props.length} propiedades cuidadosamente seleccionadas en las zonas más exclusivas de Guatemala.</p>
     </div>
     <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or);transition:all .3s" onmouseover="this.style.color='var(--or2)'" onmouseout="this.style.color='var(--or)'">Ver todas →</a>
   </div>
@@ -236,23 +150,7 @@ function indexPage(props) {
   </div>
 </section>
 
-<!-- NEWSLETTER BANNER (NUEVO) -->
-<section style="padding:80px 6%;background:linear-gradient(135deg,var(--ink3),var(--ink2));border-top:1px solid var(--gl);border-bottom:1px solid var(--gl)">
-  <div style="max-width:700px;margin:0 auto;text-align:center">
-    <div class="ey" style="justify-content:center;margin-bottom:12px">MANTENTE ACTUALIZADO</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:300;margin-bottom:20px;color:var(--wh)">
-      Suscríbete y recibe oportunidades premium antes que nadie
-    </h2>
-    <p style="font-size:.95rem;color:var(--sv);margin-bottom:35px;line-height:1.8">
-      Nuevas propiedades, market insights y oportunidades exclusivas de inversión. Directamente en tu inbox.
-    </p>
-    <form class="newsletter-form" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
-      <input type="email" placeholder="tu-email@example.com" required style="flex:1;min-width:250px;max-width:400px;padding:14px 18px;background:rgba(255,255,255,.08);border:1px solid var(--gl);color:var(--wh);font-family:'Montserrat',sans-serif;font-size:.9rem;border-radius:4px;transition:all .3s">
-      <button type="submit" style="padding:14px 32px;background:var(--or);color:var(--ink);border:none;font-size:.8rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all .3s;font-family:'Montserrat',sans-serif">Suscribirse</button>
-    </form>
-    <p style="font-size:.75rem;color:var(--mt);margin-top:18px">Respetamos tu privacidad. Baja frecuencia, solo contenido de valor.</p>
-  </div>
-</section>
+
 
 <!-- TYPES -->
 <section style="background:var(--ink)">
@@ -419,8 +317,7 @@ function detailPage(prop, all) {
       <h1 class="det-title">${escapeHtml(prop.title)}</h1>
       <div class="det-price">${escapeHtml(prop.priceFormatted)}</div>
       <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
-      ${renderDesc(prop.description)}
-      ${renderCaracteristicas(prop.caracteristicas||prop.amenities||[])}
+      ${prop.description?`<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripción</div><p class="det-desc">${escapeHtml(prop.description)}</p>`:''}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
     </div>
     <!-- MOBILE WA (hidden on desktop) -->
