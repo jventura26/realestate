@@ -588,7 +588,7 @@ ${body}
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px">
       <!-- BRAND -->
       <div>
-        <img src="/assets/logo-horizontal.png" alt="INMUHUB" style="height:36px;width:auto;margin-bottom:20px;filter:brightness(0) invert(1)" loading="lazy">
+        <div style="margin-bottom:20px"><span style="font-size:22px;font-weight:900;color:white;letter-spacing:-.5px">INMU</span><span style="font-size:22px;font-weight:900;color:var(--gold);letter-spacing:-.5px">HUB</span></div>
         <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin:0 0 24px;max-width:280px">Conectamos compradores e inversionistas con las mejores propiedades en Guatemala. Verificadas, asesoradas y sin sorpresas.</p>
         <div style="display:flex;align-items:center;gap:6px">
           <span style="width:8px;height:8px;background:#25d366;border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>
