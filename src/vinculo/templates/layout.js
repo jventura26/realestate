@@ -23,6 +23,8 @@ fbq('track','PageView');
 <!-- End Meta Pixel Code -->
 
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${pageTitle}</title>
 <meta name="description" content="${metaDesc}">
@@ -56,8 +58,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
-.nav-inner{display:flex;align-items:flex-start;justify-content:space-between;height:auto;min-height:auto !important;padding:0px 0;padding-bottom:25px}
+nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%;backdrop-filter:blur(10px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;min-height:72px;padding:0;}
 .logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-decoration:none;color:inherit}
 .logo-name{font-size:clamp(14px,2vw,22px);font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
 .logo-tag{font-size:clamp(8px,1.5vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.2;margin-top:2px}
@@ -72,7 +74,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .search-compact{max-width:100%;gap:4px}
 .search-compact input{font-size:16px;padding:10px 8px}
 .search-compact button{padding:10px 8px;font-size:14px}
-.nav-inner{flex-wrap:wrap}
+.nav-inner{flex-wrap:wrap;height:auto;min-height:60px;padding:12px 0}
 }
 /* HEADER RESPONSIVE */
 @media(max-width:768px){
@@ -172,7 +174,7 @@ label[style*="display:flex"][style*="gap:8px"] {
 .card-cinta--renta{background:var(--gray-700,#374151);color:#fff}
 .card-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
 .card-price{font-size:19px;font-weight:700;color:var(--gold,#C9A96E);line-height:1;margin-bottom:7px;letter-spacing:-0.02em}
-.card-title{font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-title{font-size:.95rem;line-height:1.4;font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;display:flex;align-items:flex-start;gap:4px;overflow:hidden}
 .card-loc svg{flex-shrink:0;opacity:.5}
 .card-loc span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -558,19 +560,23 @@ footer > div:last-child > div { text-align: center !important; }
 <body>
 <nav>
 <div class="nav-inner">
-<a href="/" class="logo">
-<img src="/assets/logo.png" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(80px,14vw,220px);width:auto;margin-right:clamp(4px,1.5vw,16px);" loading="lazy">
-</a>
-<div style="display:flex;gap:12px;align-items:flex-end;margin-left:auto;padding-bottom:20px">
-  <a href="/herramientas/valuador.html" style="font-size:14px;font-weight:500;color:#1a2a4e;padding:8px 12px;border-radius:6px;transition:all 0.2s">Valuador</a>
-<a href="/herramientas/calculadora-hipotecaria.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Calculadora</a>
-  <a href="/herramientas/simulador-inversion.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Simulador</a>
-  <a href="/herramientas/guia-compra.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Guía</a>
-</div>
-<div class="search-compact">
-<input type="text" id="navSearch" placeholder="Buscar propiedades...">
-<button aria-label="Búsqueda" style="display:flex;align-items:flex-start;justify-content:center;font-size:16px;opacity:0.7">🔍</button>
-</div>
+  <a href="/" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0">
+    <img src="/assets/logo.png" alt="INMUHUB" style="height:40px;width:auto;" loading="lazy">
+  </a>
+  <div style="display:flex;align-items:center;gap:4px;margin:0 auto;padding:0 32px">
+    <a href="/propiedades.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Propiedades</a>
+    <a href="/herramientas/valuador.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Valuador</a>
+    <a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Calculadora</a>
+    <a href="/herramientas/simulador-inversion.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Simulador</a>
+    <a href="/herramientas/guia-compra.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Guia</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div style="display:flex;align-items:center;background:#f7f8fa;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+      <input type="text" id="navSearch" placeholder="Buscar..." style="border:none;background:transparent;padding:8px 12px;font-size:13px;width:160px;outline:none;color:#1a2a4e">
+      <button aria-label="Buscar" style="background:none;border:none;padding:8px 12px;cursor:pointer;font-size:14px;color:#4a5568">🔍</button>
+    </div>
+    <a href="https://wa.me/50245542088" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:#0f1b2e;color:white;font-size:12px;font-weight:700;letter-spacing:.05em;padding:9px 18px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#1a2a4e'" onmouseout="this.style.background='#0f1b2e'">Asesoría WA</a>
+  </div>
 </div>
 </nav>
 ${body}
