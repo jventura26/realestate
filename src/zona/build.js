@@ -150,6 +150,7 @@ const urls = [
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
+write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html'); console.log('   ✔  google verification');
 write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.log('   ✔  _redirects (Wix URL migration)');
 
 // Copiar assets
