@@ -39,6 +39,42 @@ function card(p) {
 }
 
 // ── INDEX ─────────────────────────────────────────────────────────────
+function renderDesc(desc) {
+  if (!desc) return '';
+  const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripcion</div>';
+  // JSON de Wix
+  if (desc.trim().startsWith('{') || desc.includes('"nodes"')) {
+    try {
+      const texts = []; let m; const re = /"text":"([^"]+)"/g;
+      while ((m = re.exec(desc)) !== null) { const t = m[1].trim(); if (t && t.length > 1) texts.push(t); }
+      const clean = texts.join(' ');
+      return clean ? label + '<p class="det-desc">' + escapeHtml(clean) + '</p>' : '';
+    } catch(e) { return ''; }
+  }
+  // Detectar emojis como separadores
+  const emojiRe = /\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu;
+  if (emojiRe.test(desc)) {
+    const parts = desc.split(/(?=\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu).map(s => s.trim()).filter(s => s);
+    if (parts.length > 1) {
+      const html = parts.map(part => {
+        const em = part.match(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]️?/u);
+        const emoji = em ? em[0] : '';
+        const text = part.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]️?\s*/u, '').trim();
+        if (!text) return '';
+        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 10px;margin-bottom:5px;background:rgba(255,255,255,.03);border-radius:5px;border-left:2px solid var(--or)">'
+          + '<span style="font-size:1rem;flex-shrink:0">' + emoji + '</span>'
+          + '<span style="font-size:.84rem;color:var(--sv);line-height:1.65">' + escapeHtml(text) + '</span>'
+          + '</div>';
+      }).filter(Boolean).join('');
+      return label + '<div class="det-desc-list">' + html + '</div>';
+    }
+  }
+  // Texto plano con saltos de linea
+  const lines = desc.split('\n').map(l => l.trim()).filter(l => l);
+  const html = lines.map(l => '<p style="font-size:.84rem;color:var(--sv);line-height:1.7;margin-bottom:8px">' + escapeHtml(l) + '</p>').join('');
+  return label + '<div class="det-desc">' + html + '</div>';
+}
+
 function indexPage(props) {
   const featured = props.slice(0, 6);
   const tipos    = uniqueValues(props, 'tipo');
@@ -317,7 +353,7 @@ function detailPage(prop, all) {
       <h1 class="det-title">${escapeHtml(prop.title)}</h1>
       <div class="det-price">${escapeHtml(prop.priceFormatted)}</div>
       <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
-      ${prop.description?`<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripción</div><p class="det-desc">${escapeHtml(prop.description)}</p>`:''}
+      ${renderDesc(prop.description)}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
     </div>
     <!-- MOBILE WA (hidden on desktop) -->
