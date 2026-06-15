@@ -27,15 +27,19 @@ function card(p) {
   return `<a class="property-card" href="/propiedades/${p.slug}.html"
   data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
   data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
-  data-habs="${p.habitaciones||0}">
-  <div class="card-img-wrap">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${altText}" loading="lazy" width="600" height="375">
-    <div class="card-badges">${tipoBadge}${cintaBadge}</div>
+  data-habs="${p.habitaciones||0}"
+  style="display:block;background:white;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;border:1.5px solid #eef0f3;transition:all .35s;box-shadow:0 2px 8px rgba(0,0,0,.04)"
+  onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,.12)';this.style.borderColor='var(--gold)';this.querySelector('.card-img-wrap img').style.transform='scale(1.06)'"
+  onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(0,0,0,.04)';this.style.borderColor='#eef0f3';this.querySelector('.card-img-wrap img').style.transform='scale(1)'">
+  <div class="card-img-wrap" style="overflow:hidden;position:relative;aspect-ratio:4/3">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${altText}" loading="lazy" width="600" height="375" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+    <div class="card-badges" style="position:absolute;top:12px;left:12px;display:flex;gap:6px">${tipoBadge}${cintaBadge}</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.4) 0%,transparent 50%)"></div>
   </div>
-  <div class="card-body">
-    <div class="card-price">${escapeHtml(p.priceFormatted)}</div>
-    <h3 class="card-title">${escapeHtml(p.title)}</h3>
-    <p class="card-loc">${ICON_PIN}<span>${escapeHtml(p.locationFull)}</span></p>
+  <div class="card-body" style="padding:20px 22px 24px">
+    <div class="card-price" style="font-size:1.25rem;font-weight:800;color:var(--gold);margin-bottom:6px;font-family:'Cormorant Garamond',Georgia,serif">${escapeHtml(p.priceFormatted)}</div>
+    <h3 class="card-title" style="font-size:.95rem;font-weight:600;color:#0a1628;line-height:1.4;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(p.title)}</h3>
+    <p class="card-loc" style="display:flex;align-items:center;gap:5px;font-size:.78rem;color:#64748b;margin-bottom:14px">${ICON_PIN}<span>${escapeHtml(p.locationFull)}</span></p>
     ${specsHTML}
   </div>
 </a>`;
