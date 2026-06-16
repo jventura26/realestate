@@ -416,6 +416,7 @@ export default {
       const newProp = await request.json();
       newProp.id = String(Date.now());
       newProp.createdAt = new Date().toISOString();
+      newProp.slug = newProp.slug || (newProp.titulo||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
       data.push(newProp);
       await env.DB.put('propiedades', JSON.stringify(data));
       await triggerRebuild();
@@ -428,7 +429,9 @@ export default {
       const data = raw ? JSON.parse(raw) : [];
       const idx = data.findIndex(p => p.id === id);
       if (idx < 0) return json({ error: 'No encontrado' }, 404);
-      data[idx] = { ...data[idx], ...await request.json(), id };
+      const updated = await request.json();
+      if (!updated.slug && updated.titulo) updated.slug = (updated.titulo||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      data[idx] = { ...data[idx], ...updated, id };
       await env.DB.put('propiedades', JSON.stringify(data));
       await triggerRebuild();
       return json(data[idx]);
