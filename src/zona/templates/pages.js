@@ -639,7 +639,129 @@ ${relHtml}
   return layout({ title: prop.title, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body });
 }
 
-module.exports = { indexPage, catalogPage, detailPage };
+
+// ── PAGINA DE ZONA ───────────────────────────────────────────────────
+const ZONA_INFO = {
+  'guatemala': {
+    titulo: 'Guatemala', subtitulo: 'Capital y centro financiero',
+    desc: 'El corazón económico del país. Zonas como la 10, 14, 15 y 16 concentran las propiedades residenciales más exclusivas, con acceso a centros comerciales, restaurantes de autor y la mejor infraestructura urbana de Centroamérica.',
+    img: 'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=1400&q=80',
+    datos: ['Mejor infraestructura del país','Cercanía a centros financieros','Alta plusvalía histórica','Servicios premium 24/7']
+  },
+  'fraijanes': {
+    titulo: 'Fraijanes', subtitulo: 'Naturaleza y privacidad a 25 minutos de la capital',
+    desc: 'Fincas y residencias rodeadas de bosque y clima fresco. Fraijanes ha crecido como el destino preferido de quienes buscan espacio, tranquilidad y una inversión con proyección a futuro, sin alejarse demasiado de la ciudad.',
+    img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1400&q=80',
+    datos: ['Clima fresco todo el año','Terrenos amplios','Zona en crecimiento','Acceso pavimentado']
+  },
+  'mixco': {
+    titulo: 'Mixco', subtitulo: 'Equilibrio entre ciudad y accesibilidad',
+    desc: 'Uno de los municipios con mayor variedad de oferta residencial del área metropolitana. Mixco combina cercanía a la capital con precios más accesibles, ideal para quienes buscan su primera propiedad o una inversión sólida.',
+    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&q=80',
+    datos: ['Variedad de oferta residencial','Buena conectividad vial','Precios accesibles','Crecimiento sostenido']
+  },
+  'santa catarina pinula': {
+    titulo: 'Santa Catarina Pinula', subtitulo: 'Residencial premium con vista al valle',
+    desc: 'Reconocida por sus condominios y residencias de alto nivel, Santa Catarina Pinula ofrece tranquilidad, seguridad y algunas de las mejores vistas panorámicas de la ciudad de Guatemala.',
+    img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1400&q=80',
+    datos: ['Vistas panorámicas','Condominios privados','Seguridad 24/7','Alta demanda residencial']
+  },
+  'escuintla': {
+    titulo: 'Escuintla', subtitulo: 'Costa, clima cálido e inversión agrícola',
+    desc: 'Puerta de entrada a la costa del Pacífico guatemalteco. Escuintla combina propiedades vacacionales, fincas productivas e inversión a largo plazo en una de las regiones con mayor actividad comercial y agrícola del país.',
+    img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1400&q=80',
+    datos: ['Clima cálido todo el año','Fincas productivas','Cercanía a la costa','Potencial turístico']
+  },
+  'san jose pinula': {
+    titulo: 'San José Pinula', subtitulo: 'Residencial exclusivo en las afueras de la capital',
+    desc: 'Zona de expansión residencial premium, con condominios cerrados y fincas de descanso. San José Pinula atrae a quienes buscan amplitud, privacidad y un estilo de vida más relajado sin perder cercanía a la ciudad.',
+    img: 'https://images.unsplash.com/photo-1494526585095-c41746248156?w=1400&q=80',
+    datos: ['Condominios cerrados','Fincas de descanso','Privacidad y amplitud','Cercanía a carretera principal']
+  },
+};
+
+function zonaSlug(z) {
+  return (z||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+function zonaPage(zonaNombre, propsEnZona, allProps) {
+  const slug = zonaSlug(zonaNombre);
+  const info = ZONA_INFO[slug] || {
+    titulo: zonaNombre, subtitulo: 'Propiedades disponibles',
+    desc: `Descubre las propiedades disponibles en ${zonaNombre}, Guatemala. Residencias, terrenos e inversiones seleccionadas con asesoría personalizada.`,
+    img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=80',
+    datos: ['Ubicación estratégica','Propiedades verificadas','Asesoría personalizada','Respuesta rápida']
+  };
+
+  const precios = propsEnZona.map(p => p.priceNumeric).filter(n => n > 0);
+  const precioProm = precios.length ? Math.round(precios.reduce((a,b)=>a+b,0) / precios.length) : 0;
+  const precioPromFmt = precioProm ? 'Q ' + precioProm.toLocaleString('es-GT') : null;
+
+  const tiposEnZona = [...new Set(propsEnZona.map(p => p.tipo).filter(Boolean))];
+
+  const body = `
+<section style="position:relative;min-height:52vh;display:flex;align-items:flex-end;padding:0;overflow:hidden">
+  <div style="position:absolute;inset:0;z-index:0">
+    <img src="${escapeHtml(info.img)}" alt="${escapeHtml(info.titulo)}" style="width:100%;height:100%;object-fit:cover;filter:brightness(.55)">
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,var(--ink) 0%,rgba(13,27,62,.4) 60%,rgba(13,27,62,.6) 100%)"></div>
+  </div>
+  <div style="position:relative;z-index:2;padding:80px 6% 48px;max-width:900px">
+    <div class="breadcrumb" style="margin-bottom:16px"><a href="/">Inicio</a> / <a href="/propiedades.html">Propiedades</a> / ${escapeHtml(info.titulo)}</div>
+    <div class="ey">Zona Premium</div>
+    <h1 class="st" style="margin-bottom:10px">${escapeHtml(info.titulo)}</h1>
+    <p class="ss" style="max-width:560px">${escapeHtml(info.subtitulo)}</p>
+  </div>
+</section>
+
+<section style="background:var(--ink2);border-bottom:1px solid var(--bd);padding:48px 6%">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:start">
+    <div>
+      <p class="description-premium">${escapeHtml(info.desc)}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px">
+        ${info.datos.map(d => `<span class="tag">${escapeHtml(d)}</span>`).join('')}
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="sb-title">${propsEnZona.length} propiedad${propsEnZona.length!==1?'es':''}</div>
+      <div class="sb-sub">disponible${propsEnZona.length!==1?'s':''} en ${escapeHtml(info.titulo)}</div>
+      <div class="div-line"></div>
+      ${precioPromFmt ? `
+      <div class="sp-l" style="margin-bottom:4px">Precio promedio</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--or);margin-bottom:16px">${precioPromFmt}</div>
+      ` : ''}
+      ${tiposEnZona.length ? `
+      <div class="sp-l" style="margin-bottom:8px">Tipos disponibles</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
+        ${tiposEnZona.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+      </div>
+      ` : ''}
+      <a href="${waLink('Hola, quiero ver propiedades en ' + info.titulo + '.')}" target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Consultar disponibilidad</a>
+    </div>
+  </div>
+</section>
+
+<section style="padding:64px 6%">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="ey">Disponibles ahora</div>
+    <h2 class="st-large" style="margin-bottom:32px">Propiedades en <em>${escapeHtml(info.titulo)}</em></h2>
+    ${propsEnZona.length ? `<div class="prop-grid">${propsEnZona.map(card).join('')}</div>` : `
+    <div class="no-res">
+      <p>Aún no hay propiedades activas en esta zona</p>
+      <small>Contáctanos y te avisamos cuando haya disponibilidad</small>
+    </div>`}
+  </div>
+</section>`;
+
+  return layout({
+    title: `Propiedades en ${info.titulo} - Guatemala`,
+    desc: `${propsEnZona.length} propiedades disponibles en ${info.titulo}, Guatemala. ${info.subtitulo}. Asesoría personalizada por WhatsApp.`,
+    canonical: `/zonas/${slug}.html`,
+    ogImage: info.img,
+    body
+  });
+}
+
+module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO };
 
 // ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
 function testimonialsSection() {
