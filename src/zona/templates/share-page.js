@@ -39,14 +39,20 @@ function sharePage(prop) {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@400;500;600;700&display=swap">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Montserrat',sans-serif;background:#0D1B3E;color:white;min-height:100vh;}
+body{font-family:'Montserrat',sans-serif;background:#0D1B3E;color:white;min-height:100vh;overflow-x:hidden;}
+nav,header,.topbar,footer{display:none!important;}
+@media(max-width:600px){
+  h1{font-size:2rem!important;}
+  div[style*="padding:60px 24px"]{padding:40px 20px 32px!important;}
+  div[style*="font-size:2.4rem"]{font-size:1.8rem!important;}
+}
 </style>
 </head>
 <body>
 <!-- HERO -->
-<div style="position:relative;min-height:100vh;display:flex;flex-direction:column">
+<div style="position:relative;min-height:100vh;display:flex;flex-direction:column;overflow:hidden">
   <!-- Imagen de fondo -->
-  <div style="position:fixed;inset:0;z-index:0">
+  <div style="position:absolute;inset:0;z-index:0">
     <img src="${img}" alt="${prop.titulo}" style="width:100%;height:100%;object-fit:cover;display:block">
     <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,62,.6) 0%,rgba(13,27,62,.85) 50%,rgba(13,27,62,.97) 100%)"></div>
   </div>
