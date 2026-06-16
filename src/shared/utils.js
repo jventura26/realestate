@@ -39,7 +39,7 @@ function generateRedirects(properties, siteBase) {
   lines.push('/propiedades-1/   /propiedades.html   301');
   lines.push('/propiedades-1    /propiedades.html   301');
   lines.push('');
-  lines.push('/share/*  /share/:splat  200');
+  
   // No wildcard redirect - assets deben servirse directo
   return lines.join('\n');
 }
