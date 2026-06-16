@@ -86,7 +86,7 @@ function sharePage(prop) {
     + '</style>'
     + '</head>'
     + '<body>'
-    + '<script>window.__SHARE_PAGE__=true;</script>'
+    + '<script>window.__SHARE_PAGE__=true;if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});});}if(window.caches){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k);});});}</script>'
     + '<div class="overlay">'
     + '<div class="content">'
     + '<a href="https://zona-innmueble.com" class="logo"><em>ZONA</em> INNmueble</a>'
