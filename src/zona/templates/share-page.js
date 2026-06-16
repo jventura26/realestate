@@ -39,14 +39,30 @@ function sharePage(prop) {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@400;500;600;700&display=swap">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Montserrat',sans-serif;background:#0D1B3E;color:white;min-height:100vh;overflow-x:hidden;}
-nav,header,.topbar,footer{display:none!important;}
-@media(max-width:600px){
-  h1{font-size:2rem!important;}
-  div[style*="padding:60px 24px"]{padding:40px 20px 32px!important;}
-  div[style*="font-size:2.4rem"]{font-size:1.8rem!important;}
+html,body{font-family:'Montserrat',sans-serif;background:#0D1B3E;color:white;min-height:100vh;overflow-x:hidden;padding:0!important;margin:0!important;}
+/* Ocultar absolutamente todo del sitio principal */
+nav,header,footer,.wa-float,#wa-float,.topbar,#topbar,body>nav,body>header{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;}
+/* Solo mostrar el contenedor de la share page */
+body{padding-top:0!important;}
+/* Mobile responsive */
+@media(max-width:640px){
+  .share-content{padding:32px 18px 28px!important;}
+  .share-hook{font-size:1.9rem!important;line-height:1.15!important;}
+  .share-badges{gap:6px!important;}
+  .share-cta{font-size:14px!important;padding:14px 20px!important;}
 }
 </style>
+<script>
+// Ocultar nav al cargar - antes de que se pinte
+document.addEventListener('DOMContentLoaded',function(){
+  ['nav','header','footer','.wa-float','.topbar'].forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(el){el.style.display='none';});
+  });
+  // Quitar padding-top del body que pone el layout
+  document.body.style.paddingTop='0';
+  document.body.style.marginTop='0';
+});
+</script>
 </head>
 <body>
 <!-- HERO -->
@@ -58,7 +74,7 @@ nav,header,.topbar,footer{display:none!important;}
   </div>
 
   <!-- Contenido -->
-  <div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;max-width:680px;margin:0 auto;padding:60px 24px 40px;width:100%">
+  <div class="share-content" style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;max-width:680px;margin:0 auto;padding:60px 24px 40px;width:100%">
 
     <!-- Logo -->
     <div style="margin-bottom:48px">
@@ -68,7 +84,7 @@ nav,header,.topbar,footer{display:none!important;}
     </div>
 
     <!-- Badge tipo/zona -->
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+    <div class="share-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
       <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.8)">${tipo}</span>
       <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.8)">📍 ${zona}</span>
       ${isPrivada ? '<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,130,13,.15);border:1px solid rgba(245,130,13,.4);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F5820D">🔒 OFF-MARKET</span>' : ''}
