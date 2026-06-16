@@ -51,7 +51,7 @@ function normalizeKV(kvProps) {
 const path = require('path');
 const { parseProperties }  = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
-const { indexPage, catalogPage, detailPage } = require('./templates/pages');
+const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug } = require('./templates/pages');
 const { sharePage } = require('./templates/share-page');
 
 const DOMAIN = 'https://zona-innmueble.com';
@@ -144,6 +144,24 @@ if(fs.existsSync(art3Src)) {
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(`   ✔  ${props.length} detail pages`);
 
+// Generar paginas de zona /zonas/*.html
+const ZONAS = path.join(OUT, 'zonas');
+fs.mkdirSync(ZONAS, { recursive: true });
+const zonasMap = {};
+props.forEach(p => {
+  const z = p.municipio || p.zona || '';
+  if (!z) return;
+  const slug = zonaSlug(z);
+  if (!zonasMap[slug]) zonasMap[slug] = { nombre: z, props: [] };
+  if (!p.estado || p.estado === 'Activa') zonasMap[slug].props.push(p);
+});
+Object.values(zonasMap).forEach(({ nombre, props: propsZona }) => {
+  const slug = zonaSlug(nombre);
+  write(path.join(ZONAS, `${slug}.html`), zonaPage(nombre, propsZona, props));
+  console.log(`   ✔  zona: ${nombre} (${propsZona.length} props) → /zonas/${slug}.html`);
+});
+console.log(`   ✔  ${Object.keys(zonasMap).length} zona pages`);
+
 // Generar paginas compartibles /share/*.html - rebuild 2026-06-16
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
@@ -154,6 +172,7 @@ const urls = [
   { loc:'/',                 priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily'  },
   ...props.map(p=>({ loc:`/propiedades/${p.slug}.html`, priority:'0.8', changefreq:'weekly' })),
+  ...Object.keys(zonasMap).map(slug=>({ loc:`/zonas/${slug}.html`, priority:'0.7', changefreq:'weekly' })),
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
@@ -163,5 +182,5 @@ write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.
 // Copiar assets
 copyAssets(); console.log('   ✔  assets copied');
 
-console.log(`\n✅  Zona → dist/zona/  (${props.length + 10} HTML pages)\n`);
+console.log(`\n✅  Zona → dist/zona/  (${props.length * 2 + Object.keys(zonasMap).length + 10} HTML pages)\n`);
 }).catch(e => { console.error('Build error:', e); process.exit(1); });
