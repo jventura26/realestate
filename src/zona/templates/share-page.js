@@ -53,22 +53,34 @@ body{padding-top:0!important;}
 }
 </style>
 <script>
-// Ocultar nav al cargar - antes de que se pinte
+// Ejecutar inmediatamente sin esperar DOMContentLoaded
+(function(){
+  var style=document.createElement('style');
+  style.textContent='body{padding-top:0!important;margin-top:0!important;}
+nav,header,footer,.wa-float{display:none!important;}
+@media(max-width:640px){
+  .share-content{padding:32px 18px 40px!important;}
+  .share-hook{font-size:1.8rem!important;line-height:1.15!important;}
+  .share-cta{font-size:14px!important;padding:14px 18px!important;}
+  .share-badges span{font-size:10px!important;padding:4px 10px!important;}
+}';
+  document.head.appendChild(style);
+})();
 document.addEventListener('DOMContentLoaded',function(){
-  ['nav','header','footer','.wa-float','.topbar'].forEach(function(sel){
-    document.querySelectorAll(sel).forEach(function(el){el.style.display='none';});
-  });
-  // Quitar padding-top del body que pone el layout
   document.body.style.paddingTop='0';
   document.body.style.marginTop='0';
+  document.querySelectorAll('nav,header,footer,.wa-float,.nav-inner').forEach(function(el){
+    el.style.display='none';
+    el.style.height='0';
+  });
 });
 </script>
 </head>
 <body>
 <!-- HERO -->
-<div style="position:relative;min-height:100vh;display:flex;flex-direction:column;overflow:hidden">
+<div style="position:relative;min-height:100vh;display:flex;flex-direction:column">
   <!-- Imagen de fondo -->
-  <div style="position:absolute;inset:0;z-index:0">
+  <div style="position:fixed;inset:0;z-index:0">
     <img src="${img}" alt="${prop.titulo}" style="width:100%;height:100%;object-fit:cover;display:block">
     <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,27,62,.6) 0%,rgba(13,27,62,.85) 50%,rgba(13,27,62,.97) 100%)"></div>
   </div>
