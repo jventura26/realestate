@@ -415,10 +415,10 @@ ${body}
     <div>
       <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Zonas</h4>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <li><a href="/propiedades.html?ciudad=Guatemala" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 10 · Zona 14</a></li>
-        <li><a href="/propiedades.html?ciudad=Guatemala" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 15 · Zona 16</a></li>
-        <li><a href="/propiedades.html?ciudad=Fraijanes" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fraijanes · Cayalá</a></li>
-        <li><a href="/propiedades.html?ciudad=Santa+Catarina+Pinula" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Carretera El Salvador</a></li>
+        <li><a href="/zonas/guatemala.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Guatemala (Zona 10-16)</a></li>
+        <li><a href="/zonas/fraijanes.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fraijanes</a></li>
+        <li><a href="/zonas/mixco.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Mixco</a></li>
+        <li><a href="/zonas/santa-catarina-pinula.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Santa Catarina Pinula</a></li>
       </ul>
     </div>
     <div>
