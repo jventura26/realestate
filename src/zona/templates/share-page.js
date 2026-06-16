@@ -1,21 +1,32 @@
 function sharePage(prop) {
   const WA = '50245542088';
+  
+  function esc(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
   const img = prop.mainImageThumb || prop.imagen || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80';
-  const hook = prop.hook || prop.titulo || '';
-  const descCorta = prop.descCorta || '';
-  const zona = prop.zona || prop.municipio || 'Guatemala';
-  const tipo = prop.tipo || 'Propiedad';
+  const hook = esc(prop.hook || prop.titulo || '');
+  const descCorta = esc(prop.descCorta || '');
+  const zona = esc(prop.zona || prop.municipio || 'Guatemala');
+  const tipo = esc(prop.tipo || 'Propiedad');
   const hab = prop.habitaciones && prop.habitaciones !== '0' ? prop.habitaciones + ' hab.' : '';
   const ban = prop.banos && prop.banos !== '0' ? prop.banos + ' ba\u00f1os' : '';
   const isPrivada = prop.privada === true;
-  const waMsg = encodeURIComponent('Hola, me interesa: ' + prop.titulo + '. Vi la ficha y quisiera m\u00e1s informaci\u00f3n.');
+  const waMsg = encodeURIComponent('Hola, me interesa: ' + (prop.titulo||'') + '. Vi la ficha y quisiera mas informacion.');
   const shareUrl = 'https://zona-innmueble.com/share/' + prop.slug + '.html';
-  const ogTitle = hook || prop.titulo;
+  const ogTitle = hook || esc(prop.titulo);
   const ogDesc = descCorta || (tipo + ' en ' + zona);
 
   const precioHTML = isPrivada
     ? '<div class="precio-badge">\uD83D\uDD12 PRECIO DISPONIBLE BAJO SOLICITUD</div>'
-    : (prop.priceFormatted ? '<div class="precio">' + prop.priceFormatted + '</div>' : '');
+    : (prop.priceFormatted ? '<div class="precio">' + esc(prop.priceFormatted) + '</div>' : '');
 
   const badgesHTML = '<span class="badge">' + tipo + '</span>'
     + '<span class="badge">\uD83D\uDCCD ' + zona + '</span>'
@@ -25,7 +36,7 @@ function sharePage(prop) {
     return '<span class="spec">' + s + '</span>';
   }).join('');
 
-  const html = '<!DOCTYPE html>'
+  return '<!DOCTYPE html>'
     + '<html lang="es">'
     + '<head>'
     + '<meta charset="UTF-8">'
@@ -34,7 +45,7 @@ function sharePage(prop) {
     + '<meta name="description" content="' + ogDesc + '">'
     + '<meta property="og:title" content="' + ogTitle + '">'
     + '<meta property="og:description" content="' + ogDesc + '">'
-    + '<meta property="og:image" content="' + img + '">'
+    + '<meta property="og:image" content="' + esc(img) + '">'
     + '<meta property="og:url" content="' + shareUrl + '">'
     + '<meta property="og:type" content="website">'
     + '<meta name="twitter:card" content="summary_large_image">'
@@ -44,26 +55,10 @@ function sharePage(prop) {
     + '<style>'
     + '*{margin:0;padding:0;box-sizing:border-box;}'
     + 'html,body{height:100%;}'
-    + 'body{'
-    + 'font-family:\'Montserrat\',sans-serif;'
-    + 'background:#0D1B3E;'
-    + 'color:white;'
-    + 'padding:0!important;'
-    + 'margin:0!important;'
-    + '}'
-    + '.bg-img{position:fixed;inset:0;z-index:0;background:url(\'' + img + '\') center/cover no-repeat;}'
-    + '.overlay{'
-    + 'min-height:100vh;'
-    + 'background:linear-gradient(to bottom,rgba(13,27,62,.65) 0%,rgba(13,27,62,.88) 60%,rgba(13,27,62,.97) 100%);'
-    + 'display:flex;'
-    + 'flex-direction:column;'
-    + 'align-items:center;'
-    + '}'
-    + '.content{'
-    + 'width:100%;max-width:640px;'
-    + 'padding:48px 24px 48px;'
-    + 'flex:1;display:flex;flex-direction:column;'
-    + '}'
+    + 'body{font-family:\'Montserrat\',sans-serif;background:#0D1B3E;color:white;padding:0!important;margin:0!important;}'
+    + '.bg{position:fixed;inset:0;z-index:0;background:url("' + img + '") center/cover no-repeat;}'
+    + '.overlay{position:relative;z-index:1;min-height:100vh;background:linear-gradient(to bottom,rgba(13,27,62,.65) 0%,rgba(13,27,62,.88) 60%,rgba(13,27,62,.97) 100%);display:flex;flex-direction:column;align-items:center;}'
+    + '.content{width:100%;max-width:640px;padding:48px 24px 48px;flex:1;display:flex;flex-direction:column;}'
     + '.logo{font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:rgba(255,255,255,.7);margin-bottom:40px;text-decoration:none;display:inline-block;}'
     + '.logo em{color:#F5820D;font-style:normal;}'
     + '.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}'
@@ -76,20 +71,15 @@ function sharePage(prop) {
     + '.precio{font-family:\'Cormorant Garamond\',serif;font-size:2rem;font-weight:500;color:#F5820D;margin-bottom:28px;}'
     + '.precio-badge{display:inline-flex;align-items:center;background:rgba(245,130,13,.12);border:1px solid rgba(245,130,13,.3);border-radius:100px;padding:7px 18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F5820D;margin-bottom:28px;}'
     + '.divider{width:40px;height:2px;background:#F5820D;margin-bottom:28px;}'
-    + '.cta-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#F5820D;color:#0D1B3E;font-size:14px;font-weight:700;letter-spacing:.04em;padding:15px 24px;border-radius:8px;text-decoration:none;margin-bottom:12px;}'
+    + '.cta-wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#F5820D;color:#0D1B3E;font-size:14px;font-weight:700;padding:15px 24px;border-radius:8px;text-decoration:none;margin-bottom:12px;}'
     + '.cta-detail{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);font-size:13px;font-weight:600;padding:13px 24px;border-radius:8px;text-decoration:none;}'
     + '.footer-txt{margin-top:40px;text-align:center;font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.1em;}'
-    + '@media(max-width:480px){'
-    + '.content{padding:32px 18px 36px;}'
-    + '.hook{font-size:1.8rem;}'
-    + '.cta-wa{font-size:13px;padding:14px 18px;}'
-    + '}'
+    + '@media(max-width:480px){.content{padding:32px 18px 36px;}.hook{font-size:1.8rem;}.cta-wa{font-size:13px;padding:14px 18px;}}'
     + '</style>'
     + '</head>'
     + '<body>'
-    + '<script>window.__SHARE_PAGE__=true;if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});});}if(window.caches){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k);});});}</script>'
-    + '<div class="bg-img"></div>'
-    + '<div class="overlay" style="position:relative;z-index:1;">'
+    + '<div class="bg"></div>'
+    + '<div class="overlay">'
     + '<div class="content">'
     + '<a href="https://zona-innmueble.com" class="logo"><em>ZONA</em> INNmueble</a>'
     + '<div class="badges">' + badgesHTML + '</div>'
@@ -108,8 +98,6 @@ function sharePage(prop) {
     + '</div>'
     + '</body>'
     + '</html>';
-
-  return html;
 }
 
 module.exports = { sharePage };
