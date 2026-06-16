@@ -11,31 +11,48 @@ function waLink(msg) {
 
 // ── Card ─────────────────────────────────────────────────────────────
 function card(p) {
-  const img = p.mainImageThumb || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70';
+  const imgs = (p.gallery && p.gallery.length > 0) ? p.gallery : [p.mainImageThumb || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'];
+  const img = imgs[0];
+  const hasGallery = imgs.length > 1;
   const badgeClass = (p.cinta||'').toLowerCase() === 'renta' ? 'renta' : '';
   const badge = p.cinta || '';
   const meta = [];
-  if (p.habitaciones && p.habitaciones !== '0') meta.push(`${p.habitaciones} Hab.`);
-  if (p.banos        && p.banos        !== '0') meta.push(`${p.banos} Baños`);
+  if (p.habitaciones && p.habitaciones !== '0') meta.push(p.habitaciones + ' Hab.');
+  if (p.banos        && p.banos        !== '0') meta.push(p.banos + ' Baños');
   if (ca(p.areaConst)) meta.push(ca(p.areaConst));
+  const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
+  const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(u)));
 
-  return `<a class="prop-card" href="/propiedades/${p.slug}.html"
-  data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
-  data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
-  data-habs="${p.habitaciones||0}">
-  <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy">
-  <div class="pc-ov"></div>
-  ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
-  <div class="pc-info">
-    <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(p.municipio)}</div>
-    <div class="pc-title">${escapeHtml(p.title)}</div>
-    ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">${escapeHtml(p.priceFormatted)}</div>
-      <span class="pc-arr">→</span>
+  // Flechas del carrusel solo si hay galeria
+  const arrows = hasGallery ? `
+  <button class="card-prev" onclick="event.preventDefault();cardSlide('${cardId}',-1)" aria-label="Anterior">&#8249;</button>
+  <button class="card-next" onclick="event.preventDefault();cardSlide('${cardId}',1)" aria-label="Siguiente">&#8250;</button>
+  <div class="card-dots" id="${cardId}-dots">${imgs.slice(0,10).map((_,i)=>`<span class="card-dot${i===0?' active':''}" onclick="event.preventDefault();cardGoto('${cardId}',${i})"></span>`).join('')}</div>
+  ` : '';
+
+  const photoCount = hasGallery ? `<span class="card-photo-count">&#128247; ${imgs.length}</span>` : '';
+
+  return `<div class="prop-card-wrap" id="${cardId}" data-imgs='${imgsJson}' data-idx="0">
+  <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
+    data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
+    data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
+    data-habs="${p.habitaciones||0}">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy" id="${cardId}-img">
+    <div class="pc-ov"></div>
+    ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
+    ${photoCount}
+    <div class="pc-info">
+      <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(p.municipio)}</div>
+      <div class="pc-title">${escapeHtml(p.title)}</div>
+      ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="pc-price">${escapeHtml(p.priceFormatted)}</div>
+        <span class="pc-arr">→</span>
+      </div>
     </div>
-  </div>
-</a>`;
+  </a>
+  ${arrows}
+</div>`;
 }
 
 // ── INDEX ─────────────────────────────────────────────────────────────
@@ -395,9 +412,7 @@ function indexPage(props) {
     </div>
     <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
   </div>
-</section>`;
-
-  return layout({ title: null, desc: `Propiedades premium en Guatemala. ${props.length} propiedades disponibles. Asesoría personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Propiedades premium en Guatemala. ${props.length} propiedades disponibles. Asesoría personalizada.`, canonical: '/', body });
 }
 
 // ── CATALOG ───────────────────────────────────────────────────────────
