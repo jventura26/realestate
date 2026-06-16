@@ -57,7 +57,7 @@ function sharePage(prop) {
     + 'html,body{height:100%;}'
     + 'body{font-family:\'Montserrat\',sans-serif;background:#0D1B3E;color:white;padding:0!important;margin:0!important;}'
     + '.bg{position:fixed;inset:0;z-index:0;background:url("' + img + '") center/cover no-repeat;}'
-    + '.overlay{position:relative;z-index:1;min-height:100vh;background:linear-gradient(to bottom,rgba(13,27,62,.65) 0%,rgba(13,27,62,.88) 60%,rgba(13,27,62,.97) 100%);display:flex;flex-direction:column;align-items:center;}'
+    + '.overlay{position:relative;z-index:1;min-height:100vh;background:linear-gradient(to bottom,rgba(13,27,62,.85) 0%,rgba(13,27,62,.95) 60%,rgba(13,27,62,.99) 100%);display:flex;flex-direction:column;align-items:center;}'
     + '.content{width:100%;max-width:640px;padding:48px 24px 48px;flex:1;display:flex;flex-direction:column;}'
     + '.logo{font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:rgba(255,255,255,.7);margin-bottom:40px;text-decoration:none;display:inline-block;}'
     + '.logo em{color:#F5820D;font-style:normal;}'
