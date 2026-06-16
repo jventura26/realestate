@@ -147,7 +147,7 @@ console.log(`   ✔  ${props.length} detail pages`);
 // Generar paginas compartibles /share/*.html
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
-props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
+write(path.join(SHARE, '_redirects'), '# Share pages\n');
 console.log(`   ✔  ${props.length} share pages`);
 
 const urls = [
