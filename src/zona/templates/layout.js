@@ -289,6 +289,17 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 }
 .prop-card:hover .pc-info { transform: translateY(-4px); }
 .pc-info { transition: transform .4s cubic-bezier(.22,1,.36,1); }
+/* Cards con carrusel */
+.prop-card-wrap{position:relative;overflow:hidden;aspect-ratio:4/5;border-radius:4px;}
+.prop-card-wrap .prop-card{position:absolute;inset:0;aspect-ratio:unset;}
+.card-prev,.card-next{position:absolute;top:50%;transform:translateY(-50%);z-index:10;background:rgba(0,0,0,.5);color:white;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;backdrop-filter:blur(4px);}
+.card-prev{left:8px;}
+.card-next{right:8px;}
+.prop-card-wrap:hover .card-prev,.prop-card-wrap:hover .card-next{opacity:1;}
+.card-dots{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:10;}
+.card-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:background .2s;}
+.card-dot.active{background:white;}
+.card-photo-count{position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.5);color:white;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:100px;backdrop-filter:blur(4px);}
 
 /* CTA banner intermedio */
 .cta-banner {
@@ -615,6 +626,24 @@ document.querySelectorAll('.newsletter-form').forEach(form => {
     }
   });
 });
+// Carrusel de cards
+function cardSlide(id,dir){
+  var wrap=document.getElementById(id);if(!wrap)return;
+  var imgs=JSON.parse(wrap.dataset.imgs||'[]');
+  var idx=(parseInt(wrap.dataset.idx||0)+dir+imgs.length)%imgs.length;
+  wrap.dataset.idx=idx;
+  var img=document.getElementById(id+'-img');if(img)img.src=imgs[idx];
+  var dots=document.getElementById(id+'-dots');
+  if(dots)dots.querySelectorAll('.card-dot').forEach(function(d,i){d.classList.toggle('active',i===idx);});
+}
+function cardGoto(id,idx){
+  var wrap=document.getElementById(id);if(!wrap)return;
+  var imgs=JSON.parse(wrap.dataset.imgs||'[]');
+  wrap.dataset.idx=idx;
+  var img=document.getElementById(id+'-img');if(img)img.src=imgs[idx];
+  var dots=document.getElementById(id+'-dots');
+  if(dots)dots.querySelectorAll('.card-dot').forEach(function(d,i){d.classList.toggle('active',i===idx);});
+}
 </script>
 </html>`;
 }
