@@ -40,6 +40,7 @@ function generateToken() {
 function getDynamicGridJS() {
   return [
     "(async function(){",
+    "  if(window.__SHARE_PAGE__)return;",
     "  var API='https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades';",
     "  async function getProps(){",
     "    try{var ts=parseInt(localStorage.getItem('kv_ts')||'0');if(Date.now()-ts<60000){var c=localStorage.getItem('kv_props');if(c)return JSON.parse(c);}}catch(e){}",
