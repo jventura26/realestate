@@ -1,5 +1,5 @@
 # Redirects para Cloudflare Pages
-/share/*  /share/:splat.html  200
+
 # Redirect HTTP a HTTPS (Cloudflare lo maneja automáticamente)
 
 # Propiedades sin extension -> con .html
