@@ -125,7 +125,13 @@ function indexPage(props) {
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.97) 0%,rgba(13,27,62,.68) 55%,rgba(20,34,64,.9) 100%),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70') center/cover no-repeat"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.65) 0%,transparent 40%)"></div>
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
-    <div class="ey">Guatemala · Patrimonio Inmobiliario</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="ey" style="margin-bottom:0">Guatemala · Patrimonio Inmobiliario</div>
+      <div style="display:flex;align-items:center;gap:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:100px;padding:5px 12px">
+        <span class="live"></span>
+        <span style="font-size:.65rem;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.08em">Disponibles · Respuesta en menos de 2h</span>
+      </div>
+    </div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.4rem);font-weight:300;line-height:1.06;margin-bottom:22px">
       En Guatemala, la diferencia entre una casa y una <em style="color:var(--or);font-style:italic">residencia exclusiva</em> está en cada detalle.
     </h1>
@@ -190,15 +196,19 @@ function indexPage(props) {
   </div>
   <!-- Stats bar -->
   <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.8);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap">
-    ${[
-      [props.length+'+'  ,'Propiedades'],
-      ['10+','Años en el Mercado'],
-      ['5','Zonas Premium'],
-      ['100%','Asesoría Personal'],
-    ].map(([n,l])=>`<div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">${n}</div>
-      <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">${l}</div>
-    </div>`).join('')}
+    ${(()=>{
+      const vendidas = props.filter(p=>p.estado==='Vendida').length;
+      const activas = props.filter(p=>!p.estado||p.estado==='Activa').length;
+      return [
+        [activas+'+','Propiedades Activas'],
+        [vendidas>0?vendidas+'+':'10+','Cierres Exitosos'],
+        ['10+','Años en el Mercado'],
+        ['100%','Asesoría Personal'],
+      ].map(([n,l])=>`<div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">${n}</div>
+        <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">${l}</div>
+      </div>`).join('');
+    })()}
   </div>
 </section>
 
@@ -233,6 +243,33 @@ function indexPage(props) {
     ${WA_SVG} Escribir al asesor
   </a>
 </div>
+<!-- SECCION DE CONFIANZA -->
+<section style="padding:48px 6%;background:var(--ink);border-top:1px solid var(--gl);border-bottom:1px solid var(--gl)" class="fade-in-up">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt)">Por qué elegirnos</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px">
+      <div style="text-align:center;padding:24px 16px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">10+</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Años conectando familias con su propiedad ideal en Guatemala</div>
+      </div>
+      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl);border-right:1px solid var(--gl)">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">&lt;2h</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Tiempo promedio de respuesta. Tu consulta no espera</div>
+      </div>
+      <div style="text-align:center;padding:24px 16px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">100%</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Propiedades verificadas. Papelería en orden, sin sorpresas</div>
+      </div>
+      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl)">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">5★</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Calificación promedio de nuestros clientes en cada cierre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
@@ -248,7 +285,7 @@ function indexPage(props) {
         <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Zona INNmueble me ayudó a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo con mis necesidades. Altamente recomendado."</p>
         <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
           <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#1a2a4e,var(--navy));border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">MC</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">María Castillo</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Empresaria · Zona 10</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">María Castillo</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Empresaria · Zona 10 · 2025</div></div>
         </div>
       </div>
       
@@ -259,7 +296,7 @@ function indexPage(props) {
         <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Excelente asesoría para mi inversión inmobiliaria. Entendieron mi visión y me ofrecieron opciones que superaron mis expectativas. El proceso fue transparente y profesional."</p>
         <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
           <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#0d3d2a,#1a6b4a);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">CG</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Carlos García</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Inversionista · Fraijanes</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Carlos García</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Inversionista · Fraijanes · 2024</div></div>
         </div>
       </div>
       
@@ -270,7 +307,7 @@ function indexPage(props) {
         <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"El servicio es impecable. Desde la búsqueda hasta la finalización, todo fue smooth y profesional. Definitivamente mi opción número uno para propiedades premium."</p>
         <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
           <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#2d1a4e,#4a2d7a);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">SL</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Sandra López</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Ejecutiva · Zona 14</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Sandra López</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Ejecutiva · Zona 14 · 2025</div></div>
         </div>
       </div>
     </div>
@@ -606,6 +643,33 @@ function testimonialsSection() {
     ${WA_SVG} Escribir al asesor
   </a>
 </div>
+<!-- SECCION DE CONFIANZA -->
+<section style="padding:48px 6%;background:var(--ink);border-top:1px solid var(--gl);border-bottom:1px solid var(--gl)" class="fade-in-up">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt)">Por qué elegirnos</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px">
+      <div style="text-align:center;padding:24px 16px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">10+</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Años conectando familias con su propiedad ideal en Guatemala</div>
+      </div>
+      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl);border-right:1px solid var(--gl)">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">&lt;2h</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Tiempo promedio de respuesta. Tu consulta no espera</div>
+      </div>
+      <div style="text-align:center;padding:24px 16px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">100%</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Propiedades verificadas. Papelería en orden, sin sorpresas</div>
+      </div>
+      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl)">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">5★</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Calificación promedio de nuestros clientes en cada cierre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
