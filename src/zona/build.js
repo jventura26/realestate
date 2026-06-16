@@ -52,6 +52,7 @@ const path = require('path');
 const { parseProperties }  = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
 const { indexPage, catalogPage, detailPage } = require('./templates/pages');
+const { sharePage } = require('./templates/share-page');
 
 const DOMAIN = 'https://zona-innmueble.com';
 const CSV    = path.resolve(__dirname, '../../data/propiedades.csv');
@@ -143,6 +144,12 @@ if(fs.existsSync(art3Src)) {
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(`   ✔  ${props.length} detail pages`);
 
+// Generar paginas compartibles /share/*.html
+const SHARE = path.join(OUT, 'share');
+fs.mkdirSync(SHARE, { recursive: true });
+props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
+console.log(`   ✔  ${props.length} share pages`);
+
 const urls = [
   { loc:'/',                 priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily'  },
@@ -150,7 +157,7 @@ const urls = [
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
-write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html'); console.log('   ✔  google verification');
+write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html\n'); console.log('   ✔  google verification');
 write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.log('   ✔  _redirects (Wix URL migration)');
 
 // Copiar assets
