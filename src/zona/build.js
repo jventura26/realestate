@@ -144,10 +144,10 @@ if(fs.existsSync(art3Src)) {
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(`   ✔  ${props.length} detail pages`);
 
-// Generar paginas compartibles /share/*.html
+// Generar paginas compartibles /share/*.html - rebuild 2026-06-16
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
-write(path.join(SHARE, '_redirects'), '# Share pages\n');
+props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
 console.log(`   ✔  ${props.length} share pages`);
 
 const urls = [
