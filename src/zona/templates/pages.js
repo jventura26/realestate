@@ -132,10 +132,61 @@ function indexPage(props) {
     <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
       ${props.length} propiedades verificadas, oportunidades de inversión y un equipo que entiende que cada propiedad cuenta una historia. Asesoría privada para quienes saben qué buscan.
     </p>
-    <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="/propiedades.html" class="btn-or">Ver Propiedades</a>
-      <a href="${waLink('Hola, quiero una asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-ol">${WA_SVG} Asesoría por WhatsApp</a>
+    <!-- BUSCADOR HERO -->
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
+      <div style="flex:1;min-width:200px;position:relative">
+        <input type="text" id="hero-search"
+          placeholder="Buscar por zona, tipo o colonia..."
+          style="width:100%;padding:12px 16px 12px 40px;background:transparent;border:none;color:white;font-size:.88rem;font-family:'Montserrat',sans-serif;outline:none"
+          oninput="heroSearch(this.value)"
+          onkeydown="if(event.key==='Enter')heroGo()">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <div id="hero-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#0d1b3e;border:1px solid var(--gl);border-radius:8px;margin-top:4px;z-index:100;max-height:200px;overflow-y:auto"></div>
+      </div>
+      <select id="hero-tipo" style="padding:12px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:white;font-size:.82rem;font-family:'Montserrat',sans-serif;cursor:pointer;min-width:130px">
+        <option value="">Tipo de propiedad</option>
+        ${tipos.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}
+      </select>
+      <button onclick="heroGo()" style="padding:12px 22px;background:var(--or);color:var(--ink);border:none;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;font-family:'Montserrat',sans-serif">Buscar</button>
     </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero una asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-ol">${WA_SVG} Asesoría por WhatsApp</a>
+    </div>
+    <script>
+    var __heroProps=${JSON.stringify(props.map(p=>({titulo:p.titulo,municipio:p.municipio,tipo:p.tipo,slug:p.slug})))};
+    function heroSearch(q){
+      var s=document.getElementById('hero-suggestions');
+      if(!q||q.length<2){s.style.display='none';return;}
+      var ql=q.toLowerCase();
+      var matches=__heroProps.filter(function(p){
+        return (p.titulo||'').toLowerCase().includes(ql)||(p.municipio||'').toLowerCase().includes(ql);
+      }).slice(0,6);
+      if(!matches.length){s.style.display='none';return;}
+      s.innerHTML=matches.map(function(p){
+        return '<div onclick="window.location.href=\'/propiedades/'+p.slug+'.html\'" style="padding:10px 14px;cursor:pointer;font-size:.82rem;color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.06)" onmouseover="this.style.background=\'rgba(245,130,13,.15)\'" onmouseout="this.style.background=\'\'">'
+          +'<span style="font-weight:600">'+p.titulo+'</span>'
+          +' <span style="opacity:.5;font-size:.75rem">'+p.municipio+'</span>'
+          +'</div>';
+      }).join('');
+      s.style.display='block';
+    }
+    function heroGo(){
+      var q=document.getElementById('hero-search').value;
+      var t=document.getElementById('hero-tipo').value;
+      var url='/propiedades.html';
+      var params=[];
+      if(t)params.push('tipo='+encodeURIComponent(t));
+      if(q)params.push('q='+encodeURIComponent(q));
+      if(params.length)url+='?'+params.join('&');
+      window.location.href=url;
+    }
+    document.addEventListener('click',function(e){
+      if(!e.target.closest('#hero-search')&&!e.target.closest('#hero-suggestions')){
+        var s=document.getElementById('hero-suggestions');
+        if(s)s.style.display='none';
+      }
+    });
+    <\/script>
   </div>
   <!-- Stats bar -->
   <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.8);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap">
@@ -331,17 +382,29 @@ function catalogPage(props) {
       const ok=(!q||c.textContent.toLowerCase().includes(q))&&(!ti||c.dataset.tipo===ti)&&
         (!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&
         (!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&
-        (!pr||(()=>{const p=parseFloat(c.dataset.precio),pts=pr.split('-').map(Number);return p>=pts[0]&&(!pts[1]||p<=pts[1]);})());
+        (()=>{const mn=parseFloat(document.getElementById('fp-min').value)||0;const mx=parseFloat(document.getElementById('fp-max').value)||0;const pv=parseFloat(c.dataset.precio)||0;return (!mn&&!mx)||(pv>=mn&&(!mx||pv<=mx));})();
       c.style.display=ok?'':'none';if(ok)n++;
     });
     cnt.textContent=n+' propiedad'+(n!==1?'es':'');
     document.getElementById('nr').style.display=n===0?'block':'none';
   }
-  ['fq','ft','fc2','fc3','fp','fh'].forEach(id=>{
+  window.updatePriceBtn=function(){
+    var mn=document.getElementById('fp-min').value;
+    var mx=document.getElementById('fp-max').value;
+    var btn=document.getElementById('price-btn');
+    if(!mn&&!mx){btn.textContent='Precio: Cualquiera ▾';}
+    else{btn.textContent='Precio: '+(mn?'$'+parseInt(mn).toLocaleString():'0')+' – '+(mx?'$'+parseInt(mx).toLocaleString():'sin límite')+' ▾';}
+    run();
+  };
+  window.applyPrice=function(){
+    document.getElementById('price-dropdown').style.display='none';
+    run();
+  };
+  ['fq','ft','fc2','fc3','fh'].forEach(id=>{
     document.getElementById(id).addEventListener('input',run);
     document.getElementById(id).addEventListener('change',run);
   });
-  document.getElementById('cl2').addEventListener('click',()=>{['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).value='');run();});
+  document.getElementById('cl2').addEventListener('click',()=>{['fq','ft','fc2','fc3','fh'].forEach(id=>document.getElementById(id).value='');document.getElementById('fp-min').value='';document.getElementById('fp-max').value='';updatePriceBtn();run();});
   const p=new URLSearchParams(location.search);
   if(p.get('tipo'))  document.getElementById('ft').value=p.get('tipo');
   if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');
@@ -358,13 +421,23 @@ function catalogPage(props) {
   <select id="ft"><option value="">Tipo</option>${tipos.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select>
   <select id="fc2"><option value="">Municipio</option>${ciudades.map(c=>`<option>${escapeHtml(c)}</option>`).join('')}</select>
   <select id="fc3"><option value="">Estado</option>${cintas.map(c=>`<option>${escapeHtml(c)}</option>`).join('')}</select>
-  <select id="fp"><option value="">Precio</option>
-    <option value="0-100000">Hasta $100K / Q1M</option>
-    <option value="100000-300000">$100K–$300K</option>
-    <option value="300000-600000">$300K–$600K</option>
-    <option value="600000-1000000">$600K–$1M</option>
-    <option value="1000000-9999999">Más de $1M</option>
-  </select>
+  <div style="position:relative;min-width:180px">
+    <button onclick="document.getElementById('price-dropdown').style.display=document.getElementById('price-dropdown').style.display==='block'?'none':'block'" id="price-btn" style="padding:9px 14px;background:var(--ink2);border:1px solid var(--gl);border-radius:6px;color:var(--sv);font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap;width:100%;text-align:left">Precio: Cualquiera ▾</button>
+    <div id="price-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#0d1b3e;border:1px solid var(--gl);border-radius:8px;padding:16px;z-index:50;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.4)">
+      <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Rango de precio</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">Mínimo</div>
+        <input type="number" id="fp-min" placeholder="0" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
+        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">Máximo</div>
+        <input type="number" id="fp-max" placeholder="Sin límite" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+        ${[['Hasta $100K','0','100000'],['$100K–$300K','100000','300000'],['$300K–$600K','300000','600000'],['$600K–$1M','600000','1000000'],['Más de $1M','1000000',''],['Sin filtro','','']].map(([l,mn,mx])=>`<button onclick="document.getElementById('fp-min').value='${mn}';document.getElementById('fp-max').value='${mx}';updatePriceBtn();document.getElementById('price-dropdown').style.display='none';" style="padding:6px 8px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:5px;color:var(--sv);font-size:.72rem;cursor:pointer;text-align:center;font-family:inherit">${l}</button>`).join('')}
+      </div>
+      <button onclick="applyPrice()" style="width:100%;padding:8px;background:var(--or);color:var(--ink);border:none;border-radius:6px;font-weight:700;font-size:.75rem;cursor:pointer;font-family:inherit">Aplicar</button>
+    </div>
+  </div>
+  <input type="hidden" id="fp" value="">
   <select id="fh"><option value="">Habitaciones</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select>
   <button id="cl2">Limpiar</button>
   <span class="f-count" id="fc">${props.length} propiedades</span>
