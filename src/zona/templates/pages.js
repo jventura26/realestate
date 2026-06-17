@@ -166,7 +166,7 @@ function indexPage(props) {
         <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <div id="hero-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#0d1b3e;border:1px solid var(--gl);border-radius:8px;margin-top:4px;z-index:100;max-height:200px;overflow-y:auto"></div>
       </div>
-      <select id="hero-tipo" style="padding:12px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:white;font-size:.82rem;font-family:'Montserrat',sans-serif;cursor:pointer;min-width:130px">
+      <select id="hero-tipo" style="padding:12px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:white;font-size:.82rem;font-family:'Montserrat',sans-serif;cursor:pointer;min-width:140px">
         <option value="">Tipo de propiedad</option>
         ${tipos.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}
       </select>
@@ -333,7 +333,7 @@ function indexPage(props) {
     <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:60px 0 0;border-top:1px solid var(--gl);margin-top:60px">
       <div style="text-align:center;flex:1;min-width:120px">
         <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">31 Propiedades</div>
+        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">${props.filter(p=>!p.estado||p.estado==='Activa').length}+ Propiedades</div>
       </div>
       <div style="text-align:center;flex:1;min-width:120px">
         <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
@@ -412,7 +412,7 @@ function indexPage(props) {
     </div>
     <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
   </div>
-</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
 }
 
 // ── CATALOG ───────────────────────────────────────────────────────────
@@ -891,7 +891,7 @@ function trustBadges() {
 <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:24px 0;border-top:1px solid var(--gl)">
   <div style="text-align:center;flex:1;min-width:120px">
     <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-    <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">31 Propiedades</div>
+    <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">${props.filter(p=>!p.estado||p.estado==='Activa').length}+ Propiedades</div>
   </div>
   <div style="text-align:center;flex:1;min-width:120px">
     <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
