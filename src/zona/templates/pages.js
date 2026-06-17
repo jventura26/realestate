@@ -636,6 +636,25 @@ ${relHtml}
 <style>@media(max-width:768px){#mobileWa{display:block!important;margin-top:24px}}</style>`;
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
+  // Schema markup para Google
+  const schemaProperty = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": prop.title,
+    "description": prop.description || prop.title,
+    "url": `https://zona-innmueble.com/propiedades/${prop.slug}.html`,
+    "image": prop.mainImage || '',
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": prop.municipio || prop.zona || 'Guatemala',
+      "addressCountry": "GT"
+    },
+    "offers": prop.priceNumeric ? {
+      "@type": "Offer",
+      "price": prop.priceNumeric,
+      "priceCurrency": "USD"
+    } : undefined
+  });
   // Titulo SEO optimizado: "Casa en Venta Zona 16 Guatemala | Zona INNmueble"
   const seoTitle = `${prop.title} | ${prop.tipo||'Propiedad'} en ${prop.municipio||prop.zona||'Guatemala'}`;
   return layout({ title: seoTitle, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body,
