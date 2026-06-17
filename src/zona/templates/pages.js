@@ -412,7 +412,7 @@ function indexPage(props) {
     </div>
     <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
   </div>
-</section>`;  return layout({ title: null, desc: `Casas fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
 }
 
 // ── CATALOG ───────────────────────────────────────────────────────────
@@ -502,7 +502,7 @@ function catalogPage(props) {
   </div>
 </div>`;
 
-  return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} propiedades premium en Guatemala. Casas, apartamentos, fincas e inversiones con asesoría.`, canonical: '/propiedades.html', body, scripts: filterJS });
+  return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} casas, fincas y apartamentos en venta en Guatemala. Propiedades en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Filtra por precio y zona.`, canonical: '/propiedades.html', body, scripts: filterJS });
 }
 
 // ── DETAIL ────────────────────────────────────────────────────────────
@@ -636,7 +636,7 @@ ${relHtml}
 <style>@media(max-width:768px){#mobileWa{display:block!important;margin-top:24px}}</style>`;
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
-  // Schema markup para Google Rich Results
+  // Schema markup para Google
   const schemaProperty = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
