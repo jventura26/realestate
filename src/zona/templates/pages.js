@@ -636,7 +636,10 @@ ${relHtml}
 <style>@media(max-width:768px){#mobileWa{display:block!important;margin-top:24px}}</style>`;
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
-  return layout({ title: prop.title, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body });
+  // Titulo SEO optimizado: "Casa en Venta Zona 16 Guatemala | Zona INNmueble"
+  const seoTitle = `${prop.title} | ${prop.tipo||'Propiedad'} en ${prop.municipio||prop.zona||'Guatemala'}`;
+  return layout({ title: seoTitle, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body,
+    scripts: `<script type="application/ld+json">${schemaProperty}<\/script><script async src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"><\/script>` });
 }
 
 
@@ -645,37 +648,37 @@ const ZONA_INFO = {
   'guatemala': {
     titulo: 'Guatemala', subtitulo: 'Capital y centro financiero',
     desc: 'El corazón económico del país. Zonas como la 10, 14, 15 y 16 concentran las propiedades residenciales más exclusivas, con acceso a centros comerciales, restaurantes de autor y la mejor infraestructura urbana de Centroamérica.',
-    img: 'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=900&q=70',
     datos: ['Mejor infraestructura del país','Cercanía a centros financieros','Alta plusvalía histórica','Servicios premium 24/7']
   },
   'fraijanes': {
     titulo: 'Fraijanes', subtitulo: 'Naturaleza y privacidad a 25 minutos de la capital',
     desc: 'Fincas y residencias rodeadas de bosque y clima fresco. Fraijanes ha crecido como el destino preferido de quienes buscan espacio, tranquilidad y una inversión con proyección a futuro, sin alejarse demasiado de la ciudad.',
-    img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=900&q=70',
     datos: ['Clima fresco todo el año','Terrenos amplios','Zona en crecimiento','Acceso pavimentado']
   },
   'mixco': {
     titulo: 'Mixco', subtitulo: 'Equilibrio entre ciudad y accesibilidad',
     desc: 'Uno de los municipios con mayor variedad de oferta residencial del área metropolitana. Mixco combina cercanía a la capital con precios más accesibles, ideal para quienes buscan su primera propiedad o una inversión sólida.',
-    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&q=70',
     datos: ['Variedad de oferta residencial','Buena conectividad vial','Precios accesibles','Crecimiento sostenido']
   },
   'santa catarina pinula': {
     titulo: 'Santa Catarina Pinula', subtitulo: 'Residencial premium con vista al valle',
     desc: 'Reconocida por sus condominios y residencias de alto nivel, Santa Catarina Pinula ofrece tranquilidad, seguridad y algunas de las mejores vistas panorámicas de la ciudad de Guatemala.',
-    img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=900&q=70',
     datos: ['Vistas panorámicas','Condominios privados','Seguridad 24/7','Alta demanda residencial']
   },
   'escuintla': {
     titulo: 'Escuintla', subtitulo: 'Costa, clima cálido e inversión agrícola',
     desc: 'Puerta de entrada a la costa del Pacífico guatemalteco. Escuintla combina propiedades vacacionales, fincas productivas e inversión a largo plazo en una de las regiones con mayor actividad comercial y agrícola del país.',
-    img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=70',
     datos: ['Clima cálido todo el año','Fincas productivas','Cercanía a la costa','Potencial turístico']
   },
   'san jose pinula': {
     titulo: 'San José Pinula', subtitulo: 'Residencial exclusivo en las afueras de la capital',
     desc: 'Zona de expansión residencial premium, con condominios cerrados y fincas de descanso. San José Pinula atrae a quienes buscan amplitud, privacidad y un estilo de vida más relajado sin perder cercanía a la ciudad.',
-    img: 'https://images.unsplash.com/photo-1494526585095-c41746248156?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&q=70',
     datos: ['Condominios cerrados','Fincas de descanso','Privacidad y amplitud','Cercanía a carretera principal']
   },
 };
@@ -689,7 +692,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   const info = ZONA_INFO[slug] || {
     titulo: zonaNombre, subtitulo: 'Propiedades disponibles',
     desc: `Descubre las propiedades disponibles en ${zonaNombre}, Guatemala. Residencias, terrenos e inversiones seleccionadas con asesoría personalizada.`,
-    img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=80',
+    img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=70',
     datos: ['Ubicación estratégica','Propiedades verificadas','Asesoría personalizada','Respuesta rápida']
   };
 
@@ -702,7 +705,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   const body = `
 <section style="position:relative;min-height:52vh;display:flex;align-items:flex-end;padding:0;overflow:hidden">
   <div style="position:absolute;inset:0;z-index:0">
-    <img src="${escapeHtml(info.img)}" alt="${escapeHtml(info.titulo)}" style="width:100%;height:100%;object-fit:cover;filter:brightness(.55)">
+    <img src="${escapeHtml(info.img)}" alt="${escapeHtml(info.titulo)}" style="width:100%;height:100%;object-fit:cover;filter:brightness(.55)" loading="eager" fetchpriority="high">
     <div style="position:absolute;inset:0;background:linear-gradient(to top,var(--ink) 0%,rgba(13,27,62,.4) 60%,rgba(13,27,62,.6) 100%)"></div>
   </div>
   <div style="position:relative;z-index:2;padding:80px 6% 48px;max-width:900px">
@@ -768,8 +771,8 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   });
 
   return layout({
-    title: `Propiedades en ${info.titulo} - Guatemala`,
-    desc: `${propsEnZona.length} propiedades disponibles en ${info.titulo}, Guatemala. ${info.subtitulo}. Asesoría personalizada por WhatsApp.`,
+    title: `${propsEnZona.length > 0 ? propsEnZona.length + ' Propiedades en ' : 'Propiedades en '}${info.titulo} Guatemala - Casas y Fincas en Venta`,
+    desc: `${propsEnZona.length > 0 ? propsEnZona.length + ' propiedades' : 'Propiedades'} en venta en ${info.titulo}, Guatemala. ${info.subtitulo}. Casas, fincas y apartamentos con asesoría personalizada.`,
     canonical: `/zonas/${slug}.html`,
     ogImage: info.img,
     body,
