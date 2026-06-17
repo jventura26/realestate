@@ -752,12 +752,28 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   </div>
 </section>`;
 
+  const schemaZona = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `Propiedades en ${info.titulo} - Guatemala`,
+    "description": info.desc,
+    "url": `https://zona-innmueble.com/zonas/${slug}.html`,
+    "numberOfItems": propsEnZona.length,
+    "itemListElement": propsEnZona.slice(0,10).map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "url": `https://zona-innmueble.com/propiedades/${p.slug}.html`,
+      "name": p.title
+    }))
+  });
+
   return layout({
     title: `Propiedades en ${info.titulo} - Guatemala`,
     desc: `${propsEnZona.length} propiedades disponibles en ${info.titulo}, Guatemala. ${info.subtitulo}. Asesoría personalizada por WhatsApp.`,
     canonical: `/zonas/${slug}.html`,
     ogImage: info.img,
-    body
+    body,
+    scripts: `<script type="application/ld+json">${schemaZona}</script>`
   });
 }
 
