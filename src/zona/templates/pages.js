@@ -412,7 +412,7 @@ function indexPage(props) {
     </div>
     <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
   </div>
-</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
 }
 
 // ── CATALOG ───────────────────────────────────────────────────────────
