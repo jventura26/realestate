@@ -10,7 +10,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
   const pageTitle = title
     ? `${escapeHtml(title)} | Zona INNmueble`
     : 'Zona INNmueble | Propiedades Premium Guatemala';
-  const metaDesc  = escapeHtml(desc || 'Propiedades premium en Guatemala. Residencias, apartamentos, fincas e inversiones. Asesoría personalizada por WhatsApp.');
+  const metaDesc  = escapeHtml(desc || 'Casas, fincas y apartamentos en venta en Guatemala. Propiedades premium en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada por WhatsApp.');
   const ogImg     = ogImage || `${DOMAIN}/assets/og.jpg`;
   const canon     = `${DOMAIN}${canonical || '/'}`;
 
@@ -24,6 +24,28 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Zona INNmueble",
+  "url": "https://zona-innmueble.com",
+  "logo": "https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png",
+  "image": "https://zona-innmueble.com/assets/og.jpg",
+  "description": "Inmobiliaria premium en Guatemala. Casas, fincas y apartamentos en venta en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador.",
+  "telephone": "+50245542088",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Ciudad de Guatemala",
+    "addressCountry": "GT"
+  },
+  "areaServed": ["Guatemala", "Fraijanes", "Mixco", "Santa Catarina Pinula", "Escuintla"],
+  "openingHours": "Mo-Fr 08:00-18:00",
+  "sameAs": [
+    "https://www.facebook.com/Zona-INNmueble-1616853578595692/"
+  ]
+}
+</script>
 <meta property="og:type"        content="website">
 <meta property="og:title"       content="${pageTitle}">
 <meta property="og:description" content="${metaDesc}">
