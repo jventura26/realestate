@@ -9,9 +9,9 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
                   pixelId = 'TU_META_PIXEL_ID', ga4Id = 'G-XXXXXXXXXX' }) {
   const pageTitle = title
     ? `${escapeHtml(title)} | Zona INNmueble`
-    : 'Zona INNmueble | Propiedades Premium Guatemala';
+    : 'Casas y Fincas en Venta Guatemala | Zona INNmueble';
   const metaDesc  = escapeHtml(desc || 'Casas, fincas y apartamentos en venta en Guatemala. Propiedades premium en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada por WhatsApp.');
-  const ogImg     = ogImage || `${DOMAIN}/assets/og.jpg`;
+  const ogImg     = ogImage || 'https://ik.imagekit.io/Zona/og-zona-innmueble.jpg';
   const canon     = `${DOMAIN}${canonical || '/'}`;
 
   return `<!DOCTYPE html>
@@ -64,6 +64,8 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
 <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${pixelId}');fbq('track','PageView');</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
+<link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
