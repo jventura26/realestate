@@ -11,7 +11,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
     ? `${escapeHtml(title)} | Zona INNmueble`
     : 'Casas y Fincas en Venta Guatemala | Zona INNmueble';
   const metaDesc  = escapeHtml(desc || 'Casas, fincas y apartamentos en venta en Guatemala. Propiedades premium en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada por WhatsApp.');
-  const ogImg     = ogImage || 'https://ik.imagekit.io/Zona/og-zona-innmueble.jpg';
+  const ogImg     = ogImage || 'https://ik.imagekit.io/Zona/Imagen%201%20Reel.png';
   const canon     = `${DOMAIN}${canonical || '/'}`;
 
   return `<!DOCTYPE html>
