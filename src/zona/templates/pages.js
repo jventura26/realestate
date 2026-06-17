@@ -636,7 +636,7 @@ ${relHtml}
 <style>@media(max-width:768px){#mobileWa{display:block!important;margin-top:24px}}</style>`;
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
-  // Schema markup para Google
+  // Schema markup para Google Rich Results
   const schemaProperty = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
