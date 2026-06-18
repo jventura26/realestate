@@ -149,7 +149,7 @@ function getAdminJS() {
     "}",
     "document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none')doLogin();});",
     "async function doLogout(){await fetch('/api/logout',{method:'POST'});location.reload();}",
-    "async function checkSession(){var r=await fetch('/api/me');if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminApp').style.display='block';loadProps();setTimeout(function(){showPage('dashboard');},100);}}",
+    "async function checkSession(){try{var r=await fetch('/api/me');if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminApp').style.display='block';loadProps();setTimeout(function(){showPage('dashboard');},100);}}catch(e){}}",
     "async function loadProps(){var r=await fetch('/api/propiedades');if(r.ok){props=await r.json();updateStats();var tw=document.getElementById('tableWrap');if(tw)renderTable();var dt=document.getElementById('dashTableWrap');if(dt)renderTableInto(dt,props.slice(0,8));}}",
     "function updateStats(){",
     "  function setEl(id,val){var el=document.getElementById(id);if(el)el.textContent=val;}",
@@ -664,7 +664,7 @@ tr:hover td{background:#FAFBFF}
     <div class="login-sub">Panel de administración v2</div>
     <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
     <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Ingresar</button>
     <div class="login-err" id="loginErr">Usuario o contraseña incorrectos.</div>
   </div>
 </div>
