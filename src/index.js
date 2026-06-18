@@ -415,7 +415,7 @@ function getAdminJS() {
     "function renderTableInto(el,data){",
     "  if(!data||!data.length){el.innerHTML='<div style=\"padding:32px;text-align:center;color:#8A9BB0\">Sin propiedades</div>';return;}",
     "  var html='<table><thead><tr><th style=\"padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#8A9BB0;background:#F0F2F5\">Propiedad</th><th style=\"padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#8A9BB0;background:#F0F2F5\">Tipo</th><th style=\"padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#8A9BB0;background:#F0F2F5\">Precio</th><th style=\"padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#8A9BB0;background:#F0F2F5\">Estado</th><th style=\"padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;color:#8A9BB0;background:#F0F2F5\">Acciones</th></tr></thead><tbody>';",
-    "  data.forEach(function(p){",
+    "  data.forEach(function(p,idx){",
     "    var badge=p.estado==='Vendida'?'badge-red':p.estado==='Pausada'?'badge-gray':'badge-green';",
     "    html+='<tr>'+",
     "      '<td style=\"padding:13px 16px;border-bottom:1px solid #f0f0f0\"><div style=\"font-weight:600;color:#0D1B3E;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">'+escHtml(p.titulo||'')+'</div>'+",
