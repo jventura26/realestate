@@ -200,7 +200,7 @@ function getAdminJS() {
     "  return c;",
     "}",
     "function setCheckedChars(chars){",
-    "  document.querySelectorAll('#charsSection input[type=checkbox]').forEach(function(cb){",
+    "  document.querySelectorAll('.char-item input[type=checkbox]').forEach(function(cb){",
     "    cb.checked=false;cb.closest('.char-item').classList.remove('on');",
     "  });",
     "  if(!chars||!chars.length)return;",
@@ -233,7 +233,22 @@ function getAdminJS() {
     "  document.getElementById('fPrivada').checked=prop?prop.privada===true:false;",
     "  document.getElementById('fPdfUrl').value=prop?prop.pdfUrl||'':'';",
     "  document.getElementById('fDatosTecnicos').value=prop?prop.datosTecnicos||'':'';",
-    "  document.getElementById('fUbicacionGeneral').value=prop?prop.ubicacionGeneral||'':\'\'; document.getElementById('fAreaV2').value=prop?prop.areaV2||'':''; document.getElementById('fPrecioReal').value=prop?prop.precioReal||'':''; document.getElementById('fContactoVendedor').value=prop?prop.contactoVendedor||'':''; document.getElementById('fNotasInternas').value=prop?prop.notasInternas||'':''; document.getElementById('fEstadoLegal').value=prop?prop.estadoLegal||'':'';",
+    "  document.getElementById('fUbicacionGeneral').value=prop?prop.ubicacionGeneral||'':'';",
+    "  if(document.getElementById('fMunicipio'))document.getElementById('fMunicipio').value=prop?prop.municipio||'':'';",
+    "  if(document.getElementById('fAreaV2'))document.getElementById('fAreaV2').value=prop?prop.areaV2||'':'';",
+    "  if(document.getElementById('fMediosBanos'))document.getElementById('fMediosBanos').value=prop?prop.mediosBanos||'':'';",
+    "  if(document.getElementById('fParqueos'))document.getElementById('fParqueos').value=prop?prop.parqueos||'':'';",
+    "  if(document.getElementById('fNiveles'))document.getElementById('fNiveles').value=prop?prop.niveles||'':'';",
+    "  if(document.getElementById('fAnioConstruccion'))document.getElementById('fAnioConstruccion').value=prop?prop.anioConstruccion||'':'';",
+    "  if(document.getElementById('fEstadoConstruccion'))document.getElementById('fEstadoConstruccion').value=prop?prop.estadoConstruccion||'':'';",
+    "  if(document.getElementById('fTipoConstruccion'))document.getElementById('fTipoConstruccion').value=prop?prop.tipoConstruccion||'':'';",
+    "  if(document.getElementById('fTecho'))document.getElementById('fTecho').value=prop?prop.techo||'':'';",
+    "  if(document.getElementById('fPiso'))document.getElementById('fPiso').value=prop?prop.piso||'':'';",
+    "  if(document.getElementById('fAcabados'))document.getElementById('fAcabados').value=prop?prop.acabados||'':'';",
+    "  if(document.getElementById('fDepartamento'))document.getElementById('fDepartamento').value=prop?prop.departamento||'':'';",
+    "  if(document.getElementById('fSlug'))document.getElementById('fSlug').value=prop?prop.slug||'':'';",
+    "  if(document.getElementById('fLat'))document.getElementById('fLat').value=prop?prop.lat||'':'';",
+    "  if(document.getElementById('fLng'))document.getElementById('fLng').value=prop?prop.lng||'':\'\';",
     "  document.getElementById('fTipoListing').value=prop?prop.tipoListing||'Residencial':'Residencial';",
     "  gUrls=prop&&prop.gallery?prop.gallery.filter(function(u){return u&&u!==prop.imagen;}).slice(0,50):[];",
     "  renderGallery();",
@@ -253,7 +268,7 @@ function getAdminJS() {
     "  var sits=[];",
     "  if(document.getElementById('sZona').checked)sits.push('zona');",
     "  if(document.getElementById('sInmu').checked)sits.push('inmu');",
-    "  var data={titulo:titulo,precio:precio,tipo:document.getElementById('fTipo').value,operacion:document.getElementById('fOperacion').value,zona:document.getElementById('fZona').value,area:document.getElementById('fArea').value,habitaciones:document.getElementById('fHabitaciones').value,banos:document.getElementById('fBanos').value,imagen:imgM,mainImage:imgM,mainImageThumb:imgM,gallery:allG,descripcion:document.getElementById('fDescripcion').value,estado:document.getElementById('fEstado').value,sitios:sits,caracteristicas:getCheckedChars(),codigo:document.getElementById('fCodigo').value,hook:document.getElementById('fHook').value.trim(),descCorta:document.getElementById('fDescCorta').value.trim(),privada:document.getElementById('fPrivada').checked,pdfUrl:document.getElementById('fPdfUrl').value.trim(),datosTecnicos:document.getElementById('fDatosTecnicos').value.trim(),ubicacionGeneral:document.getElementById('fUbicacionGeneral').value.trim(),tipoListing:document.getElementById('fTipoListing').value,areaV2:document.getElementById('fAreaV2').value.trim(),precioReal:document.getElementById('fPrecioReal').value.trim(),contactoVendedor:document.getElementById('fContactoVendedor').value.trim(),notasInternas:document.getElementById('fNotasInternas').value.trim(),estadoLegal:document.getElementById('fEstadoLegal').value.trim()};",
+    "  var data={titulo:titulo,precio:precio,tipo:document.getElementById('fTipo').value,operacion:document.getElementById('fOperacion').value,zona:document.getElementById('fZona').value,area:document.getElementById('fArea').value,habitaciones:document.getElementById('fHabitaciones').value,banos:document.getElementById('fBanos').value,imagen:imgM,mainImage:imgM,mainImageThumb:imgM,gallery:allG,descripcion:document.getElementById('fDescripcion').value,estado:document.getElementById('fEstado').value,sitios:sits,caracteristicas:getCheckedChars(),codigo:document.getElementById('fCodigo').value,hook:document.getElementById('fHook').value.trim(),descCorta:document.getElementById('fDescCorta').value.trim(),privada:document.getElementById('fPrivada').checked,pdfUrl:document.getElementById('fPdfUrl').value.trim(),datosTecnicos:document.getElementById('fDatosTecnicos').value.trim(),ubicacionGeneral:document.getElementById('fUbicacionGeneral').value.trim(),tipoListing:document.getElementById('fTipoListing').value,areaV2:document.getElementById('fAreaV2').value.trim(),municipio:document.getElementById('fMunicipio')?document.getElementById('fMunicipio').value.trim():'',mediosBanos:document.getElementById('fMediosBanos')?document.getElementById('fMediosBanos').value.trim():'',parqueos:document.getElementById('fParqueos')?document.getElementById('fParqueos').value.trim():'',niveles:document.getElementById('fNiveles')?document.getElementById('fNiveles').value.trim():'',anioConstruccion:document.getElementById('fAnioConstruccion')?document.getElementById('fAnioConstruccion').value.trim():'',estadoConstruccion:document.getElementById('fEstadoConstruccion')?document.getElementById('fEstadoConstruccion').value.trim():'',tipoConstruccion:document.getElementById('fTipoConstruccion')?document.getElementById('fTipoConstruccion').value.trim():'',techo:document.getElementById('fTecho')?document.getElementById('fTecho').value.trim():'',piso:document.getElementById('fPiso')?document.getElementById('fPiso').value.trim():'',acabados:document.getElementById('fAcabados')?document.getElementById('fAcabados').value.trim():'',departamento:document.getElementById('fDepartamento')?document.getElementById('fDepartamento').value.trim():'',lat:document.getElementById('fLat')?document.getElementById('fLat').value.trim():'',lng:document.getElementById('fLng')?document.getElementById('fLng').value.trim():'',precioReal:document.getElementById('fPrecioReal').value.trim(),contactoVendedor:document.getElementById('fContactoVendedor').value.trim(),notasInternas:document.getElementById('fNotasInternas').value.trim(),estadoLegal:document.getElementById('fEstadoLegal').value.trim()};",
     "  var method=editingId?'PUT':'POST';",
     "  var url=editingId?'/api/propiedades/'+editingId:'/api/propiedades';",
     "  var res=await fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});",
@@ -325,7 +340,558 @@ function getAdminJS() {
 
 function getAdminHTML() {
   const js = getAdminJS();
-  return '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Admin - Zona INNmueble</title>\n<style>\n:root{--navy:#0D1B3E;--orange:#F5820D;--steel:#3A6186;--muted:#6c757d;}\n*{margin:0;padding:0;box-sizing:border-box;}\nbody{font-family:system-ui,sans-serif;background:var(--navy);color:#1a1a2e;}\ninput,button,select,textarea{font-family:inherit;}\n.login-wrap{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}\n.login-card{background:white;border-radius:12px;padding:48px 40px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.4);}\n.login-logo{color:var(--navy);font-size:22px;font-weight:800;margin-bottom:8px;}\n.login-logo span{color:var(--orange);}\n.login-sub{color:var(--muted);font-size:13px;margin-bottom:32px;}\n.field{margin-bottom:16px;}\n.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:6px;}\n.field input{width:100%;padding:11px 14px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:14px;}\n.btn-primary{width:100%;padding:13px;background:var(--navy);color:white;border:none;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer;}\n.err-msg{background:#fef2f2;color:#b91c1c;border-radius:6px;padding:10px 14px;font-size:13px;margin-top:14px;display:none;}\n.shell{display:none;min-height:100vh;background:#f0f2f5;}\n.topbar{background:var(--navy);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}\n.topbar-brand{color:white;font-weight:800;font-size:16px;}\n.topbar-brand span{color:var(--orange);}\n.topbar-right{display:flex;align-items:center;gap:12px;}\n.btn-sm{padding:7px 14px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;border:none;}\n.btn-import{background:var(--steel);color:white;}\n.btn-add{background:var(--orange);color:white;}\n.btn-logout{background:rgba(255,255,255,.15);color:white;}\n.btn-danger{background:#ef4444;color:white;}\n.btn-edit{background:var(--steel);color:white;}\n.main{max-width:1200px;margin:0 auto;padding:28px 20px;}\n.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px;}\n.stat-card{background:white;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);}\n.stat-label{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}\n.stat-value{font-size:32px;font-weight:800;color:var(--navy);}\n.stat-value.orange{color:var(--orange);}\n.import-panel{background:white;border-radius:10px;padding:24px;margin-bottom:20px;display:none;box-shadow:0 1px 4px rgba(0,0,0,.08);}\n.import-panel.open{display:block;}\n.drop-zone{border:2px dashed #d0d5dd;border-radius:8px;padding:36px;text-align:center;cursor:pointer;background:#fafafa;}\n.drop-zone:hover{border-color:var(--navy);}\n.preview-info{background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:12px 16px;display:flex;justify-content:space-between;margin:14px 0;}\n.progress-wrap{display:none;margin-bottom:12px;}\n.progress-bar-bg{background:#e5e7eb;border-radius:99px;height:8px;overflow:hidden;}\n.progress-bar{background:var(--orange);height:8px;border-radius:99px;width:0%;transition:width .3s;}\n.progress-label{font-size:12px;color:var(--muted);margin-top:5px;}\n.import-preview{display:none;}\n.import-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;}\n.table-card{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden;}\n.table-header{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f0f0;}\n.table-title{font-size:15px;font-weight:700;color:var(--navy);}\n.search-input{padding:8px 12px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:13px;width:200px;}\ntable{width:100%;border-collapse:collapse;}\nth{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);padding:11px 14px;text-align:left;background:#fafafa;border-bottom:1px solid #f0f0f0;}\ntd{padding:13px 14px;font-size:13px;border-bottom:1px solid #f8f8f8;vertical-align:middle;}\ntr:last-child td{border-bottom:none;}\ntr:hover td{background:#fafbff;}\n.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}\n.badge-green{background:#dcfce7;color:#166534;}\n.badge-blue{background:#dbeafe;color:#1e40af;}\n.badge-orange{background:#ffedd5;color:#9a3412;}\n.prop-title{font-weight:600;color:var(--navy);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}\n.prop-price{font-weight:700;color:var(--orange);}\n.actions{display:flex;gap:6px;}\n.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:flex-start;padding:40px 20px;z-index:200;overflow-y:auto;}\n.modal-overlay.open{display:flex;}\n.modal{background:white;border-radius:12px;width:100%;max-width:640px;padding:32px;}\n.modal-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:22px;}\n.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}\n.form-grid .full{grid-column:1/-1;}\n.form-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:5px;}\n.form-field input,.form-field select,.form-field textarea{width:100%;padding:10px 12px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:13px;}\n.form-field textarea{resize:vertical;min-height:80px;}\n.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}\n.btn-cancel{background:#f0f2f5;color:#1a1a2e;padding:10px 18px;border:none;border-radius:6px;font-weight:700;cursor:pointer;}\n.btn-save{background:var(--navy);color:white;padding:10px 22px;border:none;border-radius:6px;font-weight:700;cursor:pointer;}\n.gallery-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}\n.gi{position:relative;width:90px;}\n.gi img{width:90px;height:65px;object-fit:cover;border-radius:4px;border:1.5px solid #e0e0e0;}\n.gi-rm{position:absolute;top:2px;right:2px;background:#ef4444;color:white;border:none;border-radius:3px;width:16px;height:16px;font-size:10px;cursor:pointer;}\n.char-group{margin-bottom:14px;}\n.char-group-title{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:8px;padding-top:8px;border-top:1px solid #f0f0f0;}\n.char-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}\n.char-item{display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 8px;border:1.5px solid #e0e0e0;border-radius:6px;cursor:pointer;}\n.char-item input{margin:0;cursor:pointer;width:14px;height:14px;flex-shrink:0;}\n.char-item.on{background:#f0f3ff;border-color:var(--navy);}\n.sitio-sel{display:flex;gap:20px;padding:8px 0;}\n.sitio-sel label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;}\n.share-box{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px;margin-top:8px;}\n.share-box-title{font-size:11px;font-weight:700;text-transform:uppercase;color:#0369a1;margin-bottom:10px;display:flex;align-items:center;gap:6px;}\n.privada-toggle{display:flex;align-items:center;gap:10px;padding:10px 0;}\n.privada-toggle input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--orange);}\n.privada-toggle label{font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;}\n.toast{position:fixed;bottom:24px;right:24px;background:#1e293b;color:white;padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .3s;z-index:300;}\n.toast.show{transform:translateY(0);opacity:1;}\n.toast.success{border-left:4px solid #22c55e;}\n.toast.error{border-left:4px solid #ef4444;}\n</style>\n</head>\n<body>\n<div id="loginPage" class="login-wrap">\n  <div class="login-card">\n    <div class="login-logo"><span>Zona</span>-INNmueble</div>\n    <div class="login-sub">Panel de administracion</div>\n    <div class="field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>\n    <div class="field"><label>Contrasena</label><input type="password" id="loginPass" autocomplete="current-password"></div>\n    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Ingresar al panel</button>\n    <div class="err-msg" id="loginErr">Usuario o contrasena incorrectos.</div>\n  </div>\n</div>\n<div id="adminShell" class="shell">\n  <div class="topbar">\n    <div class="topbar-brand"><span>Zona</span>-INNmueble Admin</div>\n    <div class="topbar-right">\n      <button class="btn-sm btn-import" onclick="toggleImport()">Importar CSV</button>\n      <button class="btn-sm btn-add" onclick="openModal(null)">+ Nueva propiedad</button>\n      <button class="btn-sm" style="background:#7c3aed;color:white" onclick="showLeads()">Leads</button>\n      <button class="btn-sm btn-logout" onclick="doLogout()">Salir</button>\n    </div>\n  </div>\n  <div class="main">\n    <div class="import-panel" id="importPanel">\n      <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px">Importar CSV</div>\n      <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Sube el archivo propiedades.csv exportado de Wix.</div>\n      <div class="drop-zone" id="dropZone" onclick="triggerFileInput()">\n        <div style="font-size:13px;color:var(--muted)"><strong style="color:var(--navy)">Click para seleccionar</strong> o arrastra el CSV aqui</div>\n        <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleFile(this.files[0])">\n      </div>\n      <div class="import-preview" id="importPreview">\n        <div class="preview-info"><span id="previewText">0 propiedades listas</span><span id="previewFile" style="color:var(--muted)"></span></div>\n        <div class="progress-wrap" id="progressWrap"><div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div><div class="progress-label" id="progressLabel"></div></div>\n        <div class="import-actions"><button class="btn-cancel" onclick="cancelImport()">Cancelar</button><button class="btn-save" id="btnImport" onclick="doImport()">Importar al KV</button></div>\n      </div>\n    </div>\n    <div class="stats">\n      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>\n      <div class="stat-card"><div class="stat-label">Activas</div><div class="stat-value orange" id="statActivas">0</div></div>\n      <div class="stat-card"><div class="stat-label">Venta</div><div class="stat-value" id="statVenta">0</div></div>\n      <div class="stat-card"><div class="stat-label">Renta</div><div class="stat-value" id="statRenta">0</div></div>\n    </div>\n    <div class="table-card">\n      <div class="table-header"><div class="table-title">Propiedades</div>\n      <input class="search-input" type="text" placeholder="Buscar..." id="searchInput" oninput="renderTable()"></div>\n      <div id="tableWrap"></div>\n    </div>\n  </div>\n</div>\n<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">\n  <div class="modal">\n    <div class="modal-title" id="modalTitle">Nueva propiedad</div>\n    <div class="form-grid">\n      <div class="form-field full"><label>Titulo *</label><input type="text" id="fTitulo"></div>\n      <div class="form-field"><label>Precio *</label><input type="text" id="fPrecio" placeholder="Q 2,500,000"></div>\n      <div class="form-field"><label>Tipo</label><select id="fTipo"><option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option></select></div>\n      <div class="form-field"><label>Operacion</label><select id="fOperacion"><option>Venta</option><option>Renta</option><option>Venta/Renta</option></select></div>\n      <div class="form-field"><label>Zona</label><input type="text" id="fZona"></div>\n      <div class="form-field"><label>Area m² (metros)</label><input type="text" id="fArea" placeholder="Ej: 350"></div>\n      <div class="form-field"><label>Area v² (varas)</label><input type="text" id="fAreaV2" placeholder="Ej: 2048"></div>\n      <div class="form-field"><label>Habitaciones</label><input type="number" id="fHabitaciones"></div>\n      <div class="form-field"><label>Banos</label><input type="number" id="fBanos"></div>\n      <div class="form-field full"><label>Imagen principal (URL)</label><input type="url" id="fImagen" placeholder="https://..."></div>\n      <div class="form-field full">\n        <label>Galeria adicional (max 50)</label>\n        <div class="gallery-wrap" id="gWrap"></div>\n        <button type="button" onclick="addImg()" style="margin-top:6px;padding:6px 14px;border:1.5px dashed #d0d5dd;border-radius:6px;background:none;font-size:12px;color:var(--muted);cursor:pointer">+ Agregar imagen</button>\n      </div>\n      <div class="form-field full">\n        <label>Caracteristicas</label>\n        <div id="charsSection" style="margin-top:6px">\n          <div class="char-group"><div class="char-group-title">Ubicacion</div><div class="char-grid">\n            <label class="char-item"><input type="checkbox" value="Ubicacion privilegiada"> Ubicacion privilegiada</label>\n            <label class="char-item"><input type="checkbox" value="Sobre carretera"> Sobre carretera</label>\n            <label class="char-item"><input type="checkbox" value="Entorno natural y vistas"> Entorno natural y vistas</label>\n            <label class="char-item"><input type="checkbox" value="Cerca de servicios"> Cerca de servicios</label>\n            <label class="char-item"><input type="checkbox" value="Zona residencial"> Zona residencial</label>\n            <label class="char-item"><input type="checkbox" value="Acceso pavimentado"> Acceso pavimentado</label>\n          </div></div>\n          <div class="char-group"><div class="char-group-title">Terreno</div><div class="char-grid">\n            <label class="char-item"><input type="checkbox" value="Amplio espacio"> Amplio espacio</label>\n            <label class="char-item"><input type="checkbox" value="Topografia aprovechable"> Topografia aprovechable</label>\n            <label class="char-item"><input type="checkbox" value="Acceso a servicios"> Acceso a servicios</label>\n            <label class="char-item"><input type="checkbox" value="Vista al valle"> Vista al valle</label>\n            <label class="char-item"><input type="checkbox" value="Terreno plano"> Terreno plano</label>\n            <label class="char-item"><input type="checkbox" value="Con jardin"> Con jardin</label>\n          </div></div>\n          <div class="char-group"><div class="char-group-title">Ideal para</div><div class="char-grid">\n            <label class="char-item"><input type="checkbox" value="Casa de descanso"> Casa de descanso</label>\n            <label class="char-item"><input type="checkbox" value="Proyecto agricola"> Proyecto agricola</label>\n            <label class="char-item"><input type="checkbox" value="Desarrollo habitacional"> Desarrollo habitacional</label>\n            <label class="char-item"><input type="checkbox" value="Hotel ecologico"> Hotel ecologico</label>\n            <label class="char-item"><input type="checkbox" value="Inversion"> Inversion</label>\n            <label class="char-item"><input type="checkbox" value="Vivienda familiar"> Vivienda familiar</label>\n          </div></div>\n          <div class="char-group"><div class="char-group-title">Amenidades</div><div class="char-grid">\n            <label class="char-item"><input type="checkbox" value="Piscina"> Piscina</label>\n            <label class="char-item"><input type="checkbox" value="Jardin"> Jardin</label>\n            <label class="char-item"><input type="checkbox" value="Pergola"> Pergola</label>\n            <label class="char-item"><input type="checkbox" value="Chimenea"> Chimenea</label>\n            <label class="char-item"><input type="checkbox" value="Jacuzzi"> Jacuzzi</label>\n            <label class="char-item"><input type="checkbox" value="Churrasquera"> Churrasquera</label>\n            <label class="char-item"><input type="checkbox" value="Terraza"> Terraza</label>\n            <label class="char-item"><input type="checkbox" value="Estudio"> Estudio</label>\n            <label class="char-item"><input type="checkbox" value="Cuarto de servicio"> Cuarto de servicio</label>\n            <label class="char-item"><input type="checkbox" value="Bodega"> Bodega</label>\n          </div></div>\n          <div class="char-group"><div class="char-group-title">Inversion</div><div class="char-grid">\n            <label class="char-item"><input type="checkbox" value="Alta plusvalia"> Alta plusvalia</label>\n            <label class="char-item"><input type="checkbox" value="Zona en crecimiento"> Zona en crecimiento</label>\n            <label class="char-item"><input type="checkbox" value="Papeleria en orden"> Papeleria en orden</label>\n            <label class="char-item"><input type="checkbox" value="Sin gravamenes"> Sin gravamenes</label>\n            <label class="char-item"><input type="checkbox" value="Financiamiento disponible"> Financiamiento disponible</label>\n            <label class="char-item"><input type="checkbox" value="Negociable"> Negociable</label>\n          </div></div>\n        </div>\n      </div>\n      <div class="form-field full"><label>Descripcion</label><textarea id="fDescripcion"></textarea></div>\n      <div class="form-field full">\n        <div class="share-box">\n          <div class="share-box-title">🔗 Ficha compartible (WhatsApp / Facebook)</div>\n          <div class="form-field" style="margin-bottom:10px"><label>Hook — frase que detiene el scroll</label><input type="text" id="fHook" placeholder="Ej: Hay casas. Y luego esta."></div>\n          <div class="form-field" style="margin-bottom:10px"><label>Descripcion corta para compartir</label><textarea id="fDescCorta" style="min-height:60px" placeholder="2-3 lineas premium que generen curiosidad sin revelar todo..."></textarea></div>\n          <div class="privada-toggle">\n            <input type="checkbox" id="fPrivada">\n            <label for="fPrivada">🔒 Propiedad PRIVADA — ocultar precio en la ficha compartible</label>\n          </div>\n          <div style="font-size:11px;color:var(--muted);margin-top:4px">Si esta activo, el link compartible no mostrara el precio. Solo zona, tipo y datos generales.</div>\n        </div>\n      </div>\n      <div class="form-field full">\n        <label>Tipo de Listing</label>\n        <select id="fTipoListing"><option>Residencial</option><option>Finca</option><option>Inversion</option><option>Comercial</option></select>\n      </div>\n      <div class="form-field full"><label>Ubicacion general (sin direccion exacta)</label><input type="text" id="fUbicacionGeneral" placeholder="Ej: Fraijanes · Carretera a El Salvador"></div>\n      <div class="form-field full"><label>Datos tecnicos</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 banos · 580 m² · Terreno 2,400 m²"></div>\n      <div class="form-field full"><div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:16px;margin-bottom:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#92400e;margin-bottom:12px">🔐 Info Privada — solo visible en admin</div><div class="form-field" style="margin-bottom:10px"><label>Precio real / margen</label><input type="text" id="fPrecioReal" placeholder="Ej: Acepta minimo Q 2,200,000"></div><div class="form-field" style="margin-bottom:10px"><label>Contacto vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Perez · 5555-1234"></div><div class="form-field" style="margin-bottom:10px"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:60px" placeholder="Motivacion de venta, situacion especial..."></textarea></div><div class="form-field"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravamenes, IUSI al dia"></div></div></div><div class="form-field full"><div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:16px;margin-bottom:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#92400e;margin-bottom:12px">🔐 Info Privada — solo visible en admin</div><div class="form-field" style="margin-bottom:10px"><label>Precio real / margen</label><input type="text" id="fPrecioReal" placeholder="Ej: Acepta minimo Q 2,200,000"></div><div class="form-field" style="margin-bottom:10px"><label>Contacto vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Perez 5555-1234"></div><div class="form-field" style="margin-bottom:10px"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:60px" placeholder="Motivacion de venta, situacion especial..."></textarea></div><div class="form-field"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravamenes, IUSI al dia"></div></div><div class="form-field full"><label>URL del PDF (Paquete de listado)</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>\n      <div class="form-field"><label>Codigo referencia</label><input type="text" id="fCodigo" placeholder="CV-001"></div>\n      <div class="form-field"><label>Estado</label><select id="fEstado"><option>Activa</option><option>Vendida</option><option>Pausada</option></select></div>\n      <div class="form-field full"><label>Publicar en</label>\n        <div class="sitio-sel">\n          <label><input type="checkbox" id="sZona" checked> zona-innmueble.com</label>\n          <label><input type="checkbox" id="sInmu" checked> inmuhub.com</label>\n        </div>\n      </div>\n    </div>\n    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveProp()">Guardar propiedad</button></div>\n  </div>\n</div>\n<div class="toast" id="toast"></div>\n<script>\n' + js + '\n</scr' + 'ipt>\n</body>\n</html>';
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin · Zona INNmueble</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --navy:#0D1B3E;--navy2:#142240;--navy3:#1A3060;
+  --or:#F5820D;--or2:#FF9B2E;
+  --wh:#fff;--bg:#F0F2F5;--bg2:#E8EBF0;
+  --text:#1A1A2E;--text2:#4A5568;--text3:#8A9BB0;
+  --border:#E2E8F0;--border2:#CBD5E0;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+input,select,textarea,button{font-family:inherit;font-size:13px}
+a{text-decoration:none;color:inherit}
+/* LAYOUT */
+.app{display:flex;height:100vh;overflow:hidden}
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-logo{padding:18px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-brand{font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--wh)}
+.sb-brand span{color:var(--or)}
+.sb-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;letter-spacing:.04em}
+.sb-nav{padding:10px 0;flex:1}
+.sb-section{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.22);padding:14px 20px 5px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;border-right:2px solid transparent}
+.sb-item:hover{color:var(--wh);background:rgba(255,255,255,.06)}
+.sb-item.active{color:var(--wh);background:rgba(245,130,13,.15);border-right-color:var(--or)}
+.sb-item i{font-size:17px;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--or);color:var(--navy);font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
+.sb-bottom{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--navy);flex-shrink:0}
+.sb-uname{font-size:12px;color:rgba(255,255,255,.8);font-weight:600}
+.sb-urole{font-size:10px;color:rgba(255,255,255,.35)}
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--wh);border-bottom:1px solid var(--border);padding:0 24px;height:58px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar-title{font-size:16px;font-weight:700;color:var(--navy);flex:1}
+.content{flex:1;overflow-y:auto;padding:24px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--or);color:var(--wh)}
+.btn-primary:hover{background:var(--or2)}
+.btn-navy{background:var(--navy);color:var(--wh)}
+.btn-navy:hover{background:var(--navy3)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-danger{background:var(--red);color:var(--wh)}
+.btn-sm{padding:5px 12px;font-size:11px}
+.btn i{font-size:15px}
+/* CARDS */
+.card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:20px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:700;color:var(--navy)}
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
+.stat-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:18px 20px;box-shadow:var(--shadow)}
+.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.stat-label i{font-size:15px;color:var(--or)}
+.stat-val{font-size:28px;font-weight:800;color:var(--navy);line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+.stat-sub.up{color:var(--green)}
+.stat-sub.warn{color:var(--or)}
+/* TABLE */
+.table-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.table-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border)}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 12px;flex:1;max-width:300px}
+.search-box i{font-size:16px;color:var(--text3)}
+.search-box input{border:none;background:transparent;outline:none;width:100%;font-size:13px;color:var(--text)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:11px 16px;text-align:left;background:var(--bg);border-bottom:1px solid var(--border)}
+td{padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFBFF}
+.prop-thumb{width:48px;height:38px;border-radius:6px;object-fit:cover;background:var(--bg2)}
+.prop-name{font-weight:600;color:var(--navy);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prop-loc{font-size:11px;color:var(--text3);margin-top:2px}
+.price-cell{font-weight:700;color:var(--or);white-space:nowrap}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-orange{background:#ffedd5;color:#9a3412}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-gray{background:#f1f5f9;color:#475569}
+.badge-purple{background:#f3e8ff;color:#7e22ce}
+.actions-cell{display:flex;gap:6px;align-items:center}
+.icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .15s}
+.icon-btn:hover{background:var(--navy);color:var(--wh);border-color:var(--navy)}
+.icon-btn i{font-size:15px}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;justify-content:flex-start;align-items:stretch;z-index:500}
+.modal-overlay.open{display:flex}
+.modal-panel{background:var(--wh);width:820px;max-width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-topbar{background:var(--navy);padding:0 24px;height:58px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.modal-topbar-title{font-size:15px;font-weight:700;color:var(--wh);flex:1}
+.modal-body{flex:1;overflow-y:auto;padding:0}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;background:var(--wh)}
+/* FORM SECTIONS */
+.form-sections{display:grid;grid-template-columns:1fr 300px;gap:0;align-items:start}
+.form-left{padding:20px 20px 20px 24px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:0}
+.form-right{padding:20px 24px 20px 20px;display:flex;flex-direction:column;gap:14px}
+.fsec{margin-bottom:20px}
+.fsec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);padding:10px 0 10px;border-bottom:1px solid var(--border);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.fsec-title i{font-size:16px;color:var(--or)}
+.fg{margin-bottom:12px}
+.fg:last-child{margin-bottom:0}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;color:var(--text);background:var(--wh);outline:none;transition:border-color .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--or)}
+.fg textarea{resize:vertical;min-height:72px}
+.fg-row{display:grid;gap:10px}
+.fg-row.c2{grid-template-columns:1fr 1fr}
+.fg-row.c3{grid-template-columns:1fr 1fr 1fr}
+.fg-row.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+/* CHECKBOXES */
+.chars-section{margin-bottom:14px}
+.chars-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.chars-label i{font-size:14px;color:var(--or)}
+.chars-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.char-item{display:flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2)}
+.char-item:hover{border-color:var(--or);color:var(--navy)}
+.char-item input{width:13px;height:13px;accent-color:var(--or);cursor:pointer;flex-shrink:0}
+.char-item.on{background:#FFF8F2;border-color:var(--or);color:var(--navy);font-weight:500}
+/* SHARE BOX */
+.share-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px;margin-bottom:14px}
+.share-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E40AF;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.share-title i{font-size:15px}
+.share-box .fg label{color:#1D4ED8}
+.share-box .fg input,.share-box .fg textarea{border-color:#BFDBFE;background:#fff}
+.share-box .fg input:focus,.share-box .fg textarea:focus{border-color:#3B82F6}
+/* PRIVATE BOX */
+.priv-box{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:14px;margin-bottom:14px}
+.priv-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.priv-title i{font-size:15px}
+.priv-box .fg label{color:#78350F}
+.priv-box .fg input,.priv-box .fg textarea{border-color:#FCD34D;background:#FFFDE7}
+.priv-box .fg input:focus,.priv-box .fg textarea:focus{border-color:#F59E0B}
+/* SIDE CARD */
+.side-card{background:var(--wh);border:1px solid var(--border);border-radius:8px;padding:14px}
+.side-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.side-card-title i{font-size:15px;color:var(--or)}
+.status-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--text2);background:var(--bg);transition:all .15s}
+.pill.selected{background:var(--or);color:var(--wh);border-color:var(--or)}
+.sitio-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-bottom:7px;transition:border-color .15s}
+.sitio-row:hover{border-color:var(--or)}
+.sitio-row:last-child{margin-bottom:0}
+.sitio-row input{width:14px;height:14px;accent-color:var(--or)}
+.sitio-label{font-size:12px;font-weight:600;color:var(--navy)}
+.sitio-url{font-size:10px;color:var(--text3)}
+/* IMG */
+.img-drop{border:1.5px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;background:var(--bg);transition:all .15s}
+.img-drop:hover{border-color:var(--or);background:#FFF8F2}
+.img-drop i{font-size:28px;color:var(--text3);display:block;margin-bottom:5px}
+.img-drop-text{font-size:12px;color:var(--text2);font-weight:500}
+.img-drop-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.gallery-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.gi{position:relative;width:64px}
+.gi img{width:64px;height:50px;object-fit:cover;border-radius:5px;border:1px solid var(--border)}
+.gi-rm{position:absolute;top:2px;right:2px;background:var(--red);color:var(--wh);border:none;border-radius:3px;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* LEADS PAGE */
+.leads-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.lead-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow);transition:all .2s}
+.lead-card:hover{border-color:var(--or);transform:translateY(-2px)}
+.lead-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.lead-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy3));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--wh);flex-shrink:0}
+.lead-name{font-size:14px;font-weight:700;color:var(--navy)}
+.lead-time{font-size:11px;color:var(--text3);margin-top:1px}
+.lead-prop{font-size:12px;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.lead-prop i{font-size:14px;color:var(--or)}
+.lead-type{font-size:11px;color:var(--text3);margin-bottom:10px}
+.lead-wa{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:var(--wh);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;transition:all .15s}
+.lead-wa:hover{background:#1ebe5d}
+.lead-wa i{font-size:14px}
+/* IMPORT */
+.import-panel{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;display:none;box-shadow:var(--shadow)}
+.import-panel.open{display:block}
+.drop-zone{border:2px dashed var(--border2);border-radius:8px;padding:36px;text-align:center;cursor:pointer;background:var(--bg);transition:all .15s}
+.drop-zone:hover{border-color:var(--navy)}
+.progress-wrap{display:none;margin-bottom:12px}
+.progress-bar-bg{background:var(--bg2);border-radius:99px;height:6px;overflow:hidden}
+.progress-bar{background:var(--or);height:6px;border-radius:99px;width:0%;transition:width .3s}
+.progress-label{font-size:11px;color:var(--text3);margin-top:4px}
+.import-preview{display:none}
+.import-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--wh);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .3s;z-index:999;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-left:4px solid var(--green)}
+.toast.error{border-left:4px solid var(--red)}
+/* LOGIN */
+.login-wrap{display:flex;justify-content:center;align-items:center;min-height:100vh;background:var(--navy)}
+.login-card{background:var(--wh);border-radius:14px;padding:44px 40px;width:100%;max-width:380px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.login-logo{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.login-logo span{color:var(--or)}
+.login-sub{color:var(--text3);font-size:13px;margin-bottom:28px}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
+.login-field input{width:100%;padding:10px 13px;border:1.5px solid var(--border2);border-radius:7px;font-size:14px;outline:none;transition:border-color .15s}
+.login-field input:focus{border-color:var(--or)}
+.login-btn{width:100%;padding:12px;background:var(--navy);color:var(--wh);border:none;border-radius:7px;font-weight:700;font-size:14px;cursor:pointer;transition:background .15s}
+.login-btn:hover{background:var(--navy3)}
+.login-err{background:#FEF2F2;color:#B91C1C;border-radius:6px;padding:10px 14px;font-size:13px;margin-top:12px;display:none}
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .fg-row.c3,.fg-row.c4{grid-template-columns:1fr 1fr}
+  .form-sections{grid-template-columns:1fr}
+  .form-right{border-top:1px solid var(--border);padding:20px 24px}
+  .modal-panel{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo"><span>Zona</span>-INNmueble</div>
+    <div class="login-sub">Panel de administración v2</div>
+    <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
+    <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="loginErr">Usuario o contraseña incorrectos.</div>
+  </div>
+</div>
+
+<div id="adminApp" class="app" style="display:none">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-brand"><span>Zona</span>-INNmueble</div>
+      <div class="sb-sub">Panel de administración</div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-item active" onclick="showPage('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="sb-section">Catálogo</div>
+      <div class="sb-item" onclick="showPage('propiedades')" id="nav-propiedades"><i class="ti ti-building"></i> Propiedades</div>
+      <div class="sb-item" onclick="openModal(null)" id="nav-nueva"><i class="ti ti-plus"></i> Nueva propiedad</div>
+      <div class="sb-item" onclick="showPage('importar')" id="nav-importar"><i class="ti ti-upload"></i> Importar CSV</div>
+      <div class="sb-section">Clientes</div>
+      <div class="sb-item" onclick="showPage('leads')" id="nav-leads"><i class="ti ti-users"></i> Leads <span class="sb-badge" id="leadsCount">0</span></div>
+      <div class="sb-section">Sitios</div>
+      <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')" id="nav-zona"><i class="ti ti-world"></i> Zona INNmueble</div>
+      <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')" id="nav-inmu"><i class="ti ti-building-skyscraper"></i> InmuHub</div>
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">ZI</div>
+        <div>
+          <div class="sb-uname">Admin</div>
+          <div class="sb-urole" id="sbRole">zona-innmueble.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <button class="btn btn-ghost btn-sm" onclick="triggerRebuildBtn()"><i class="ti ti-refresh"></i> Rebuild sitio</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
+    </div>
+    <div class="content" id="mainContent"></div>
+  </div>
+</div>
+
+<!-- MODAL PROPIEDAD -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-panel">
+    <div class="modal-topbar">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()" style="color:#fff;border-color:rgba(255,255,255,.2)"><i class="ti ti-arrow-left"></i></button>
+      <div class="modal-topbar-title" id="modalTitle">Nueva propiedad</div>
+      <button class="btn btn-ghost btn-sm" onclick="saveProp()" style="color:#fff;border-color:rgba(255,255,255,.2)"><i class="ti ti-device-floppy"></i> Guardar</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-sections">
+        <div class="form-left">
+
+          <!-- BASICA -->
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-info-circle"></i> Información básica</div>
+            <div class="fg"><label>Título *</label><input type="text" id="fTitulo" placeholder="Ej: Casa en Kanajuyú · Zona 16"></div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Precio *</label><input type="text" id="fPrecio" placeholder="Ej: $395,000 o Q 2,500,000"></div>
+              <div class="fg"><label>Código</label><input type="text" id="fCodigo" placeholder="CV-001"></div>
+            </div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Tipo</label><select id="fTipo"><option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option></select></div>
+              <div class="fg"><label>Operación</label><select id="fOperacion"><option>Venta</option><option>Renta</option><option>Venta/Renta</option></select></div>
+              <div class="fg"><label>Listing</label><select id="fTipoListing"><option>Residencial</option><option>Finca</option><option>Inversión</option><option>Comercial</option></select></div>
+            </div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Zona / Colonia</label><input type="text" id="fZona" placeholder="Ej: Kanajuyú, Villas de Alcalá"></div>
+              <div class="fg"><label>Municipio</label><input type="text" id="fMunicipio" placeholder="Ej: Guatemala, Fraijanes, Mixco"></div>
+            </div>
+            <div class="fg"><label>Ubicación general (sin dirección exacta)</label><input type="text" id="fUbicacionGeneral" placeholder="Ej: Fraijanes · Carretera a El Salvador · Km 16.5"></div>
+          </div>
+
+          <!-- MEDIDAS -->
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-ruler"></i> Medidas y espacios</div>
+            <div class="fg-row c4">
+              <div class="fg"><label>Área m²</label><input type="text" id="fArea" placeholder="350"></div>
+              <div class="fg"><label>Área v²</label><input type="text" id="fAreaV2" placeholder="2048"></div>
+              <div class="fg"><label>Habitaciones</label><input type="number" id="fHabitaciones" placeholder="0" min="0"></div>
+              <div class="fg"><label>Baños</label><input type="number" id="fBanos" placeholder="0" min="0"></div>
+            </div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Medios baños</label><input type="number" id="fMediosBanos" placeholder="0" min="0"></div>
+              <div class="fg"><label>Parqueos</label><input type="number" id="fParqueos" placeholder="0" min="0"></div>
+              <div class="fg"><label>Niveles</label><input type="number" id="fNiveles" placeholder="1" min="1"></div>
+            </div>
+            <div class="fg"><label>Datos técnicos (resumen para la ficha pública)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m² · Terreno 2,400 m²"></div>
+          </div>
+
+          <!-- CONSTRUCCION -->
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-tools"></i> Construcción y acabados</div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Año de construcción</label><input type="text" id="fAnioConstruccion" placeholder="Ej: 2018"></div>
+              <div class="fg"><label>Estado</label><select id="fEstadoConstruccion"><option value="">-- Seleccionar --</option><option>Nueva</option><option>Usada</option><option>En construcción</option><option>En planos</option></select></div>
+            </div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Tipo de construcción</label><select id="fTipoConstruccion"><option value="">-- Seleccionar --</option><option>Block / Concreto</option><option>Mixta</option><option>Madera</option><option>Adobe</option></select></div>
+              <div class="fg"><label>Tipo de techo</label><select id="fTecho"><option value="">-- Seleccionar --</option><option>Losa</option><option>Terraza</option><option>Duralita</option><option>Teja</option><option>Mixto</option></select></div>
+            </div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Piso principal</label><select id="fPiso"><option value="">-- Seleccionar --</option><option>Granito</option><option>Porcelanato</option><option>Cerámica</option><option>Madera</option><option>Mármol</option><option>Cemento alisado</option></select></div>
+              <div class="fg"><label>Nivel de acabados</label><select id="fAcabados"><option value="">-- Seleccionar --</option><option>Básico</option><option>Medio</option><option>Premium</option><option>Lujo</option></select></div>
+            </div>
+          </div>
+
+          <!-- DESCRIPCION -->
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-file-text"></i> Descripción</div>
+            <div class="fg"><label>Descripción completa</label><textarea id="fDescripcion" style="min-height:100px" placeholder="Descripción detallada para el sitio web..."></textarea></div>
+            <div class="fg"><label>Hook para redes sociales</label><input type="text" id="fHook" placeholder="Ej: Hay casas. Y luego está esta."></div>
+            <div class="fg"><label>Descripción corta para compartir</label><textarea id="fDescCorta" style="min-height:60px" placeholder="2-3 líneas premium que generen curiosidad sin revelar todo..."></textarea></div>
+          </div>
+
+          <!-- CARACTERISTICAS -->
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-tag"></i> Características</div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-map-pin"></i> Ubicación</div>
+              <div class="chars-grid" id="chars-ubicacion">
+                <label class="char-item"><input type="checkbox" value="Ubicación privilegiada"> Ubicación privilegiada</label>
+                <label class="char-item"><input type="checkbox" value="Sobre carretera principal"> Sobre carretera principal</label>
+                <label class="char-item"><input type="checkbox" value="Entorno natural y vistas"> Entorno natural y vistas</label>
+                <label class="char-item"><input type="checkbox" value="Cerca de servicios"> Cerca de servicios</label>
+                <label class="char-item"><input type="checkbox" value="Zona residencial exclusiva"> Zona residencial exclusiva</label>
+                <label class="char-item"><input type="checkbox" value="Acceso pavimentado"> Acceso pavimentado</label>
+                <label class="char-item"><input type="checkbox" value="Vista al valle"> Vista al valle</label>
+                <label class="char-item"><input type="checkbox" value="Vista a montañas"> Vista a montañas</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-shield"></i> Seguridad</div>
+              <div class="chars-grid" id="chars-seguridad">
+                <label class="char-item"><input type="checkbox" value="Garita 24/7"> Garita 24/7</label>
+                <label class="char-item"><input type="checkbox" value="Condominio cerrado"> Condominio cerrado</label>
+                <label class="char-item"><input type="checkbox" value="Cámaras de seguridad"> Cámaras de seguridad</label>
+                <label class="char-item"><input type="checkbox" value="Sistema de alarma"> Sistema de alarma</label>
+                <label class="char-item"><input type="checkbox" value="Muros perimetrales"> Muros perimetrales</label>
+                <label class="char-item"><input type="checkbox" value="Portón eléctrico"> Portón eléctrico</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-droplet"></i> Servicios básicos</div>
+              <div class="chars-grid" id="chars-servicios">
+                <label class="char-item"><input type="checkbox" value="Agua municipal"> Agua municipal</label>
+                <label class="char-item"><input type="checkbox" value="Pozo propio"> Pozo propio</label>
+                <label class="char-item"><input type="checkbox" value="Cisterna"> Cisterna</label>
+                <label class="char-item"><input type="checkbox" value="Luz 110v/220v"> Luz 110v/220v</label>
+                <label class="char-item"><input type="checkbox" value="Panel solar"> Panel solar</label>
+                <label class="char-item"><input type="checkbox" value="Internet fibra disponible"> Internet fibra disponible</label>
+                <label class="char-item"><input type="checkbox" value="Gas propano"> Gas propano</label>
+                <label class="char-item"><input type="checkbox" value="Drenaje municipal"> Drenaje municipal</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-car"></i> Vehículos</div>
+              <div class="chars-grid" id="chars-vehiculos">
+                <label class="char-item"><input type="checkbox" value="Garaje cerrado"> Garaje cerrado</label>
+                <label class="char-item"><input type="checkbox" value="Parqueo techado"> Parqueo techado</label>
+                <label class="char-item"><input type="checkbox" value="Parqueo descubierto"> Parqueo descubierto</label>
+                <label class="char-item"><input type="checkbox" value="Acceso para camión"> Acceso para camión</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-tree"></i> Exteriores</div>
+              <div class="chars-grid" id="chars-exteriores">
+                <label class="char-item"><input type="checkbox" value="Piscina"> Piscina</label>
+                <label class="char-item"><input type="checkbox" value="Jardín amplio"> Jardín amplio</label>
+                <label class="char-item"><input type="checkbox" value="Área de BBQ"> Área de BBQ</label>
+                <label class="char-item"><input type="checkbox" value="Pérgola"> Pérgola</label>
+                <label class="char-item"><input type="checkbox" value="Terraza exterior"> Terraza exterior</label>
+                <label class="char-item"><input type="checkbox" value="Cancha deportiva"> Cancha deportiva</label>
+                <label class="char-item"><input type="checkbox" value="Juegos infantiles"> Juegos infantiles</label>
+                <label class="char-item"><input type="checkbox" value="Huerto / área de siembra"> Huerto / área de siembra</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-sofa"></i> Interiores</div>
+              <div class="chars-grid" id="chars-interiores">
+                <label class="char-item"><input type="checkbox" value="Cocina equipada"> Cocina equipada</label>
+                <label class="char-item"><input type="checkbox" value="Isla de cocina"> Isla de cocina</label>
+                <label class="char-item"><input type="checkbox" value="Walk-in closet"> Walk-in closet</label>
+                <label class="char-item"><input type="checkbox" value="Cuarto de servicio con baño"> Cuarto de servicio con baño</label>
+                <label class="char-item"><input type="checkbox" value="Bodega"> Bodega</label>
+                <label class="char-item"><input type="checkbox" value="Chimenea"> Chimenea</label>
+                <label class="char-item"><input type="checkbox" value="Jacuzzi"> Jacuzzi</label>
+                <label class="char-item"><input type="checkbox" value="Estudio / Oficina"> Estudio / Oficina</label>
+                <label class="char-item"><input type="checkbox" value="Sala familiar"> Sala familiar</label>
+                <label class="char-item"><input type="checkbox" value="Sala de cine"> Sala de cine</label>
+                <label class="char-item"><input type="checkbox" value="Lavandería interna"> Lavandería interna</label>
+                <label class="char-item"><input type="checkbox" value="Bar interior"> Bar interior</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-plant"></i> Para fincas</div>
+              <div class="chars-grid" id="chars-finca">
+                <label class="char-item"><input type="checkbox" value="Agua de nacimiento"> Agua de nacimiento</label>
+                <label class="char-item"><input type="checkbox" value="Río o quebrada"> Río o quebrada</label>
+                <label class="char-item"><input type="checkbox" value="Luz trifásica"> Luz trifásica</label>
+                <label class="char-item"><input type="checkbox" value="Casa del guardián"> Casa del guardián</label>
+                <label class="char-item"><input type="checkbox" value="Corrales"> Corrales</label>
+                <label class="char-item"><input type="checkbox" value="Cultivo activo"> Cultivo activo</label>
+                <label class="char-item"><input type="checkbox" value="Finca inscrita en Registro"> Finca inscrita en Registro</label>
+                <label class="char-item"><input type="checkbox" value="Caminos internos"> Caminos internos</label>
+              </div>
+            </div>
+
+            <div class="chars-section">
+              <div class="chars-label"><i class="ti ti-trending-up"></i> Inversión</div>
+              <div class="chars-grid" id="chars-inversion">
+                <label class="char-item"><input type="checkbox" value="Alta plusvalía"> Alta plusvalía</label>
+                <label class="char-item"><input type="checkbox" value="Zona en crecimiento"> Zona en crecimiento</label>
+                <label class="char-item"><input type="checkbox" value="Papelería en orden"> Papelería en orden</label>
+                <label class="char-item"><input type="checkbox" value="Sin gravámenes"> Sin gravámenes</label>
+                <label class="char-item"><input type="checkbox" value="Financiamiento disponible"> Financiamiento disponible</label>
+                <label class="char-item"><input type="checkbox" value="Negociable"> Negociable</label>
+                <label class="char-item"><input type="checkbox" value="Potencial de desarrollo"> Potencial de desarrollo</label>
+                <label class="char-item"><input type="checkbox" value="Apta para alquiler"> Apta para alquiler</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- SHARE -->
+          <div class="share-box">
+            <div class="share-title"><i class="ti ti-share"></i> Ficha compartible — WhatsApp / Redes</div>
+            <div class="fg"><label>URL del PDF (paquete de listado)</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 0">
+              <input type="checkbox" id="fPrivada" style="width:15px;height:15px;accent-color:var(--or)">
+              <label for="fPrivada" style="font-size:12px;color:#1E40AF;cursor:pointer;font-weight:500">🔒 Propiedad PRIVADA — ocultar precio en la ficha compartible</label>
+            </div>
+          </div>
+
+          <!-- PRIVADA -->
+          <div class="priv-box">
+            <div class="priv-title"><i class="ti ti-lock"></i> Información privada — solo visible en admin</div>
+            <div class="fg"><label>Precio real / margen de negociación</label><input type="text" id="fPrecioReal" placeholder="Ej: Vendedor acepta mínimo Q 2,200,000"></div>
+            <div class="fg"><label>Contacto del vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Pérez · +502 5555-1234"></div>
+            <div class="fg"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:70px" placeholder="Motivación de venta, situación especial, historial de precio, observaciones..."></textarea></div>
+            <div class="fg"><label>Estado legal y documentación</label><input type="text" id="fEstadoLegal" placeholder="Ej: Escritura en Registro, sin gravámenes, IUSI al día, hipoteca con Banrural"></div>
+          </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="form-right">
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-photo"></i> Imagen principal</div>
+            <div class="fg"><input type="url" id="fImagen" placeholder="https://ik.imagekit.io/Zona/..."></div>
+            <div id="imgPreview" style="display:none;margin-top:8px"><img id="imgPreviewEl" style="width:100%;height:120px;object-fit:cover;border-radius:6px;border:1px solid var(--border)"></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-photos"></i> Galería</div>
+            <div class="gallery-wrap" id="gWrap"></div>
+            <button type="button" onclick="addImg()" style="margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer">+ Agregar imagen</button>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-toggle-right"></i> Estado</div>
+            <div class="fg"><select id="fEstado"><option>Activa</option><option>Vendida</option><option>Pausada</option></select></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-world"></i> Publicar en</div>
+            <label class="sitio-row"><input type="checkbox" id="sZona" checked>
+              <div><div class="sitio-label">Zona INNmueble</div><div class="sitio-url">zona-innmueble.com</div></div>
+            </label>
+            <label class="sitio-row"><input type="checkbox" id="sInmu" checked>
+              <div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div>
+            </label>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-map-pin"></i> Ubicación y SEO</div>
+            <div class="fg"><label>Departamento</label>
+              <select id="fDepartamento">
+                <option value="">-- Seleccionar --</option>
+                <option>Guatemala</option><option>Sacatepéquez</option><option>Escuintla</option>
+                <option>Chimaltenango</option><option>Baja Verapaz</option><option>Alta Verapaz</option>
+                <option>El Progreso</option><option>Jalapa</option><option>Jutiapa</option>
+              </select>
+            </div>
+            <div class="fg"><label>Slug (URL)</label><input type="text" id="fSlug" placeholder="auto-generado desde título"></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-map"></i> Coordenadas (opcional)</div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Latitud</label><input type="text" id="fLat" placeholder="14.6349"></div>
+              <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-navy" onclick="saveProp()"><i class="ti ti-device-floppy"></i> Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+${js}
+</script>
+</body>
+</html>`;
+
 }
 
 export default {
