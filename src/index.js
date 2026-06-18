@@ -150,7 +150,7 @@ function getAdminJS() {
     "document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none')doLogin();});",
     "async function doLogout(){await fetch('/api/logout',{method:'POST'});location.reload();}",
     "async function checkSession(){try{var r=await fetch('/api/me');if(r.ok){document.getElementById('loginPage').style.display='none';document.getElementById('adminApp').style.display='block';loadProps();setTimeout(function(){showPage('dashboard');},100);}}catch(e){}}",
-    "async function loadProps(){var r=await fetch('/api/propiedades');if(r.ok){props=await r.json();updateStats();renderTable();var dt=document.getElementById('dashTableWrap');if(dt)renderTableInto(dt,props.slice(0,8));}}",
+    "async function loadProps(){var r=await fetch('/api/propiedades',{credentials:'include'});if(r.ok){props=await r.json();updateStats();renderTable();var dt=document.getElementById('dashTableWrap');if(dt)renderTableInto(dt,props.slice(0,8));}else{console.error('loadProps error:',r.status);}}",
     "function updateStats(){",
     "  function setEl(id,val){var el=document.getElementById(id);if(el)el.textContent=val;}",
     "  setEl('statTotal',props.length);",
@@ -647,7 +647,7 @@ tr:hover td{background:#FAFBFF}
 .toast.success{border-left:4px solid var(--green)}
 .toast.error{border-left:4px solid var(--red)}
 /* LOGIN */
-.login-wrap{display:flex;justify-content:center;align-items:center;min-height:100vh;background:var(--navy)}
+.login-wrap{display:flex;justify-content:center;align-items:center;min-height:100vh;background:var(--navy);position:fixed;inset:0;z-index:999}
 .login-card{background:var(--wh);border-radius:14px;padding:44px 40px;width:100%;max-width:380px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
 .login-logo{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
 .login-logo span{color:var(--or)}
