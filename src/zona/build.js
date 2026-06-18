@@ -116,6 +116,11 @@ const art1Src = path.join(__dirname, 'guia-inversion-real-estate-2026.html');
 const art2Src = path.join(__dirname, 'zona-10-vs-zona-14.html');
 const art3Src = path.join(__dirname, 'senales-alerta-comprar-propiedad.html');
 
+const adminSrc = path.join(__dirname, 'admin.html');
+if(fs.existsSync(adminSrc)) {
+  fs.copyFileSync(adminSrc, path.join(OUT, 'admin.html'));
+  console.log('   ✔  admin.html');
+}
 if(fs.existsSync(faqSrc)) {
   fs.copyFileSync(faqSrc, path.join(OUT, 'faq.html'));
   console.log('   ✔  faq.html');
