@@ -396,9 +396,6 @@ export default {
       });
     }
 
-    return json({ error: 'Not found' }, 404);
-  },
-};
     const authed = await requireAuth(request, env);
       return authed ? json({ ok: true }) : json({ error: 'No autorizado' }, 401);
     }
