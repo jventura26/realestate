@@ -134,7 +134,8 @@ function renderDesc(desc) {
 
 function indexPage(props) {
   const featured = props.slice(0, 6);
-  const tipos    = uniqueValues(props, 'tipo');
+  const tiposRaw = uniqueValues(props, 'tipo');
+  const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
 
   const body = `
 <!-- HERO -->
@@ -218,7 +219,7 @@ function indexPage(props) {
       const activas = props.filter(p=>!p.estado||p.estado==='Activa').length;
       return [
         [activas+'+','Propiedades Activas'],
-        [vendidas>0?vendidas+'+':'10+','Cierres Exitosos'],
+        [vendidas>0?vendidas+'+':'50+','Familias Asesoradas'],
         ['10+','Años en el Mercado'],
         ['100%','Asesoría Personal'],
       ].map(([n,l])=>`<div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
@@ -412,12 +413,13 @@ function indexPage(props) {
     </div>
     <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
   </div>
-</section>`;  return layout({ title: null, desc: `Casas fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
 }
 
 // ── CATALOG ───────────────────────────────────────────────────────────
 function catalogPage(props) {
-  const tipos    = uniqueValues(props, 'tipo');
+  const tiposRaw = uniqueValues(props, 'tipo');
+  const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
   const ciudades = uniqueValues(props, 'municipio');
   const cintas   = uniqueValues(props, 'cinta');
 
