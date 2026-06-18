@@ -601,80 +601,256 @@ function detailPage(prop, all) {
     }
   });
 
+
+  // Quick specs for hero bar
+  const quickSpecs = [
+    prop.habitaciones&&prop.habitaciones!=='0' ? {icon:'🛏', v:prop.habitaciones, l:'hab.'} : null,
+    prop.banos&&prop.banos!=='0'               ? {icon:'🚿', v:prop.banos, l:'baños'} : null,
+    prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon:'🚗', v:prop.parqueos, l:'parqueos'} : null,
+    ca(prop.areaConst)||prop.area              ? {icon:'📐', v:ca(prop.areaConst)||prop.area, l:'m²'} : null,
+    prop.areaV2                                ? {icon:'📏', v:prop.areaV2, l:'v²'} : null,
+    prop.manzanas                              ? {icon:'🌿', v:prop.manzanas, l:'mz'} : null,
+  ].filter(Boolean);
+
+  const waNum = prop.waAsesor ? prop.waAsesor.replace(/\\D/g,'') : '50245542088';
+
   const body = `
-<script type="application/ld+json">${jsonLd}</script>
-<div class="det-header">
-  <div class="breadcrumb">
-    <a href="/">Inicio</a>/<a href="/propiedades.html">Propiedades</a>/<span style="color:var(--sv)">${escapeHtml(prop.title)}</span>
+<script type="application/ld+json">${jsonLd}<\/script>
+
+<style>
+.dv3-hero{position:relative;background:#000;overflow:hidden}
+.dv3-hero-img{width:100%;max-height:580px;object-fit:cover;display:block;opacity:.92}
+.dv3-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 50%,transparent 100%)}
+.dv3-hero-content{position:absolute;bottom:0;left:0;right:0;padding:28px 5% 32px}
+.dv3-badge{display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#000;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px}
+.dv3-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:400;color:#fff;line-height:1.1;margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.dv3-loc{font-size:.75rem;color:rgba(255,255,255,.75);letter-spacing:.06em;display:flex;align-items:center;gap:6px}
+.dv3-gal{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#000}
+.dv3-gal img{width:100%;aspect-ratio:16/10;object-fit:cover;cursor:pointer;opacity:.72;transition:opacity .2s}
+.dv3-gal img:hover{opacity:1}
+.dv3-gal-more{position:relative;cursor:pointer;overflow:hidden}
+.dv3-gal-more img{width:100%;aspect-ratio:16/10;object-fit:cover;opacity:.4}
+.dv3-gal-more-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.06em}
+.dv3-bread{padding:14px 5%;display:flex;align-items:center;gap:8px;font-size:.68rem;color:var(--mt);border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.dv3-bread a{color:var(--mt);transition:color .2s}.dv3-bread a:hover{color:var(--or)}
+.dv3-wrap{display:grid;grid-template-columns:1fr 360px;gap:0;align-items:start;max-width:1400px;margin:0 auto;padding:0 5% 60px}
+.dv3-main{padding:36px 40px 36px 0;border-right:1px solid var(--bd)}
+.dv3-side{padding:32px 0 32px 36px;position:sticky;top:20px}
+.dv3-price-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--bd)}
+.dv3-price{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.4rem);color:var(--or);font-weight:400;line-height:1}
+.dv3-price-sub{font-size:.68rem;color:var(--mt);margin-top:4px}
+.dv3-share-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border:1px solid var(--bd);background:transparent;color:var(--sv);font-size:.65rem;font-weight:600;letter-spacing:.06em;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
+.dv3-share-btn:hover{border-color:var(--or);color:var(--or)}
+.dv3-qs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px}
+.dv3-qs-item{display:flex;align-items:center;gap:7px;padding:9px 14px;background:var(--ink2);border:1px solid var(--bd);border-radius:4px;font-size:.8rem;font-weight:600;color:var(--sv)}
+.dv3-qs-item span{font-size:.62rem;font-weight:400;color:var(--mt)}
+.dv3-hook{font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic;padding:18px 20px;border-left:2px solid var(--or);margin-bottom:28px;background:rgba(245,130,13,.04)}
+.dv3-tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
+.dv3-tabs::-webkit-scrollbar{display:none}
+.dv3-tab{padding:12px 20px;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.dv3-tab:hover{color:var(--sv)}
+.dv3-tab.on{color:var(--or);border-bottom-color:var(--or)}
+.dv3-tab-panel{display:none}.dv3-tab-panel.on{display:block}
+.dv3-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin-bottom:24px}
+.dv3-spec{background:var(--ink2);padding:13px 16px}
+.dv3-spec-l{font-size:.56rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);margin-bottom:4px}
+.dv3-spec-v{font-size:.9rem;font-weight:500;color:var(--sv)}
+.dv3-desc{font-size:.85rem;line-height:1.85;color:var(--sv)}
+.dv3-datos{padding:14px 18px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.25);border-radius:5px;font-size:.82rem;color:var(--sv);line-height:1.7;margin-bottom:18px}
+.dv3-chars-group{margin-bottom:22px}
+.dv3-chars-group-title{display:flex;align-items:center;gap:8px;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv);margin-bottom:10px}
+.dv3-chars-list{display:flex;flex-wrap:wrap;gap:7px}
+.dv3-char{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.18);border-radius:4px;font-size:.73rem;color:var(--sv)}
+.dv3-char::before{content:'✓';color:var(--or);font-weight:700;font-size:.8rem}
+.dv3-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:6px;border:1px solid var(--bd);margin-bottom:20px}
+.dv3-video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.dv3-plano{width:100%;border-radius:6px;border:1px solid var(--bd);display:block}
+.dv3-side-card{background:var(--ink2);border:1px solid var(--bd);border-top:2px solid var(--or);padding:24px 22px;margin-bottom:12px;border-radius:4px}
+.dv3-side-card.wa-card{border-top-color:#25D366}
+.dv3-agent-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.dv3-agent-avatar{width:44px;height:44px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#000;flex-shrink:0}
+.dv3-agent-name{font-size:.82rem;font-weight:700;color:var(--sv)}
+.dv3-agent-role{font-size:.65rem;color:var(--mt);margin-top:2px}
+.dv3-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#25D366;animation:lp 2s ease-in-out infinite;margin-right:6px;flex-shrink:0;vertical-align:middle}
+.dv3-avail{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#25D366;margin-bottom:16px;display:flex;align-items:center}
+.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#25D366;color:#fff;padding:13px 16px;border-radius:4px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
+.dv3-wa-btn:hover{filter:brightness(1.1)}
+.dv3-wa-btn.outline{background:transparent;border:1px solid #25D366;color:#25D366}
+.dv3-wa-btn.outline:hover{background:#25D366;color:#fff}
+.dv3-divider{height:1px;background:var(--bd);margin:18px 0}
+.dv3-form-title{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
+.dv3-input{width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit;margin-bottom:8px;outline:none;transition:border-color .2s;box-sizing:border-box}
+.dv3-input:focus{border-color:var(--or)}
+.dv3-submit{width:100%;padding:11px;background:var(--or);color:var(--ink);border:none;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:3px;font-family:inherit;transition:background .2s}
+.dv3-submit:hover{background:var(--or2)}
+.dv3-side-ref{background:var(--ink2);border:1px solid var(--bd);padding:16px 20px;border-radius:4px;margin-bottom:12px}
+.dv3-ref-l{font-size:.56rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.dv3-ref-v{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.08em;color:var(--sv)}
+.dv3-more-links{background:var(--ink2);border:1px solid var(--bd);padding:16px 20px;border-radius:4px}
+.dv3-more-link{display:block;font-size:.73rem;color:var(--sv);padding:7px 0;border-bottom:1px solid var(--bd);transition:color .2s}
+.dv3-more-link:last-child{border-bottom:none;padding-bottom:0}
+.dv3-more-link:hover{color:var(--or)}
+.dv3-wa-float{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 14px;background:var(--ink);border-top:1px solid var(--bd);gap:8px;align-items:center}
+.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:#fff;padding:12px 8px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
+.dv3-wa-float a.sec{background:transparent;border:1px solid #25D366;color:#25D366}
+@media(max-width:1024px){
+  .dv3-wrap{grid-template-columns:1fr;padding:0 4% 40px}
+  .dv3-main{padding:28px 0;border-right:none;border-bottom:1px solid var(--bd)}
+  .dv3-side{padding:28px 0 0;position:static}
+  .dv3-wa-float{display:flex}
+  .dv3-side-card.wa-card{display:none}
+  .dv3-gal{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:600px){
+  .dv3-hero-img{max-height:260px}
+  .dv3-hero-content{padding:14px 4% 18px}
+  .dv3-title{font-size:1.45rem}
+  .dv3-price{font-size:1.5rem}
+  .dv3-qs-item{padding:7px 11px;font-size:.74rem}
+  .dv3-specs-grid{grid-template-columns:1fr}
+  .dv3-gal{grid-template-columns:repeat(3,1fr)}
+  .dv3-tab{padding:10px 13px;font-size:.62rem}
+  .dv3-bread{padding:10px 4%;font-size:.62rem}
+  .dv3-wrap{padding:0 4% 80px}
+  .dv3-share-btn{display:none}
+}
+</style>
+
+<div class="dv3-bread">
+  <a href="/">Inicio</a> <span style="opacity:.3">›</span>
+  <a href="/propiedades.html">Propiedades</a> <span style="opacity:.3">›</span>
+  <span style="color:var(--sv)">${escapeHtml(prop.title)}</span>
+</div>
+
+<div class="dv3-hero">
+  <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer">
+  <div class="dv3-hero-overlay"></div>
+  <div class="dv3-hero-content">
+    <div class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</div>
+    <h1 class="dv3-title">${escapeHtml(prop.title)}</h1>
+    <div class="dv3-loc">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      ${escapeHtml(prop.locationFull||prop.municipio||prop.zona||'Guatemala')}
+    </div>
   </div>
 </div>
-<div class="det-body">
-  <!-- LEFT -->
-  <div>
-    <div class="main-img"><img referrerpolicy="no-referrer" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}"></div>
-    ${galHtml}
-    <div style="margin-top:42px">
-      <div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:8px">${escapeHtml(prop.tipo)} · ${escapeHtml(prop.cinta||prop.estado||'')}</div>
-      <h1 class="det-title">${escapeHtml(prop.title)}</h1>
-      <div class="det-price">${escapeHtml(prop.priceFormatted)}</div>
-      ${prop.descCorta ? `<div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--sv);line-height:1.8;margin-bottom:20px;font-style:italic">"${escapeHtml(prop.descCorta)}"</div>` : ''}
-      <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
-      ${prop.datosTecnicos ? `<div style="margin-top:16px;padding:14px 16px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.82rem;color:var(--sv);line-height:1.7">${escapeHtml(prop.datosTecnicos)}</div>` : ''}
-      ${prop.produccion ? `<div style="margin-top:10px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:4px;font-size:.78rem;color:var(--sv)"><span style="color:var(--or);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase">Producción · </span>${escapeHtml(prop.produccion)}</div>` : ''}
-      ${prop.colindancias ? `<div style="margin-top:10px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:4px;font-size:.78rem;color:var(--sv)"><span style="color:var(--or);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase">Colindancias · </span>${escapeHtml(prop.colindancias)}</div>` : ''}
-      ${prop.videoTour ? `<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Video tour</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:4px"><iframe src="${prop.videoTour.replace('watch?v=','embed/')}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe></div></div>` : ''}
-      ${prop.plano ? `<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Plano de planta</div><img src="${escapeHtml(prop.plano)}" alt="Plano ${escapeHtml(prop.title)}" style="width:100%;border-radius:4px;border:1px solid var(--bd)" loading="lazy"></div>` : ''}
-      ${renderDesc(prop.description)}
+
+${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>6){return '<div class="dv3-gal-more" onclick="document.getElementById(\'mi\').src=\''+escapeHtml(src)+'\'"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="document.getElementById(\'mi\').src=this.src">';}).join('') + '</div>' : ''}
+
+<div class="dv3-wrap">
+  <div class="dv3-main">
+
+    <div class="dv3-price-row">
+      <div>
+        <div class="dv3-price">${escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
+        ${prop.precioRenta ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
+      </div>
+      <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
+        &#8679; Compartir
+      </button>
+    </div>
+
+    ${quickSpecs.length ? '<div class="dv3-qs">'+quickSpecs.map(function(q){return '<div class="dv3-qs-item">'+q.icon+' '+escapeHtml(String(q.v))+' <span>'+escapeHtml(q.l)+'</span></div>';}).join('')+'</div>' : ''}
+
+    ${prop.descCorta ? '<div class="dv3-hook">&ldquo;'+escapeHtml(prop.descCorta)+'&rdquo;</div>' : ''}
+
+    <div class="dv3-tabs">
+      <button class="dv3-tab on" onclick="dv3Tab('det',this)">Detalles</button>
+      <button class="dv3-tab" onclick="dv3Tab('desc',this)">Descripci&oacute;n</button>
+      ${(prop.caracteristicas&&prop.caracteristicas.length) ? '<button class="dv3-tab" onclick="dv3Tab(\'chars\',this)">Caracter&iacute;sticas</button>' : ''}
+      ${(prop.videoTour||prop.plano) ? '<button class="dv3-tab" onclick="dv3Tab(\'media\',this)">Video / Plano</button>' : ''}
+    </div>
+
+    <div class="dv3-tab-panel on" id="dv3-det">
+      ${prop.datosTecnicos ? '<div class="dv3-datos">'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
+      <div class="dv3-specs-grid">${specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')}</div>
+      ${prop.produccion ? '<div class="dv3-datos" style="margin-top:8px"><strong style="color:var(--or)">Producci&oacute;n &middot; </strong>'+escapeHtml(prop.produccion)+'</div>' : ''}
+      ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:8px"><strong style="color:var(--or)">Colindancias &middot; </strong>'+escapeHtml(prop.colindancias)+'</div>' : ''}
+    </div>
+
+    <div class="dv3-tab-panel" id="dv3-desc">
+      <div class="dv3-desc">${renderDesc(prop.description)}</div>
+    </div>
+
+    <div class="dv3-tab-panel" id="dv3-chars">
       ${renderCaracteristicas(prop.caracteristicas||[])}
-      ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
     </div>
-    <!-- MOBILE WA (hidden on desktop) -->
-    <div style="display:none" id="mobileWa">
-      <a href="${waLink(msgInfo)}"  target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Solicitar información</a>
-      <a href="${waLink(msgVisit)}" target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Agendar visita privada</a>
-      <a href="${waLink(msgFin)}"   target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Consultar financiamiento</a>
+
+    <div class="dv3-tab-panel" id="dv3-media">
+      ${prop.videoTour ? '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div><div class="dv3-video-wrap"><iframe src="'+prop.videoTour.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div></div>' : ''}
+      ${prop.plano ? '<div><div class="dv3-ref-l" style="margin-bottom:12px">Plano de planta</div><img class="dv3-plano" src="'+escapeHtml(prop.plano)+'" alt="Plano '+escapeHtml(prop.title)+'" loading="lazy"></div>' : ''}
     </div>
+
   </div>
-  <!-- SIDEBAR -->
-  <div>
-    <div class="sidebar">
-      <div style="font-size:.57rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px;display:flex;align-items:center"><span class="live"></span>Asesor Disponible</div>
-      <div class="sb-title">¿Te interesa<br>esta propiedad?</div>
-      <p class="sb-sub">Respuesta en menos de 1 hora por WhatsApp.</p>
-      <a href="${waLink(msgInfo)}"  target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Solicitar información</a>
-      <a href="${waLink(msgVisit)}" target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Agendar visita privada</a>
-      <a href="${waLink(msgFin)}"   target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Consultar financiamiento</a>
-      <div class="div-line"></div>
-      <div style="text-align:center;font-size:.63rem;color:var(--mt);line-height:1.65">
-        <strong style="display:block;color:var(--sv);margin-bottom:4px">${prop.asesor ? escapeHtml(prop.asesor) : 'Zona INNmueble'}</strong>
-        <strong style="display:block;color:var(--or);margin-bottom:4px">+502 ${prop.waAsesor ? escapeHtml(prop.waAsesor) : '4554-2088'}</strong>
-        Lun–Vie 8:00–18:00 · Sáb 9:00–14:00
+
+  <div class="dv3-side">
+
+    <div class="dv3-side-card wa-card">
+      <div class="dv3-avail"><span class="dv3-live"></span>Asesor disponible ahora</div>
+      <div class="dv3-agent-row">
+        <div class="dv3-agent-avatar">${prop.asesor ? escapeHtml(prop.asesor.charAt(0).toUpperCase()) : 'ZI'}</div>
+        <div>
+          <div class="dv3-agent-name">${prop.asesor ? escapeHtml(prop.asesor) : 'Zona INNmueble'}</div>
+          <div class="dv3-agent-role">Asesor inmobiliario &middot; +502 ${prop.waAsesor ? escapeHtml(prop.waAsesor) : '4554-2088'}</div>
+        </div>
       </div>
-      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--gl)">
-        <div style="font-size:.57rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">O deja tus datos</div>
-        <form id="lead-form-${prop.slug}" onsubmit="var f=this;var t='Nuevo lead - '+f.propiedad.value+'%0ANombre: '+f.nombre.value+'%0ATelefono: '+f.telefono.value+'%0AMensaje: '+(f.mensaje.value||'Sin mensaje')+'%0AURL: ${propUrl}';window.open('https://wa.me/50245542088?text='+encodeURIComponent(t),'_blank');f.nextElementSibling.style.display='block';f.reset();return false;" style="display:flex;flex-direction:column;gap:8px">
-          <input type="hidden" name="propiedad" value="${escapeHtml(prop.title)}">
-          <input type="text" name="nombre" placeholder="Tu nombre" required style="padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--gl)'">
-          <input type="tel" name="telefono" placeholder="Tu teléfono" required style="padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--gl)'">
-          <textarea name="mensaje" placeholder="¿Qué deseas saber?" rows="2" style="padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;resize:none;font-family:inherit" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--gl)'"></textarea>
-          <button type="submit" style="padding:10px;background:var(--or);color:var(--ink);border:none;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;font-family:inherit">Solicitar información</button>
-        </form>
-        <p style="display:none;font-size:.75rem;color:#4ade80;text-align:center;margin:8px 0 0">✓ Enviado. Te contactamos pronto.</p>
-      </div>
+      <a class="dv3-wa-btn" href="${waLink(msgInfo)}" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Solicitar informaci&oacute;n
+      </a>
+      <a class="dv3-wa-btn outline" href="${waLink(msgVisit)}" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Agendar visita privada
+      </a>
+      <div class="dv3-divider"></div>
+      <div class="dv3-form-title">O d&eacute;janos tus datos</div>
+      <form onsubmit="var f=this,wa='50245542088',t=encodeURIComponent('Nuevo lead - ${escapeHtml(prop.title)}\nNombre: '+f.nombre.value+'\nTel\u00e9fono: '+f.telefono.value+'\nMensaje: '+(f.mensaje.value||'Sin mensaje')+'\nURL: ${propUrl}');window.open('https://wa.me/'+wa+'?text='+t,'_blank');f.nextElementSibling.style.display='block';f.reset();return false;">
+        <input class="dv3-input" type="text" name="nombre" placeholder="Tu nombre completo" required>
+        <input class="dv3-input" type="tel" name="telefono" placeholder="Tu tel&eacute;fono / WhatsApp" required>
+        <textarea class="dv3-input" name="mensaje" placeholder="&iquest;Qu&eacute; deseas saber?" rows="2" style="resize:none"></textarea>
+        <button class="dv3-submit" type="submit">Enviar consulta</button>
+      </form>
+      <p style="display:none;font-size:.72rem;color:#4ade80;text-align:center;margin:10px 0 0">&check; Enviado. Te contactamos pronto.</p>
     </div>
-    <div style="margin-top:10px;background:var(--ink2);border:1px solid var(--bd);padding:18px 20px">
-      <div style="font-size:.56rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:10px">Código de referencia</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.08em;color:var(--sv)">${escapeHtml(prop.codigo||prop.slug.toUpperCase())}</div>
+
+    <div class="dv3-side-ref">
+      <div class="dv3-ref-l">C&oacute;digo de referencia</div>
+      <div class="dv3-ref-v">${escapeHtml(prop.codigo||prop.slug.toUpperCase())}</div>
     </div>
-    <div style="margin-top:10px;background:var(--ink2);border:1px solid var(--bd);padding:18px 20px">
-      <div style="font-size:.56rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Más propiedades</div>
-      <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}" style="display:block;font-size:.74rem;color:var(--sv);margin-bottom:7px;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--sv)'">→ Más ${escapeHtml(prop.tipo)}s disponibles</a>
-      <a href="/propiedades.html?ciudad=${encodeURIComponent(prop.municipio)}" style="display:block;font-size:.74rem;color:var(--sv);transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--sv)'">→ En ${escapeHtml(prop.municipio)}</a>
+
+    <div class="dv3-more-links">
+      <div class="dv3-ref-l" style="margin-bottom:10px">M&aacute;s propiedades</div>
+      <a class="dv3-more-link" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">&rarr; M&aacute;s ${escapeHtml(prop.tipo)}s disponibles</a>
+      <a class="dv3-more-link" href="/propiedades.html?ciudad=${encodeURIComponent(prop.municipio||prop.zona||'')}">&rarr; Propiedades en ${escapeHtml(prop.municipio||prop.zona||'Guatemala')}</a>
+      <a class="dv3-more-link" href="/propiedades.html">&rarr; Ver cat&aacute;logo completo</a>
     </div>
+
   </div>
 </div>
+
+<div class="dv3-wa-float" id="dv3waFloat">
+  <a href="${waLink(msgInfo)}" target="_blank" rel="noopener">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Informaci&oacute;n
+  </a>
+  <a class="sec" href="${waLink(msgVisit)}" target="_blank" rel="noopener">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Visita
+  </a>
+</div>
+
 ${relHtml}
-<style>@media(max-width:768px){#mobileWa{display:block!important;margin-top:24px}}</style>`;
+
+<script>
+function dv3Tab(id,btn){
+  document.querySelectorAll('.dv3-tab-panel').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.dv3-tab').forEach(function(b){b.classList.remove('on');});
+  var el=document.getElementById('dv3-'+id);
+  if(el)el.classList.add('on');
+  btn.classList.add('on');
+}
+<\/script>`;
+
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
   // Schema markup para Google
