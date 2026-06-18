@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin · Zona INNmueble</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --navy:#0D1B3E;--navy2:#142240;--navy3:#1A3060;
+  --or:#F5820D;--or2:#FF9B2E;
+  --wh:#fff;--bg:#F0F2F5;
+  --text:#1A1A2E;--text2:#4A5568;--text3:#8A9BB0;
+  --border:#E2E8F0;--border2:#CBD5E0;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+input,select,textarea,button{font-family:inherit;font-size:13px}
+a{text-decoration:none;color:inherit}
+
+/* LOGIN */
+#loginPage{position:fixed;inset:0;background:var(--navy);display:flex;justify-content:center;align-items:center;z-index:9999}
+.login-card{background:var(--wh);border-radius:14px;padding:44px 40px;width:100%;max-width:380px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.login-logo{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.login-logo span{color:var(--or)}
+.login-sub{color:var(--text3);font-size:13px;margin-bottom:28px}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
+.login-field input{width:100%;padding:10px 13px;border:1.5px solid var(--border2);border-radius:7px;font-size:14px;outline:none;transition:border-color .15s}
+.login-field input:focus{border-color:var(--or)}
+#loginBtn{width:100%;padding:12px;background:var(--navy);color:var(--wh);border:none;border-radius:7px;font-weight:700;font-size:14px;cursor:pointer}
+#loginBtn:hover{background:var(--navy3)}
+#loginErr{background:#FEF2F2;color:#B91C1C;border-radius:6px;padding:10px 14px;font-size:13px;margin-top:12px;display:none}
+
+/* APP */
+#adminApp{display:none;height:100vh;overflow:hidden}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-logo{padding:18px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-brand{font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--wh)}
+.sb-brand span{color:var(--or)}
+.sb-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}
+.sb-nav{padding:10px 0;flex:1}
+.sb-section{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.22);padding:14px 20px 5px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;border-right:2px solid transparent}
+.sb-item:hover{color:var(--wh);background:rgba(255,255,255,.06)}
+.sb-item.active{color:var(--wh);background:rgba(245,130,13,.15);border-right-color:var(--or)}
+.sb-item i{font-size:17px;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--or);color:var(--navy);font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
+.sb-bottom{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--navy);flex-shrink:0}
+.sb-uname{font-size:12px;color:rgba(255,255,255,.8);font-weight:600}
+.sb-urole{font-size:10px;color:rgba(255,255,255,.35)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{background:var(--wh);border-bottom:1px solid var(--border);padding:0 24px;height:58px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.topbar-title{font-size:16px;font-weight:700;color:var(--navy);flex:1}
+.content{flex:1;overflow-y:auto;padding:24px;min-height:0}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--or);color:var(--wh)}
+.btn-primary:hover{background:var(--or2)}
+.btn-navy{background:var(--navy);color:var(--wh)}
+.btn-navy:hover{background:var(--navy3)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-sm{padding:5px 12px;font-size:11px}
+.btn i{font-size:15px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
+.stat-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px}
+.stat-val{font-size:28px;font-weight:800;color:var(--navy);line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+
+/* TABLE */
+.table-wrap{background:var(--wh);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.table-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border)}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 12px;flex:1;max-width:300px}
+.search-box i{font-size:16px;color:var(--text3)}
+.search-box input{border:none;background:transparent;outline:none;width:100%;font-size:13px;color:var(--text)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:11px 16px;text-align:left;background:var(--bg);border-bottom:1px solid var(--border)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFBFF}
+.prop-img{width:52px;height:40px;border-radius:6px;object-fit:cover;background:var(--bg);border:1px solid var(--border)}
+.prop-name{font-weight:600;color:var(--navy)}
+.prop-loc{font-size:11px;color:var(--text3);margin-top:2px}
+.price-cell{font-weight:700;color:var(--or);white-space:nowrap}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-gray{background:#f1f5f9;color:#475569}
+.badge-orange{background:#ffedd5;color:#9a3412}
+.actions-cell{display:flex;gap:6px}
+.icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .15s}
+.icon-btn:hover{background:var(--navy);color:var(--wh);border-color:var(--navy)}
+.icon-btn.danger:hover{background:var(--red);border-color:var(--red)}
+.icon-btn i{font-size:15px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:500;overflow-y:auto;padding:20px}
+.modal-overlay.open{display:block}
+.modal-panel{background:var(--wh);width:100%;max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-topbar{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;gap:14px}
+.modal-topbar-title{font-size:15px;font-weight:700;color:var(--wh);flex:1}
+.modal-body{padding:0}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:var(--wh)}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 300px;gap:0}
+.form-left{padding:20px 20px 20px 24px;border-right:1px solid var(--border);max-height:80vh;overflow-y:auto}
+.form-right{padding:20px 24px 20px 20px;max-height:80vh;overflow-y:auto}
+.fsec{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.fsec:last-child{border-bottom:none;margin-bottom:0}
+.fsec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.fsec-title i{font-size:16px;color:var(--or)}
+.fg{margin-bottom:12px}
+.fg:last-child{margin-bottom:0}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;color:var(--text);background:var(--wh);outline:none;transition:border-color .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--or)}
+.fg textarea{resize:vertical;min-height:72px}
+.fg-row{display:grid;gap:10px}
+.fg-row.c2{grid-template-columns:1fr 1fr}
+.fg-row.c3{grid-template-columns:1fr 1fr 1fr}
+.fg-row.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+
+/* CHARS */
+.chars-group{margin-bottom:14px}
+.chars-group-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.chars-group-title i{font-size:14px;color:var(--or)}
+.chars-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.char-item{display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s;user-select:none}
+.char-item:hover{border-color:var(--or)}
+.char-item input{width:13px;height:13px;accent-color:var(--or);cursor:pointer;flex-shrink:0;margin:0}
+.char-item.checked{background:#FFF8F2;border-color:var(--or);color:var(--navy);font-weight:500}
+
+/* SHARE BOX */
+.share-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px;margin-bottom:14px}
+.share-box-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E40AF;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.share-box .fg label{color:#1D4ED8}
+.share-box .fg input,.share-box .fg textarea{border-color:#BFDBFE}
+
+/* PRIVATE BOX */
+.priv-box{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:14px}
+.priv-box-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.priv-box .fg label{color:#78350F}
+.priv-box .fg input,.priv-box .fg textarea{border-color:#FCD34D;background:#FFFDE7}
+
+/* SIDE CARDS */
+.side-card{background:var(--wh);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px}
+.side-card:last-child{margin-bottom:0}
+.side-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.side-card-title i{font-size:15px;color:var(--or)}
+.status-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--text2);background:var(--bg);transition:all .15s}
+.pill.active{background:var(--or);color:var(--wh);border-color:var(--or)}
+.sitio-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-bottom:7px}
+.sitio-row:last-child{margin-bottom:0}
+.sitio-row:hover{border-color:var(--or)}
+.sitio-row input{width:14px;height:14px;accent-color:var(--or)}
+.sitio-label{font-size:12px;font-weight:600;color:var(--navy)}
+.sitio-url{font-size:10px;color:var(--text3)}
+
+/* GALLERY */
+.img-preview{width:100%;height:120px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:none;margin-top:8px}
+.gal-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.gal-item{position:relative}
+.gal-item img{width:64px;height:50px;object-fit:cover;border-radius:5px;border:1px solid var(--border)}
+.gal-item button{position:absolute;top:2px;right:2px;background:var(--red);color:var(--wh);border:none;border-radius:3px;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+
+/* LEADS */
+.lead-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.lead-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lead-name{font-size:14px;font-weight:700;color:var(--navy)}
+.lead-time{font-size:11px;color:var(--text3)}
+.lead-detail{font-size:12px;color:var(--text2);margin-bottom:4px}
+.wa-btn{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:var(--wh);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;margin-top:8px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--wh);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-left:4px solid var(--green)}
+.toast.error{border-left:4px solid var(--red)}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .form-right{border-top:1px solid var(--border)}
+  .fg-row.c3,.fg-row.c4{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo"><span>Zona</span>-INNmueble</div>
+    <div class="login-sub">Panel de administración v2</div>
+    <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
+    <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password"></div>
+    <button id="loginBtn" onclick="doLogin()">Ingresar</button>
+    <div id="loginErr">Usuario o contraseña incorrectos.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="adminApp">
+  <div class="app">
+    <div class="sidebar">
+      <div class="sb-logo">
+        <div class="sb-brand"><span>Zona</span>-INNmueble</div>
+        <div class="sb-sub">Panel de administración</div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-item active" id="nav-dashboard" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+        <div class="sb-section">Catálogo</div>
+        <div class="sb-item" id="nav-propiedades" onclick="showPage('propiedades')"><i class="ti ti-building"></i> Propiedades</div>
+        <div class="sb-item" id="nav-nueva" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</div>
+        <div class="sb-section">Clientes</div>
+        <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge" id="leadsCount">0</span></div>
+        <div class="sb-section">Sitios</div>
+        <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Zona INNmueble</div>
+        <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> InmuHub</div>
+      </div>
+      <div class="sb-bottom">
+        <div class="sb-user">
+          <div class="sb-avatar">ZI</div>
+          <div>
+            <div class="sb-uname">Admin</div>
+            <div class="sb-urole">zona-innmueble.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
+        <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
+      </div>
+      <div class="content" id="mainContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROPIEDAD -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-panel">
+    <div class="modal-topbar">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()" style="color:#fff;border-color:rgba(255,255,255,.2)"><i class="ti ti-x"></i></button>
+      <div class="modal-topbar-title" id="modalTitle">Nueva propiedad</div>
+      <button class="btn btn-navy btn-sm" onclick="saveProp()" style="background:var(--or);border-color:var(--or)"><i class="ti ti-device-floppy"></i> Guardar</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-left">
+
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-info-circle"></i> Información básica</div>
+            <div class="fg"><label>Título *</label><input type="text" id="fTitulo" placeholder="Ej: Casa en Kanajuyú · Zona 16"></div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: $395,000"></div>
+              <div class="fg"><label>Código</label><input type="text" id="fCodigo" placeholder="CV-001"></div>
+            </div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Tipo</label><select id="fTipo"><option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option></select></div>
+              <div class="fg"><label>Operación</label><select id="fOperacion"><option>Venta</option><option>Renta</option><option>Venta/Renta</option></select></div>
+              <div class="fg"><label>Listing</label><select id="fTipoListing"><option>Residencial</option><option>Finca</option><option>Inversión</option><option>Comercial</option></select></div>
+            </div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Zona / Colonia</label><input type="text" id="fZona" placeholder="Ej: Kanajuyú"></div>
+              <div class="fg"><label>Municipio</label><input type="text" id="fMunicipio" placeholder="Ej: Guatemala, Fraijanes"></div>
+            </div>
+            <div class="fg"><label>Ubicación general</label><input type="text" id="fUbicacionGeneral" placeholder="Ej: Fraijanes · Carretera a El Salvador · Km 16.5"></div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-ruler"></i> Medidas y espacios</div>
+            <div class="fg-row c4">
+              <div class="fg"><label>Área m²</label><input type="text" id="fArea" placeholder="350"></div>
+              <div class="fg"><label>Área v²</label><input type="text" id="fAreaV2" placeholder="2048"></div>
+              <div class="fg"><label>Habitaciones</label><input type="number" id="fHabitaciones" placeholder="0" min="0"></div>
+              <div class="fg"><label>Baños</label><input type="number" id="fBanos" placeholder="0" min="0"></div>
+            </div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Medios baños</label><input type="number" id="fMediosBanos" placeholder="0" min="0"></div>
+              <div class="fg"><label>Parqueos</label><input type="number" id="fParqueos" placeholder="0" min="0"></div>
+              <div class="fg"><label>Niveles</label><input type="number" id="fNiveles" placeholder="1" min="1"></div>
+            </div>
+            <div class="fg"><label>Datos técnicos (resumen)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m² · Terreno 2,400 m²"></div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-tools"></i> Construcción y acabados</div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Año construcción</label><input type="text" id="fAnioConstruccion" placeholder="2018"></div>
+              <div class="fg"><label>Estado</label><select id="fEstadoConstruccion"><option value="">-- Seleccionar --</option><option>Nueva</option><option>Usada</option><option>En construcción</option><option>En planos</option></select></div>
+            </div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Tipo construcción</label><select id="fTipoConstruccion"><option value="">-- Seleccionar --</option><option>Block / Concreto</option><option>Mixta</option><option>Madera</option><option>Adobe</option></select></div>
+              <div class="fg"><label>Techo</label><select id="fTecho"><option value="">-- Seleccionar --</option><option>Losa</option><option>Terraza</option><option>Duralita</option><option>Teja</option><option>Mixto</option></select></div>
+            </div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Piso</label><select id="fPiso"><option value="">-- Seleccionar --</option><option>Granito</option><option>Porcelanato</option><option>Cerámica</option><option>Madera</option><option>Mármol</option><option>Cemento alisado</option></select></div>
+              <div class="fg"><label>Acabados</label><select id="fAcabados"><option value="">-- Seleccionar --</option><option>Básico</option><option>Medio</option><option>Premium</option><option>Lujo</option></select></div>
+            </div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-file-text"></i> Descripción</div>
+            <div class="fg"><label>Descripción completa</label><textarea id="fDescripcion" style="min-height:90px" placeholder="Descripción detallada para el sitio web..."></textarea></div>
+            <div class="fg"><label>Hook para redes sociales</label><input type="text" id="fHook" placeholder="Ej: Hay casas. Y luego está esta."></div>
+            <div class="fg"><label>Descripción corta</label><textarea id="fDescCorta" style="min-height:56px" placeholder="2-3 líneas premium..."></textarea></div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-tag"></i> Características</div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-map-pin"></i> Ubicación</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Ubicación privilegiada"> Ubicación privilegiada</label>
+                <label class="char-item"><input type="checkbox" value="Sobre carretera principal"> Sobre carretera principal</label>
+                <label class="char-item"><input type="checkbox" value="Entorno natural y vistas"> Entorno natural y vistas</label>
+                <label class="char-item"><input type="checkbox" value="Cerca de servicios"> Cerca de servicios</label>
+                <label class="char-item"><input type="checkbox" value="Zona residencial exclusiva"> Zona residencial exclusiva</label>
+                <label class="char-item"><input type="checkbox" value="Acceso pavimentado"> Acceso pavimentado</label>
+                <label class="char-item"><input type="checkbox" value="Vista al valle"> Vista al valle</label>
+                <label class="char-item"><input type="checkbox" value="Vista a montañas"> Vista a montañas</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-shield"></i> Seguridad</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Garita 24/7"> Garita 24/7</label>
+                <label class="char-item"><input type="checkbox" value="Condominio cerrado"> Condominio cerrado</label>
+                <label class="char-item"><input type="checkbox" value="Cámaras de seguridad"> Cámaras de seguridad</label>
+                <label class="char-item"><input type="checkbox" value="Sistema de alarma"> Sistema de alarma</label>
+                <label class="char-item"><input type="checkbox" value="Muros perimetrales"> Muros perimetrales</label>
+                <label class="char-item"><input type="checkbox" value="Portón eléctrico"> Portón eléctrico</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-droplet"></i> Servicios básicos</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Agua municipal"> Agua municipal</label>
+                <label class="char-item"><input type="checkbox" value="Pozo propio"> Pozo propio</label>
+                <label class="char-item"><input type="checkbox" value="Cisterna"> Cisterna</label>
+                <label class="char-item"><input type="checkbox" value="Luz 110v/220v"> Luz 110v/220v</label>
+                <label class="char-item"><input type="checkbox" value="Panel solar"> Panel solar</label>
+                <label class="char-item"><input type="checkbox" value="Internet fibra disponible"> Internet fibra disponible</label>
+                <label class="char-item"><input type="checkbox" value="Gas propano"> Gas propano</label>
+                <label class="char-item"><input type="checkbox" value="Drenaje municipal"> Drenaje municipal</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-car"></i> Vehículos</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Garaje cerrado"> Garaje cerrado</label>
+                <label class="char-item"><input type="checkbox" value="Parqueo techado"> Parqueo techado</label>
+                <label class="char-item"><input type="checkbox" value="Parqueo descubierto"> Parqueo descubierto</label>
+                <label class="char-item"><input type="checkbox" value="Acceso para camión"> Acceso para camión</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-tree"></i> Exteriores</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Piscina"> Piscina</label>
+                <label class="char-item"><input type="checkbox" value="Jardín amplio"> Jardín amplio</label>
+                <label class="char-item"><input type="checkbox" value="Área de BBQ"> Área de BBQ</label>
+                <label class="char-item"><input type="checkbox" value="Pérgola"> Pérgola</label>
+                <label class="char-item"><input type="checkbox" value="Terraza exterior"> Terraza exterior</label>
+                <label class="char-item"><input type="checkbox" value="Cancha deportiva"> Cancha deportiva</label>
+                <label class="char-item"><input type="checkbox" value="Juegos infantiles"> Juegos infantiles</label>
+                <label class="char-item"><input type="checkbox" value="Huerto / área de siembra"> Huerto / área de siembra</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-sofa"></i> Interiores</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Cocina equipada"> Cocina equipada</label>
+                <label class="char-item"><input type="checkbox" value="Isla de cocina"> Isla de cocina</label>
+                <label class="char-item"><input type="checkbox" value="Walk-in closet"> Walk-in closet</label>
+                <label class="char-item"><input type="checkbox" value="Cuarto de servicio con baño"> Cuarto de servicio</label>
+                <label class="char-item"><input type="checkbox" value="Bodega"> Bodega</label>
+                <label class="char-item"><input type="checkbox" value="Chimenea"> Chimenea</label>
+                <label class="char-item"><input type="checkbox" value="Jacuzzi"> Jacuzzi</label>
+                <label class="char-item"><input type="checkbox" value="Estudio / Oficina"> Estudio / Oficina</label>
+                <label class="char-item"><input type="checkbox" value="Sala familiar"> Sala familiar</label>
+                <label class="char-item"><input type="checkbox" value="Sala de cine"> Sala de cine</label>
+                <label class="char-item"><input type="checkbox" value="Lavandería interna"> Lavandería interna</label>
+                <label class="char-item"><input type="checkbox" value="Bar interior"> Bar interior</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-plant"></i> Para fincas</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Agua de nacimiento"> Agua de nacimiento</label>
+                <label class="char-item"><input type="checkbox" value="Río o quebrada"> Río o quebrada</label>
+                <label class="char-item"><input type="checkbox" value="Luz trifásica"> Luz trifásica</label>
+                <label class="char-item"><input type="checkbox" value="Casa del guardián"> Casa del guardián</label>
+                <label class="char-item"><input type="checkbox" value="Corrales"> Corrales</label>
+                <label class="char-item"><input type="checkbox" value="Cultivo activo"> Cultivo activo</label>
+                <label class="char-item"><input type="checkbox" value="Finca inscrita en Registro"> Finca inscrita</label>
+                <label class="char-item"><input type="checkbox" value="Caminos internos"> Caminos internos</label>
+              </div>
+            </div>
+
+            <div class="chars-group">
+              <div class="chars-group-title"><i class="ti ti-trending-up"></i> Inversión</div>
+              <div class="chars-grid">
+                <label class="char-item"><input type="checkbox" value="Alta plusvalía"> Alta plusvalía</label>
+                <label class="char-item"><input type="checkbox" value="Zona en crecimiento"> Zona en crecimiento</label>
+                <label class="char-item"><input type="checkbox" value="Papelería en orden"> Papelería en orden</label>
+                <label class="char-item"><input type="checkbox" value="Sin gravámenes"> Sin gravámenes</label>
+                <label class="char-item"><input type="checkbox" value="Financiamiento disponible"> Financiamiento disponible</label>
+                <label class="char-item"><input type="checkbox" value="Negociable"> Negociable</label>
+                <label class="char-item"><input type="checkbox" value="Potencial de desarrollo"> Potencial de desarrollo</label>
+                <label class="char-item"><input type="checkbox" value="Apta para alquiler"> Apta para alquiler</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-box">
+            <div class="share-box-title"><i class="ti ti-share"></i> Ficha compartible — WhatsApp / Redes</div>
+            <div class="fg"><label>URL del PDF</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1E40AF;cursor:pointer;padding:4px 0">
+              <input type="checkbox" id="fPrivada" style="width:15px;height:15px;accent-color:var(--or)">
+              Propiedad PRIVADA — ocultar precio en la ficha compartible
+            </label>
+          </div>
+
+          <div class="priv-box" style="margin-top:14px">
+            <div class="priv-box-title"><i class="ti ti-lock"></i> Información privada — solo visible en admin</div>
+            <div class="fg"><label>Precio real / margen de negociación</label><input type="text" id="fPrecioReal" placeholder="Ej: Vendedor acepta mínimo Q 2,200,000"></div>
+            <div class="fg"><label>Contacto del vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Pérez · +502 5555-1234"></div>
+            <div class="fg"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:60px" placeholder="Motivación de venta, situación especial..."></textarea></div>
+            <div class="fg"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravámenes, IUSI al día"></div>
+          </div>
+
+        </div>
+
+        <div class="form-right">
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-photo"></i> Imagen principal</div>
+            <div class="fg"><input type="url" id="fImagen" placeholder="https://ik.imagekit.io/Zona/..." oninput="previewImg()"></div>
+            <img id="imgPreview" class="img-preview">
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-photos"></i> Galería</div>
+            <div class="gal-wrap" id="galWrap"></div>
+            <button type="button" onclick="addGalImg()" style="margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer">+ Agregar imagen</button>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-toggle-right"></i> Estado</div>
+            <div class="status-pills" id="statusPills">
+              <div class="pill active" onclick="setStatus('Activa')">Activa</div>
+              <div class="pill" onclick="setStatus('Vendida')">Vendida</div>
+              <div class="pill" onclick="setStatus('Pausada')">Pausada</div>
+            </div>
+            <input type="hidden" id="fEstado" value="Activa">
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-world"></i> Publicar en</div>
+            <label class="sitio-row"><input type="checkbox" id="sZona" checked><div><div class="sitio-label">Zona INNmueble</div><div class="sitio-url">zona-innmueble.com</div></div></label>
+            <label class="sitio-row"><input type="checkbox" id="sInmu" checked><div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div></label>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-map-pin"></i> Ubicación y SEO</div>
+            <div class="fg"><label>Departamento</label>
+              <select id="fDepartamento">
+                <option value="">-- Seleccionar --</option>
+                <option>Guatemala</option><option>Sacatepéquez</option><option>Escuintla</option>
+                <option>Chimaltenango</option><option>Baja Verapaz</option><option>Alta Verapaz</option>
+                <option>El Progreso</option><option>Jalapa</option><option>Jutiapa</option>
+              </select>
+            </div>
+            <div class="fg"><label>Slug (URL)</label><input type="text" id="fSlug" placeholder="auto-generado desde título"></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-map"></i> Coordenadas (opcional)</div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Latitud</label><input type="text" id="fLat" placeholder="14.6349"></div>
+              <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-navy" onclick="saveProp()"><i class="ti ti-device-floppy"></i> Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://zona-inmu.tours-virtuales-gt.workers.dev';
+let props = [];
+let editingId = null;
+let galUrls = [];
+let currentStatus = 'Activa';
+
+// ── AUTH ──────────────────────────────────────────────────────
+async function doLogin() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const btn  = document.getElementById('loginBtn');
+  const err  = document.getElementById('loginErr');
+  if (!user || !pass) return;
+  btn.disabled = true;
+  btn.textContent = 'Ingresando...';
+  err.style.display = 'none';
+  try {
+    const r = await fetch(API + '/api/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({user, pass})
+    });
+    if (r.ok) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      await loadProps();
+      showPage('dashboard');
+    } else {
+      err.style.display = 'block';
+    }
+  } catch(e) {
+    err.textContent = 'Error de conexión.';
+    err.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Ingresar';
+}
+
+async function doLogout() {
+  await fetch(API + '/api/logout', {method:'POST', credentials:'include'}).catch(()=>{});
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+}
+
+async function checkSession() {
+  try {
+    const r = await fetch(API + '/api/me', {credentials:'include'});
+    if (r.ok) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      await loadProps();
+      showPage('dashboard');
+    }
+  } catch(e) {}
+}
+
+// ── PROPS ────────────────────────────────────────────────────
+async function loadProps() {
+  try {
+    const r = await fetch(API + '/api/propiedades', {credentials:'include'});
+    if (r.ok) {
+      props = await r.json();
+    }
+  } catch(e) { console.error('loadProps:', e); }
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────
+function showPage(page) {
+  ['dashboard','propiedades','leads','nueva'].forEach(p => {
+    const n = document.getElementById('nav-' + p);
+    if (n) n.classList.remove('active');
+  });
+  const nav = document.getElementById('nav-' + page);
+  if (nav) nav.classList.add('active');
+  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads'};
+  document.getElementById('pageTitle').textContent = titles[page] || page;
+  const mc = document.getElementById('mainContent');
+  if (!mc) return;
+  if (page === 'dashboard')    renderDashboard(mc);
+  if (page === 'propiedades')  renderPropiedades(mc);
+  if (page === 'leads')        renderLeads(mc);
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────
+function renderDashboard(mc) {
+  const activas  = props.filter(p => !p.estado || p.estado === 'Activa').length;
+  const vendidas = props.filter(p => p.estado === 'Vendida').length;
+  mc.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Propiedades activas</div><div class="stat-val">${activas}</div><div class="stat-sub">Total: ${props.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Vendidas</div><div class="stat-val">${vendidas}</div></div>
+      <div class="stat-card"><div class="stat-label">Leads</div><div class="stat-val" id="dashLeadsNum">-</div></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Propiedades recientes</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
+      </div>
+      ${buildTable(props.slice(0, 8))}
+    </div>`;
+  fetch(API + '/api/leads', {credentials:'include'})
+    .then(r => r.json()).then(leads => {
+      const el = document.getElementById('dashLeadsNum');
+      if (el) el.textContent = leads.length;
+      const lc = document.getElementById('leadsCount');
+      if (lc) lc.textContent = leads.length;
+    }).catch(() => {});
+}
+
+// ── PROPIEDADES PAGE ─────────────────────────────────────────
+function renderPropiedades(mc) {
+  mc.innerHTML = `
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="search-box"><i class="ti ti-search"></i><input type="text" id="searchInput" placeholder="Buscar propiedad..." oninput="filterTable()"></div>
+        <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
+      </div>
+      <div id="tableBody">${buildTable(props)}</div>
+    </div>`;
+}
+
+function filterTable() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const filtered = q ? props.filter(p =>
+    (p.titulo||'').toLowerCase().includes(q) ||
+    (p.municipio||p.zona||'').toLowerCase().includes(q) ||
+    (p.tipo||'').toLowerCase().includes(q)
+  ) : props;
+  const tb = document.getElementById('tableBody');
+  if (tb) tb.innerHTML = buildTable(filtered);
+}
+
+function buildTable(data) {
+  if (!data || !data.length) return '<div style="padding:40px;text-align:center;color:var(--text3)">Sin propiedades</div>';
+  let rows = '';
+  data.forEach((p, i) => {
+    const id  = encodeURIComponent(p.id || p.slug || i);
+    const est = p.estado || 'Activa';
+    const bc  = est==='Vendida' ? 'badge-red' : est==='Pausada' ? 'badge-gray' : 'badge-green';
+    const img = p.imagen ? `<img class="prop-img" src="${p.imagen}" onerror="this.style.display='none'">` : `<div class="prop-img" style="background:var(--bg)"></div>`;
+    rows += `<tr>
+      <td style="white-space:nowrap">${img}</td>
+      <td><div class="prop-name">${esc(p.titulo||'')}</div><div class="prop-loc">${esc(p.municipio||p.zona||'')}</div></td>
+      <td>${esc(p.tipo||'')}</td>
+      <td class="price-cell">${esc(p.priceFormatted||p.precio||'')}</td>
+      <td><span class="badge ${bc}">${esc(est)}</span></td>
+      <td><div class="actions-cell">
+        <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
+        <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
+        <div class="icon-btn" title="Ver en sitio" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
+      </div></td>
+    </tr>`;
+  });
+  return `<table>
+    <thead><tr><th></th><th>Propiedad</th><th>Tipo</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+// ── LEADS PAGE ───────────────────────────────────────────────
+async function renderLeads(mc) {
+  mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Cargando leads...</div>';
+  try {
+    const r = await fetch(API + '/api/leads', {credentials:'include'});
+    const leads = await r.json();
+    const lc = document.getElementById('leadsCount');
+    if (lc) lc.textContent = leads.length;
+    if (!leads.length) { mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Sin leads aún.</div>'; return; }
+    mc.innerHTML = `<div style="font-size:13px;color:var(--text3);margin-bottom:16px">${leads.length} leads registrados</div>` +
+      leads.map(l => `
+        <div class="lead-card">
+          <div class="lead-header">
+            <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
+            <div class="lead-time">${l.fecha ? l.fecha.substring(0,10) : '-'}</div>
+          </div>
+          <div class="lead-detail"><strong>Tel:</strong> ${esc(l.telefono||'-')}</div>
+          <div class="lead-detail"><strong>Propiedad:</strong> ${esc(l.propiedad||'-')}</div>
+          <div class="lead-detail"><strong>Tipo:</strong> ${esc(l.tipo||'-')}</div>
+          ${l.telefono ? `<a class="wa-btn" href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank"><i class="ti ti-brand-whatsapp"></i> Contactar</a>` : ''}
+        </div>`).join('');
+  } catch(e) {
+    mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--red)">Error cargando leads.</div>';
+  }
+}
+
+// ── MODAL ────────────────────────────────────────────────────
+function openModal(id) {
+  editingId = null;
+  galUrls = [];
+  currentStatus = 'Activa';
+  clearForm();
+  if (id) {
+    const decoded = decodeURIComponent(id);
+    const p = props.find(x => (x.id||x.slug) === decoded || encodeURIComponent(x.id||x.slug) === id);
+    if (p) {
+      editingId = p.id || p.slug;
+      document.getElementById('modalTitle').textContent = 'Editar propiedad';
+      loadForm(p);
+    }
+  } else {
+    document.getElementById('modalTitle').textContent = 'Nueva propiedad';
+  }
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function clearForm() {
+  ['fTitulo','fPrecio','fCodigo','fZona','fMunicipio','fUbicacionGeneral',
+   'fArea','fAreaV2','fHabitaciones','fBanos','fMediosBanos','fParqueos','fNiveles','fDatosTecnicos',
+   'fAnioConstruccion','fDescripcion','fHook','fDescCorta','fPdfUrl',
+   'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen'
+  ].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados','fDepartamento'].forEach(id => {
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('fTipo').value = 'Casa';
+  document.getElementById('fOperacion').value = 'Venta';
+  document.getElementById('fTipoListing').value = 'Residencial';
+  document.getElementById('fPrivada').checked = false;
+  document.getElementById('sZona').checked = true;
+  document.getElementById('sInmu').checked = true;
+  document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb => { cb.checked=false; cb.closest('.char-item').classList.remove('checked'); });
+  setStatus('Activa');
+  galUrls = [];
+  renderGallery();
+  const imgPrev = document.getElementById('imgPreview');
+  if (imgPrev) imgPrev.style.display = 'none';
+}
+
+function loadForm(p) {
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
+  set('fTitulo', p.titulo); set('fPrecio', p.precio); set('fCodigo', p.codigo);
+  set('fZona', p.zona); set('fMunicipio', p.municipio); set('fUbicacionGeneral', p.ubicacionGeneral);
+  set('fArea', p.area); set('fAreaV2', p.areaV2); set('fHabitaciones', p.habitaciones);
+  set('fBanos', p.banos); set('fMediosBanos', p.mediosBanos); set('fParqueos', p.parqueos);
+  set('fNiveles', p.niveles); set('fDatosTecnicos', p.datosTecnicos);
+  set('fAnioConstruccion', p.anioConstruccion); set('fEstadoConstruccion', p.estadoConstruccion);
+  set('fTipoConstruccion', p.tipoConstruccion); set('fTecho', p.techo);
+  set('fPiso', p.piso); set('fAcabados', p.acabados);
+  set('fDescripcion', p.descripcion); set('fHook', p.hook); set('fDescCorta', p.descCorta);
+  set('fPdfUrl', p.pdfUrl); set('fPrecioReal', p.precioReal);
+  set('fContactoVendedor', p.contactoVendedor); set('fNotasInternas', p.notasInternas);
+  set('fEstadoLegal', p.estadoLegal); set('fSlug', p.slug);
+  set('fLat', p.lat); set('fLng', p.lng); set('fImagen', p.imagen);
+  const sel = (id, val) => { const el=document.getElementById(id); if(el&&val) el.value=val; };
+  sel('fTipo', p.tipo); sel('fOperacion', p.operacion); sel('fTipoListing', p.tipoListing);
+  sel('fDepartamento', p.departamento);
+  document.getElementById('fPrivada').checked = !!p.privada;
+  document.getElementById('sZona').checked = p.sitios ? p.sitios.includes('zona') : true;
+  document.getElementById('sInmu').checked = p.sitios ? p.sitios.includes('inmu') : true;
+  setStatus(p.estado || 'Activa');
+  if (p.caracteristicas) {
+    document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb => {
+      const on = p.caracteristicas.includes(cb.value);
+      cb.checked = on;
+      cb.closest('.char-item').classList.toggle('checked', on);
+    });
+  }
+  galUrls = p.gallery ? p.gallery.filter(u => u && u !== p.imagen) : [];
+  renderGallery();
+  if (p.imagen) {
+    const img = document.getElementById('imgPreview');
+    if (img) { img.src = p.imagen; img.style.display = 'block'; }
+  }
+}
+
+function setStatus(st) {
+  currentStatus = st;
+  document.getElementById('fEstado').value = st;
+  document.querySelectorAll('#statusPills .pill').forEach(p => {
+    p.classList.toggle('active', p.textContent === st);
+  });
+}
+
+function previewImg() {
+  const val = document.getElementById('fImagen').value;
+  const img = document.getElementById('imgPreview');
+  if (val) { img.src = val; img.style.display = 'block'; }
+  else { img.style.display = 'none'; }
+}
+
+function addGalImg() {
+  const url = prompt('URL de la imagen (ImageKit):');
+  if (url && url.trim()) { galUrls.push(url.trim()); renderGallery(); }
+}
+
+function removeGalImg(i) {
+  galUrls.splice(i, 1);
+  renderGallery();
+}
+
+function renderGallery() {
+  const wrap = document.getElementById('galWrap');
+  if (!wrap) return;
+  wrap.innerHTML = galUrls.map((u, i) =>
+    `<div class="gal-item"><img src="${u}" onerror="this.style.opacity='.3'"><button onclick="removeGalImg(${i})">×</button></div>`
+  ).join('');
+}
+
+async function saveProp() {
+  const titulo = document.getElementById('fTitulo').value.trim();
+  if (!titulo) { showToast('El título es obligatorio','error'); return; }
+
+  const chars = Array.from(document.querySelectorAll('.char-item input[type=checkbox]:checked')).map(cb => cb.value);
+  const sitios = [];
+  if (document.getElementById('sZona').checked) sitios.push('zona');
+  if (document.getElementById('sInmu').checked) sitios.push('inmu');
+
+  const g = id => { const el=document.getElementById(id); return el ? el.value.trim() : ''; };
+
+  const data = {
+    titulo, precio:g('fPrecio'), codigo:g('fCodigo'),
+    tipo:g('fTipo'), operacion:g('fOperacion'), tipoListing:g('fTipoListing'),
+    zona:g('fZona'), municipio:g('fMunicipio'), ubicacionGeneral:g('fUbicacionGeneral'),
+    area:g('fArea'), areaV2:g('fAreaV2'), habitaciones:g('fHabitaciones'),
+    banos:g('fBanos'), mediosBanos:g('fMediosBanos'), parqueos:g('fParqueos'),
+    niveles:g('fNiveles'), datosTecnicos:g('fDatosTecnicos'),
+    anioConstruccion:g('fAnioConstruccion'), estadoConstruccion:g('fEstadoConstruccion'),
+    tipoConstruccion:g('fTipoConstruccion'), techo:g('fTecho'),
+    piso:g('fPiso'), acabados:g('fAcabados'),
+    descripcion:g('fDescripcion'), hook:g('fHook'), descCorta:g('fDescCorta'),
+    pdfUrl:g('fPdfUrl'), privada:document.getElementById('fPrivada').checked,
+    precioReal:g('fPrecioReal'), contactoVendedor:g('fContactoVendedor'),
+    notasInternas:g('fNotasInternas'), estadoLegal:g('fEstadoLegal'),
+    departamento:g('fDepartamento'), lat:g('fLat'), lng:g('fLng'),
+    imagen:g('fImagen'), gallery:galUrls,
+    estado:currentStatus, caracteristicas:chars, sitios,
+    ...(editingId ? {id:editingId} : {})
+  };
+
+  try {
+    const r = await fetch(API + '/api/propiedades', {
+      method: editingId ? 'PUT' : 'POST',
+      credentials: 'include',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    if (r.ok) {
+      showToast(editingId ? 'Propiedad actualizada ✓' : 'Propiedad creada ✓', 'success');
+      closeModal();
+      await loadProps();
+      showPage('propiedades');
+    } else {
+      showToast('Error al guardar', 'error');
+    }
+  } catch(e) {
+    showToast('Error de conexión', 'error');
+  }
+}
+
+async function deleteProp(id, titulo) {
+  if (!confirm('¿Eliminar "' + decodeURIComponent(titulo) + '"?')) return;
+  try {
+    const r = await fetch(API + '/api/propiedades/' + id, {method:'DELETE', credentials:'include'});
+    if (r.ok) {
+      showToast('Propiedad eliminada', 'success');
+      await loadProps();
+      showPage('propiedades');
+    } else {
+      showToast('Error al eliminar', 'error');
+    }
+  } catch(e) {
+    showToast('Error de conexión', 'error');
+  }
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type||'');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── KEYBOARD ─────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') doLogin();
+  if (e.key === 'Escape') closeModal();
+});
+
+document.querySelectorAll('.char-item').forEach(item => {
+  item.addEventListener('change', () => {
+    item.classList.toggle('checked', item.querySelector('input').checked);
+  });
+});
+
+// ── INIT ─────────────────────────────────────────────────────
+checkSession();
+</script>
+</body>
+</html>
