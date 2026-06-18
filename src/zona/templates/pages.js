@@ -693,6 +693,19 @@ function detailPage(prop, all) {
 .dv3-wa-float{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 14px;background:var(--ink);border-top:1px solid var(--bd);gap:8px;align-items:center}
 .dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:#fff;padding:12px 8px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
 .dv3-wa-float a.sec{background:transparent;border:1px solid #25D366;color:#25D366}
+/* LIGHTBOX */
+.dv3-lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
+.dv3-lb.open{display:flex}
+.dv3-lb-img{max-width:92vw;max-height:80vh;object-fit:contain;border-radius:4px;display:block}
+.dv3-lb-strip{display:flex;gap:6px;margin-top:14px;overflow-x:auto;max-width:92vw;padding-bottom:4px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent}
+.dv3-lb-strip img{width:64px;height:48px;object-fit:cover;border-radius:3px;cursor:pointer;opacity:.55;flex-shrink:0;transition:opacity .15s;border:2px solid transparent}
+.dv3-lb-strip img.on{opacity:1;border-color:var(--or)}
+.dv3-lb-close{position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:1.8rem;cursor:pointer;line-height:1;opacity:.7;transition:opacity .2s}
+.dv3-lb-close:hover{opacity:1}
+.dv3-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.5rem;cursor:pointer;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.dv3-lb-nav:hover{background:rgba(255,255,255,.25)}
+.dv3-lb-prev{left:16px}.dv3-lb-next{right:16px}
+.dv3-lb-counter{position:absolute;top:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:.72rem;letter-spacing:.12em}
 @media(max-width:1024px){
   .dv3-wrap{grid-template-columns:1fr;padding:0 4% 40px}
   .dv3-main{padding:28px 0;border-right:none;border-bottom:1px solid var(--bd)}
@@ -735,7 +748,7 @@ function detailPage(prop, all) {
   </div>
 </div>
 
-${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>6){return '<div class="dv3-gal-more" onclick="document.getElementById(\'mi\').src=\''+escapeHtml(src)+'\'"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="document.getElementById(\'mi\').src=this.src">';}).join('') + '</div>' : ''}
+${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
 
 <div class="dv3-wrap">
   <div class="dv3-main">
@@ -762,14 +775,17 @@ ${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){
     </div>
 
     <div class="dv3-tab-panel on" id="dv3-det">
-      ${prop.datosTecnicos ? '<div class="dv3-datos">'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
+      ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
       <div class="dv3-specs-grid">${specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')}</div>
-      ${prop.produccion ? '<div class="dv3-datos" style="margin-top:8px"><strong style="color:var(--or)">Producci&oacute;n &middot; </strong>'+escapeHtml(prop.produccion)+'</div>' : ''}
-      ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:8px"><strong style="color:var(--or)">Colindancias &middot; </strong>'+escapeHtml(prop.colindancias)+'</div>' : ''}
+      ${prop.produccion ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Producci&oacute;n</span>'+escapeHtml(prop.produccion)+'</div>' : ''}
+      ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-desc">
+      ${prop.hook ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
+      <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
       <div class="dv3-desc">${renderDesc(prop.description)}</div>
+      ${prop.ubicacionGeneral ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-chars">
@@ -841,7 +857,56 @@ ${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){
 
 ${relHtml}
 
+<!-- LIGHTBOX -->
+<div class="dv3-lb" id="dv3lb" onclick="if(event.target===this)dv3LightClose()">
+  <button class="dv3-lb-close" onclick="dv3LightClose()">&#10005;</button>
+  <button class="dv3-lb-nav dv3-lb-prev" onclick="dv3LightNav(-1)">&#8249;</button>
+  <button class="dv3-lb-nav dv3-lb-next" onclick="dv3LightNav(1)">&#8250;</button>
+  <span class="dv3-lb-counter" id="dv3lbCounter"></span>
+  <img class="dv3-lb-img" id="dv3lbImg" src="" alt="">
+  <div class="dv3-lb-strip" id="dv3lbStrip"></div>
+</div>
+
 <script>
+var _dv3Gal=${JSON.stringify(gal)};
+var _dv3Idx=0;
+function dv3LightOpen(i){
+  _dv3Idx=i||0;
+  dv3LightRender();
+  document.getElementById('dv3lb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function dv3LightClose(){
+  document.getElementById('dv3lb').classList.remove('open');
+  document.body.style.overflow='';
+}
+function dv3LightNav(d){
+  _dv3Idx=(_dv3Idx+d+_dv3Gal.length)%_dv3Gal.length;
+  dv3LightRender();
+}
+function dv3LightRender(){
+  var img=document.getElementById('dv3lbImg');
+  var ctr=document.getElementById('dv3lbCounter');
+  var strip=document.getElementById('dv3lbStrip');
+  if(!img)return;
+  img.src=_dv3Gal[_dv3Idx]||'';
+  if(ctr)ctr.textContent=(_dv3Idx+1)+' / '+_dv3Gal.length;
+  if(strip){
+    strip.innerHTML=_dv3Gal.map(function(src,i){
+      return '<img src="'+src+'" class="'+(i===_dv3Idx?'on':'')+'" onclick="dv3LightSet('+i+')" loading="lazy">';
+    }).join('');
+    var active=strip.querySelectorAll('img')[_dv3Idx];
+    if(active)active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+}
+function dv3LightSet(i){_dv3Idx=i;dv3LightRender();}
+document.addEventListener('keydown',function(e){
+  var lb=document.getElementById('dv3lb');
+  if(!lb||!lb.classList.contains('open'))return;
+  if(e.key==='ArrowRight')dv3LightNav(1);
+  if(e.key==='ArrowLeft')dv3LightNav(-1);
+  if(e.key==='Escape')dv3LightClose();
+});
 function dv3Tab(id,btn){
   document.querySelectorAll('.dv3-tab-panel').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('.dv3-tab').forEach(function(b){b.classList.remove('on');});
