@@ -557,6 +557,9 @@ function detailPage(prop, all) {
     prop.precioRenta                           ? { l:'Renta mensual', v: prop.precioRenta }  : null,
     prop.disponibleDesde                       ? { l:'Disponible',    v: prop.disponibleDesde } : null,
     prop.bancoFin                              ? { l:'Banco',         v: prop.bancoFin }     : null,
+    prop.certEnerg                             ? { l:'Cert. energético', v: prop.certEnerg } : null,
+    prop.asesor                                ? { l:'Asesor',        v: prop.asesor }       : null,
+    prop.fechaPublicacion                      ? { l:'Publicado',     v: prop.fechaPublicacion } : null,
     prop.codigo                                ? { l:'Código',        v: prop.codigo }       : null,
   ].filter(Boolean);
 
@@ -619,6 +622,8 @@ function detailPage(prop, all) {
       ${prop.datosTecnicos ? `<div style="margin-top:16px;padding:14px 16px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.82rem;color:var(--sv);line-height:1.7">${escapeHtml(prop.datosTecnicos)}</div>` : ''}
       ${prop.produccion ? `<div style="margin-top:10px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:4px;font-size:.78rem;color:var(--sv)"><span style="color:var(--or);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase">Producción · </span>${escapeHtml(prop.produccion)}</div>` : ''}
       ${prop.colindancias ? `<div style="margin-top:10px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:4px;font-size:.78rem;color:var(--sv)"><span style="color:var(--or);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase">Colindancias · </span>${escapeHtml(prop.colindancias)}</div>` : ''}
+      ${prop.videoTour ? `<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Video tour</div><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:4px"><iframe src="${prop.videoTour.replace('watch?v=','embed/')}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe></div></div>` : ''}
+      ${prop.plano ? `<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Plano de planta</div><img src="${escapeHtml(prop.plano)}" alt="Plano ${escapeHtml(prop.title)}" style="width:100%;border-radius:4px;border:1px solid var(--bd)" loading="lazy"></div>` : ''}
       ${renderDesc(prop.description)}
       ${renderCaracteristicas(prop.caracteristicas||[])}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
@@ -641,7 +646,8 @@ function detailPage(prop, all) {
       <a href="${waLink(msgFin)}"   target="_blank" rel="noopener" class="wa-btn">${WA_SVG} Consultar financiamiento</a>
       <div class="div-line"></div>
       <div style="text-align:center;font-size:.63rem;color:var(--mt);line-height:1.65">
-        <strong style="display:block;color:var(--sv);margin-bottom:4px">+502 4554-2088</strong>
+        <strong style="display:block;color:var(--sv);margin-bottom:4px">${prop.asesor ? escapeHtml(prop.asesor) : 'Zona INNmueble'}</strong>
+        <strong style="display:block;color:var(--or);margin-bottom:4px">+502 ${prop.waAsesor ? escapeHtml(prop.waAsesor) : '4554-2088'}</strong>
         Lun–Vie 8:00–18:00 · Sáb 9:00–14:00
       </div>
       <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--gl)">
