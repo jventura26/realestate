@@ -74,7 +74,10 @@ function renderCaracteristicas(chars) {
     { label:'Interiores',      icon:'🏠', items:['Cocina equipada','Isla de cocina','Walk-in closet','Cuarto de servicio con baño','Bodega','Chimenea','Jacuzzi','Estudio / Oficina','Sala familiar','Sala de cine','Lavandería interna','Bar interior'] },
     { label:'Vehículos',       icon:'🚗', items:['Garaje cerrado','Parqueo techado','Parqueo descubierto','Acceso para camión'] },
     { label:'Para fincas',     icon:'🌱', items:['Agua de nacimiento','Río o quebrada','Luz trifásica','Casa del guardián','Corrales','Cultivo activo','Finca inscrita en Registro','Caminos internos'] },
-    { label:'Inversión',       icon:'📈', items:['Alta plusvalía','Zona en crecimiento','Papelería en orden','Sin gravámenes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler'] },
+    { label:'Inversión',       icon:'📈', items:['Alta plusvalía','Zona en crecimiento','Papelería en orden','Sin gravámenes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler','Acepta permuta','Acepta financiamiento bancario','Disponibilidad inmediata'] },
+    { label:'Local / Comercial', icon:'🏬', items:['Sobre avenida principal','Rampa de carga','Uso de suelo comercial','Uso de suelo industrial','Baños para empleados','Luz trifásica disponible'] },
+    { label:'Terreno',          icon:'🗺️', items:['Topografía plana','Uso de suelo autorizado','Servicios disponibles','Apto para construcción inmediata','Estudio topográfico disponible','Permisos municipales tramitados'] },
+    { label:'Renta',            icon:'🔑', items:['Amueblado','Semi amueblado','Mascotas permitidas','Incluye mantenimiento','Incluye internet','Incluye agua'] },
   ];
   const activas = grupos.map(g => ({ ...g, activos: g.items.filter(i => chars.includes(i)) })).filter(g => g.activos.length);
   if (!activas.length) return '';
@@ -536,6 +539,24 @@ function detailPage(prop, all) {
     prop.techo                                 ? { l:'Techo',         v: prop.techo }        : null,
     prop.piso                                  ? { l:'Piso',          v: prop.piso }         : null,
     prop.acabados                              ? { l:'Acabados',      v: prop.acabados }     : null,
+    prop.orientacion                           ? { l:'Orientación',   v: prop.orientacion }  : null,
+    prop.antiguedad                            ? { l:'Antigüedad',    v: prop.antiguedad + ' años' } : null,
+    prop.ventanas                              ? { l:'Ventanas',      v: prop.ventanas }     : null,
+    prop.cielos                                ? { l:'Cielos',        v: prop.cielos }       : null,
+    prop.calentador                            ? { l:'Calentador',    v: prop.calentador }   : null,
+    prop.cuotaMant                             ? { l:'Mantenimiento', v: prop.cuotaMant }    : null,
+    prop.numeroPiso                            ? { l:'Piso',          v: prop.numeroPiso }   : null,
+    prop.areaBalcon                            ? { l:'Balcón',        v: prop.areaBalcon + ' m²' } : null,
+    prop.vista                                 ? { l:'Vista',         v: prop.vista }        : null,
+    prop.alturaTecho                           ? { l:'Altura techo',  v: prop.alturaTecho + ' m' } : null,
+    prop.frenteML                              ? { l:'Frente',        v: prop.frenteML + ' ml' } : null,
+    prop.manzanas                              ? { l:'Extensión',     v: prop.manzanas + ' mz' } : null,
+    prop.cultivo                               ? { l:'Cultivo',       v: prop.cultivo }      : null,
+    prop.tituloFinca                           ? { l:'Título',        v: prop.tituloFinca }  : null,
+    prop.tiempoCarretera                       ? { l:'A carretera',   v: prop.tiempoCarretera } : null,
+    prop.precioRenta                           ? { l:'Renta mensual', v: prop.precioRenta }  : null,
+    prop.disponibleDesde                       ? { l:'Disponible',    v: prop.disponibleDesde } : null,
+    prop.bancoFin                              ? { l:'Banco',         v: prop.bancoFin }     : null,
     prop.codigo                                ? { l:'Código',        v: prop.codigo }       : null,
   ].filter(Boolean);
 
@@ -596,6 +617,8 @@ function detailPage(prop, all) {
       ${prop.descCorta ? `<div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--sv);line-height:1.8;margin-bottom:20px;font-style:italic">"${escapeHtml(prop.descCorta)}"</div>` : ''}
       <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
       ${prop.datosTecnicos ? `<div style="margin-top:16px;padding:14px 16px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.82rem;color:var(--sv);line-height:1.7">${escapeHtml(prop.datosTecnicos)}</div>` : ''}
+      ${prop.produccion ? `<div style="margin-top:10px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:4px;font-size:.78rem;color:var(--sv)"><span style="color:var(--or);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase">Producción · </span>${escapeHtml(prop.produccion)}</div>` : ''}
+      ${prop.colindancias ? `<div style="margin-top:10px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:4px;font-size:.78rem;color:var(--sv)"><span style="color:var(--or);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase">Colindancias · </span>${escapeHtml(prop.colindancias)}</div>` : ''}
       ${renderDesc(prop.description)}
       ${renderCaracteristicas(prop.caracteristicas||[])}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
