@@ -3,6 +3,23 @@
  */
 
 const ADMIN_USER = 'admin';
+
+const ALLOWED_ORIGINS = [
+  'https://zona-innmueble.com',
+  'https://www.zona-innmueble.com',
+  'https://inmuhub.com',
+];
+
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
 const ADMIN_PASS = 'admin1203';
 const SESSION_TTL = 60 * 60 * 8;
 const HOOK_ZONA = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/8105bd67-0276-4485-a0e0-50dcdb0e525d';
@@ -20,7 +37,7 @@ async function triggerRebuild() {
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    headers: { 'Content-Type': 'application/json', ...corsHeaders(request) },
   });
 }
 
@@ -1012,16 +1029,14 @@ export default {
     if (method === 'OPTIONS') {
       return new Response(null, {
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          ...corsHeaders(request),
         },
       });
     }
 
     if (path === '/dynamic-grid.js') {
       return new Response(getDynamicGridJS(), {
-        headers: { 'Content-Type': 'application/javascript', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-cache' },
+        headers: { 'Content-Type': 'application/javascript', 'Cache-Control': 'no-cache', ...corsHeaders(request) },
       });
     }
 
@@ -1070,7 +1085,7 @@ export default {
           return p;
         });
       return new Response(JSON.stringify(pub), {
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=60' },
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=60', ...corsHeaders(request) },
       });
     }
 
