@@ -66,33 +66,33 @@ function ca(area) {
 
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
-  const grupos = {
-    'Ubicacion': ['Ubicacion privilegiada','Sobre carretera','Entorno natural y vistas','Cerca de servicios','Zona residencial','Acceso pavimentado'],
-    'Terreno': ['Amplio espacio','Topografia aprovechable','Acceso a servicios','Vista al valle','Terreno plano','Con jardin'],
-    'Ideal para': ['Casa de descanso','Proyecto agricola','Desarrollo habitacional','Hotel ecologico','Inversion','Vivienda familiar'],
-    'Amenidades': ['Piscina','Jardin','Pergola','Chimenea','Jacuzzi','Churrasquera','Terraza','Estudio','Cuarto de servicio','Bodega'],
-    'Inversion': ['Alta plusvalia','Zona en crecimiento','Papeleria en orden','Sin gravamenes','Financiamiento disponible','Negociable'],
-  };
-  const emojis = {
-    'Ubicacion privilegiada':'📍','Sobre carretera':'🚗','Entorno natural y vistas':'🌄','Cerca de servicios':'🏙️','Zona residencial':'🏘️','Acceso pavimentado':'🛣️',
-    'Amplio espacio':'📏','Topografia aprovechable':'🌳','Acceso a servicios':'💧','Vista al valle':'🌅','Terreno plano':'⬜','Con jardin':'🌿',
-    'Casa de descanso':'🏡','Proyecto agricola':'🌱','Desarrollo habitacional':'🏘️','Hotel ecologico':'🏢','Inversion':'📈','Vivienda familiar':'👨‍👩‍👧',
-    'Piscina':'🏊','Jardin':'🌿','Pergola':'⛺','Chimenea':'🔥','Jacuzzi':'🛁','Churrasquera':'🍖','Terraza':'🌇','Estudio':'💼','Cuarto de servicio':'🛏','Bodega':'📦',
-    'Alta plusvalia':'📈','Zona en crecimiento':'🚀','Papeleria en orden':'📄','Sin gravamenes':'✅','Financiamiento disponible':'🏦','Negociable':'🤝',
-  };
-  let html = '<div style="margin-top:32px"><div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Caracteristicas</div>';
-  Object.entries(grupos).forEach(([grupo, items]) => {
-    const activos = items.filter(i => chars.includes(i));
-    if (!activos.length) return;
-    html += '<div style="margin-bottom:14px"><div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:8px">' + grupo + '</div>';
-    html += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
-    activos.forEach(item => {
-      const emoji = emojis[item] || '';
-      html += '<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(255,255,255,.05);border:1px solid var(--gl);border-radius:20px;font-size:.72rem;color:var(--sv)">' + emoji + ' ' + item + '</span>';
+  const grupos = [
+    { label:'Ubicación',       icon:'📍', items:['Ubicación privilegiada','Sobre carretera principal','Entorno natural y vistas','Cerca de servicios','Zona residencial exclusiva','Acceso pavimentado','Vista al valle','Vista a montañas'] },
+    { label:'Seguridad',       icon:'🛡️', items:['Garita 24/7','Condominio cerrado','Cámaras de seguridad','Sistema de alarma','Muros perimetrales','Portón eléctrico'] },
+    { label:'Servicios',       icon:'💡', items:['Agua municipal','Pozo propio','Cisterna','Luz 110v/220v','Panel solar','Internet fibra disponible','Gas propano','Drenaje municipal'] },
+    { label:'Exteriores',      icon:'🌿', items:['Piscina','Jardín amplio','Área de BBQ','Pérgola','Terraza exterior','Cancha deportiva','Juegos infantiles','Huerto / área de siembra'] },
+    { label:'Interiores',      icon:'🏠', items:['Cocina equipada','Isla de cocina','Walk-in closet','Cuarto de servicio con baño','Bodega','Chimenea','Jacuzzi','Estudio / Oficina','Sala familiar','Sala de cine','Lavandería interna','Bar interior'] },
+    { label:'Vehículos',       icon:'🚗', items:['Garaje cerrado','Parqueo techado','Parqueo descubierto','Acceso para camión'] },
+    { label:'Para fincas',     icon:'🌱', items:['Agua de nacimiento','Río o quebrada','Luz trifásica','Casa del guardián','Corrales','Cultivo activo','Finca inscrita en Registro','Caminos internos'] },
+    { label:'Inversión',       icon:'📈', items:['Alta plusvalía','Zona en crecimiento','Papelería en orden','Sin gravámenes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler'] },
+  ];
+  const activas = grupos.map(g => ({ ...g, activos: g.items.filter(i => chars.includes(i)) })).filter(g => g.activos.length);
+  if (!activas.length) return '';
+  let html = `<div style="margin-top:36px;padding-top:32px;border-top:1px solid var(--bd)">
+    <div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:24px">Características y amenidades</div>`;
+  activas.forEach(g => {
+    html += `<div style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:.9rem">${g.icon}</span>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv)">${g.label}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">`;
+    g.activos.forEach(item => {
+      html += `<span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.72rem;color:var(--wh);font-weight:400;letter-spacing:.02em">✓ ${item}</span>`;
     });
-    html += '</div></div>';
+    html += `</div></div>`;
   });
-  html += '</div>';
+  html += `</div>`;
   return html;
 }
 
@@ -519,16 +519,24 @@ function detailPage(prop, all) {
   const msgFin   = `Hola, me interesa la propiedad: ${prop.title}. Quiero consultar opciones de financiamiento. Link: ${propUrl}`;
 
   const specs = [
-    { l:'Tipo',        v: prop.tipo },
-    { l:'Estado',      v: prop.cinta||prop.estado },
-    { l:'Condición',   v: prop.estado },
-    { l:'Ubicación',   v: prop.locationFull },
-    prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones', v: prop.habitaciones } : null,
-    prop.banos&&prop.banos!=='0'               ? { l:'Baños',        v: prop.banos }        : null,
-    prop.parqueos&&prop.parqueos!=='No'        ? { l:'Garaje',       v: prop.parqueos }     : null,
-    ca(prop.areaConst) ? { l:'Area', v: ca(prop.areaConst) } : null,
-    prop.terreno                               ? { l:'Terreno',      v: prop.terreno }      : null,
-    prop.codigo                                ? { l:'Código',       v: prop.codigo }       : null,
+    { l:'Tipo',              v: prop.tipo },
+    { l:'Operación',         v: prop.operacion || prop.cinta },
+    { l:'Municipio',         v: prop.municipio || prop.zona },
+    prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones',  v: prop.habitaciones } : null,
+    prop.banos&&prop.banos!=='0'               ? { l:'Baños',         v: prop.banos }        : null,
+    prop.mediosBanos&&prop.mediosBanos!=='0'   ? { l:'Medios baños',  v: prop.mediosBanos }  : null,
+    prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? { l:'Parqueos', v: prop.parqueos } : null,
+    prop.niveles&&prop.niveles!=='0'           ? { l:'Niveles',       v: prop.niveles }      : null,
+    ca(prop.areaConst)||prop.area ? { l:'Área m²', v: ca(prop.areaConst)||prop.area } : null,
+    prop.areaV2                                ? { l:'Área v²',       v: prop.areaV2 }       : null,
+    prop.terreno                               ? { l:'Terreno',       v: prop.terreno }      : null,
+    prop.anioConstruccion                      ? { l:'Año construcción', v: prop.anioConstruccion } : null,
+    prop.estadoConstruccion                    ? { l:'Condición',     v: prop.estadoConstruccion } : null,
+    prop.tipoConstruccion                      ? { l:'Construcción',  v: prop.tipoConstruccion }   : null,
+    prop.techo                                 ? { l:'Techo',         v: prop.techo }        : null,
+    prop.piso                                  ? { l:'Piso',          v: prop.piso }         : null,
+    prop.acabados                              ? { l:'Acabados',      v: prop.acabados }     : null,
+    prop.codigo                                ? { l:'Código',        v: prop.codigo }       : null,
   ].filter(Boolean);
 
   const gal    = prop.gallery.slice(0, 10);
@@ -585,7 +593,9 @@ function detailPage(prop, all) {
       <div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:8px">${escapeHtml(prop.tipo)} · ${escapeHtml(prop.cinta||prop.estado||'')}</div>
       <h1 class="det-title">${escapeHtml(prop.title)}</h1>
       <div class="det-price">${escapeHtml(prop.priceFormatted)}</div>
+      ${prop.descCorta ? `<div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--sv);line-height:1.8;margin-bottom:20px;font-style:italic">"${escapeHtml(prop.descCorta)}"</div>` : ''}
       <div class="specs">${specs.map(s=>`<div class="sp"><div class="sp-l">${escapeHtml(s.l)}</div><div class="sp-v">${escapeHtml(String(s.v))}</div></div>`).join('')}</div>
+      ${prop.datosTecnicos ? `<div style="margin-top:16px;padding:14px 16px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.82rem;color:var(--sv);line-height:1.7">${escapeHtml(prop.datosTecnicos)}</div>` : ''}
       ${renderDesc(prop.description)}
       ${renderCaracteristicas(prop.caracteristicas||[])}
       ${prop.amenities?.length?`<div style="margin-bottom:22px">${prop.amenities.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`:''}
