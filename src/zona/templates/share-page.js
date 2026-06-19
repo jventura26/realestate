@@ -148,6 +148,7 @@ function sharePage(prop) {
     + '<div class="hero-bottom">'
     + '<div class="tipo-listing">' + tipoListing + ' · Listado privado</div>'
     + precioHTML
+    + codigoRef
     + '</div>'
     + '</div>'
 
@@ -156,6 +157,7 @@ function sharePage(prop) {
     + '<div class="ubicacion">📍 ' + ubicacion + '</div>'
     + (hook ? '<h1 class="hook">' + hook + '</h1>' : '')
     + (descCorta ? '<p class="desc">' + descCorta + '</p>' : '')
+    + charsHtml
     + '<div class="divider"></div>'
     + (datosTecnicos ? '<div class="datos">' + datosTecnicos + '</div>' : '')
 
