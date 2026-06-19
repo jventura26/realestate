@@ -75,14 +75,34 @@
     var q = (document.getElementById('fq') || {value:''}).value.toLowerCase();
     var ft = (document.getElementById('ft') || {value:''}).value;
     var fc = (document.getElementById('fc2') || {value:''}).value;
+    var fc3 = (document.getElementById('fc3') || {value:''}).value;
+    var fh = (document.getElementById('fh') || {value:''}).value;
+    var fsort = (document.getElementById('fsort') || {value:''}).value;
+    var fpRaw = (document.getElementById('fp') || {value:''}).value;
+    var priceMin = 0, priceMax = Infinity;
+    if (fpRaw) {
+      var parts = fpRaw.split('-');
+      priceMin = parseFloat(parts[0]) || 0;
+      priceMax = parts[1] ? (parseFloat(parts[1]) || Infinity) : Infinity;
+    }
     var filtered = props.filter(function(p) {
       if (q && !(p.titulo||'').toLowerCase().includes(q) && !(p.zona||'').toLowerCase().includes(q)) return false;
       if (ft && p.tipo !== ft) return false;
       if (fc && p.municipio !== fc) return false;
+      if (fc3 && p.cinta !== fc3 && p.operacion !== fc3) return false;
+      if (fh && parseInt(p.habitaciones||0) < parseInt(fh)) return false;
+      var priceNum = p.priceNumeric || 0;
+      if (priceNum > 0 && (priceNum < priceMin || priceNum > priceMax)) return false;
       return true;
     });
+    if (fsort === 'price_asc') filtered.sort(function(a,b){ return (a.priceNumeric||0)-(b.priceNumeric||0); });
+    else if (fsort === 'price_desc') filtered.sort(function(a,b){ return (b.priceNumeric||0)-(a.priceNumeric||0); });
+    else if (fsort === 'newest') filtered.sort(function(a,b){ return (b.createdAt||'').localeCompare(a.createdAt||''); });
+    else if (fsort === 'area_desc') filtered.sort(function(a,b){ return (parseFloat(b.area)||0)-(parseFloat(a.area)||0); });
     if (!filtered.length) {
       grid.innerHTML = '<p style="text-align:center;padding:60px;opacity:.5;color:white">No hay propiedades disponibles.</p>';
+      var cnt0 = document.getElementById('fc');
+      if (cnt0) cnt0.textContent = '0 propiedades';
       return;
     }
     grid.innerHTML = filtered.map(cardFn).join('');
@@ -90,6 +110,30 @@
     var cnt = document.getElementById('fc');
     if (cnt) cnt.textContent = filtered.length + ' propiedad' + (filtered.length !== 1 ? 'es' : '');
   }
+
+  window.updatePriceBtn = function() {
+    var min = (document.getElementById('fp-min') || {value:''}).value;
+    var max = (document.getElementById('fp-max') || {value:''}).value;
+    var btn = document.getElementById('price-btn');
+    if (!btn) return;
+    if (!min && !max) { btn.textContent = 'Precio: Cualquiera \u25be'; return; }
+    var fmt = function(n) { return n ? '$' + Number(n).toLocaleString('en-US') : ''; };
+    if (min && max) btn.textContent = fmt(min) + ' \u2013 ' + fmt(max) + ' \u25be';
+    else if (min) btn.textContent = 'Desde ' + fmt(min) + ' \u25be';
+    else btn.textContent = 'Hasta ' + fmt(max) + ' \u25be';
+  };
+
+  window.applyPrice = function() {
+    var min = (document.getElementById('fp-min') || {value:''}).value;
+    var max = (document.getElementById('fp-max') || {value:''}).value;
+    var fp = document.getElementById('fp');
+    if (fp) {
+      fp.value = (min || '0') + '-' + (max || '');
+      fp.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    var dropdown = document.getElementById('price-dropdown');
+    if (dropdown) dropdown.style.display = 'none';
+  };
 
   async function init() {
     var grid = document.getElementById('g');
@@ -105,7 +149,7 @@
       render(props, grid);
 
       // Reconectar filtros existentes
-      ['fq','ft','fc2','fc3','fp','fh'].forEach(function(id) {
+      ['fq','ft','fc2','fc3','fp','fh','fsort'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', function() { render(props, grid); });
       });
