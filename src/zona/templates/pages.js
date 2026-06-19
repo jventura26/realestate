@@ -513,6 +513,9 @@ function catalogPage(props) {
 
 // ── DETAIL ────────────────────────────────────────────────────────────
 function detailPage(prop, all) {
+  // Configuración de privacidad (declarado primero para usar en jsonLd, meta, etc.)
+  const cfg = prop.privConfig || {};
+  const esExclusiva = prop.esExclusiva || cfg.exclusiva || false;
   const related  = getRelated(prop, all);
   const img      = prop.mainImage || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=70';
   const propUrl  = `${DOMAIN}/propiedades/${prop.slug}.html`;
@@ -572,7 +575,7 @@ function detailPage(prop, all) {
     ? `<section class="related"><div class="ey">Relacionadas</div><h2 class="st">También te puede <em>interesar</em></h2><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></section>` : '';
 
   // JSON-LD structured data
-  const cleanDesc = (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
+  const cleanDesc = (esExclusiva||cfg.descripcion) ? '' : (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
   const jsonLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
@@ -582,7 +585,7 @@ function detailPage(prop, all) {
     "image": prop.mainImage || '',
     "numberOfRooms": prop.habitaciones || undefined,
     "floorSize": prop.areaConst ? { "@type":"QuantitativeValue", "value": prop.areaConst } : undefined,
-    "offers": {
+    "offers": (esExclusiva||cfg.precio) ? undefined : {
       "@type": "Offer",
       "price": prop.priceNumeric || 0,
       "priceCurrency": (prop.priceFormatted||'').includes('$') ? 'USD' : 'GTQ',
@@ -602,10 +605,6 @@ function detailPage(prop, all) {
     }
   });
 
-
-  // Configuración de privacidad
-  const cfg = prop.privConfig || {};
-  const esExclusiva = prop.esExclusiva || cfg.exclusiva || false;
 
   // Banner exclusiva
   const exclusivaBanner = esExclusiva
@@ -761,22 +760,22 @@ function detailPage(prop, all) {
   </div>
 </div>
 
-${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
+${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
 
 <div class="dv3-wrap">
   <div class="dv3-main">
 
     <div class="dv3-price-row">
       <div>
-        <div class="dv3-price">${escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
-        ${prop.precioRenta ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
+        <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
+        ${(!esExclusiva&&!cfg.precio&&prop.precioRenta) ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
       </div>
       <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
         &#8679; Compartir
       </button>
     </div>
 
-    ${quickSpecs.length ? '<div class="dv3-qs">'+quickSpecs.map(function(q){return '<div class="dv3-qs-item">'+q.icon+' '+escapeHtml(String(q.v))+' <span>'+escapeHtml(q.l)+'</span></div>';}).join('')+'</div>' : ''}
+    ${(!esExclusiva&&!cfg.specs&&quickSpecs.length) ? '<div class="dv3-qs">'+quickSpecs.map(function(q){return '<div class="dv3-qs-item">'+q.icon+' '+escapeHtml(String(q.v))+' <span>'+escapeHtml(q.l)+'</span></div>';}).join('')+'</div>' : ''}
 
     ${prop.descCorta ? '<div class="dv3-hook">&ldquo;'+escapeHtml(prop.descCorta)+'&rdquo;</div>' : ''}
 
@@ -799,8 +798,8 @@ ${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){
       ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Descripción disponible previa consulta.</div>' : ''}
       ${(!esExclusiva&&!cfg.descripcion&&prop.hook) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
       <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
-      <div class="dv3-desc">${renderDesc(prop.description)}</div>
-      ${prop.ubicacionGeneral ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
+      <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
+      ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-chars">
@@ -883,7 +882,7 @@ ${relHtml}
 </div>
 
 <script>
-var _dv3Gal=${JSON.stringify(gal)};
+var _dv3Gal=${JSON.stringify((esExclusiva||cfg.fotos) ? [gal[0]].filter(Boolean) : gal)};
 var _dv3Idx=0;
 function dv3LightOpen(i){
   _dv3Idx=i||0;
@@ -932,13 +931,13 @@ function dv3Tab(id,btn){
 <\/script>`;
 
 
-  const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${prop.priceFormatted}. ${prop.habitaciones&&prop.habitaciones!=='0'?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
+  const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${(esExclusiva||cfg.precio)?'Precio a consultar':prop.priceFormatted}. ${(!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0')?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
   // Schema markup para Google
   const schemaProperty = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
     "name": prop.title,
-    "description": prop.description || prop.title,
+    "description": (esExclusiva||cfg.descripcion) ? prop.title : (prop.description || prop.title),
     "url": `https://zona-innmueble.com/propiedades/${prop.slug}.html`,
     "image": prop.mainImage || '',
     "address": {
@@ -946,7 +945,7 @@ function dv3Tab(id,btn){
       "addressLocality": prop.municipio || prop.zona || 'Guatemala',
       "addressCountry": "GT"
     },
-    "offers": prop.priceNumeric ? {
+    "offers": (prop.priceNumeric && !esExclusiva && !cfg.precio) ? {
       "@type": "Offer",
       "price": prop.priceNumeric,
       "priceCurrency": "USD"
