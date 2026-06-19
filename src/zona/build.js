@@ -34,7 +34,18 @@ function normalizeKV(kvProps) {
     ...p,
     title: p.titulo || p.title || '',
     description: p.descripcion || p.description || '',
-    priceFormatted: p.priceFormatted || p.precio || '',
+    priceFormatted: p.priceFormatted || (function(){
+      const raw = p.precio || '';
+      if (!raw) return '';
+      const isUSD = raw.includes('$') || raw.toUpperCase().includes('USD');
+      const isQ = raw.startsWith('Q') || raw.toUpperCase().startsWith('Q ');
+      const num = parseFloat(raw.replace(/[^0-9.]/g, ''));
+      if (isNaN(num)) return raw;
+      const fmt = num.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+      if (isUSD) return '$' + fmt;
+      if (isQ) return 'Q ' + fmt;
+      return raw;
+    })(),
     priceNumeric: p.priceNumeric || 0,
     locationFull: p.locationFull || p.zona || '',
     mainImage: p.mainImage || p.imagen || '',
@@ -110,6 +121,20 @@ write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   �
 
 // Copiar FAQ y About
 const faqSrc = path.join(__dirname, 'faq.html');
+// Copiar dynamic-grid.js
+const dynGridSrc = path.join(__dirname, 'assets', 'dynamic-grid.js');
+if(fs.existsSync(dynGridSrc)) {
+  fs.copyFileSync(dynGridSrc, path.join(OUT, 'dynamic-grid.js'));
+  console.log('   ✔  dynamic-grid.js');
+}
+
+// 404
+const src404 = path.join(__dirname, '404.html');
+if(fs.existsSync(src404)) {
+  fs.copyFileSync(src404, path.join(OUT, '404.html'));
+  console.log('   ✔  404.html');
+}
+
 const aboutSrc = path.join(__dirname, 'about.html');
 const blogSrc = path.join(__dirname, 'blog.html');
 const art1Src = path.join(__dirname, 'guia-inversion-real-estate-2026.html');
