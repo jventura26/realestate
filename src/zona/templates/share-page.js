@@ -29,6 +29,18 @@ function sharePage(prop) {
     ? '<div class="precio-tag">Precio disponible bajo solicitud</div>'
     : (prop.priceFormatted ? '<div class="precio-tag precio-visible">' + esc(prop.priceFormatted) + '</div>' : '');
 
+  const codigoRef = prop.codigo
+    ? '<div style="font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:6px">Ref. ' + esc(prop.codigo) + '</div>'
+    : '';
+
+  const charsHtml = (prop.caracteristicas && prop.caracteristicas.length && !isPrivada)
+    ? '<div style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)">'
+      + '<div style="font-size:.54rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,130,13,.8);margin-bottom:8px">Características</div>'
+      + '<div style="display:flex;flex-wrap:wrap;gap:5px">'
+      + prop.caracteristicas.slice(0,8).map(function(ch){ return '<span style="font-size:.64rem;padding:4px 9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;color:rgba(255,255,255,.65)">✓ ' + esc(ch) + '</span>'; }).join('')
+      + '</div></div>'
+    : '';
+
   const propSlug = prop.slug || '';
   const propNombre = esc(prop.titulo || '');
   const pdfTarget = pdfUrl ? esc(pdfUrl) : '';
