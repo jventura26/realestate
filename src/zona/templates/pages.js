@@ -477,6 +477,7 @@ function catalogPage(props) {
   <input id="fq" type="text" placeholder="Buscar propiedad, zona..." style="flex:1;min-width:170px">
   <select id="ft"><option value="">Tipo</option>${tipos.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select>
   <select id="fc2"><option value="">Municipio</option>${ciudades.map(c=>`<option>${escapeHtml(c)}</option>`).join('')}</select>
+  <select id="fsort"><option value="">Ordenar por</option><option value="price_asc">Precio: menor a mayor</option><option value="price_desc">Precio: mayor a menor</option><option value="newest">Más recientes</option><option value="area_desc">Mayor área</option></select>
   <select id="fc3"><option value="">Estado</option>${cintas.map(c=>`<option>${escapeHtml(c)}</option>`).join('')}</select>
   <div style="position:relative;min-width:180px">
     <button onclick="document.getElementById('price-dropdown').style.display=document.getElementById('price-dropdown').style.display==='block'?'none':'block'" id="price-btn" style="padding:9px 14px;background:var(--ink2);border:1px solid var(--gl);border-radius:6px;color:var(--sv);font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap;width:100%;text-align:left">Precio: Cualquiera ▾</button>
@@ -601,6 +602,18 @@ function detailPage(prop, all) {
     }
   });
 
+
+  // Configuración de privacidad
+  const cfg = prop.privConfig || {};
+  const esExclusiva = prop.esExclusiva || cfg.exclusiva || false;
+
+  // Banner exclusiva
+  const exclusivaBanner = esExclusiva
+    ? '<div style="background:linear-gradient(135deg,rgba(245,130,13,.12),rgba(245,130,13,.04));border:1px solid rgba(245,130,13,.3);border-radius:6px;padding:20px 24px;margin-bottom:24px;text-align:center">'
+      + '<div style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">🏷️ Propiedad exclusiva</div>'
+      + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:var(--sv);line-height:1.6;font-style:italic">Esta propiedad es de carácter exclusivo.<br>Para más información contacte directamente con su asesor.</div>'
+      + '</div>'
+    : '';
 
   // Quick specs for hero bar
   const quickSpecs = [
@@ -775,21 +788,23 @@ ${gal.length > 1 ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){
     </div>
 
     <div class="dv3-tab-panel on" id="dv3-det">
+      ${exclusivaBanner}
       ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
-      <div class="dv3-specs-grid">${specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')}</div>
+      ${!esExclusiva && !cfg.specs ? '<div class="dv3-specs-grid">'+specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')+'</div>' : (!esExclusiva ? '' : '')}
       ${prop.produccion ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Producci&oacute;n</span>'+escapeHtml(prop.produccion)+'</div>' : ''}
       ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-desc">
-      ${prop.hook ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
+      ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Descripción disponible previa consulta.</div>' : ''}
+      ${(!esExclusiva&&!cfg.descripcion&&prop.hook) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
       <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
       <div class="dv3-desc">${renderDesc(prop.description)}</div>
       ${prop.ubicacionGeneral ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-chars">
-      ${renderCaracteristicas(prop.caracteristicas||[])}
+      ${(esExclusiva||cfg.caracteristicas) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Características disponibles previa consulta.</div>' : renderCaracteristicas(prop.caracteristicas||[])}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-media">
