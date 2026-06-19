@@ -121,6 +121,12 @@ section{padding:20px 6%}
 .pc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.97) 0%,rgba(13,27,62,.25) 50%,transparent 100%)}
 .pc-badge{position:absolute;top:14px;left:14px;background:var(--or);color:var(--ink);font-size:.54rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:4px 9px}
 .pc-badge.renta{background:var(--bl)}
+.pc-badge-excl{position:absolute;top:14px;right:14px;background:var(--ink);color:var(--or);border:1px solid var(--or);font-size:.54rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px}
+.pc-badge-new{position:absolute;top:14px;right:14px;background:#22c55e;color:#000;font-size:.54rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px}
+.pc-fav{position:absolute;bottom:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:transform .15s}
+.pc-fav:hover{transform:scale(1.1)}
+.pc-fav svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;transition:fill .15s,stroke .15s}
+.pc-fav.active svg{fill:var(--or);stroke:var(--or)}
 .pc-info{position:absolute;bottom:22px;left:20px;right:20px}
 .pc-tipo{font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
 .pc-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;line-height:1.2;margin-bottom:7px}
@@ -669,6 +675,30 @@ function cardGoto(id,idx){
   var dots=document.getElementById(id+'-dots');
   if(dots)dots.querySelectorAll('.card-dot').forEach(function(d,i){d.classList.toggle('active',i===idx);});
 }
+var FAV_KEY='zona_favoritos_v1';
+function getFavs(){
+  try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]');}catch(e){return [];}
+}
+function isFav(slug){
+  return getFavs().indexOf(slug)>=0;
+}
+function toggleFav(slug,btn){
+  event.preventDefault();event.stopPropagation();
+  var favs=getFavs();
+  var idx=favs.indexOf(slug);
+  if(idx>=0){favs.splice(idx,1);}else{favs.push(slug);}
+  try{localStorage.setItem(FAV_KEY,JSON.stringify(favs));}catch(e){}
+  if(btn)btn.classList.toggle('active',idx<0);
+  var counter=document.getElementById('favCounter');
+  if(counter)counter.textContent=favs.length;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var favs=getFavs();
+  document.querySelectorAll('.pc-fav').forEach(function(btn){
+    var slug=btn.getAttribute('data-slug');
+    if(favs.indexOf(slug)>=0)btn.classList.add('active');
+  });
+});
 </script>
 </html>`;
 }
