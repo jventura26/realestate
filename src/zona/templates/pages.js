@@ -516,6 +516,13 @@ function detailPage(prop, all) {
   // Configuración de privacidad (declarado primero para usar en jsonLd, meta, etc.)
   const cfg = prop.privConfig || {};
   const esExclusiva = prop.esExclusiva || cfg.exclusiva || false;
+  const isNewListing = (() => {
+    if (!prop.fechaPublicacion) return false;
+    const pubDate = new Date(prop.fechaPublicacion);
+    if (isNaN(pubDate.getTime())) return false;
+    const daysSince = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60 * 24);
+    return daysSince >= 0 && daysSince <= 7;
+  })();
   const related  = getRelated(prop, all);
   const img      = prop.mainImage || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=70';
   const propUrl  = `${DOMAIN}/propiedades/${prop.slug}.html`;
@@ -635,6 +642,7 @@ function detailPage(prop, all) {
 .dv3-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 50%,transparent 100%)}
 .dv3-hero-content{position:absolute;bottom:0;left:0;right:0;padding:28px 5% 32px}
 .dv3-badge{display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#000;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px}
+.dv3-badge-new{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#000;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px;margin-left:6px}
 .dv3-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:400;color:#fff;line-height:1.1;margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
 .dv3-loc{font-size:.75rem;color:rgba(255,255,255,.75);letter-spacing:.06em;display:flex;align-items:center;gap:6px}
 .dv3-gal{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#000}
@@ -752,6 +760,7 @@ function detailPage(prop, all) {
   <div class="dv3-hero-overlay"></div>
   <div class="dv3-hero-content">
     <div class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</div>
+    ${isNewListing ? '<span class="dv3-badge-new">&#10024; Nuevo</span>' : ''}
     <h1 class="dv3-title">${escapeHtml(prop.title)}</h1>
     <div class="dv3-loc">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -784,6 +793,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       <button class="dv3-tab" onclick="dv3Tab('desc',this)">Descripci&oacute;n</button>
       ${(prop.caracteristicas&&prop.caracteristicas.length) ? '<button class="dv3-tab" onclick="dv3Tab(\'chars\',this)">Caracter&iacute;sticas</button>' : ''}
       ${(prop.videoTour||prop.plano) ? '<button class="dv3-tab" onclick="dv3Tab(\'media\',this)">Video / Plano</button>' : ''}
+      ${(!esExclusiva&&!cfg.ubicacion&&prop.lat&&prop.lng) ? '<button class="dv3-tab" onclick="dv3Tab(\'mapa\',this)">Ubicaci&oacute;n</button>' : ''}
     </div>
 
     <div class="dv3-tab-panel on" id="dv3-det">
@@ -810,6 +820,16 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       ${prop.videoTour ? '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div><div class="dv3-video-wrap"><iframe src="'+prop.videoTour.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div></div>' : ''}
       ${prop.plano ? '<div><div class="dv3-ref-l" style="margin-bottom:12px">Plano de planta</div><img class="dv3-plano" src="'+escapeHtml(prop.plano)+'" alt="Plano '+escapeHtml(prop.title)+'" loading="lazy"></div>' : ''}
     </div>
+
+    ${(!esExclusiva&&!cfg.ubicacion&&prop.lat&&prop.lng) ? `<div class="dv3-tab-panel" id="dv3-mapa">
+      <div class="dv3-video-wrap" style="padding-bottom:50%">
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${parseFloat(prop.lng)-0.01}%2C${parseFloat(prop.lat)-0.01}%2C${parseFloat(prop.lng)+0.01}%2C${parseFloat(prop.lat)+0.01}&layer=mapnik&marker=${prop.lat}%2C${prop.lng}" loading="lazy"></iframe>
+      </div>
+      <a href="https://www.google.com/maps?q=${prop.lat},${prop.lng}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:.75rem;color:var(--or)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Abrir en Google Maps
+      </a>
+    </div>` : ''}
 
   </div>
 
