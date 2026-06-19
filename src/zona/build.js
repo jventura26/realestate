@@ -137,9 +137,22 @@ if(fs.existsSync(src404)) {
 
 const aboutSrc = path.join(__dirname, 'about.html');
 const blogSrc = path.join(__dirname, 'blog.html');
-const art1Src = path.join(__dirname, 'guia-inversion-real-estate-2026.html');
-const art2Src = path.join(__dirname, 'zona-10-vs-zona-14.html');
-const art3Src = path.join(__dirname, 'senales-alerta-comprar-propiedad.html');
+
+// Todos los artículos de blog que deben copiarse al output.
+// IMPORTANTE: cada artículo nuevo que se cree en src/zona/ debe agregarse aquí,
+// o el build lo dejará fuera silenciosamente (fue la causa de un 404 real en producción).
+const blogArticles = [
+  'guia-inversion-real-estate-2026.html',
+  'zona-10-vs-zona-14.html',
+  'senales-alerta-comprar-propiedad.html',
+  'futuro-real-estate-guatemala-2030.html',
+  'maximizar-roi-propiedades-alquiler.html',
+  'cuanto-cuesta-casa-fraijanes-2026.html',
+  'como-comprar-finca-guatemala.html',
+  'mejores-zonas-vivir-guatemala.html',
+  'proceso-comprar-casa-guatemala.html',
+  'precios-casas-zona-10-guatemala.html',
+];
 
 const adminSrc = path.join(__dirname, 'admin.html');
 if(fs.existsSync(adminSrc)) {
@@ -158,18 +171,15 @@ if(fs.existsSync(blogSrc)) {
   fs.copyFileSync(blogSrc, path.join(OUT, 'blog.html'));
   console.log('   ✔  blog.html');
 }
-if(fs.existsSync(art1Src)) {
-  fs.copyFileSync(art1Src, path.join(OUT, 'guia-inversion-real-estate-2026.html'));
-  console.log('   ✔  blog/art1.html');
-}
-if(fs.existsSync(art2Src)) {
-  fs.copyFileSync(art2Src, path.join(OUT, 'zona-10-vs-zona-14.html'));
-  console.log('   ✔  blog/art2.html');
-}
-if(fs.existsSync(art3Src)) {
-  fs.copyFileSync(art3Src, path.join(OUT, 'senales-alerta-comprar-propiedad.html'));
-  console.log('   ✔  blog/art3.html');
-}
+blogArticles.forEach(filename => {
+  const srcFile = path.join(__dirname, filename);
+  if (fs.existsSync(srcFile)) {
+    fs.copyFileSync(srcFile, path.join(OUT, filename));
+    console.log('   ✔  ' + filename);
+  } else {
+    console.warn('   ⚠️  Artículo listado pero NO encontrado: ' + filename);
+  }
+});
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(`   ✔  ${props.length} detail pages`);
