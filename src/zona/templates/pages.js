@@ -11,17 +11,29 @@ function waLink(msg) {
 
 // ── Card ─────────────────────────────────────────────────────────────
 function card(p) {
-  const imgs = (p.gallery && p.gallery.length > 0) ? p.gallery : [p.mainImageThumb || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'];
+  const cfg = p.privConfig || {};
+  const esExclusiva = p.esExclusiva || cfg.exclusiva || false;
+  const isNewListing = (() => {
+    if (!p.fechaPublicacion) return false;
+    const pubDate = new Date(p.fechaPublicacion);
+    if (isNaN(pubDate.getTime())) return false;
+    const daysSince = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60 * 24);
+    return daysSince >= 0 && daysSince <= 7;
+  })();
+  const imgs = (p.gallery && p.gallery.length > 0 && !(esExclusiva||cfg.fotos)) ? p.gallery : [p.mainImageThumb || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'];
   const img = imgs[0];
   const hasGallery = imgs.length > 1;
   const badgeClass = (p.cinta||'').toLowerCase() === 'renta' ? 'renta' : '';
   const badge = p.cinta || '';
   const meta = [];
-  if (p.habitaciones && p.habitaciones !== '0') meta.push(p.habitaciones + ' Hab.');
-  if (p.banos        && p.banos        !== '0') meta.push(p.banos + ' Baños');
-  if (ca(p.areaConst)) meta.push(ca(p.areaConst));
+  if (!esExclusiva && !cfg.specs) {
+    if (p.habitaciones && p.habitaciones !== '0') meta.push(p.habitaciones + ' Hab.');
+    if (p.banos        && p.banos        !== '0') meta.push(p.banos + ' Baños');
+    if (ca(p.areaConst)) meta.push(ca(p.areaConst));
+  }
   const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
   const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(u)));
+  const priceLabel = (esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(p.priceFormatted);
 
   // Flechas del carrusel solo si hay galeria
   const arrows = hasGallery ? `
@@ -31,6 +43,8 @@ function card(p) {
   ` : '';
 
   const photoCount = hasGallery ? `<span class="card-photo-count">&#128247; ${imgs.length}</span>` : '';
+  const exclusivaBadge = esExclusiva ? `<span class="pc-badge-excl">&#10022; Exclusiva</span>` : '';
+  const newBadge = (!esExclusiva && isNewListing) ? `<span class="pc-badge-new">&#10024; Nuevo</span>` : '';
 
   return `<div class="prop-card-wrap" id="${cardId}" data-imgs='${imgsJson}' data-idx="0">
   <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
@@ -40,13 +54,18 @@ function card(p) {
     <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy" id="${cardId}-img">
     <div class="pc-ov"></div>
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
+    ${exclusivaBadge}
+    ${newBadge}
     ${photoCount}
+    <button class="pc-fav" data-slug="${escapeHtml(p.slug)}" onclick="toggleFav('${escapeHtml(p.slug)}',this)" aria-label="Guardar en favoritos">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>
     <div class="pc-info">
       <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(p.municipio)}</div>
       <div class="pc-title">${escapeHtml(p.title)}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="pc-price">${escapeHtml(p.priceFormatted)}</div>
+        <div class="pc-price">${priceLabel}</div>
         <span class="pc-arr">→</span>
       </div>
     </div>
@@ -58,9 +77,15 @@ function card(p) {
 // ── INDEX ─────────────────────────────────────────────────────────────
 function ca(area) {
   if (!area) return '';
-  const s = String(area).trim().replace(/^'+/, '');
+  let s = String(area).trim().replace(/^'+/, '');
   if (!s || s === '0' || s === '-' || s === '--' || s === '---') return '';
   if (/^0\s*(v²|m²|v2|m2)?$/.test(s)) return '';
+  // Si el valor viene con unidad de varas (dato legado mal cargado como "Área m²"),
+  // no lo mostramos como m² — el campo areaV2 ya cubre esa medida correctamente.
+  if (/v[²2]/i.test(s)) return '';
+  // Limpiar cualquier unidad de metros sobrante para dejar solo el número
+  s = s.replace(/\s*m[²2]\s*$/i, '').trim();
+  if (!s) return '';
   return s;
 }
 
