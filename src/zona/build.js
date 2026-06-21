@@ -30,23 +30,29 @@ function cleanArea(area) {
   return s.replace(/^'+/, '').trim();
 }
 function normalizeKV(kvProps) {
-  return kvProps.map(p => ({
+  return kvProps.map(p => {
+    const rawPrice = p.precio || '';
+    const parsedNum = rawPrice ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : NaN;
+    const safeNum = isNaN(parsedNum) ? 0 : parsedNum;
+    return ({
     ...p,
     title: p.titulo || p.title || '',
     description: p.descripcion || p.description || '',
     priceFormatted: p.priceFormatted || (function(){
-      const raw = p.precio || '';
-      if (!raw) return '';
-      const isUSD = raw.includes('$') || raw.toUpperCase().includes('USD');
-      const isQ = raw.startsWith('Q') || raw.toUpperCase().startsWith('Q ');
-      const num = parseFloat(raw.replace(/[^0-9.]/g, ''));
-      if (isNaN(num)) return raw;
-      const fmt = num.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+      if (!rawPrice) return '';
+      const isUSD = rawPrice.includes('$') || rawPrice.toUpperCase().includes('USD');
+      const isQ = rawPrice.startsWith('Q') || rawPrice.toUpperCase().startsWith('Q ');
+      if (isNaN(parsedNum)) return rawPrice;
+      const fmt = parsedNum.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
       if (isUSD) return '$' + fmt;
       if (isQ) return 'Q ' + fmt;
-      return raw;
+      return rawPrice;
     })(),
-    priceNumeric: p.priceNumeric || 0,
+    // IMPORTANTE: priceNumeric se calcula del texto en `precio` porque el admin nunca
+    // envía un priceNumeric explícito. Si en el futuro el admin lo calculara y lo guardara,
+    // p.priceNumeric tendría prioridad aquí (fue la causa real de que los filtros de precio
+    // y el ordenamiento por precio mostraran 0 resultados en producción).
+    priceNumeric: (p.priceNumeric && p.priceNumeric > 0) ? p.priceNumeric : safeNum,
     locationFull: p.locationFull || p.zona || '',
     mainImage: p.mainImage || p.imagen || '',
     mainImageThumb: p.mainImageThumb || p.imagen || '',
@@ -56,7 +62,8 @@ function normalizeKV(kvProps) {
     estado: p.estado || 'Activa',
     area: cleanArea(p.area || p.areaConst || ''),
     areaConst: cleanArea(p.areaConst || p.area || ''),
-  }));
+  });
+  });
 }
 
 const path = require('path');
