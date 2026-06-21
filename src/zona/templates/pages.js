@@ -819,6 +819,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       ${(prop.caracteristicas&&prop.caracteristicas.length) ? '<button class="dv3-tab" onclick="dv3Tab(\'chars\',this)">Caracter&iacute;sticas</button>' : ''}
       ${(prop.videoTour||prop.plano) ? '<button class="dv3-tab" onclick="dv3Tab(\'media\',this)">Video / Plano</button>' : ''}
       ${(!esExclusiva&&!cfg.ubicacion&&prop.lat&&prop.lng) ? '<button class="dv3-tab" onclick="dv3Tab(\'mapa\',this)">Ubicaci&oacute;n</button>' : ''}
+      ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? '<button class="dv3-tab" onclick="dv3Tab(\'hipoteca\',this)">Calculadora</button>' : ''}
     </div>
 
     <div class="dv3-tab-panel on" id="dv3-det">
@@ -854,6 +855,38 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         Abrir en Google Maps
       </a>
+    </div>` : ''}
+
+    ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? `<div class="dv3-tab-panel" id="dv3-hipoteca">
+      <div class="dv3-ref-l" style="margin-bottom:14px">Estimaci&oacute;n de cuota mensual</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+        <div>
+          <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Enganche (%)</label>
+          <input type="range" id="hipEnganche" min="10" max="50" step="5" value="20" oninput="dv3CalcHipoteca()" style="width:100%">
+          <div style="font-size:.78rem;color:var(--sv);margin-top:4px"><span id="hipEngancheVal">20</span>%</div>
+        </div>
+        <div>
+          <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Plazo (a&ntilde;os)</label>
+          <input type="range" id="hipPlazo" min="5" max="30" step="5" value="20" oninput="dv3CalcHipoteca()" style="width:100%">
+          <div style="font-size:.78rem;color:var(--sv);margin-top:4px"><span id="hipPlazoVal">20</span> a&ntilde;os</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+        <div>
+          <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Tasa de inter&eacute;s anual (%)</label>
+          <input type="number" id="hipTasa" value="9.5" step="0.1" min="1" max="25" oninput="dv3CalcHipoteca()" style="width:100%;padding:8px 10px;background:var(--ink2);border:1px solid var(--bd);border-radius:4px;color:var(--wh);font-size:.85rem">
+        </div>
+      </div>
+      <div class="dv3-datos" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--mt);font-size:.75rem">Precio de la propiedad</span><strong id="hipPrecioBase" style="color:var(--sv)"></strong></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--mt);font-size:.75rem">Enganche estimado</span><strong id="hipEngancheMonto" style="color:var(--sv)"></strong></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--mt);font-size:.75rem">Monto a financiar</span><strong id="hipMontoFinanciar" style="color:var(--sv)"></strong></div>
+      </div>
+      <div style="background:rgba(245,130,13,.1);border:1px solid rgba(245,130,13,.3);border-radius:6px;padding:18px;text-align:center;margin-bottom:10px">
+        <div style="font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Cuota mensual estimada</div>
+        <div id="hipCuotaMensual" style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--wh)"></div>
+      </div>
+      <p style="font-size:.68rem;color:var(--mt);line-height:1.6">Esta es una estimaci&oacute;n informativa basada en una tasa de referencia y no constituye una oferta de financiamiento. La aprobaci&oacute;n final, tasa real y condiciones dependen del banco y de tu perfil crediticio.</p>
     </div>` : ''}
 
   </div>
@@ -973,7 +1006,37 @@ function dv3Tab(id,btn){
   if(el)el.classList.add('on');
   btn.classList.add('on');
 }
+var _dv3PrecioBase=${(!esExclusiva&&!cfg.precio) ? (prop.priceNumeric||0) : 0};
+var _dv3Moneda=${JSON.stringify((prop.priceFormatted||'').includes('$') ? '$' : 'Q')};
+function dv3FmtMoneda(n){
+  return _dv3Moneda+' '+Math.round(n).toLocaleString('en-US');
+}
+function dv3CalcHipoteca(){
+  var engPct=parseFloat(document.getElementById('hipEnganche').value)||20;
+  var plazoAnios=parseFloat(document.getElementById('hipPlazo').value)||20;
+  var tasaAnual=parseFloat(document.getElementById('hipTasa').value)||9.5;
+  document.getElementById('hipEngancheVal').textContent=engPct;
+  document.getElementById('hipPlazoVal').textContent=plazoAnios;
+  if(!_dv3PrecioBase)return;
+  var enganche=_dv3PrecioBase*(engPct/100);
+  var monto=_dv3PrecioBase-enganche;
+  var tasaMensual=(tasaAnual/100)/12;
+  var nPagos=plazoAnios*12;
+  var cuota=tasaMensual>0
+    ? monto*(tasaMensual*Math.pow(1+tasaMensual,nPagos))/(Math.pow(1+tasaMensual,nPagos)-1)
+    : monto/nPagos;
+  var elPrecio=document.getElementById('hipPrecioBase');
+  var elEng=document.getElementById('hipEngancheMonto');
+  var elMonto=document.getElementById('hipMontoFinanciar');
+  var elCuota=document.getElementById('hipCuotaMensual');
+  if(elPrecio)elPrecio.textContent=dv3FmtMoneda(_dv3PrecioBase);
+  if(elEng)elEng.textContent=dv3FmtMoneda(enganche);
+  if(elMonto)elMonto.textContent=dv3FmtMoneda(monto);
+  if(elCuota)elCuota.textContent=dv3FmtMoneda(cuota)+' / mes';
+}
+if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
 <\/script>`;
+
 
 
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${(esExclusiva||cfg.precio)?'Precio a consultar':prop.priceFormatted}. ${(!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0')?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
