@@ -221,10 +221,10 @@ export default {
     if (method === 'PUT' && path.startsWith('/api/propiedades/')) {
       const authed = await requireAuth(request, env);
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
-      const id = path.slice('/api/propiedades/'.length);
+      const id = decodeURIComponent(path.slice('/api/propiedades/'.length));
       const raw = await env.DB.get('propiedades');
       const data = raw ? JSON.parse(raw) : [];
-      const idx = data.findIndex(p => p.id === id);
+      const idx = data.findIndex(p => (p.id || p.slug || '') === id);
       if (idx < 0) return jsonRes({ error: 'No encontrado' }, 404);
       let body;
       try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
@@ -246,7 +246,7 @@ export default {
       if (!id) return jsonRes({ error: 'ID requerido' }, 400);
       const raw = await env.DB.get('propiedades');
       const data = raw ? JSON.parse(raw) : [];
-      const idx = data.findIndex(p => p.id === id);
+      const idx = data.findIndex(p => (p.id || p.slug || '') === id);
       if (idx < 0) return jsonRes({ error: 'No encontrado' }, 404);
       if (!body.slug && body.titulo) {
         body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -260,10 +260,13 @@ export default {
     if (method === 'DELETE' && path.startsWith('/api/propiedades/')) {
       const authed = await requireAuth(request, env);
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
-      const id = path.slice('/api/propiedades/'.length);
+      const id = decodeURIComponent(path.slice('/api/propiedades/'.length));
       const raw = await env.DB.get('propiedades');
       const data = raw ? JSON.parse(raw) : [];
-      const filtered = data.filter(p => p.id !== id);
+      const filtered = data.filter(p => {
+        const pid = p.id || p.slug || '';
+        return pid !== id;
+      });
       await env.DB.put('propiedades', JSON.stringify(filtered));
       return jsonRes({ ok: true });
     }
