@@ -210,7 +210,7 @@ export default {
       body.id = String(Date.now());
       body.createdAt = new Date().toISOString();
       if (!body.slug && body.titulo) {
-        body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
       }
       data.push(body);
       await env.DB.put('propiedades', JSON.stringify(data));
@@ -229,7 +229,7 @@ export default {
       let body;
       try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
       if (!body.slug && body.titulo) {
-        body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
       }
       data[idx] = { ...data[idx], ...body, id };
       await env.DB.put('propiedades', JSON.stringify(data));
@@ -249,7 +249,7 @@ export default {
       const idx = data.findIndex(p => p.id === id);
       if (idx < 0) return jsonRes({ error: 'No encontrado' }, 404);
       if (!body.slug && body.titulo) {
-        body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        body.slug = body.titulo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
       }
       data[idx] = { ...data[idx], ...body, id };
       await env.DB.put('propiedades', JSON.stringify(data));
