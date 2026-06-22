@@ -169,6 +169,9 @@ section{padding:20px 6%}
 @keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 .div-line{height:1px;background:var(--bd);margin:16px 0}
 /* FLOAT WA */
+.hero-sug-item{padding:10px 14px;cursor:pointer;font-size:.82rem;color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.06);transition:background .15s}
+.hero-sug-item:hover{background:rgba(245,130,13,.15)}
+.hero-sug-item:last-child{border-bottom:none}
 .wa-float{position:fixed;bottom:26px;right:26px;z-index:300;width:52px;height:52px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(245,130,13,.4);transition:all .3s;animation:wfp 3s ease-in-out infinite}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(245,130,13,.5)}
 @keyframes wfp{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.07)}}
