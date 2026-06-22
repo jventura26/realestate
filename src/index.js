@@ -236,6 +236,7 @@ export default {
       }
       data.push(body);
       await env.DB.put('propiedades', JSON.stringify(data));
+      triggerRebuild(); // auto-deploy al crear
       return jsonRes({ ok: true, id: body.id });
     }
 
@@ -255,6 +256,7 @@ export default {
       }
       data[idx] = { ...data[idx], ...body, id };
       await env.DB.put('propiedades', JSON.stringify(data));
+      triggerRebuild(); // auto-deploy al editar
       return jsonRes({ ok: true, prop: data[idx] });
     }
 
@@ -275,6 +277,7 @@ export default {
       }
       data[idx] = { ...data[idx], ...body, id };
       await env.DB.put('propiedades', JSON.stringify(data));
+      triggerRebuild(); // auto-deploy al editar
       return jsonRes({ ok: true, prop: data[idx] });
     }
 
@@ -290,6 +293,7 @@ export default {
         return pid !== id;
       });
       await env.DB.put('propiedades', JSON.stringify(filtered));
+      triggerRebuild(); // auto-deploy al eliminar
       return jsonRes({ ok: true });
     }
 
