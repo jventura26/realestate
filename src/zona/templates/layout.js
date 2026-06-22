@@ -5,7 +5,8 @@ const WA        = '50245542088';
 
 const WA_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
-function layout({ title, desc, canonical, ogImage, body, scripts = '',
+// CAMBIO 3: ogType = 'website' como parámetro por defecto
+function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scripts = '',
                   pixelId = '1668269500330907', ga4Id = 'G-5KVQZYZ7B3' }) {
   const pageTitle = title
     ? `${escapeHtml(title)} | Zona INNmueble`
@@ -30,7 +31,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
   "@type": "RealEstateAgent",
   "name": "Zona INNmueble",
   "url": "https://zona-innmueble.com",
-  "logo": "https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png",
+  "logo": "https://zona-innmueble.com/assets/images/logo.png",
   "image": "https://zona-innmueble.com/assets/og.jpg",
   "description": "Inmobiliaria premium en Guatemala. Casas, fincas y apartamentos en venta en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador.",
   "telephone": "+50245542088",
@@ -46,7 +47,7 @@ function layout({ title, desc, canonical, ogImage, body, scripts = '',
   ]
 }
 </script>
-<meta property="og:type"        content="website">
+<meta property="og:type"        content="${ogType}">
 <meta property="og:title"       content="${pageTitle}">
 <meta property="og:description" content="${metaDesc}">
 <meta property="og:url"         content="${canon}">
@@ -405,7 +406,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
@@ -463,12 +464,13 @@ ${body}
         <li style="font-size:.8rem;color:var(--sv)">📞 +502 4554-2088</li>
         <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
         <li><a href="/about.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Nosotros</a></li>
+        <li><a href="/privacidad.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Privacidad</a></li>
       </ul>
     </div>
   </div>
   <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
     <span style="font-size:.72rem;color:var(--mt)">© 2026 Zona INNmueble Real Estate · Guatemala</span>
-    <span style="font-size:.72rem;color:var(--mt)">Premium Real Estate · Propiedades verificadas</span>
+    <a href="/privacidad.html" style="font-size:.72rem;color:var(--mt);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">Política de Privacidad</a>
   </div>
   <style>
     @media(max-width:768px){
@@ -491,7 +493,7 @@ function animateCounters() {
     const target = parseInt(counter.getAttribute('data-target'));
     if(!target || counter.dataset.animated) return;
     counter.dataset.animated = '1';
-    
+
     let current = 0;
     const increment = target / 30;
     const timer = setInterval(() => {
@@ -549,7 +551,6 @@ document.querySelectorAll('.counter').forEach(el => {
 });
 
 // NEWSLETTER BREVO INTEGRATION
-// API Key configured in Cloudflare Environment Variables
 const BREVO_API_KEY = window.BREVO_API_KEY || 'CONFIGURE_IN_CLOUDFLARE_ENV';
 const BREVO_LIST_ID = 3;
 
@@ -591,16 +592,14 @@ if(hamburger && navLinks) {
     navLinks.classList.toggle('active');
     hamburger.classList.toggle('active');
   });
-  
-  // Cerrar menú al hacer click en un link
+
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('active');
       hamburger.classList.remove('active');
     });
   });
-  
-  // Cerrar menú al hacer click fuera
+
   document.addEventListener('click', (e) => {
     if(!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
       navLinks.classList.remove('active');
@@ -608,8 +607,6 @@ if(hamburger && navLinks) {
     }
   });
 }
-
-// Newsletter forms listener
 
 // Fade in al scroll con Intersection Observer
 const fadeEls = document.querySelectorAll('.fade-in-up');
@@ -644,7 +641,7 @@ document.querySelectorAll('.newsletter-form').forEach(form => {
     btn.textContent = 'Suscribiendo...';
 
     const result = await subscribeNewsletter(email);
-    
+
     if (result.success) {
       input.value = '';
       btn.textContent = '¡Suscrito!';
@@ -661,6 +658,7 @@ document.querySelectorAll('.newsletter-form').forEach(form => {
     }
   });
 });
+
 // Carrusel de cards
 function cardSlide(id,dir){
   var wrap=document.getElementById(id);if(!wrap)return;
