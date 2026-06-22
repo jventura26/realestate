@@ -816,10 +816,10 @@ function detailPage(prop, all) {
 .dv3-agent-role{font-size:.65rem;color:var(--mt);margin-top:2px}
 .dv3-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#25D366;animation:lp 2s ease-in-out infinite;margin-right:6px;flex-shrink:0;vertical-align:middle}
 .dv3-avail{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#25D366;margin-bottom:16px;display:flex;align-items:center}
-.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#25D366;color:#fff;padding:13px 16px;border-radius:4px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
+.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:13px 16px;border-radius:4px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
 .dv3-wa-btn:hover{filter:brightness(1.1)}
-.dv3-wa-btn.outline{background:transparent;border:1px solid #25D366;color:#25D366}
-.dv3-wa-btn.outline:hover{background:#25D366;color:#fff}
+.dv3-wa-btn.outline{background:transparent;border:1px solid rgba(37,211,102,.3);color:rgba(255,255,255,.7)}
+.dv3-wa-btn.outline:hover{background:#0d1b3e;border-color:rgba(37,211,102,.5);color:#fff}
 .dv3-divider{height:1px;background:var(--bd);margin:18px 0}
 .dv3-form-title{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
 .dv3-input{width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit;margin-bottom:8px;outline:none;transition:border-color .2s;box-sizing:border-box}
@@ -834,8 +834,8 @@ function detailPage(prop, all) {
 .dv3-more-link:last-child{border-bottom:none;padding-bottom:0}
 .dv3-more-link:hover{color:var(--or)}
 .dv3-wa-float{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 14px;background:var(--ink);border-top:1px solid var(--bd);gap:8px;align-items:center}
-.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#25D366;color:#fff;padding:12px 8px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
-.dv3-wa-float a.sec{background:transparent;border:1px solid #25D366;color:#25D366}
+.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:12px 8px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
+.dv3-wa-float a.sec{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
 /* LIGHTBOX */
 .dv3-lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
 .dv3-lb.open{display:flex}
@@ -1392,7 +1392,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
         <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Tipos disponibles</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">${tiposEnZona.map(t=>`<span style="background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:100px;padding:4px 10px;font-size:.65rem;color:var(--sv)">${escapeHtml(t)}</span>`).join('')}</div>
       </div>` : ''}
-      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero ver propiedades en ' + info.titulo + ', Guatemala.')}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;padding:13px 20px;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none;margin-bottom:10px">
+      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero ver propiedades en ' + info.titulo + ', Guatemala.')}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#0d1b3e;border:1px solid rgba(37,211,102,.3);color:#fff;padding:13px 20px;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none;margin-bottom:10px">
         ${WA_SVG} Consultar disponibilidad
       </a>
       <p style="text-align:center;font-size:.62rem;color:var(--mt);margin:0">Respuesta en menos de 2 horas · Sin compromiso</p>
@@ -1441,7 +1441,7 @@ ${info.lifestyle && info.lifestyle.length ? `
         <p style="font-size:.82rem;color:var(--sv);line-height:1.9;margin-bottom:24px;font-weight:300">
           Nuestro equipo conoce cada propiedad, cada colonia y cada micro-mercado de ${escapeHtml(info.titulo.split('—')[0].trim())}. Dinos qué buscas.
         </p>
-        <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, busco una propiedad en ' + info.titulo + '. ¿Qué opciones tienen disponibles?')}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 18px;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none;margin-bottom:10px">
+        <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, busco una propiedad en ' + info.titulo + '. ¿Qué opciones tienen disponibles?')}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;background:#0d1b3e;border:1px solid rgba(37,211,102,.3);color:#fff;padding:12px 18px;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none;margin-bottom:10px">
           ${WA_SVG} Escribir ahora
         </a>
         <a href="/propiedades.html" style="display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--gl);color:var(--sv);padding:11px 18px;border-radius:8px;font-size:.68rem;font-weight:600;text-decoration:none;letter-spacing:.06em;text-transform:uppercase">
@@ -1468,7 +1468,7 @@ ${info.lifestyle && info.lifestyle.length ? `
       <p style="font-size:.85rem;color:var(--sv);margin-bottom:6px">No hay propiedades activas en esta zona por el momento</p>
       <small style="font-size:.72rem;color:var(--mt)">Contáctanos y te avisamos cuando haya disponibilidad</small>
       <div style="margin-top:22px">
-        <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, me interesa una propiedad en ' + info.titulo + '. ¿Cuándo tendrán disponibilidad?')}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:10px 20px;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none">
+        <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, me interesa una propiedad en ' + info.titulo + '. ¿Cuándo tendrán disponibilidad?')}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#0d1b3e;border:1px solid rgba(37,211,102,.3);color:#fff;padding:10px 20px;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none">
           ${WA_SVG} Avisar cuando haya disponibilidad
         </a>
       </div>
