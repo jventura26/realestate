@@ -12,7 +12,7 @@
   --wh:#fff;--bg:#F0F2F5;
   --text:#1A1A2E;--text2:#4A5568;--text3:#8A9BB0;
   --border:#E2E8F0;--border2:#CBD5E0;
-  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
@@ -29,7 +29,7 @@ a{text-decoration:none;color:inherit}
 .login-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
 .login-field input{width:100%;padding:10px 13px;border:1.5px solid var(--border2);border-radius:7px;font-size:14px;outline:none;transition:border-color .15s}
 .login-field input:focus{border-color:var(--or)}
-#loginBtn{width:100%;padding:12px;background:var(--navy);color:var(--wh);border:none;border-radius:7px;font-weight:700;font-size:14px;cursor:pointer}
+#loginBtn{width:100%;padding:12px;background:var(--navy);color:var(--wh);border:none;border-radius:7px;font-weight:700;font-size:14px;cursor:pointer;transition:background .15s}
 #loginBtn:hover{background:var(--navy3)}
 #loginErr{background:#FEF2F2;color:#B91C1C;border-radius:6px;padding:10px 14px;font-size:13px;margin-top:12px;display:none}
 
@@ -50,6 +50,7 @@ a{text-decoration:none;color:inherit}
 .sb-item.active{color:var(--wh);background:rgba(245,130,13,.15);border-right-color:var(--or)}
 .sb-item i{font-size:17px;flex-shrink:0}
 .sb-badge{margin-left:auto;background:var(--or);color:var(--navy);font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
+.sb-badge.new{background:var(--green)}
 .sb-bottom{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08)}
 .sb-user{display:flex;align-items:center;gap:10px}
 .sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--navy);flex-shrink:0}
@@ -70,79 +71,122 @@ a{text-decoration:none;color:inherit}
 .btn-navy:hover{background:var(--navy3)}
 .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
 .btn-ghost:hover{background:var(--bg)}
+.btn-green{background:var(--green);color:var(--wh)}
 .btn-sm{padding:5px 12px;font-size:11px}
 .btn i{font-size:15px}
 
-/* STATS */
+/* DASHBOARD STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
-.stat-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.stat-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--or)}
+.stat-card.green::before{background:var(--green)}
+.stat-card.blue::before{background:var(--blue)}
+.stat-card.red::before{background:var(--red)}
+.stat-card.yellow::before{background:var(--yellow)}
 .stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px}
 .stat-val{font-size:28px;font-weight:800;color:var(--navy);line-height:1}
 .stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+.stat-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:28px;color:var(--border);opacity:.7}
+
+/* DASHBOARD GRID */
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:16px}
+@media(max-width:1100px){.dash-grid{grid-template-columns:1fr}}
 
 /* TABLE */
 .table-wrap{background:var(--wh);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .table-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border)}
-.search-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 12px;flex:1;max-width:300px}
+.table-title{font-size:13px;font-weight:700;color:var(--navy)}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 12px;flex:1;max-width:280px}
 .search-box i{font-size:16px;color:var(--text3)}
 .search-box input{border:none;background:transparent;outline:none;width:100%;font-size:13px;color:var(--text)}
 table{width:100%;border-collapse:collapse}
-th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:11px 16px;text-align:left;background:var(--bg);border-bottom:1px solid var(--border)}
-td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px}
+th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:11px 14px;text-align:left;background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#FAFBFF}
-.prop-img{width:52px;height:40px;border-radius:6px;object-fit:cover;background:var(--bg);border:1px solid var(--border)}
-.prop-name{font-weight:600;color:var(--navy)}
-.prop-loc{font-size:11px;color:var(--text3);margin-top:2px}
+.prop-img{width:48px;height:38px;border-radius:5px;object-fit:cover;background:var(--bg);border:1px solid var(--border);display:block}
+.prop-name{font-weight:600;color:var(--navy);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prop-loc{font-size:11px;color:var(--text3);margin-top:1px}
 .price-cell{font-weight:700;color:var(--or);white-space:nowrap}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
 .badge-green{background:#dcfce7;color:#166534}
 .badge-red{background:#fee2e2;color:#991b1b}
 .badge-gray{background:#f1f5f9;color:#475569}
 .badge-orange{background:#ffedd5;color:#9a3412}
-.actions-cell{display:flex;gap:6px}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-yellow{background:#fef3c7;color:#92400e}
+.actions-cell{display:flex;gap:5px}
 .icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .15s}
 .icon-btn:hover{background:var(--navy);color:var(--wh);border-color:var(--navy)}
 .icon-btn.danger:hover{background:var(--red);border-color:var(--red)}
+.icon-btn.success:hover{background:var(--green);border-color:var(--green)}
 .icon-btn i{font-size:15px}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:500;overflow-y:auto;padding:20px}
-.modal-overlay.open{display:block}
-.modal-panel{background:var(--wh);width:100%;max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.modal-topbar{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;gap:14px}
-.modal-topbar-title{font-size:15px;font-weight:700;color:var(--wh);flex:1}
-.modal-body{padding:0}
-.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:var(--wh)}
+/* COMPLETION BAR */
+.completion-bar{height:4px;background:var(--border);border-radius:2px;margin-top:4px;width:80px}
+.completion-fill{height:100%;border-radius:2px;transition:width .3s}
 
-/* FORM */
-.form-grid{display:grid;grid-template-columns:1fr 300px;gap:0}
-.form-left{padding:20px 20px 20px 24px;border-right:1px solid var(--border);max-height:80vh;overflow-y:auto}
-.form-right{padding:20px 24px 20px 20px;max-height:80vh;overflow-y:auto}
-.fsec{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:500;overflow-y:auto;padding:16px}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.modal-panel{background:var(--wh);width:100%;max-width:960px;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.4);display:flex;flex-direction:column;max-height:calc(100vh - 32px)}
+.modal-topbar{background:var(--navy);padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.modal-topbar-title{font-size:14px;font-weight:700;color:var(--wh);flex:1}
+.modal-progress{font-size:11px;color:rgba(255,255,255,.5);white-space:nowrap}
+.modal-body{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* FORM TABS */
+.form-tabs-nav{width:160px;background:#F8FAFC;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;padding:12px 0}
+.ftab{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;border-right:2px solid transparent;transition:all .15s}
+.ftab:hover{color:var(--navy);background:rgba(0,0,0,.03)}
+.ftab.active{color:var(--or);background:rgba(245,130,13,.06);border-right-color:var(--or);font-weight:700}
+.ftab i{font-size:16px;flex-shrink:0}
+.ftab-dot{width:6px;height:6px;border-radius:50%;background:var(--green);margin-left:auto;display:none}
+.ftab.has-data .ftab-dot{display:block}
+.form-tabs-body{flex:1;overflow-y:auto;padding:20px}
+.ftab-panel{display:none}
+.ftab-panel.active{display:block}
+.form-right{width:280px;border-left:1px solid var(--border);padding:16px;overflow-y:auto;flex-shrink:0;background:var(--bg)}
+
+/* FORM ELEMENTS */
+.fsec{margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border)}
 .fsec:last-child{border-bottom:none;margin-bottom:0}
-.fsec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.fsec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:7px}
 .fsec-title i{font-size:16px;color:var(--or)}
-.fg{margin-bottom:12px}
+.fg{margin-bottom:10px}
 .fg:last-child{margin-bottom:0}
 .fg label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;color:var(--text);background:var(--wh);outline:none;transition:border-color .15s}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--or)}
-.fg textarea{resize:vertical;min-height:72px}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--or);box-shadow:0 0 0 2px rgba(245,130,13,.1)}
+.fg textarea{resize:vertical;min-height:70px}
 .fg-row{display:grid;gap:10px}
 .fg-row.c2{grid-template-columns:1fr 1fr}
 .fg-row.c3{grid-template-columns:1fr 1fr 1fr}
 .fg-row.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+.fg-hint{font-size:11px;color:var(--text3);margin-top:3px}
+.fg-auto{font-size:11px;color:var(--blue);margin-top:2px;cursor:pointer}
 
 /* CHARS */
 .chars-group{margin-bottom:14px}
 .chars-group-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .chars-group-title i{font-size:14px;color:var(--or)}
-.chars-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.chars-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .char-item{display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s;user-select:none}
 .char-item:hover{border-color:var(--or)}
 .char-item input{width:13px;height:13px;accent-color:var(--or);cursor:pointer;flex-shrink:0;margin:0}
 .char-item.checked{background:#FFF8F2;border-color:var(--or);color:var(--navy);font-weight:500}
+
+/* PRIV CONFIG */
+.priv-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--border);border-radius:7px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
+.priv-toggle:hover{border-color:var(--or)}
+.priv-toggle label{font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;flex:1}
+.priv-toggle small{font-size:11px;color:var(--text3);display:block;font-weight:400}
+.toggle-switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:var(--border2);border-radius:10px;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:var(--wh);border-radius:50%;transition:.2s}
+.toggle-switch input:checked + .toggle-slider{background:var(--or)}
+.toggle-switch input:checked + .toggle-slider::before{transform:translateX(16px)}
 
 /* SHARE BOX */
 .share-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px;margin-bottom:14px}
@@ -157,45 +201,70 @@ tr:hover td{background:#FAFBFF}
 .priv-box .fg input,.priv-box .fg textarea{border-color:#FCD34D;background:#FFFDE7}
 
 /* SIDE CARDS */
-.side-card{background:var(--wh);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px}
+.side-card{background:var(--wh);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px}
 .side-card:last-child{margin-bottom:0}
-.side-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.side-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .side-card-title i{font-size:15px;color:var(--or)}
 .status-pills{display:flex;gap:6px;flex-wrap:wrap}
 .pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--text2);background:var(--bg);transition:all .15s}
 .pill.active{background:var(--or);color:var(--wh);border-color:var(--or)}
-.sitio-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-bottom:7px}
+.sitio-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;margin-bottom:6px;transition:border-color .15s}
 .sitio-row:last-child{margin-bottom:0}
 .sitio-row:hover{border-color:var(--or)}
 .sitio-row input{width:14px;height:14px;accent-color:var(--or)}
 .sitio-label{font-size:12px;font-weight:600;color:var(--navy)}
 .sitio-url{font-size:10px;color:var(--text3)}
-
-/* GALLERY */
-.img-preview{width:100%;height:120px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:none;margin-top:8px}
-.gal-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.img-preview{width:100%;height:110px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:none;margin-top:8px}
+.gal-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .gal-item{position:relative}
-.gal-item img{width:64px;height:50px;object-fit:cover;border-radius:5px;border:1px solid var(--border)}
-.gal-item button{position:absolute;top:2px;right:2px;background:var(--red);color:var(--wh);border:none;border-radius:3px;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.gal-item img{width:60px;height:46px;object-fit:cover;border-radius:5px;border:1px solid var(--border)}
+.gal-remove{position:absolute;top:-4px;right:-4px;background:var(--red);color:var(--wh);border:none;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+.gal-count{font-size:11px;color:var(--text3);margin-top:4px}
+.add-gal-btn{margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer;transition:border-color .15s}
+.add-gal-btn:hover{border-color:var(--or);color:var(--or)}
+
+/* MODAL FOOTER */
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg);flex-shrink:0}
+.modal-footer-left{display:flex;gap:8px}
+.modal-footer-right{display:flex;gap:8px}
 
 /* LEADS */
-.lead-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
-.lead-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.leads-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.lead-filter-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--text2);background:var(--wh);transition:all .15s}
+.lead-filter-btn.active{background:var(--navy);color:var(--wh);border-color:var(--navy)}
+.lead-card{background:var(--wh);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;transition:box-shadow .15s}
+.lead-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.lead-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px}
 .lead-name{font-size:14px;font-weight:700;color:var(--navy)}
-.lead-time{font-size:11px;color:var(--text3)}
-.lead-detail{font-size:12px;color:var(--text2);margin-bottom:4px}
-.wa-btn{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:var(--wh);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;margin-top:8px}
+.lead-time{font-size:11px;color:var(--text3);white-space:nowrap}
+.lead-detail{font-size:12px;color:var(--text2);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.lead-detail i{font-size:14px;color:var(--text3);flex-shrink:0}
+.lead-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.wa-btn{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:var(--wh);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s}
+.wa-btn:hover{background:#1ebe5d}
+.lead-status-sel{padding:5px 10px;border:1px solid var(--border2);border-radius:6px;font-size:12px;font-weight:600;outline:none;cursor:pointer;background:var(--wh)}
+.lead-note-btn{padding:5px 10px;border:1px solid var(--border2);border-radius:6px;font-size:12px;color:var(--text2);background:var(--wh);cursor:pointer;display:flex;align-items:center;gap:4px}
+.lead-note-area{margin-top:8px;display:none}
+.lead-note-area textarea{width:100%;padding:8px;border:1px solid var(--border2);border-radius:6px;font-size:12px;resize:none;outline:none}
+.lead-note-area textarea:focus{border-color:var(--or)}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--wh);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;display:flex;align-items:center;gap:8px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--wh);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;display:flex;align-items:center;gap:8px;max-width:320px}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left:4px solid var(--green)}
 .toast.error{border-left:4px solid var(--red)}
 
+/* REBUILD BTN */
+.rebuild-banner{background:linear-gradient(135deg,var(--navy),var(--navy3));border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.rebuild-text{color:rgba(255,255,255,.8);font-size:12px}
+.rebuild-text strong{color:var(--wh);display:block;margin-bottom:2px}
+
 @media(max-width:768px){
   .sidebar{display:none}
-  .form-grid{grid-template-columns:1fr}
-  .form-right{border-top:1px solid var(--border)}
+  .form-tabs-nav{display:none}
+  .form-right{width:100%;border-left:none;border-top:1px solid var(--border)}
+  .modal-body{flex-direction:column}
+  .dash-grid{grid-template-columns:1fr}
   .fg-row.c3,.fg-row.c4{grid-template-columns:1fr 1fr}
 }
 </style>
@@ -206,9 +275,9 @@ tr:hover td{background:#FAFBFF}
 <div id="loginPage">
   <div class="login-card">
     <div class="login-logo"><span>Zona</span>-INNmueble</div>
-    <div class="login-sub">Panel de administración v2</div>
+    <div class="login-sub">Panel de administración · Premium</div>
     <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
-    <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password"></div>
+    <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button id="loginBtn" onclick="doLogin()">Ingresar</button>
     <div id="loginErr">Usuario o contraseña incorrectos.</div>
   </div>
@@ -226,19 +295,19 @@ tr:hover td{background:#FAFBFF}
         <div class="sb-item active" id="nav-dashboard" onclick="showPage('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
         <div class="sb-section">Catálogo</div>
         <div class="sb-item" id="nav-propiedades" onclick="showPage('propiedades')"><i class="ti ti-building"></i> Propiedades</div>
-        <div class="sb-item" id="nav-nueva" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</div>
+        <div class="sb-item" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</div>
         <div class="sb-section">Clientes</div>
-        <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge" id="leadsCount">0</span></div>
+        <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge new" id="leadsCount">0</span></div>
         <div class="sb-section">Sitios</div>
-        <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Zona INNmueble</div>
-        <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> InmuHub</div>
+        <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Ver sitio</div>
+        <div class="sb-item" onclick="triggerRebuild()"><i class="ti ti-refresh"></i> Publicar cambios</div>
       </div>
       <div class="sb-bottom">
         <div class="sb-user">
           <div class="sb-avatar">ZI</div>
           <div>
             <div class="sb-uname">Admin</div>
-            <div class="sb-urole">zona-innmueble.com</div>
+            <div class="sb-urole" id="sidebarLogout" onclick="doLogout()" style="cursor:pointer;color:rgba(255,100,100,.6)">Cerrar sesión</div>
           </div>
         </div>
       </div>
@@ -246,6 +315,7 @@ tr:hover td{background:#FAFBFF}
     <div class="main">
       <div class="topbar">
         <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span id="topLeadsCount" style="background:var(--green);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:2px">0</span></button>
         <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
         <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
       </div>
@@ -260,31 +330,78 @@ tr:hover td{background:#FAFBFF}
     <div class="modal-topbar">
       <button class="btn btn-ghost btn-sm" onclick="closeModal()" style="color:#fff;border-color:rgba(255,255,255,.2)"><i class="ti ti-x"></i></button>
       <div class="modal-topbar-title" id="modalTitle">Nueva propiedad</div>
-      <button class="btn btn-navy btn-sm" onclick="saveProp()" style="background:var(--or);border-color:var(--or)"><i class="ti ti-device-floppy"></i> Guardar</button>
+      <div class="modal-progress" id="modalProgress">0% completo</div>
+      <button class="btn btn-sm" onclick="saveProp()" style="background:var(--or);color:#fff;border:none"><i class="ti ti-device-floppy"></i> Guardar</button>
     </div>
     <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-left">
+      <!-- TABS NAV -->
+      <div class="form-tabs-nav">
+        <div class="ftab active" onclick="switchTab('basico')"><i class="ti ti-info-circle"></i> Básico <span class="ftab-dot"></span></div>
+        <div class="ftab" onclick="switchTab('detalles')"><i class="ti ti-ruler"></i> Detalles <span class="ftab-dot"></span></div>
+        <div class="ftab" onclick="switchTab('contenido')"><i class="ti ti-file-text"></i> Contenido <span class="ftab-dot"></span></div>
+        <div class="ftab" onclick="switchTab('caracteristicas')"><i class="ti ti-tag"></i> Amenidades <span class="ftab-dot"></span></div>
+        <div class="ftab" onclick="switchTab('publicacion')"><i class="ti ti-send"></i> Publicación <span class="ftab-dot"></span></div>
+      </div>
 
+      <!-- TABS BODY -->
+      <div class="form-tabs-body">
+
+        <!-- TAB 1: BÁSICO -->
+        <div class="ftab-panel active" id="tab-basico">
           <div class="fsec">
-            <div class="fsec-title"><i class="ti ti-info-circle"></i> Información básica</div>
-            <div class="fg"><label>Título *</label><input type="text" id="fTitulo" placeholder="Ej: Casa en Kanajuyú · Zona 16"></div>
+            <div class="fsec-title"><i class="ti ti-home"></i> Información principal</div>
+            <div class="fg"><label>Título de la propiedad *</label><input type="text" id="fTitulo" placeholder="Ej: Residencia en Kanajuyú · Zona 16" oninput="updateProgress()"></div>
             <div class="fg-row c2">
-              <div class="fg"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: $395,000"></div>
-              <div class="fg"><label>Código</label><input type="text" id="fCodigo" placeholder="CV-001"></div>
+              <div class="fg"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: $395,000 o Q 3,200,000" oninput="autoFormatPrice()"></div>
+              <div class="fg"><label>Código interno</label><input type="text" id="fCodigo" placeholder="CV-001"></div>
             </div>
             <div class="fg-row c3">
-              <div class="fg"><label>Tipo</label><select id="fTipo"><option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option></select></div>
-              <div class="fg"><label>Operación</label><select id="fOperacion"><option>Venta</option><option>Renta</option><option>Venta/Renta</option></select></div>
-              <div class="fg"><label>Listing</label><select id="fTipoListing"><option>Residencial</option><option>Finca</option><option>Inversión</option><option>Comercial</option></select></div>
+              <div class="fg"><label>Tipo</label>
+                <select id="fTipo" onchange="updateProgress()">
+                  <option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option>
+                </select>
+              </div>
+              <div class="fg"><label>Operación</label>
+                <select id="fOperacion"><option>Venta</option><option>Renta</option><option>Venta/Renta</option></select>
+              </div>
+              <div class="fg"><label>Categoría</label>
+                <select id="fTipoListing"><option>Residencial</option><option>Finca</option><option>Inversión</option><option>Comercial</option></select>
+              </div>
+            </div>
+          </div>
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-map-pin"></i> Ubicación</div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Zona / Colonia</label><input type="text" id="fZona" placeholder="Ej: Kanajuyú, El Socorro, Hacienda Nueva"></div>
+              <div class="fg"><label>Municipio</label><input type="text" id="fMunicipio" placeholder="Ej: Guatemala, Fraijanes, Mixco"></div>
             </div>
             <div class="fg-row c2">
-              <div class="fg"><label>Zona / Colonia</label><input type="text" id="fZona" placeholder="Ej: Kanajuyú"></div>
-              <div class="fg"><label>Municipio</label><input type="text" id="fMunicipio" placeholder="Ej: Guatemala, Fraijanes"></div>
+              <div class="fg"><label>Departamento</label>
+                <select id="fDepartamento">
+                  <option value="">-- Seleccionar --</option>
+                  <option>Guatemala</option><option>Sacatepéquez</option><option>Escuintla</option>
+                  <option>Chimaltenango</option><option>Baja Verapaz</option><option>Alta Verapaz</option>
+                  <option>El Progreso</option><option>Jalapa</option><option>Jutiapa</option>
+                </select>
+              </div>
+              <div class="fg"><label>Ubicación general (referencia)</label><input type="text" id="fUbicacionGeneral" placeholder="Fraijanes · Km 16.5 · Carr. a El Salvador"></div>
             </div>
-            <div class="fg"><label>Ubicación general</label><input type="text" id="fUbicacionGeneral" placeholder="Ej: Fraijanes · Carretera a El Salvador · Km 16.5"></div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Latitud</label><input type="text" id="fLat" placeholder="14.6349"></div>
+              <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
+            </div>
           </div>
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-user-check"></i> Asesor</div>
+            <div class="fg-row c2">
+              <div class="fg"><label>Nombre del asesor</label><input type="text" id="fAsesor" placeholder="Ej: Juan Pérez"></div>
+              <div class="fg"><label>WhatsApp asesor (sin +502)</label><input type="text" id="fWaAsesor" placeholder="Ej: 45542088"></div>
+            </div>
+          </div>
+        </div>
 
+        <!-- TAB 2: DETALLES -->
+        <div class="ftab-panel" id="tab-detalles">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-ruler"></i> Medidas y espacios</div>
             <div class="fg-row c4">
@@ -293,227 +410,314 @@ tr:hover td{background:#FAFBFF}
               <div class="fg"><label>Habitaciones</label><input type="number" id="fHabitaciones" placeholder="0" min="0"></div>
               <div class="fg"><label>Baños</label><input type="number" id="fBanos" placeholder="0" min="0"></div>
             </div>
-            <div class="fg-row c3">
+            <div class="fg-row c4">
               <div class="fg"><label>Medios baños</label><input type="number" id="fMediosBanos" placeholder="0" min="0"></div>
               <div class="fg"><label>Parqueos</label><input type="number" id="fParqueos" placeholder="0" min="0"></div>
               <div class="fg"><label>Niveles</label><input type="number" id="fNiveles" placeholder="1" min="1"></div>
+              <div class="fg"><label>Terreno m²</label><input type="text" id="fTerreno" placeholder="500"></div>
             </div>
-            <div class="fg"><label>Datos técnicos (resumen)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m² · Terreno 2,400 m²"></div>
+            <div class="fg"><label>Resumen técnico (para ficha)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4.5 baños · 580 m² construidos · Terreno 2,400 m²"></div>
           </div>
-
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-tools"></i> Construcción y acabados</div>
-            <div class="fg-row c2">
+            <div class="fg-row c3">
               <div class="fg"><label>Año construcción</label><input type="text" id="fAnioConstruccion" placeholder="2018"></div>
-              <div class="fg"><label>Estado</label><select id="fEstadoConstruccion"><option value="">-- Seleccionar --</option><option>Nueva</option><option>Usada</option><option>En construcción</option><option>En planos</option></select></div>
+              <div class="fg"><label>Estado</label>
+                <select id="fEstadoConstruccion"><option value="">-- Seleccionar --</option><option>Nueva</option><option>Usada</option><option>En construcción</option><option>En planos</option></select>
+              </div>
+              <div class="fg"><label>Acabados</label>
+                <select id="fAcabados"><option value="">-- Seleccionar --</option><option>Básico</option><option>Medio</option><option>Premium</option><option>Lujo</option></select>
+              </div>
             </div>
-            <div class="fg-row c2">
-              <div class="fg"><label>Tipo construcción</label><select id="fTipoConstruccion"><option value="">-- Seleccionar --</option><option>Block / Concreto</option><option>Mixta</option><option>Madera</option><option>Adobe</option></select></div>
-              <div class="fg"><label>Techo</label><select id="fTecho"><option value="">-- Seleccionar --</option><option>Losa</option><option>Terraza</option><option>Duralita</option><option>Teja</option><option>Mixto</option></select></div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Tipo construcción</label>
+                <select id="fTipoConstruccion"><option value="">-- Seleccionar --</option><option>Block / Concreto</option><option>Mixta</option><option>Madera</option><option>Adobe</option></select>
+              </div>
+              <div class="fg"><label>Techo</label>
+                <select id="fTecho"><option value="">-- Seleccionar --</option><option>Losa</option><option>Terraza</option><option>Duralita</option><option>Teja</option><option>Mixto</option></select>
+              </div>
+              <div class="fg"><label>Piso</label>
+                <select id="fPiso"><option value="">-- Seleccionar --</option><option>Granito</option><option>Porcelanato</option><option>Cerámica</option><option>Madera</option><option>Mármol</option><option>Cemento alisado</option></select>
+              </div>
             </div>
-            <div class="fg-row c2">
-              <div class="fg"><label>Piso</label><select id="fPiso"><option value="">-- Seleccionar --</option><option>Granito</option><option>Porcelanato</option><option>Cerámica</option><option>Madera</option><option>Mármol</option><option>Cemento alisado</option></select></div>
-              <div class="fg"><label>Acabados</label><select id="fAcabados"><option value="">-- Seleccionar --</option><option>Básico</option><option>Medio</option><option>Premium</option><option>Lujo</option></select></div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Orientación</label>
+                <select id="fOrientacion"><option value="">--</option><option>Norte</option><option>Sur</option><option>Este</option><option>Oeste</option><option>Noreste</option><option>Noroeste</option><option>Sureste</option><option>Suroeste</option></select>
+              </div>
+              <div class="fg"><label>Antigüedad (años)</label><input type="number" id="fAntiguedad" placeholder="0" min="0"></div>
+              <div class="fg"><label>Cuota mantenimiento</label><input type="text" id="fCuotaMant" placeholder="Ej: Q 800/mes"></div>
             </div>
           </div>
-
           <div class="fsec">
-            <div class="fsec-title"><i class="ti ti-file-text"></i> Descripción</div>
-            <div class="fg"><label>Descripción completa</label><textarea id="fDescripcion" style="min-height:90px" placeholder="Descripción detallada para el sitio web..."></textarea></div>
-            <div class="fg"><label>Hook para redes sociales</label><input type="text" id="fHook" placeholder="Ej: Hay casas. Y luego está esta."></div>
-            <div class="fg"><label>Descripción corta</label><textarea id="fDescCorta" style="min-height:56px" placeholder="2-3 líneas premium..."></textarea></div>
+            <div class="fsec-title"><i class="ti ti-building-skyscraper"></i> Apartamento</div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Número de piso</label><input type="number" id="fNumeroPiso" placeholder="0" min="0"></div>
+              <div class="fg"><label>Área balcón m²</label><input type="text" id="fAreaBalcon" placeholder="0"></div>
+              <div class="fg"><label>Vista</label>
+                <select id="fVista"><option value="">--</option><option>Interior</option><option>Exterior</option><option>Ciudad</option><option>Jardín</option><option>Montaña</option><option>Valle</option></select>
+              </div>
+            </div>
           </div>
-
           <div class="fsec">
-            <div class="fsec-title"><i class="ti ti-tag"></i> Características</div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-map-pin"></i> Ubicación</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Ubicación privilegiada"> Ubicación privilegiada</label>
-                <label class="char-item"><input type="checkbox" value="Sobre carretera principal"> Sobre carretera principal</label>
-                <label class="char-item"><input type="checkbox" value="Entorno natural y vistas"> Entorno natural y vistas</label>
-                <label class="char-item"><input type="checkbox" value="Cerca de servicios"> Cerca de servicios</label>
-                <label class="char-item"><input type="checkbox" value="Zona residencial exclusiva"> Zona residencial exclusiva</label>
-                <label class="char-item"><input type="checkbox" value="Acceso pavimentado"> Acceso pavimentado</label>
-                <label class="char-item"><input type="checkbox" value="Vista al valle"> Vista al valle</label>
-                <label class="char-item"><input type="checkbox" value="Vista a montañas"> Vista a montañas</label>
-              </div>
+            <div class="fsec-title"><i class="ti ti-plant"></i> Finca</div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Extensión (manzanas)</label><input type="text" id="fManzanas" placeholder="0"></div>
+              <div class="fg"><label>Tipo de cultivo</label><input type="text" id="fCultivo" placeholder="Ej: Aguacate, Café, Sin cultivo"></div>
+              <div class="fg"><label>Tiempo a carretera</label><input type="text" id="fTiempoCarretera" placeholder="Ej: 5 min"></div>
             </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-shield"></i> Seguridad</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Garita 24/7"> Garita 24/7</label>
-                <label class="char-item"><input type="checkbox" value="Condominio cerrado"> Condominio cerrado</label>
-                <label class="char-item"><input type="checkbox" value="Cámaras de seguridad"> Cámaras de seguridad</label>
-                <label class="char-item"><input type="checkbox" value="Sistema de alarma"> Sistema de alarma</label>
-                <label class="char-item"><input type="checkbox" value="Muros perimetrales"> Muros perimetrales</label>
-                <label class="char-item"><input type="checkbox" value="Portón eléctrico"> Portón eléctrico</label>
-              </div>
-            </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-droplet"></i> Servicios básicos</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Agua municipal"> Agua municipal</label>
-                <label class="char-item"><input type="checkbox" value="Pozo propio"> Pozo propio</label>
-                <label class="char-item"><input type="checkbox" value="Cisterna"> Cisterna</label>
-                <label class="char-item"><input type="checkbox" value="Luz 110v/220v"> Luz 110v/220v</label>
-                <label class="char-item"><input type="checkbox" value="Panel solar"> Panel solar</label>
-                <label class="char-item"><input type="checkbox" value="Internet fibra disponible"> Internet fibra disponible</label>
-                <label class="char-item"><input type="checkbox" value="Gas propano"> Gas propano</label>
-                <label class="char-item"><input type="checkbox" value="Drenaje municipal"> Drenaje municipal</label>
-              </div>
-            </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-car"></i> Vehículos</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Garaje cerrado"> Garaje cerrado</label>
-                <label class="char-item"><input type="checkbox" value="Parqueo techado"> Parqueo techado</label>
-                <label class="char-item"><input type="checkbox" value="Parqueo descubierto"> Parqueo descubierto</label>
-                <label class="char-item"><input type="checkbox" value="Acceso para camión"> Acceso para camión</label>
-              </div>
-            </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-tree"></i> Exteriores</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Piscina"> Piscina</label>
-                <label class="char-item"><input type="checkbox" value="Jardín amplio"> Jardín amplio</label>
-                <label class="char-item"><input type="checkbox" value="Área de BBQ"> Área de BBQ</label>
-                <label class="char-item"><input type="checkbox" value="Pérgola"> Pérgola</label>
-                <label class="char-item"><input type="checkbox" value="Terraza exterior"> Terraza exterior</label>
-                <label class="char-item"><input type="checkbox" value="Cancha deportiva"> Cancha deportiva</label>
-                <label class="char-item"><input type="checkbox" value="Juegos infantiles"> Juegos infantiles</label>
-                <label class="char-item"><input type="checkbox" value="Huerto / área de siembra"> Huerto / área de siembra</label>
-              </div>
-            </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-sofa"></i> Interiores</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Cocina equipada"> Cocina equipada</label>
-                <label class="char-item"><input type="checkbox" value="Isla de cocina"> Isla de cocina</label>
-                <label class="char-item"><input type="checkbox" value="Walk-in closet"> Walk-in closet</label>
-                <label class="char-item"><input type="checkbox" value="Cuarto de servicio con baño"> Cuarto de servicio</label>
-                <label class="char-item"><input type="checkbox" value="Bodega"> Bodega</label>
-                <label class="char-item"><input type="checkbox" value="Chimenea"> Chimenea</label>
-                <label class="char-item"><input type="checkbox" value="Jacuzzi"> Jacuzzi</label>
-                <label class="char-item"><input type="checkbox" value="Estudio / Oficina"> Estudio / Oficina</label>
-                <label class="char-item"><input type="checkbox" value="Sala familiar"> Sala familiar</label>
-                <label class="char-item"><input type="checkbox" value="Sala de cine"> Sala de cine</label>
-                <label class="char-item"><input type="checkbox" value="Lavandería interna"> Lavandería interna</label>
-                <label class="char-item"><input type="checkbox" value="Bar interior"> Bar interior</label>
-              </div>
-            </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-plant"></i> Para fincas</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Agua de nacimiento"> Agua de nacimiento</label>
-                <label class="char-item"><input type="checkbox" value="Río o quebrada"> Río o quebrada</label>
-                <label class="char-item"><input type="checkbox" value="Luz trifásica"> Luz trifásica</label>
-                <label class="char-item"><input type="checkbox" value="Casa del guardián"> Casa del guardián</label>
-                <label class="char-item"><input type="checkbox" value="Corrales"> Corrales</label>
-                <label class="char-item"><input type="checkbox" value="Cultivo activo"> Cultivo activo</label>
-                <label class="char-item"><input type="checkbox" value="Finca inscrita en Registro"> Finca inscrita</label>
-                <label class="char-item"><input type="checkbox" value="Caminos internos"> Caminos internos</label>
-              </div>
-            </div>
-
-            <div class="chars-group">
-              <div class="chars-group-title"><i class="ti ti-trending-up"></i> Inversión</div>
-              <div class="chars-grid">
-                <label class="char-item"><input type="checkbox" value="Alta plusvalía"> Alta plusvalía</label>
-                <label class="char-item"><input type="checkbox" value="Zona en crecimiento"> Zona en crecimiento</label>
-                <label class="char-item"><input type="checkbox" value="Papelería en orden"> Papelería en orden</label>
-                <label class="char-item"><input type="checkbox" value="Sin gravámenes"> Sin gravámenes</label>
-                <label class="char-item"><input type="checkbox" value="Financiamiento disponible"> Financiamiento disponible</label>
-                <label class="char-item"><input type="checkbox" value="Negociable"> Negociable</label>
-                <label class="char-item"><input type="checkbox" value="Potencial de desarrollo"> Potencial de desarrollo</label>
-                <label class="char-item"><input type="checkbox" value="Apta para alquiler"> Apta para alquiler</label>
-              </div>
+            <div class="fg"><label>Título / Escritura</label>
+              <select id="fTituloFinca"><option value="">-- Seleccionar --</option><option>Finca inscrita en Registro</option><option>Título supletorio</option><option>En trámite</option><option>Escritura pública</option></select>
             </div>
           </div>
-
-          <div class="share-box">
-            <div class="share-box-title"><i class="ti ti-share"></i> Ficha compartible — WhatsApp / Redes</div>
-            <div class="fg"><label>URL del PDF</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1E40AF;cursor:pointer;padding:4px 0">
-              <input type="checkbox" id="fPrivada" style="width:15px;height:15px;accent-color:var(--or)">
-              Propiedad PRIVADA — ocultar precio en la ficha compartible
-            </label>
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-home-dollar"></i> Renta</div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Precio renta mensual</label><input type="text" id="fPrecioRenta" placeholder="Ej: $1,200/mes"></div>
+              <div class="fg"><label>Banco financiamiento</label><input type="text" id="fBancoFin" placeholder="Ej: Banrural, G&T"></div>
+              <div class="fg"><label>Disponible desde</label><input type="text" id="fDisponibleDesde" placeholder="Ej: Julio 2026"></div>
+            </div>
           </div>
-
-          <div class="priv-box" style="margin-top:14px">
-            <div class="priv-box-title"><i class="ti ti-lock"></i> Información privada — solo visible en admin</div>
-            <div class="fg"><label>Precio real / margen de negociación</label><input type="text" id="fPrecioReal" placeholder="Ej: Vendedor acepta mínimo Q 2,200,000"></div>
-            <div class="fg"><label>Contacto del vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Pérez · +502 5555-1234"></div>
-            <div class="fg"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:60px" placeholder="Motivación de venta, situación especial..."></textarea></div>
-            <div class="fg"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravámenes, IUSI al día"></div>
-          </div>
-
         </div>
 
-        <div class="form-right">
-
-          <div class="side-card">
-            <div class="side-card-title"><i class="ti ti-photo"></i> Imagen principal</div>
-            <div class="fg"><input type="url" id="fImagen" placeholder="https://ik.imagekit.io/Zona/..." oninput="previewImg()"></div>
-            <img id="imgPreview" class="img-preview">
-          </div>
-
-          <div class="side-card">
-            <div class="side-card-title"><i class="ti ti-photos"></i> Galería</div>
-            <div class="gal-wrap" id="galWrap"></div>
-            <button type="button" onclick="addGalImg()" style="margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer">+ Agregar imagen</button>
-          </div>
-
-          <div class="side-card">
-            <div class="side-card-title"><i class="ti ti-toggle-right"></i> Estado</div>
-            <div class="status-pills" id="statusPills">
-              <div class="pill active" onclick="setStatus('Activa')">Activa</div>
-              <div class="pill" onclick="setStatus('Vendida')">Vendida</div>
-              <div class="pill" onclick="setStatus('Pausada')">Pausada</div>
+        <!-- TAB 3: CONTENIDO -->
+        <div class="ftab-panel" id="tab-contenido">
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-file-text"></i> Textos premium</div>
+            <div class="fg">
+              <label>Descripción completa</label>
+              <textarea id="fDescripcion" style="min-height:100px" placeholder="Descripción detallada y premium para el sitio web. Describe el entorno, los acabados, el estilo de vida que ofrece..." oninput="updateProgress()"></textarea>
             </div>
-            <input type="hidden" id="fEstado" value="Activa">
+            <div class="fg">
+              <label>Hook para redes sociales</label>
+              <input type="text" id="fHook" placeholder="Ej: Hay casas. Y luego está esta.">
+              <div class="fg-hint">Frase corta y poderosa para Instagram y Facebook. Máx. 80 caracteres.</div>
+            </div>
+            <div class="fg">
+              <label>Descripción corta (para preview)</label>
+              <textarea id="fDescCorta" style="min-height:56px" placeholder="2-3 líneas elegantes que resumen lo esencial de la propiedad..."></textarea>
+            </div>
           </div>
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-search"></i> SEO y multimedia</div>
+            <div class="fg"><label>Tags SEO (separados por coma)</label><input type="text" id="fTagsSeo" placeholder="Ej: casa zona 10, residencia exclusiva guatemala, propiedad premium"></div>
+            <div class="fg"><label>Video tour (YouTube / Vimeo URL)</label><input type="url" id="fVideoUrl" placeholder="https://youtube.com/watch?v=..."></div>
+            <div class="fg"><label>Plano de planta (URL imagen)</label><input type="url" id="fPlano" placeholder="https://ik.imagekit.io/Zona/planos/..."></div>
+            <div class="fg"><label>Certificado energético</label>
+              <select id="fCertEnerg"><option value="">Sin certificado</option><option>A+</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+            </div>
+            <div class="fg">
+              <label>Slug URL</label>
+              <input type="text" id="fSlug" placeholder="casa-zona-10-kanajuyu">
+              <div class="fg-auto" onclick="autoSlug()">🔄 Generar desde título</div>
+            </div>
+            <div class="fg"><label>Fecha de publicación</label><input type="date" id="fFechaPublicacion"></div>
+          </div>
+          <div class="share-box">
+            <div class="share-box-title"><i class="ti ti-share"></i> Ficha compartible (WhatsApp / Redes)</div>
+            <div class="fg"><label>URL del PDF (Google Drive)</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>
+          </div>
+          <div class="priv-box" style="margin-top:14px">
+            <div class="priv-box-title"><i class="ti ti-lock"></i> Información privada (solo admin)</div>
+            <div class="fg"><label>Precio real / margen negociación</label><input type="text" id="fPrecioReal" placeholder="Ej: Vendedor acepta mínimo Q 2,200,000"></div>
+            <div class="fg"><label>Contacto del vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Pérez · +502 5555-1234"></div>
+            <div class="fg"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:56px" placeholder="Motivación de venta, situación especial, observaciones..."></textarea></div>
+            <div class="fg"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravámenes, IUSI al día, escritura en trámite"></div>
+          </div>
+        </div>
 
-          <div class="side-card">
-            <div class="side-card-title"><i class="ti ti-world"></i> Publicar en</div>
+        <!-- TAB 4: CARACTERÍSTICAS -->
+        <div class="ftab-panel" id="tab-caracteristicas">
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-map-pin"></i> Ubicación</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Ubicación privilegiada"> Ubicación privilegiada</label>
+              <label class="char-item"><input type="checkbox" value="Sobre carretera principal"> Sobre carretera principal</label>
+              <label class="char-item"><input type="checkbox" value="Entorno natural y vistas"> Entorno natural y vistas</label>
+              <label class="char-item"><input type="checkbox" value="Cerca de servicios"> Cerca de servicios</label>
+              <label class="char-item"><input type="checkbox" value="Zona residencial exclusiva"> Zona residencial exclusiva</label>
+              <label class="char-item"><input type="checkbox" value="Acceso pavimentado"> Acceso pavimentado</label>
+              <label class="char-item"><input type="checkbox" value="Vista al valle"> Vista al valle</label>
+              <label class="char-item"><input type="checkbox" value="Vista a montañas"> Vista a montañas</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-shield"></i> Seguridad</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Garita 24/7"> Garita 24/7</label>
+              <label class="char-item"><input type="checkbox" value="Condominio cerrado"> Condominio cerrado</label>
+              <label class="char-item"><input type="checkbox" value="Cámaras de seguridad"> Cámaras de seguridad</label>
+              <label class="char-item"><input type="checkbox" value="Sistema de alarma"> Sistema de alarma</label>
+              <label class="char-item"><input type="checkbox" value="Muros perimetrales"> Muros perimetrales</label>
+              <label class="char-item"><input type="checkbox" value="Portón eléctrico"> Portón eléctrico</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-droplet"></i> Servicios básicos</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Agua municipal"> Agua municipal</label>
+              <label class="char-item"><input type="checkbox" value="Pozo propio"> Pozo propio</label>
+              <label class="char-item"><input type="checkbox" value="Cisterna"> Cisterna</label>
+              <label class="char-item"><input type="checkbox" value="Luz 110v/220v"> Luz 110v/220v</label>
+              <label class="char-item"><input type="checkbox" value="Panel solar"> Panel solar</label>
+              <label class="char-item"><input type="checkbox" value="Internet fibra disponible"> Internet fibra</label>
+              <label class="char-item"><input type="checkbox" value="Gas propano"> Gas propano</label>
+              <label class="char-item"><input type="checkbox" value="Drenaje municipal"> Drenaje municipal</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-tree"></i> Exteriores</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Piscina"> Piscina</label>
+              <label class="char-item"><input type="checkbox" value="Jardín amplio"> Jardín amplio</label>
+              <label class="char-item"><input type="checkbox" value="Área de BBQ"> Área de BBQ</label>
+              <label class="char-item"><input type="checkbox" value="Pérgola"> Pérgola</label>
+              <label class="char-item"><input type="checkbox" value="Terraza exterior"> Terraza exterior</label>
+              <label class="char-item"><input type="checkbox" value="Cancha deportiva"> Cancha deportiva</label>
+              <label class="char-item"><input type="checkbox" value="Juegos infantiles"> Juegos infantiles</label>
+              <label class="char-item"><input type="checkbox" value="Huerto / área de siembra"> Huerto / siembra</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-sofa"></i> Interiores</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Cocina equipada"> Cocina equipada</label>
+              <label class="char-item"><input type="checkbox" value="Isla de cocina"> Isla de cocina</label>
+              <label class="char-item"><input type="checkbox" value="Walk-in closet"> Walk-in closet</label>
+              <label class="char-item"><input type="checkbox" value="Cuarto de servicio con baño"> Cuarto de servicio</label>
+              <label class="char-item"><input type="checkbox" value="Bodega"> Bodega</label>
+              <label class="char-item"><input type="checkbox" value="Chimenea"> Chimenea</label>
+              <label class="char-item"><input type="checkbox" value="Jacuzzi"> Jacuzzi</label>
+              <label class="char-item"><input type="checkbox" value="Estudio / Oficina"> Estudio / Oficina</label>
+              <label class="char-item"><input type="checkbox" value="Sala familiar"> Sala familiar</label>
+              <label class="char-item"><input type="checkbox" value="Sala de cine"> Sala de cine</label>
+              <label class="char-item"><input type="checkbox" value="Lavandería interna"> Lavandería interna</label>
+              <label class="char-item"><input type="checkbox" value="Bar interior"> Bar interior</label>
+              <label class="char-item"><input type="checkbox" value="Cocina abierta"> Cocina abierta</label>
+              <label class="char-item"><input type="checkbox" value="Aire acondicionado"> Aire acondicionado</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-plant"></i> Para fincas</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Agua de nacimiento"> Agua de nacimiento</label>
+              <label class="char-item"><input type="checkbox" value="Río o quebrada"> Río o quebrada</label>
+              <label class="char-item"><input type="checkbox" value="Luz trifásica"> Luz trifásica</label>
+              <label class="char-item"><input type="checkbox" value="Casa del guardián"> Casa del guardián</label>
+              <label class="char-item"><input type="checkbox" value="Corrales"> Corrales</label>
+              <label class="char-item"><input type="checkbox" value="Cultivo activo"> Cultivo activo</label>
+              <label class="char-item"><input type="checkbox" value="Finca inscrita en Registro"> Finca inscrita</label>
+              <label class="char-item"><input type="checkbox" value="Caminos internos"> Caminos internos</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-trending-up"></i> Inversión</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Alta plusvalía"> Alta plusvalía</label>
+              <label class="char-item"><input type="checkbox" value="Zona en crecimiento"> Zona en crecimiento</label>
+              <label class="char-item"><input type="checkbox" value="Papelería en orden"> Papelería en orden</label>
+              <label class="char-item"><input type="checkbox" value="Sin gravámenes"> Sin gravámenes</label>
+              <label class="char-item"><input type="checkbox" value="Financiamiento disponible"> Financiamiento disponible</label>
+              <label class="char-item"><input type="checkbox" value="Negociable"> Negociable</label>
+              <label class="char-item"><input type="checkbox" value="Potencial de desarrollo"> Potencial de desarrollo</label>
+              <label class="char-item"><input type="checkbox" value="Apta para alquiler"> Apta para alquiler</label>
+              <label class="char-item"><input type="checkbox" value="Acepta permuta"> Acepta permuta</label>
+              <label class="char-item"><input type="checkbox" value="Disponibilidad inmediata"> Disponibilidad inmediata</label>
+            </div>
+          </div>
+          <div class="chars-group">
+            <div class="chars-group-title"><i class="ti ti-car"></i> Vehículos</div>
+            <div class="chars-grid">
+              <label class="char-item"><input type="checkbox" value="Garaje cerrado"> Garaje cerrado</label>
+              <label class="char-item"><input type="checkbox" value="Parqueo techado"> Parqueo techado</label>
+              <label class="char-item"><input type="checkbox" value="Parqueo descubierto"> Parqueo descubierto</label>
+              <label class="char-item"><input type="checkbox" value="Acceso para camión"> Acceso para camión</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: PUBLICACIÓN -->
+        <div class="ftab-panel" id="tab-publicacion">
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-eye-off"></i> Control de visibilidad pública</div>
+            <p style="font-size:12px;color:var(--text3);margin-bottom:14px">Selecciona qué información se oculta en el sitio público. Útil para propiedades exclusivas o en negociación.</p>
+            <div class="priv-toggle" onclick="togglePriv('privPrecio')">
+              <label><strong>Ocultar precio</strong><small>Muestra "A consultar" en vez del precio</small></label>
+              <label class="toggle-switch"><input type="checkbox" id="privPrecio"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="priv-toggle" onclick="togglePriv('privDireccion')">
+              <label><strong>Ocultar dirección exacta</strong><small>Solo muestra zona/municipio general</small></label>
+              <label class="toggle-switch"><input type="checkbox" id="privDireccion"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="priv-toggle" onclick="togglePriv('privGaleria')">
+              <label><strong>Ocultar galería</strong><small>Solo muestra la imagen principal</small></label>
+              <label class="toggle-switch"><input type="checkbox" id="privGaleria"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="priv-toggle" onclick="togglePriv('privDatos')">
+              <label><strong>Ocultar datos técnicos</strong><small>Área, habitaciones y baños no visibles</small></label>
+              <label class="toggle-switch"><input type="checkbox" id="privDatos"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="priv-toggle" onclick="togglePriv('privDesc')">
+              <label><strong>Ocultar descripción</strong><small>Solo muestra el hook de redes</small></label>
+              <label class="toggle-switch"><input type="checkbox" id="privDesc"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="priv-toggle" onclick="togglePriv('privExclusiva')">
+              <label><strong style="color:var(--or)">🏷️ Listado EXCLUSIVO</strong><small>Muestra mensaje de propiedad exclusiva y oculta todo excepto imagen y título</small></label>
+              <label class="toggle-switch"><input type="checkbox" id="privExclusiva"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-world"></i> Publicar en</div>
             <label class="sitio-row"><input type="checkbox" id="sZona" checked><div><div class="sitio-label">Zona INNmueble</div><div class="sitio-url">zona-innmueble.com</div></div></label>
-            <label class="sitio-row"><input type="checkbox" id="sInmu" checked><div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div></label>
+            <label class="sitio-row"><input type="checkbox" id="sInmu"><div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div></label>
           </div>
-
-          <div class="side-card">
-            <div class="side-card-title"><i class="ti ti-map-pin"></i> Ubicación y SEO</div>
-            <div class="fg"><label>Departamento</label>
-              <select id="fDepartamento">
-                <option value="">-- Seleccionar --</option>
-                <option>Guatemala</option><option>Sacatepéquez</option><option>Escuintla</option>
-                <option>Chimaltenango</option><option>Baja Verapaz</option><option>Alta Verapaz</option>
-                <option>El Progreso</option><option>Jalapa</option><option>Jutiapa</option>
-              </select>
-            </div>
-            <div class="fg"><label>Slug (URL)</label><input type="text" id="fSlug" placeholder="auto-generado desde título"></div>
-          </div>
-
-          <div class="side-card">
-            <div class="side-card-title"><i class="ti ti-map"></i> Coordenadas (opcional)</div>
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-eye"></i> Contadores</div>
             <div class="fg-row c2">
-              <div class="fg"><label>Latitud</label><input type="text" id="fLat" placeholder="14.6349"></div>
-              <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
+              <div class="fg"><label>Vistas</label><input type="number" id="fVistas" placeholder="0" min="0"></div>
+              <div class="fg"><label>Favoritos</label><input type="number" id="fFavoritos" placeholder="0" min="0"></div>
             </div>
           </div>
+        </div>
 
+      </div><!-- /form-tabs-body -->
+
+      <!-- SIDEBAR DERECHO -->
+      <div class="form-right">
+        <div class="side-card">
+          <div class="side-card-title"><i class="ti ti-photo"></i> Imagen principal</div>
+          <div class="fg"><input type="url" id="fImagen" placeholder="https://ik.imagekit.io/Zona/..." oninput="previewImg(); updateProgress()"></div>
+          <img id="imgPreview" class="img-preview">
+        </div>
+        <div class="side-card">
+          <div class="side-card-title"><i class="ti ti-photos"></i> Galería (<span id="galCount">0</span> fotos)</div>
+          <div class="gal-wrap" id="galWrap"></div>
+          <button type="button" class="add-gal-btn" onclick="addGalImgBulk()">+ Agregar fotos (URL por URL)</button>
+        </div>
+        <div class="side-card">
+          <div class="side-card-title"><i class="ti ti-toggle-right"></i> Estado</div>
+          <div class="status-pills" id="statusPills">
+            <div class="pill active" onclick="setStatus('Activa')">Activa</div>
+            <div class="pill" onclick="setStatus('Vendida')">Vendida</div>
+            <div class="pill" onclick="setStatus('Pausada')">Pausada</div>
+          </div>
+          <input type="hidden" id="fEstado" value="Activa">
+        </div>
+        <div class="side-card" style="background:#FFF8F2;border-color:rgba(245,130,13,.3)">
+          <div class="side-card-title"><i class="ti ti-share"></i> Compartir propiedad</div>
+          <button type="button" onclick="shareWA()" class="btn btn-green btn-sm" style="width:100%;justify-content:center;margin-bottom:6px"><i class="ti ti-brand-whatsapp"></i> Enviar por WhatsApp</button>
+          <button type="button" onclick="copyLink()" class="btn btn-ghost btn-sm" style="width:100%;justify-content:center"><i class="ti ti-link"></i> Copiar enlace</button>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-navy" onclick="saveProp()"><i class="ti ti-device-floppy"></i> Guardar propiedad</button>
+      <div class="modal-footer-left">
+        <button class="btn btn-ghost btn-sm" onclick="closeModal()"><i class="ti ti-x"></i> Cancelar</button>
+        <button class="btn btn-ghost btn-sm" onclick="duplicateProp()" id="btnDuplicate" style="display:none"><i class="ti ti-copy"></i> Duplicar</button>
+      </div>
+      <div class="modal-footer-right">
+        <div id="progressLabel" style="font-size:12px;color:var(--text3);align-self:center">0% completo</div>
+        <button class="btn btn-navy btn-sm" onclick="saveProp()"><i class="ti ti-device-floppy"></i> Guardar propiedad</button>
+      </div>
     </div>
   </div>
 </div>
@@ -526,6 +730,8 @@ let props = [];
 let editingId = null;
 let galUrls = [];
 let currentStatus = 'Activa';
+let leadsData = [];
+let leadStatuses = {};
 
 // ── AUTH ──────────────────────────────────────────────────────
 async function doLogin() {
@@ -534,34 +740,21 @@ async function doLogin() {
   const btn  = document.getElementById('loginBtn');
   const err  = document.getElementById('loginErr');
   if (!user || !pass) return;
-  btn.disabled = true;
-  btn.textContent = 'Ingresando...';
-  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Ingresando...'; err.style.display = 'none';
   try {
-    const r = await fetch(API + '/api/login', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({user, pass})
-    });
+    const r = await fetch(API + '/api/login', {method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({user,pass})});
     if (r.ok) {
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('adminApp').style.display = 'block';
       await loadProps();
       showPage('dashboard');
-    } else {
-      err.style.display = 'block';
-    }
-  } catch(e) {
-    err.textContent = 'Error de conexión.';
-    err.style.display = 'block';
-  }
-  btn.disabled = false;
-  btn.textContent = 'Ingresar';
+    } else { err.style.display = 'block'; }
+  } catch(e) { err.textContent = 'Error de conexión.'; err.style.display = 'block'; }
+  btn.disabled = false; btn.textContent = 'Ingresar';
 }
 
 async function doLogout() {
-  await fetch(API + '/api/logout', {method:'POST', credentials:'include'}).catch(()=>{});
+  await fetch(API + '/api/logout', {method:'POST',credentials:'include'}).catch(()=>{});
   document.getElementById('adminApp').style.display = 'none';
   document.getElementById('loginPage').style.display = 'flex';
 }
@@ -582,52 +775,89 @@ async function checkSession() {
 async function loadProps() {
   try {
     const r = await fetch(API + '/api/propiedades', {credentials:'include'});
-    if (r.ok) {
-      props = await r.json();
-    }
+    if (r.ok) props = await r.json();
   } catch(e) { console.error('loadProps:', e); }
 }
 
 // ── NAVIGATION ───────────────────────────────────────────────
 function showPage(page) {
-  ['dashboard','propiedades','leads','nueva'].forEach(p => {
-    const n = document.getElementById('nav-' + p);
-    if (n) n.classList.remove('active');
-  });
+  document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
-  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads'};
+  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads CRM'};
   document.getElementById('pageTitle').textContent = titles[page] || page;
   const mc = document.getElementById('mainContent');
-  if (!mc) return;
-  if (page === 'dashboard')    renderDashboard(mc);
-  if (page === 'propiedades')  renderPropiedades(mc);
-  if (page === 'leads')        renderLeads(mc);
+  if (page === 'dashboard')   renderDashboard(mc);
+  if (page === 'propiedades') renderPropiedades(mc);
+  if (page === 'leads')       renderLeads(mc);
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────
 function renderDashboard(mc) {
   const activas  = props.filter(p => !p.estado || p.estado === 'Activa').length;
   const vendidas = props.filter(p => p.estado === 'Vendida').length;
+  const pausadas = props.filter(p => p.estado === 'Pausada').length;
+  const casas    = props.filter(p => p.tipo === 'Casa').length;
+  const fincas   = props.filter(p => p.tipo === 'Finca').length;
+  const apts     = props.filter(p => p.tipo === 'Apartamento').length;
+
   mc.innerHTML = `
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Propiedades activas</div><div class="stat-val">${activas}</div><div class="stat-sub">Total: ${props.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Vendidas</div><div class="stat-val">${vendidas}</div></div>
-      <div class="stat-card"><div class="stat-label">Leads</div><div class="stat-val" id="dashLeadsNum">-</div></div>
+    <div class="rebuild-banner">
+      <div class="rebuild-text"><strong>¿Actualizaste propiedades?</strong>Los cambios se reflejan en el sitio después de publicar.</div>
+      <button class="btn btn-sm" style="background:var(--or);color:#fff;border:none;white-space:nowrap" onclick="triggerRebuild()"><i class="ti ti-refresh"></i> Publicar ahora</button>
     </div>
-    <div class="table-wrap">
-      <div class="table-header">
-        <div style="font-size:13px;font-weight:700;color:var(--navy)">Propiedades recientes</div>
-        <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
+    <div class="stats-grid">
+      <div class="stat-card green"><div class="stat-label">Activas</div><div class="stat-val">${activas}</div><div class="stat-sub">De ${props.length} total</div><i class="ti ti-check stat-icon"></i></div>
+      <div class="stat-card red"><div class="stat-label">Vendidas</div><div class="stat-val">${vendidas}</div><div class="stat-sub">Cerradas</div><i class="ti ti-trophy stat-icon"></i></div>
+      <div class="stat-card yellow"><div class="stat-label">Pausadas</div><div class="stat-val">${pausadas}</div><div class="stat-sub">En revisión</div><i class="ti ti-pause stat-icon"></i></div>
+      <div class="stat-card blue"><div class="stat-label">Leads</div><div class="stat-val" id="dashLeadsNum">—</div><div class="stat-sub">Total registrados</div><i class="ti ti-users stat-icon"></i></div>
+    </div>
+    <div class="dash-grid">
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">Propiedades recientes</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
+        </div>
+        ${buildTable(props.slice(0, 8))}
       </div>
-      ${buildTable(props.slice(0, 8))}
+      <div>
+        <div class="table-wrap" style="margin-bottom:14px">
+          <div class="table-header"><div class="table-title">Por tipo</div></div>
+          <div style="padding:14px 20px">
+            ${[['Casa',casas,'#F5820D'],['Finca',fincas,'#22c55e'],['Apartamento',apts,'#3b82f6'],['Otros',props.length-casas-fincas-apts,'#8A9BB0']].map(([tipo,n,color])=>`
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="font-size:12px;color:var(--text2);width:90px">${tipo}</div>
+              <div style="flex:1;height:8px;background:var(--border);border-radius:4px">
+                <div style="height:100%;border-radius:4px;background:${color};width:${props.length?Math.round(n/props.length*100):0}%;transition:width .5s"></div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--navy);width:24px;text-align:right">${n}</div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="table-wrap" id="dashLeadsWrap">
+          <div class="table-header"><div class="table-title">Últimos leads</div><button class="btn btn-ghost btn-sm" onclick="showPage('leads')">Ver todos</button></div>
+          <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Cargando...</div>
+        </div>
+      </div>
     </div>`;
+  
   fetch(API + '/api/leads', {credentials:'include'})
     .then(r => r.json()).then(leads => {
-      const el = document.getElementById('dashLeadsNum');
-      if (el) el.textContent = leads.length;
-      const lc = document.getElementById('leadsCount');
-      if (lc) lc.textContent = leads.length;
+      leadsData = leads;
+      const n = leads.length;
+      document.querySelectorAll('#dashLeadsNum,#topLeadsCount').forEach(el => { if(el) el.textContent = n; });
+      document.querySelectorAll('#leadsCount,#topLeadsCount').forEach(el => { if(el) el.textContent = n; });
+      const wrap = document.getElementById('dashLeadsWrap');
+      if (!wrap) return;
+      if (!leads.length) { wrap.innerHTML += '<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Sin leads aún</div>'; return; }
+      wrap.querySelector('div:last-child').innerHTML = leads.slice(0,4).map(l => `
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--navy)">${esc(l.nombre||'Sin nombre')}</div>
+            <div style="font-size:11px;color:var(--text3)">${esc(l.propiedad||'-')} · ${l.fecha?l.fecha.substring(0,10):'-'}</div>
+          </div>
+          ${l.telefono?`<a href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank" class="wa-btn" style="padding:4px 10px;font-size:11px"><i class="ti ti-brand-whatsapp"></i></a>`:''}
+        </div>`).join('');
     }).catch(() => {});
 }
 
@@ -637,119 +867,242 @@ function renderPropiedades(mc) {
     <div class="table-wrap">
       <div class="table-header">
         <div class="search-box"><i class="ti ti-search"></i><input type="text" id="searchInput" placeholder="Buscar propiedad..." oninput="filterTable()"></div>
-        <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
+        <div style="display:flex;gap:8px">
+          <select id="filterStatus" onchange="filterTable()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:7px;font-size:12px;outline:none">
+            <option value="">Todos los estados</option>
+            <option value="Activa">Activas</option>
+            <option value="Vendida">Vendidas</option>
+            <option value="Pausada">Pausadas</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
+        </div>
       </div>
       <div id="tableBody">${buildTable(props)}</div>
     </div>`;
 }
 
 function filterTable() {
-  const q = (document.getElementById('searchInput').value || '').toLowerCase();
-  const filtered = q ? props.filter(p =>
-    (p.titulo||'').toLowerCase().includes(q) ||
-    (p.municipio||p.zona||'').toLowerCase().includes(q) ||
-    (p.tipo||'').toLowerCase().includes(q)
-  ) : props;
+  const q  = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const st = document.getElementById('filterStatus')?.value || '';
+  let filtered = props;
+  if (q) filtered = filtered.filter(p => (p.titulo||'').toLowerCase().includes(q) || (p.municipio||p.zona||'').toLowerCase().includes(q) || (p.tipo||'').toLowerCase().includes(q));
+  if (st) filtered = filtered.filter(p => (p.estado||'Activa') === st);
   const tb = document.getElementById('tableBody');
   if (tb) tb.innerHTML = buildTable(filtered);
 }
 
 function buildTable(data) {
-  if (!data || !data.length) return '<div style="padding:40px;text-align:center;color:var(--text3)">Sin propiedades</div>';
+  if (!data || !data.length) return '<div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">Sin propiedades</div>';
   let rows = '';
   data.forEach((p, i) => {
     const id  = encodeURIComponent(p.id || p.slug || i);
     const est = p.estado || 'Activa';
-    const bc  = est==='Vendida' ? 'badge-red' : est==='Pausada' ? 'badge-gray' : 'badge-green';
-    const img = p.imagen ? `<img class="prop-img" src="${p.imagen}" onerror="this.style.display='none'">` : `<div class="prop-img" style="background:var(--bg)"></div>`;
+    const bc  = est==='Vendida'?'badge-red':est==='Pausada'?'badge-gray':'badge-green';
+    const img = p.imagen ? `<img class="prop-img" src="${p.imagen}" onerror="this.style.opacity='.3'">` : `<div class="prop-img"></div>`;
+    const comp = calcCompletion(p);
+    const compColor = comp>=80?'#22c55e':comp>=50?'#f59e0b':'#ef4444';
     rows += `<tr>
       <td style="white-space:nowrap">${img}</td>
-      <td><div class="prop-name">${esc(p.titulo||'')}</div><div class="prop-loc">${esc(p.municipio||p.zona||'')}</div></td>
-      <td>${esc(p.tipo||'')}</td>
-      <td class="price-cell">${esc(p.priceFormatted||p.precio||'')}</td>
+      <td>
+        <div class="prop-name" title="${esc(p.titulo||'')}">${esc(p.titulo||'')}</div>
+        <div class="prop-loc">${esc(p.municipio||p.zona||'')} · ${esc(p.tipo||'')}</div>
+        <div class="completion-bar"><div class="completion-fill" style="width:${comp}%;background:${compColor}"></div></div>
+      </td>
+      <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>
       <td><span class="badge ${bc}">${esc(est)}</span></td>
+      <td style="font-size:11px;color:var(--text3)">${comp}%</td>
       <td><div class="actions-cell">
         <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
+        <div class="icon-btn success" title="Ver en sitio" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
         <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
-        <div class="icon-btn" title="Ver en sitio" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
       </div></td>
     </tr>`;
   });
   return `<table>
-    <thead><tr><th></th><th>Propiedad</th><th>Tipo</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <thead><tr><th></th><th>Propiedad</th><th>Precio</th><th>Estado</th><th>Completud</th><th>Acciones</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
 
-// ── LEADS PAGE ───────────────────────────────────────────────
+function calcCompletion(p) {
+  const checks = [
+    p.titulo, p.precio, p.tipo, p.municipio||p.zona,
+    p.descripcion, p.imagen, (p.gallery&&p.gallery.length>1),
+    p.habitaciones||p.manzanas, p.banos, p.area||p.areaConst,
+    p.caracteristicas&&p.caracteristicas.length
+  ];
+  const done = checks.filter(Boolean).length;
+  return Math.round(done / checks.length * 100);
+}
+
+// ── LEADS CRM ────────────────────────────────────────────────
+let currentLeadFilter = 'all';
+
 async function renderLeads(mc) {
   mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Cargando leads...</div>';
   try {
     const r = await fetch(API + '/api/leads', {credentials:'include'});
-    const leads = await r.json();
-    const lc = document.getElementById('leadsCount');
-    if (lc) lc.textContent = leads.length;
-    if (!leads.length) { mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Sin leads aún.</div>'; return; }
-    mc.innerHTML = `<div style="font-size:13px;color:var(--text3);margin-bottom:16px">${leads.length} leads registrados</div>` +
-      leads.map(l => `
-        <div class="lead-card">
-          <div class="lead-header">
-            <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
-            <div class="lead-time">${l.fecha ? l.fecha.substring(0,10) : '-'}</div>
-          </div>
-          <div class="lead-detail"><strong>Tel:</strong> ${esc(l.telefono||'-')}</div>
-          <div class="lead-detail"><strong>Propiedad:</strong> ${esc(l.propiedad||'-')}</div>
-          <div class="lead-detail"><strong>Tipo:</strong> ${esc(l.tipo||'-')}</div>
-          ${l.telefono ? `<a class="wa-btn" href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank"><i class="ti ti-brand-whatsapp"></i> Contactar</a>` : ''}
-        </div>`).join('');
+    leadsData = await r.json();
+    document.querySelectorAll('#leadsCount,#topLeadsCount').forEach(el => { if(el) el.textContent = leadsData.length; });
+    
+    if (!leadsData.length) {
+      mc.innerHTML = `<div style="padding:60px;text-align:center">
+        <i class="ti ti-users" style="font-size:48px;color:var(--border);display:block;margin-bottom:12px"></i>
+        <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px">Sin leads aún</div>
+        <div style="font-size:12px;color:var(--text3)">Los leads aparecerán aquí cuando los clientes completen el formulario del sitio.</div>
+      </div>`;
+      return;
+    }
+
+    const statusCounts = leadsData.reduce((acc, l) => {
+      const s = leadStatuses[l.id||l.fecha] || 'Nuevo';
+      acc[s] = (acc[s]||0) + 1;
+      return acc;
+    }, {});
+
+    mc.innerHTML = `
+      <div class="leads-filters">
+        <button class="lead-filter-btn active" onclick="filterLeads('all',this)">Todos (${leadsData.length})</button>
+        <button class="lead-filter-btn" onclick="filterLeads('Nuevo',this)">Nuevos (${statusCounts['Nuevo']||0})</button>
+        <button class="lead-filter-btn" onclick="filterLeads('Contactado',this)">Contactados (${statusCounts['Contactado']||0})</button>
+        <button class="lead-filter-btn" onclick="filterLeads('Calificado',this)">Calificados (${statusCounts['Calificado']||0})</button>
+        <button class="lead-filter-btn" onclick="filterLeads('Cerrado',this)">Cerrados (${statusCounts['Cerrado']||0})</button>
+      </div>
+      <div id="leadsList">${buildLeadsList(leadsData)}</div>`;
   } catch(e) {
     mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--red)">Error cargando leads.</div>';
   }
 }
 
-// ── MODAL ────────────────────────────────────────────────────
+function buildLeadsList(leads) {
+  return leads.map((l, i) => {
+    const lid = l.id || l.fecha || i;
+    const st = leadStatuses[lid] || 'Nuevo';
+    const stColors = {Nuevo:'badge-blue',Contactado:'badge-yellow',Calificado:'badge-orange',Cerrado:'badge-green'};
+    return `
+      <div class="lead-card" data-status="${st}" data-id="${lid}">
+        <div class="lead-header">
+          <div>
+            <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
+            <span class="badge ${stColors[st]||'badge-gray'}" style="margin-top:4px">${st}</span>
+          </div>
+          <div class="lead-time">${l.fecha?l.fecha.substring(0,10):'-'}</div>
+        </div>
+        ${l.telefono?`<div class="lead-detail"><i class="ti ti-phone"></i> ${esc(l.telefono)}</div>`:''}
+        ${l.propiedad?`<div class="lead-detail"><i class="ti ti-building"></i> ${esc(l.propiedad)}</div>`:''}
+        ${l.mensaje?`<div class="lead-detail" style="font-style:italic"><i class="ti ti-message"></i> "${esc(l.mensaje)}"</div>`:''}
+        <div class="lead-actions">
+          ${l.telefono?`<a class="wa-btn" href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank"><i class="ti ti-brand-whatsapp"></i> Contactar</a>`:''}
+          <select class="lead-status-sel" onchange="updateLeadStatus('${lid}',this.value)">
+            <option ${st==='Nuevo'?'selected':''}>Nuevo</option>
+            <option ${st==='Contactado'?'selected':''}>Contactado</option>
+            <option ${st==='Calificado'?'selected':''}>Calificado</option>
+            <option ${st==='Cerrado'?'selected':''}>Cerrado</option>
+          </select>
+          <button class="lead-note-btn" onclick="toggleNote('note-${lid}')"><i class="ti ti-note"></i> Nota</button>
+        </div>
+        <div class="lead-note-area" id="note-${lid}">
+          <textarea placeholder="Escribe una nota sobre este lead..." rows="2">${l._nota||''}</textarea>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function filterLeads(status, btn) {
+  currentLeadFilter = status;
+  document.querySelectorAll('.lead-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = status === 'all' ? leadsData : leadsData.filter(l => {
+    const lid = l.id || l.fecha;
+    return (leadStatuses[lid] || 'Nuevo') === status;
+  });
+  const list = document.getElementById('leadsList');
+  if (list) list.innerHTML = buildLeadsList(filtered);
+}
+
+function updateLeadStatus(lid, status) {
+  leadStatuses[lid] = status;
+  const card = document.querySelector(`[data-id="${lid}"]`);
+  if (card) card.dataset.status = status;
+  showToast(`Estado: ${status}`, 'success');
+}
+
+function toggleNote(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+// ── REBUILD ──────────────────────────────────────────────────
+function triggerRebuild() {
+  showToast('Para publicar: haz push en GitHub. Cloudflare Pages rebuilds automáticamente.', 'success');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
 function openModal(id) {
-  editingId = null;
-  galUrls = [];
-  currentStatus = 'Activa';
+  editingId = null; galUrls = []; currentStatus = 'Activa';
   clearForm();
+  document.getElementById('btnDuplicate').style.display = 'none';
   if (id) {
     const decoded = decodeURIComponent(id);
     const p = props.find(x => (x.id||x.slug) === decoded || encodeURIComponent(x.id||x.slug) === id);
     if (p) {
       editingId = p.id || p.slug;
       document.getElementById('modalTitle').textContent = 'Editar propiedad';
+      document.getElementById('btnDuplicate').style.display = 'inline-flex';
       loadForm(p);
     }
   } else {
     document.getElementById('modalTitle').textContent = 'Nueva propiedad';
   }
+  switchTab('basico');
   document.getElementById('modalOverlay').classList.add('open');
+  updateProgress();
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function switchTab(tab) {
+  document.querySelectorAll('.ftab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('tab-' + tab);
+  if (panel) panel.classList.add('active');
+  const tabs = {basico:0,detalles:1,contenido:2,caracteristicas:3,publicacion:4};
+  const idx = tabs[tab];
+  document.querySelectorAll('.ftab')[idx]?.classList.add('active');
+}
+
+function togglePriv(id) {
+  const el = document.getElementById(id);
+  if (el) el.checked = !el.checked;
 }
 
 function clearForm() {
-  ['fTitulo','fPrecio','fCodigo','fZona','fMunicipio','fUbicacionGeneral',
-   'fArea','fAreaV2','fHabitaciones','fBanos','fMediosBanos','fParqueos','fNiveles','fDatosTecnicos',
-   'fAnioConstruccion','fDescripcion','fHook','fDescCorta','fPdfUrl',
-   'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen'
-  ].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
-  ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados','fDepartamento'].forEach(id => {
+  const ids = ['fTitulo','fPrecio','fCodigo','fZona','fMunicipio','fUbicacionGeneral',
+    'fArea','fAreaV2','fHabitaciones','fBanos','fMediosBanos','fParqueos','fNiveles',
+    'fDatosTecnicos','fTerreno','fAnioConstruccion','fDescripcion','fHook','fDescCorta',
+    'fPdfUrl','fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal',
+    'fSlug','fLat','fLng','fImagen','fManzanas','fCultivo','fTituloFinca',
+    'fTiempoCarretera','fPrecioRenta','fBancoFin','fDisponibleDesde','fNumeroPiso',
+    'fAreaBalcon','fAsesor','fWaAsesor','fTagsSeo','fVideoUrl','fPlano',
+    'fVistas','fFavoritos','fFechaPublicacion','fAntiguedad','fCuotaMant'];
+  ids.forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados',
+   'fDepartamento','fOrientacion','fVista','fCertEnerg'].forEach(id => {
     const el=document.getElementById(id); if(el) el.value='';
   });
   document.getElementById('fTipo').value = 'Casa';
   document.getElementById('fOperacion').value = 'Venta';
   document.getElementById('fTipoListing').value = 'Residencial';
-  document.getElementById('fPrivada').checked = false;
   document.getElementById('sZona').checked = true;
-  document.getElementById('sInmu').checked = true;
-  document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb => { cb.checked=false; cb.closest('.char-item').classList.remove('checked'); });
+  document.getElementById('sInmu').checked = false;
+  ['privPrecio','privDireccion','privGaleria','privDatos','privDesc','privExclusiva'].forEach(id => {
+    const el=document.getElementById(id); if(el) el.checked=false;
+  });
+  document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb => {
+    cb.checked=false; cb.closest('.char-item').classList.remove('checked');
+  });
   setStatus('Activa');
-  galUrls = [];
-  renderGallery();
+  galUrls = []; renderGallery();
   const imgPrev = document.getElementById('imgPreview');
   if (imgPrev) imgPrev.style.display = 'none';
 }
@@ -758,166 +1111,240 @@ function loadForm(p) {
   const set = (id, val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
   set('fTitulo', p.titulo); set('fPrecio', p.precio); set('fCodigo', p.codigo);
   set('fZona', p.zona); set('fMunicipio', p.municipio); set('fUbicacionGeneral', p.ubicacionGeneral);
-  set('fArea', p.area); set('fAreaV2', p.areaV2); set('fHabitaciones', p.habitaciones);
-  set('fBanos', p.banos); set('fMediosBanos', p.mediosBanos); set('fParqueos', p.parqueos);
+  set('fArea', p.area||p.areaConst); set('fAreaV2', p.areaV2);
+  set('fHabitaciones', p.habitaciones); set('fBanos', p.banos);
+  set('fMediosBanos', p.mediosBanos); set('fParqueos', p.parqueos);
   set('fNiveles', p.niveles); set('fDatosTecnicos', p.datosTecnicos);
-  set('fAnioConstruccion', p.anioConstruccion); set('fEstadoConstruccion', p.estadoConstruccion);
-  set('fTipoConstruccion', p.tipoConstruccion); set('fTecho', p.techo);
-  set('fPiso', p.piso); set('fAcabados', p.acabados);
-  set('fDescripcion', p.descripcion); set('fHook', p.hook); set('fDescCorta', p.descCorta);
+  set('fTerreno', p.terreno); set('fAnioConstruccion', p.anioConstruccion);
+  set('fEstadoConstruccion', p.estadoConstruccion); set('fTipoConstruccion', p.tipoConstruccion);
+  set('fTecho', p.techo); set('fPiso', p.piso); set('fAcabados', p.acabados);
+  set('fOrientacion', p.orientacion); set('fAntiguedad', p.antiguedad);
+  set('fCuotaMant', p.cuotaMant); set('fDescripcion', p.descripcion);
+  set('fHook', p.hook); set('fDescCorta', p.descCorta);
   set('fPdfUrl', p.pdfUrl); set('fPrecioReal', p.precioReal);
   set('fContactoVendedor', p.contactoVendedor); set('fNotasInternas', p.notasInternas);
   set('fEstadoLegal', p.estadoLegal); set('fSlug', p.slug);
-  set('fLat', p.lat); set('fLng', p.lng); set('fImagen', p.imagen);
+  set('fLat', p.lat); set('fLng', p.lng); set('fImagen', p.imagen||p.mainImage);
+  set('fManzanas', p.manzanas); set('fCultivo', p.cultivo);
+  set('fTituloFinca', p.tituloFinca); set('fTiempoCarretera', p.tiempoCarretera);
+  set('fPrecioRenta', p.precioRenta); set('fBancoFin', p.bancoFin);
+  set('fDisponibleDesde', p.disponibleDesde); set('fNumeroPiso', p.numeroPiso);
+  set('fAreaBalcon', p.areaBalcon); set('fVista', p.vista);
+  set('fAsesor', p.asesor); set('fWaAsesor', p.waAsesor);
+  set('fTagsSeo', p.tagsSeo); set('fVideoUrl', p.videoUrl||p.video);
+  set('fPlano', p.plano); set('fVistas', p.vistas||0); set('fFavoritos', p.favoritos||0);
+  set('fFechaPublicacion', p.fechaPublicacion);
   const sel = (id, val) => { const el=document.getElementById(id); if(el&&val) el.value=val; };
-  sel('fTipo', p.tipo); sel('fOperacion', p.operacion); sel('fTipoListing', p.tipoListing);
-  sel('fDepartamento', p.departamento);
-  document.getElementById('fPrivada').checked = !!p.privada;
+  sel('fTipo', p.tipo); sel('fOperacion', p.operacion||p.cinta);
+  sel('fTipoListing', p.tipoListing); sel('fDepartamento', p.departamento);
+  sel('fOrientacion', p.orientacion); sel('fVista', p.vista); sel('fCertEnerg', p.certEnerg);
+  // privConfig
+  const cfg = p.privConfig || {};
+  document.getElementById('privPrecio').checked = !!cfg.precio;
+  document.getElementById('privDireccion').checked = !!cfg.direccion;
+  document.getElementById('privGaleria').checked = !!cfg.galeria;
+  document.getElementById('privDatos').checked = !!cfg.datos;
+  document.getElementById('privDesc').checked = !!cfg.descripcion;
+  document.getElementById('privExclusiva').checked = !!(p.esExclusiva || cfg.exclusiva);
   document.getElementById('sZona').checked = p.sitios ? p.sitios.includes('zona') : true;
-  document.getElementById('sInmu').checked = p.sitios ? p.sitios.includes('inmu') : true;
+  document.getElementById('sInmu').checked = p.sitios ? p.sitios.includes('inmu') : false;
   setStatus(p.estado || 'Activa');
   if (p.caracteristicas) {
     document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb => {
       const on = p.caracteristicas.includes(cb.value);
-      cb.checked = on;
-      cb.closest('.char-item').classList.toggle('checked', on);
+      cb.checked = on; cb.closest('.char-item').classList.toggle('checked', on);
     });
   }
-  galUrls = p.gallery ? p.gallery.filter(u => u && u !== p.imagen) : [];
+  galUrls = (p.gallery||[]).filter(u => u && u !== (p.imagen||p.mainImage));
   renderGallery();
-  if (p.imagen) {
+  if (p.imagen||p.mainImage) {
     const img = document.getElementById('imgPreview');
-    if (img) { img.src = p.imagen; img.style.display = 'block'; }
+    if (img) { img.src = p.imagen||p.mainImage; img.style.display='block'; }
   }
+  updateProgress();
 }
 
 function setStatus(st) {
   currentStatus = st;
   document.getElementById('fEstado').value = st;
-  document.querySelectorAll('#statusPills .pill').forEach(p => {
-    p.classList.toggle('active', p.textContent === st);
-  });
+  document.querySelectorAll('#statusPills .pill').forEach(p => p.classList.toggle('active', p.textContent===st));
 }
 
 function previewImg() {
   const val = document.getElementById('fImagen').value;
   const img = document.getElementById('imgPreview');
-  if (val) { img.src = val; img.style.display = 'block'; }
-  else { img.style.display = 'none'; }
+  if (val) { img.src=val; img.style.display='block'; } else { img.style.display='none'; }
 }
 
-function addGalImg() {
+function addGalImgBulk() {
   const url = prompt('URL de la imagen (ImageKit):');
   if (url && url.trim()) { galUrls.push(url.trim()); renderGallery(); }
 }
 
-function removeGalImg(i) {
-  galUrls.splice(i, 1);
-  renderGallery();
-}
+function removeGalImg(i) { galUrls.splice(i,1); renderGallery(); }
 
 function renderGallery() {
   const wrap = document.getElementById('galWrap');
   if (!wrap) return;
-  wrap.innerHTML = galUrls.map((u, i) =>
-    `<div class="gal-item"><img src="${u}" onerror="this.style.opacity='.3'"><button onclick="removeGalImg(${i})">×</button></div>`
+  wrap.innerHTML = galUrls.map((u,i) =>
+    `<div class="gal-item"><img src="${u}" onerror="this.style.opacity='.3'"><button class="gal-remove" onclick="removeGalImg(${i})">×</button></div>`
   ).join('');
+  const cnt = document.getElementById('galCount');
+  if (cnt) cnt.textContent = galUrls.length;
+}
+
+function autoSlug() {
+  const titulo = document.getElementById('fTitulo').value;
+  if (!titulo) return;
+  const slug = titulo.toLowerCase()
+    .replace(/[áàäâ]/g,'a').replace(/[éèëê]/g,'e').replace(/[íìïî]/g,'i')
+    .replace(/[óòöô]/g,'o').replace(/[úùüû]/g,'u').replace(/ñ/g,'n')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  document.getElementById('fSlug').value = slug;
+}
+
+function autoFormatPrice() { /* prix auto-format placeholder */ }
+
+function updateProgress() {
+  const titulo = document.getElementById('fTitulo')?.value;
+  const precio = document.getElementById('fPrecio')?.value;
+  const tipo = document.getElementById('fTipo')?.value;
+  const municipio = document.getElementById('fMunicipio')?.value;
+  const desc = document.getElementById('fDescripcion')?.value;
+  const imagen = document.getElementById('fImagen')?.value;
+  const hab = document.getElementById('fHabitaciones')?.value;
+  const banos = document.getElementById('fBanos')?.value;
+  const area = document.getElementById('fArea')?.value;
+  const hook = document.getElementById('fHook')?.value;
+  const slug = document.getElementById('fSlug')?.value;
+  const checks = [titulo,precio,tipo,municipio,desc,imagen,hab,banos,area,hook,slug,galUrls.length>0];
+  const done = checks.filter(Boolean).length;
+  const pct = Math.round(done/checks.length*100);
+  document.querySelectorAll('#modalProgress,#progressLabel').forEach(el => {
+    if(el) el.textContent = `${pct}% completo`;
+  });
+}
+
+function shareWA() {
+  const titulo = document.getElementById('fTitulo').value || 'Propiedad';
+  const slug = document.getElementById('fSlug').value;
+  const url = slug ? `https://zona-innmueble.com/propiedades/${slug}.html` : 'https://zona-innmueble.com';
+  const msg = encodeURIComponent(`*${titulo}*\n${url}`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+}
+
+function copyLink() {
+  const slug = document.getElementById('fSlug').value;
+  if (!slug) { showToast('Primero genera el slug', 'error'); return; }
+  navigator.clipboard.writeText(`https://zona-innmueble.com/propiedades/${slug}.html`);
+  showToast('Enlace copiado ✓', 'success');
+}
+
+async function duplicateProp() {
+  if (!editingId) return;
+  const p = props.find(x => (x.id||x.slug) === editingId);
+  if (!p) return;
+  editingId = null;
+  document.getElementById('fTitulo').value = (p.titulo||'') + ' (Copia)';
+  document.getElementById('fSlug').value = '';
+  document.getElementById('modalTitle').textContent = 'Duplicar propiedad';
+  document.getElementById('btnDuplicate').style.display = 'none';
+  showToast('Editando copia — guarda para crear', 'success');
 }
 
 async function saveProp() {
   const titulo = document.getElementById('fTitulo').value.trim();
-  if (!titulo) { showToast('El título es obligatorio','error'); return; }
-
+  if (!titulo) { showToast('El título es obligatorio', 'error'); switchTab('basico'); return; }
   const chars = Array.from(document.querySelectorAll('.char-item input[type=checkbox]:checked')).map(cb => cb.value);
   const sitios = [];
   if (document.getElementById('sZona').checked) sitios.push('zona');
   if (document.getElementById('sInmu').checked) sitios.push('inmu');
-
   const g = id => { const el=document.getElementById(id); return el ? el.value.trim() : ''; };
-
+  const privConfig = {
+    precio: document.getElementById('privPrecio').checked,
+    direccion: document.getElementById('privDireccion').checked,
+    galeria: document.getElementById('privGaleria').checked,
+    datos: document.getElementById('privDatos').checked,
+    descripcion: document.getElementById('privDesc').checked,
+    exclusiva: document.getElementById('privExclusiva').checked,
+  };
   const data = {
     titulo, precio:g('fPrecio'), codigo:g('fCodigo'),
     tipo:g('fTipo'), operacion:g('fOperacion'), tipoListing:g('fTipoListing'),
     zona:g('fZona'), municipio:g('fMunicipio'), ubicacionGeneral:g('fUbicacionGeneral'),
-    area:g('fArea'), areaV2:g('fAreaV2'), habitaciones:g('fHabitaciones'),
-    banos:g('fBanos'), mediosBanos:g('fMediosBanos'), parqueos:g('fParqueos'),
-    niveles:g('fNiveles'), datosTecnicos:g('fDatosTecnicos'),
+    area:g('fArea'), areaV2:g('fAreaV2'), terreno:g('fTerreno'),
+    habitaciones:g('fHabitaciones'), banos:g('fBanos'), mediosBanos:g('fMediosBanos'),
+    parqueos:g('fParqueos'), niveles:g('fNiveles'), datosTecnicos:g('fDatosTecnicos'),
     anioConstruccion:g('fAnioConstruccion'), estadoConstruccion:g('fEstadoConstruccion'),
     tipoConstruccion:g('fTipoConstruccion'), techo:g('fTecho'),
     piso:g('fPiso'), acabados:g('fAcabados'),
+    orientacion:g('fOrientacion'), antiguedad:g('fAntiguedad'), cuotaMant:g('fCuotaMant'),
+    numeroPiso:g('fNumeroPiso'), areaBalcon:g('fAreaBalcon'), vista:g('fVista'),
+    manzanas:g('fManzanas'), cultivo:g('fCultivo'), tituloFinca:g('fTituloFinca'),
+    tiempoCarretera:g('fTiempoCarretera'), precioRenta:g('fPrecioRenta'),
+    bancoFin:g('fBancoFin'), disponibleDesde:g('fDisponibleDesde'),
     descripcion:g('fDescripcion'), hook:g('fHook'), descCorta:g('fDescCorta'),
-    pdfUrl:g('fPdfUrl'), privada:document.getElementById('fPrivada').checked,
-    precioReal:g('fPrecioReal'), contactoVendedor:g('fContactoVendedor'),
-    notasInternas:g('fNotasInternas'), estadoLegal:g('fEstadoLegal'),
-    departamento:g('fDepartamento'), lat:g('fLat'), lng:g('fLng'),
+    pdfUrl:g('fPdfUrl'), precioReal:g('fPrecioReal'),
+    contactoVendedor:g('fContactoVendedor'), notasInternas:g('fNotasInternas'),
+    estadoLegal:g('fEstadoLegal'), departamento:g('fDepartamento'),
+    lat:g('fLat'), lng:g('fLng'), slug:g('fSlug'),
     imagen:g('fImagen'), gallery:galUrls,
-    estado:currentStatus, caracteristicas:chars, sitios,
+    asesor:g('fAsesor'), waAsesor:g('fWaAsesor'),
+    tagsSeo:g('fTagsSeo'), videoUrl:g('fVideoUrl'), plano:g('fPlano'),
+    certEnerg:g('fCertEnerg'), vistas:parseInt(g('fVistas'))||0,
+    favoritos:parseInt(g('fFavoritos'))||0, fechaPublicacion:g('fFechaPublicacion'),
+    estado:currentStatus, caracteristicas:chars, sitios, privConfig,
+    esExclusiva: privConfig.exclusiva,
     ...(editingId ? {id:editingId} : {})
   };
-
   try {
     const r = await fetch(API + '/api/propiedades', {
       method: editingId ? 'PUT' : 'POST',
-      credentials: 'include',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(data)
+      credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
     });
     if (r.ok) {
       showToast(editingId ? 'Propiedad actualizada ✓' : 'Propiedad creada ✓', 'success');
       closeModal();
       await loadProps();
       showPage('propiedades');
-    } else {
-      showToast('Error al guardar', 'error');
-    }
-  } catch(e) {
-    showToast('Error de conexión', 'error');
-  }
+    } else { showToast('Error al guardar', 'error'); }
+  } catch(e) { showToast('Error de conexión', 'error'); }
 }
 
 async function deleteProp(id, titulo) {
   if (!confirm('¿Eliminar "' + decodeURIComponent(titulo) + '"?')) return;
   try {
-    const r = await fetch(API + '/api/propiedades/' + id, {method:'DELETE', credentials:'include'});
+    const r = await fetch(API + '/api/propiedades/' + id, {method:'DELETE',credentials:'include'});
     if (r.ok) {
       showToast('Propiedad eliminada', 'success');
       await loadProps();
       showPage('propiedades');
-    } else {
-      showToast('Error al eliminar', 'error');
-    }
-  } catch(e) {
-    showToast('Error de conexión', 'error');
-  }
+    } else { showToast('Error al eliminar', 'error'); }
+  } catch(e) { showToast('Error de conexión', 'error'); }
 }
 
 // ── UTILS ────────────────────────────────────────────────────
 function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function showToast(msg, type) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + (type||'');
-  void t.offsetWidth;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.textContent = msg; t.className = 'toast '+(type||'');
+  void t.offsetWidth; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
-// ── KEYBOARD ─────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') doLogin();
-  if (e.key === 'Escape') closeModal();
+  if (e.key==='Escape') closeModal();
 });
 
 document.querySelectorAll('.char-item').forEach(item => {
-  item.addEventListener('change', () => {
-    item.classList.toggle('checked', item.querySelector('input').checked);
-  });
+  item.addEventListener('change', () => item.classList.toggle('checked', item.querySelector('input').checked));
 });
 
-// ── INIT ─────────────────────────────────────────────────────
 checkSession();
 </script>
 </body>
