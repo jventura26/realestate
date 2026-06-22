@@ -295,6 +295,66 @@ function indexPage(props) {
 
 <!-- TESTIMONIOS (FASE 1) -->
 
+<!-- OFF-MARKET -->
+<section style="padding:80px 6%;background:var(--ink);position:relative;overflow:hidden" class="fade-in-up">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(193,145,75,.06) 0%,transparent 70%)"></div>
+  <div style="max-width:1200px;margin:0 auto;position:relative;z-index:1">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <!-- TEXTO -->
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:20px">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block;animation:pulse-dot 2s infinite"></span>
+          <span style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Acceso Exclusivo</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;line-height:1.12;margin-bottom:22px;color:var(--wh)">
+          Propiedades que <em style="color:var(--or);font-style:italic">no están publicadas</em>
+        </h2>
+        <p style="font-size:.85rem;color:var(--sv);line-height:1.95;margin-bottom:32px;max-width:440px;font-weight:300">
+          El mercado premium de Guatemala mueve sus mejores propiedades en privado. Accede a listados exclusivos antes de que lleguen al mercado abierto.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:36px">
+          ${[
+            ['Residencias en Zona 10, 14 y 15 no listadas públicamente',''],
+            ['Fincas con potencial de desarrollo en Carretera a El Salvador',''],
+            ['Oportunidades de inversión con ROI proyectado',''],
+          ].map(([t])=>`<div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:18px;height:18px;border-radius:50%;background:rgba(193,145,75,.15);border:1px solid rgba(193,145,75,.35);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center">
+              <svg width="8" height="8" viewBox="0 0 10 10"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="var(--or)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="font-size:.82rem;color:var(--sv);line-height:1.7">${t}</span>
+          </div>`).join('')}
+        </div>
+        <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, me interesa acceder a propiedades fuera del mercado. ¿Tienen listados exclusivos?')}" target="_blank" rel="noopener" class="btn-or" style="display:inline-flex;align-items:center;gap:10px">
+          ${WA_SVG} Solicitar acceso privado
+        </a>
+        <p style="margin-top:14px;font-size:.63rem;color:var(--mt)">Respuesta en menos de 2 horas · Sin compromiso</p>
+      </div>
+      <!-- VISUAL -->
+      <div style="position:relative">
+        <div style="border-radius:16px;overflow:hidden;aspect-ratio:4/5;position:relative;background:var(--ink2);border:1px solid var(--gl)">
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover;opacity:.85" loading="lazy">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.85) 0%,transparent 50%)"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:28px">
+            <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px">Off-Market</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:4px">Residencia Privada</div>
+            <div style="font-size:.72rem;color:var(--sv)">Zona 14 · Solo para clientes verificados</div>
+          </div>
+          <!-- LOCK BADGE -->
+          <div style="position:absolute;top:20px;right:20px;background:rgba(13,27,62,.85);backdrop-filter:blur(8px);border:1px solid var(--gl);border-radius:100px;padding:8px 14px;display:flex;align-items:center;gap:7px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span style="font-size:.6rem;font-weight:600;color:var(--wh);letter-spacing:.08em">Acceso Privado</span>
+          </div>
+        </div>
+        <!-- STAT CARD FLOTANTE -->
+        <div style="position:absolute;bottom:-20px;left:-20px;background:var(--ink2);border:1px solid var(--gl);border-radius:12px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:4px">+40%</div>
+          <div style="font-size:.63rem;color:var(--sv);line-height:1.5">propiedades off-market<br>no llegan al público</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA INTERMEDIO -->
 <div class="cta-banner fade-in-up">
   <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
@@ -435,7 +495,10 @@ function indexPage(props) {
     <div class="ey" style="margin-bottom:12px">Tu asesor personal</div>
     <h2 class="st" style="margin-bottom:44px">Un equipo que conoce <em>cada propiedad</em></h2>
     <div class="asesor-card">
-      <div class="asesor-avatar">ZI</div>
+      <div class="asesor-avatar" style="background:transparent;border:none;padding:0;width:88px;height:88px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+        <img src="/assets/images/logo.png" alt="Zona INNmueble" style="width:80px;height:80px;object-fit:contain;border-radius:50%;background:#0d1b3e;padding:10px;border:1px solid var(--gl)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;width:80px;height:80px;border-radius:50%;background:var(--or);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;align-items:center;justify-content:center">ZI</div>
+      </div>
       <div style="flex:1">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:6px">Equipo Zona INNmueble</div>
         <div style="font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Asesores Inmobiliarios · Guatemala</div>
