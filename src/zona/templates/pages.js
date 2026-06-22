@@ -166,10 +166,42 @@ function indexPage(props) {
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
 
   const body = `
+===============================================================
+INSTRUCCIONES — Lee esto primero
+===============================================================
+
+Este archivo contiene el código del nuevo hero con video de fondo.
+
+DÓNDE PEGARLO:
+  Archivo: src/zona/templates/pages.js (en GitHub)
+  Busca:   <!-- HERO -->
+  Reemplaza: todo desde <!-- HERO --> hasta ANTES de <!-- FEATURED -->
+  (NO borres <!-- FEATURED --> ni lo que sigue)
+
+LOS ${...} SON CÓDIGO — no son errores.
+  Ejemplo: ${props.length} → cuando el sitio compile, esto
+  se reemplaza automáticamente con el número real de propiedades.
+  Debes pegarlos exactamente como están.
+
+===============================================================
+CÓDIGO A PEGAR (desde aquí hasta el final del archivo)
+===============================================================
+
 <!-- HERO -->
 <section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
-  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.97) 0%,rgba(13,27,62,.68) 55%,rgba(20,34,64,.9) 100%),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70') center/cover no-repeat"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.65) 0%,transparent 40%)"></div>
+
+  <!-- VIDEO DE FONDO -->
+  <video autoplay muted loop playsinline
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.55"
+    poster="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70">
+    <source src="/assets/reel-hero.mp4" type="video/mp4">
+  </video>
+
+  <!-- GRADIENTE ENCIMA DEL VIDEO -->
+  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.75) 100%);z-index:1"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.7) 0%,transparent 45%);z-index:1"></div>
+
+  <!-- CONTENIDO HERO -->
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
       <div class="ey" style="margin-bottom:0">Guatemala · Patrimonio Inmobiliario</div>
@@ -179,10 +211,10 @@ function indexPage(props) {
       </div>
     </div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.4rem);font-weight:300;line-height:1.06;margin-bottom:22px">
-      En Guatemala, la diferencia entre una casa y una <em style="color:var(--or);font-style:italic">residencia exclusiva</em> está en cada detalle.
+      En Guatemala, la diferencia entre una casa y una <em style="color:var(--or);font-style:italic">residencia exclusiva</em> est&aacute; en cada detalle.
     </h1>
     <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
-      ${props.length} propiedades verificadas, oportunidades de inversión y un equipo que entiende que cada propiedad cuenta una historia. Asesoría privada para quienes saben qué buscan.
+      ${props.length} propiedades verificadas, oportunidades de inversi&oacute;n y un equipo que entiende que cada propiedad cuenta una historia. Asesor&iacute;a privada para quienes saben qu&eacute; buscan.
     </p>
     <!-- BUSCADOR HERO -->
     <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
@@ -202,7 +234,7 @@ function indexPage(props) {
       <button onclick="heroGo()" style="padding:12px 22px;background:var(--or);color:var(--ink);border:none;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;font-family:'Montserrat',sans-serif">Buscar</button>
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero una asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-ol">${WA_SVG} Asesoría por WhatsApp</a>
+      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero una asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-ol">${WA_SVG} Asesor&iacute;a por WhatsApp</a>
     </div>
     <script>
     var __heroProps=${JSON.stringify(props.map(p=>({titulo:p.titulo,municipio:p.municipio,tipo:p.tipo,slug:p.slug})))};
@@ -245,16 +277,17 @@ function indexPage(props) {
     });
     <\/script>
   </div>
-  <!-- Stats bar -->
-  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.8);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap">
+
+  <!-- BARRA DE ESTADÍSTICAS -->
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,27,62,.75);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
     ${(()=>{
       const vendidas = props.filter(p=>p.estado==='Vendida').length;
       const activas = props.filter(p=>!p.estado||p.estado==='Activa').length;
       return [
         [activas+'+','Propiedades Activas'],
         [vendidas>0?vendidas+'+':'50+','Familias Asesoradas'],
-        ['10+','Años en el Mercado'],
-        ['100%','Asesoría Personal'],
+        ['10+','A&ntilde;os en el Mercado'],
+        ['100%','Asesor&iacute;a Personal'],
       ].map(([n,l])=>`<div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">${n}</div>
         <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">${l}</div>
