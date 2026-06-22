@@ -125,6 +125,28 @@ export default {
       });
     }
 
+    // ── Public propiedades alias (used by build.js) ─────────────
+    if (method === 'GET' && path === '/api/public/propiedades') {
+      const raw = await env.DB.get('propiedades');
+      const data = raw ? JSON.parse(raw) : [];
+      const pub = data
+        .filter(p => p.estado !== 'Pausada' && p.estado !== 'Eliminada')
+        .map(p => {
+          const out = { ...p };
+          if (p.privConfig) {
+            if (p.privConfig.precio) delete out.precio;
+            if (p.privConfig.direccion) { delete out.ubicacion; delete out.municipio; }
+            if (p.privConfig.galeria) { delete out.gallery; delete out.galeria; }
+            if (p.privConfig.datos) { delete out.habitaciones; delete out.banos; delete out.area; }
+            if (p.privConfig.descripcion) delete out.descripcion;
+          }
+          return out;
+        });
+      return new Response(JSON.stringify(pub), {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', ...cors(request) },
+      });
+    }
+
     // ── POST /api/login ──────────────────────────────────────────
     if (method === 'POST' && path === '/api/login') {
       let body;
