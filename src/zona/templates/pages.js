@@ -215,11 +215,16 @@ function indexPage(props) {
       }).slice(0,6);
       if(!matches.length){s.style.display='none';return;}
       s.innerHTML=matches.map(function(p){
-        return '<div onclick="window.location.href=\'/propiedades/'+p.slug+'.html\'" style="padding:10px 14px;cursor:pointer;font-size:.82rem;color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.06)" onmouseover="this.style.background=\'rgba(245,130,13,.15)\'" onmouseout="this.style.background=\'\'">'
+        return '<div class="hero-sug-item" data-slug="'+p.slug+'">'
           +'<span style="font-weight:600">'+p.titulo+'</span>'
           +' <span style="opacity:.5;font-size:.75rem">'+p.municipio+'</span>'
           +'</div>';
       }).join('');
+      s.querySelectorAll('.hero-sug-item').forEach(function(el){
+        el.addEventListener('click', function(){
+          window.location.href = '/propiedades/' + el.getAttribute('data-slug') + '.html';
+        });
+      });
       s.style.display='block';
     }
     function heroGo(){
