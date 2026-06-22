@@ -15,6 +15,85 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0D1B3E">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
+<!-- Meta Pixel Code -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1668269500330907');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1668269500330907&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5KVQZYZ7B3"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5KVQZYZ7B3');</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cómo busco propiedades según mi presupuesto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "En nuestro catálogo de propiedades puedes filtrar por tipo, precio mínimo y máximo, zona y habitaciones. También puedes contactarnos por WhatsApp para una búsqueda personalizada."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Todas las propiedades están verificadas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, el 100% de nuestras propiedades son verificadas personalmente. Realizamos inspecciones de documentación legal, estado físico, servicios básicos y validación de título en el Registro General de Propiedad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué retorno puedo esperar invirtiendo en propiedades?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El retorno depende de la ubicación, tipo de propiedad, mercado actual y estrategia (alquiler, venta, plusvalía). Nuestro equipo puede ayudarte con un análisis ROI personalizado."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Facilitan financiamiento?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No realizamos financiamiento directo, pero tenemos relaciones con bancos e instituciones financieras. Podemos orientarte con las mejores opciones según tu perfil."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el proceso de compra?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1. Identificas la propiedad. 2. Visita programada o virtual. 3. Validación de documentos legales. 4. Firma de promesa de compra. 5. Trámites notariales y registro de propiedad. Nuestro equipo te acompaña en cada paso."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo aseguran que la documentación es legal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Realizamos verificaciones exhaustivas: consulta en Registro General de Propiedad, validación de escritura original, certificado de no poseer deudas municipales e inspección de gravámenes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el horario de atención?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Lunes a Viernes: 8:00 AM - 6:00 PM. Sábado: 9:00 AM - 1:00 PM. WhatsApp 24/7: +502 4554-2088."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Son confidenciales mis datos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, total confidencialidad. Tu información personal y detalles de compra son privados. No compartimos datos con terceros sin tu consentimiento."
+      }
+    }
+  ]
+}
+</script>
 <style>
 :root{--ink:#0D1B3E;--ink2:#0F2A52;--or:#F5820D;--wh:#fff;--sv:#8A9BB0;--mt:#56647A;--bd:rgba(255,255,255,.08);--gl:rgba(245,130,13,.25);--wa:#25D366}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -70,13 +149,15 @@ section{padding:20px 6%}
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
+    <a href="/"><img src="/assets/images/logo.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
+      <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Finca">Fincas</a></li>
       <li><a href="/blog.html">Blog</a></li>
+      <li><a href="/zonas/guatemala.html">Zonas</a></li>
       <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
@@ -93,31 +174,31 @@ section{padding:20px 6%}
 <section style="padding:60px 6%">
   <div class="faq-container">
     <div class="faq-category">
-      <h2 class="faq-cat-title">Propiedades & Búsqueda</h2>
+      <h2 class="faq-cat-title">Propiedades &amp; Búsqueda</h2>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Cómo busco propiedades según mi presupuesto?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">En nuestro <a href="/propiedades.html" style="color:var(--or)">catálogo de propiedades</a> puedes filtrar por tipo, precio mínimo y máximo, zona y habitaciones. También puedes contactarnos por WhatsApp para una búsqueda personalizada.</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Todas las propiedades están verificadas?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Sí, el 100% de nuestras propiedades son verificadas personalmente. Realizamos inspecciones de documentación legal, estado físico, servicios básicos y validación de título en el Registro General de Propiedad.</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Puedo ver la propiedad antes de contactar?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Cada propiedad incluye fotos profesionales, galería de imágenes y descripción detallada. Para visitas programadas o virtual tours, contáctanos por WhatsApp y coordinamos.</p></div></div>
     </div>
 
     <div class="faq-category">
-      <h2 class="faq-cat-title">Inversión & Financiamiento</h2>
+      <h2 class="faq-cat-title">Inversión &amp; Financiamiento</h2>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Qué retorno puedo esperar invirtiendo en propiedades?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">El retorno depende de la ubicación, tipo de propiedad, mercado actual y estrategia (alquiler, venta, plusvalía). Nuestro equipo puede ayudarte con un análisis ROI personalizado. Contáctanos para una consulta.</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Facilitan financiamiento?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">No realizamos financiamiento directo, pero tenemos relaciones con bancos e instituciones financieras. Podemos orientarte con las mejores opciones según tu perfil.</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Hay propiedades para alquiler?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Sí, disponemos de propiedades en venta y también oportunidades para inversión en alquiler. Contáctanos para explorar opciones de inversión con flujo de ingresos.</p></div></div>
     </div>
 
     <div class="faq-category">
-      <h2 class="faq-cat-title">Proceso & Garantías</h2>
+      <h2 class="faq-cat-title">Proceso &amp; Garantías</h2>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Cuál es el proceso de compra?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">1. Identificas la propiedad<br>2. Visita programada o virtual<br>3. Validación de documentos legales<br>4. Firma de promesa de compra<br>5. Trámites notariales y registro de propiedad<br><br>Nuestro equipo te acompaña en cada paso.</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Cómo aseguran que la documentación es legal?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Realizamos verificaciones exhaustivas: consulta en Registro General de Propiedad, validación de escritura original, certificado de no poseer deudas municipales e inspección de gravámenes.</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Hay garantía después de comprar?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Sí, proporcionamos asesoría post-venta y estamos disponibles para resolver dudas sobre tu propiedad. También conectamos con servicios confiables de mantención si lo necesitas.</p></div></div>
     </div>
 
     <div class="faq-category">
-      <h2 class="faq-cat-title">Asesoría & Soporte</h2>
+      <h2 class="faq-cat-title">Asesoría &amp; Soporte</h2>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Cuál es el horario de atención?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Lunes a Viernes: 8:00 AM - 6:00 PM<br>Sábado: 9:00 AM - 1:00 PM<br>WhatsApp 24/7: +502 4554-2088</p></div></div>
       <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Cómo me contacto con un asesor?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">WhatsApp: +502 4554-2088 (respuesta en menos de 2 horas)<br>También puedes usar el botón de WhatsApp en cualquier página del sitio.</p></div></div>
-      <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Son confidenciales mis datos?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Sí, total confidencialidad. Tu información personal y detalles de compra son privados. No compartimos datos con terceros sin tu consentimiento.</p></div></div>
+      <div class="faq-item"><div class="faq-header"><span class="faq-title">¿Son confidenciales mis datos?</span><span class="faq-icon">▼</span></div><div class="faq-content"><p class="faq-text">Sí, total confidencialidad. Tu información personal y detalles de compra son privados. No compartimos datos con terceros sin tu consentimiento. Consulta nuestra <a href="/privacidad.html" style="color:var(--or)">Política de Privacidad</a>.</p></div></div>
     </div>
   </div>
 </section>
@@ -164,12 +245,13 @@ section{padding:20px 6%}
         <li style="font-size:.8rem;color:var(--sv)">📞 +502 4554-2088</li>
         <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
         <li><a href="/about.html" style="font-size:.8rem;color:var(--sv)">Nosotros</a></li>
+        <li><a href="/privacidad.html" style="font-size:.8rem;color:var(--sv)">Privacidad</a></li>
       </ul>
     </div>
   </div>
   <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
     <span style="font-size:.72rem;color:var(--mt)">© 2026 Zona INNmueble Real Estate · Guatemala</span>
-    <span style="font-size:.72rem;color:var(--mt)">Premium Real Estate · Propiedades verificadas</span>
+    <a href="/privacidad.html" style="font-size:.72rem;color:var(--mt)">Política de Privacidad</a>
   </div>
 </footer>
 
