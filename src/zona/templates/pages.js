@@ -166,27 +166,6 @@ function indexPage(props) {
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
 
   const body = `
-===============================================================
-INSTRUCCIONES — Lee esto primero
-===============================================================
-
-Este archivo contiene el código del nuevo hero con video de fondo.
-
-DÓNDE PEGARLO:
-  Archivo: src/zona/templates/pages.js (en GitHub)
-  Busca:   <!-- HERO -->
-  Reemplaza: todo desde <!-- HERO --> hasta ANTES de <!-- FEATURED -->
-  (NO borres <!-- FEATURED --> ni lo que sigue)
-
-LOS ${...} SON CÓDIGO — no son errores.
-  Ejemplo: ${props.length} → cuando el sitio compile, esto
-  se reemplaza automáticamente con el número real de propiedades.
-  Debes pegarlos exactamente como están.
-
-===============================================================
-CÓDIGO A PEGAR (desde aquí hasta el final del archivo)
-===============================================================
-
 <!-- HERO -->
 <section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
 
