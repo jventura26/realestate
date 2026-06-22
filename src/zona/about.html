@@ -15,6 +15,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0D1B3E">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
+<!-- Meta Pixel Code -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1668269500330907');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1668269500330907&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5KVQZYZ7B3"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5KVQZYZ7B3');</script>
 <style>
 :root{--ink:#0D1B3E;--ink2:#0F2A52;--or:#F5820D;--or2:#D46F07;--bl:#4A90D9;--wh:#fff;--sv:#8A9BB0;--mt:#56647A;--bd:rgba(255,255,255,.08);--gl:rgba(245,130,13,.25);--wa:#25D366}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -82,6 +89,7 @@ footer{background:var(--ink2);padding:44px 6%;border-top:1px solid var(--gl);mar
   "name": "Zona INNmueble",
   "description": "Inmobiliaria premium en Guatemala especializada en casas, fincas y propiedades residenciales en Zona 10, Zona 14, Fraijanes y Carretera a El Salvador.",
   "url": "https://zona-innmueble.com",
+  "logo": "https://zona-innmueble.com/assets/images/logo.png",
   "telephone": "+50245542088",
   "address": {
     "@type": "PostalAddress",
@@ -97,13 +105,15 @@ footer{background:var(--ink2);padding:44px 6%;border-top:1px solid var(--gl);mar
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
+    <a href="/"><img src="/assets/images/logo.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
+      <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Finca">Fincas</a></li>
       <li><a href="/blog.html">Blog</a></li>
+      <li><a href="/zonas/guatemala.html">Zonas</a></li>
       <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
@@ -127,7 +137,7 @@ footer{background:var(--ink2);padding:44px 6%;border-top:1px solid var(--gl);mar
     </div>
 
     <div style="margin-bottom:60px">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;margin-bottom:32px">Misión & Visión</h2>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;margin-bottom:32px">Misión &amp; Visión</h2>
       <div class="card-grid">
         <div class="card">
           <div style="font-size:2rem;margin-bottom:12px">🎯</div>
@@ -209,12 +219,13 @@ footer{background:var(--ink2);padding:44px 6%;border-top:1px solid var(--gl);mar
         <li style="font-size:.8rem;color:var(--sv)">📞 +502 4554-2088</li>
         <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
         <li><a href="/about.html" style="font-size:.8rem;color:var(--sv)">Nosotros</a></li>
+        <li><a href="/privacidad.html" style="font-size:.8rem;color:var(--sv)">Privacidad</a></li>
       </ul>
     </div>
   </div>
   <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
     <span style="font-size:.72rem;color:var(--mt)">© 2026 Zona INNmueble Real Estate · Guatemala</span>
-    <span style="font-size:.72rem;color:var(--mt)">Premium Real Estate · Propiedades verificadas</span>
+    <a href="/privacidad.html" style="font-size:.72rem;color:var(--mt)">Política de Privacidad</a>
   </div>
 </footer>
 
