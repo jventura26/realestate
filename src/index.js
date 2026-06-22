@@ -54,7 +54,7 @@ function getAdminHTML() {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
@@ -236,7 +236,7 @@ export default {
       }
       data.push(body);
       await env.DB.put('propiedades', JSON.stringify(data));
-      triggerRebuild(); // auto-deploy al crear
+      ctx.waitUntil(triggerRebuild()); // auto-deploy al crear
       return jsonRes({ ok: true, id: body.id });
     }
 
@@ -256,7 +256,7 @@ export default {
       }
       data[idx] = { ...data[idx], ...body, id };
       await env.DB.put('propiedades', JSON.stringify(data));
-      triggerRebuild(); // auto-deploy al editar
+      ctx.waitUntil(triggerRebuild()); // auto-deploy al editar
       return jsonRes({ ok: true, prop: data[idx] });
     }
 
@@ -277,7 +277,7 @@ export default {
       }
       data[idx] = { ...data[idx], ...body, id };
       await env.DB.put('propiedades', JSON.stringify(data));
-      triggerRebuild(); // auto-deploy al editar
+      ctx.waitUntil(triggerRebuild()); // auto-deploy al editar
       return jsonRes({ ok: true, prop: data[idx] });
     }
 
@@ -293,7 +293,7 @@ export default {
         return pid !== id;
       });
       await env.DB.put('propiedades', JSON.stringify(filtered));
-      triggerRebuild(); // auto-deploy al eliminar
+      ctx.waitUntil(triggerRebuild()); // auto-deploy al eliminar
       return jsonRes({ ok: true });
     }
 
@@ -322,7 +322,7 @@ export default {
     if (method === 'POST' && path === '/api/rebuild') {
       const authed = await requireAuth(request, env);
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
-      await triggerRebuild();
+      ctx.waitUntil(triggerRebuild());
       return jsonRes({ ok: true });
     }
 
