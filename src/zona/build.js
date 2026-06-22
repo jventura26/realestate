@@ -81,7 +81,7 @@ function write(p, c) { fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeF
 function copyAssets() {
   const dstDir = path.join(OUT, 'assets');
   fs.mkdirSync(dstDir, { recursive: true });
-  
+
   // Copiar desde public/assets (logo, icon)
   const publicDir = path.join(__dirname, '../../public/assets');
   const fileMappings = {
@@ -97,14 +97,14 @@ function copyAssets() {
       }
     });
   }
-  
+
   // Copiar favicon desde src/zona/assets
   const zonaFaviconSrc = path.join(__dirname, 'assets/favicon.png');
   const zonaFaviconDst = path.join(dstDir, 'favicon.png');
   if (fs.existsSync(zonaFaviconSrc)) {
     fs.copyFileSync(zonaFaviconSrc, zonaFaviconDst);
   }
-  
+
   // Copiar images/ si existe
   const imagesDir = path.join(__dirname, 'assets/images');
   const dstImagesDir = path.join(dstDir, 'images');
@@ -178,6 +178,17 @@ if(fs.existsSync(blogSrc)) {
   fs.copyFileSync(blogSrc, path.join(OUT, 'blog.html'));
   console.log('   ✔  blog.html');
 }
+
+// ── NUEVO: Política de Privacidad ────────────────────────────────────
+const privacidadSrc = path.join(__dirname, 'privacidad.html');
+if(fs.existsSync(privacidadSrc)) {
+  fs.copyFileSync(privacidadSrc, path.join(OUT, 'privacidad.html'));
+  console.log('   ✔  privacidad.html');
+} else {
+  console.warn('   ⚠️  privacidad.html no encontrado en src/zona/ — agrégalo para Meta Ads compliance');
+}
+// ─────────────────────────────────────────────────────────────────────
+
 blogArticles.forEach(filename => {
   const srcFile = path.join(__dirname, filename);
   if (fs.existsSync(srcFile)) {
@@ -221,6 +232,7 @@ const urls = [
   { loc:'/blog.html',        priority:'0.8', changefreq:'weekly' },
   { loc:'/about.html',       priority:'0.6', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/faq.html',         priority:'0.6', changefreq:'monthly', lastmod:'2026-06-10' },
+  { loc:'/privacidad.html',  priority:'0.3', changefreq:'yearly',  lastmod:'2026-06-21' },
   { loc:'/cuanto-cuesta-casa-fraijanes-2026.html',   priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/como-comprar-finca-guatemala.html',         priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/mejores-zonas-vivir-guatemala.html',        priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
@@ -245,5 +257,5 @@ write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.
 // Copiar assets
 copyAssets(); console.log('   ✔  assets copied');
 
-console.log(`\n✅  Zona → dist/zona/  (${props.length * 2 + Object.keys(zonasMap).length + 10} HTML pages)\n`);
+console.log(`\n✅  Zona → dist/zona/  (${props.length * 2 + Object.keys(zonasMap).length + 11} HTML pages)\n`);
 }).catch(e => { console.error('Build error:', e); process.exit(1); });
