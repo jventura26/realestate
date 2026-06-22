@@ -50,8 +50,10 @@ function card(p) {
   <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
     data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
     data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
-    data-habs="${p.habitaciones||0}">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy" id="${cardId}-img">
+    data-habs="${p.habitaciones||0}"
+    data-fecha="${escapeHtml(String(p.fechaPublicacion||p.createdAt||''))}"
+    data-area="${parseFloat(p.areaConst)||parseFloat(p.area)||0}">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
     <div class="pc-ov"></div>
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
     ${exclusivaBadge}
@@ -482,8 +484,24 @@ function catalogPage(props) {
         (!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&
         (!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&
         (()=>{const mn=parseFloat(document.getElementById('fp-min').value)||0;const mx=parseFloat(document.getElementById('fp-max').value)||0;const pv=parseFloat(c.dataset.precio)||0;return (!mn&&!mx)||(pv>=mn&&(!mx||pv<=mx));})();
-      c.style.display=ok?'':'none';if(ok)n++;
+      c.parentElement.style.display=ok?'':'none';if(ok)n++;
     });
+    // Ordenar
+    var sv=document.getElementById('fsort').value;
+    if(sv){
+      var wraps=[...grid.querySelectorAll('.prop-card-wrap')];
+      wraps.sort(function(a,b){
+        var ca=a.querySelector('.prop-card'),cb=b.querySelector('.prop-card');
+        if(!ca||!cb)return 0;
+        var pa=parseFloat(ca.dataset.precio)||0,pb=parseFloat(cb.dataset.precio)||0;
+        if(sv==='price_asc')return pa-pb;
+        if(sv==='price_desc')return pb-pa;
+        if(sv==='newest')return (cb.dataset.fecha||'').localeCompare(ca.dataset.fecha||'');
+        if(sv==='area_desc')return (parseFloat(cb.dataset.area)||0)-(parseFloat(ca.dataset.area)||0);
+        return 0;
+      });
+      wraps.forEach(function(w){grid.appendChild(w);});
+    }
     cnt.textContent=n+' propiedad'+(n!==1?'es':'');
     document.getElementById('nr').style.display=n===0?'block':'none';
   }
@@ -499,11 +517,11 @@ function catalogPage(props) {
     document.getElementById('price-dropdown').style.display='none';
     run();
   };
-  ['fq','ft','fc2','fc3','fh'].forEach(id=>{
+  ['fq','ft','fc2','fc3','fh','fsort'].forEach(id=>{
     document.getElementById(id).addEventListener('input',run);
     document.getElementById(id).addEventListener('change',run);
   });
-  document.getElementById('cl2').addEventListener('click',()=>{['fq','ft','fc2','fc3','fh'].forEach(id=>document.getElementById(id).value='');document.getElementById('fp-min').value='';document.getElementById('fp-max').value='';updatePriceBtn();run();});
+  document.getElementById('cl2').addEventListener('click',()=>{['fq','ft','fc2','fc3','fh','fsort'].forEach(id=>document.getElementById(id).value='');document.getElementById('fp-min').value='';document.getElementById('fp-max').value='';updatePriceBtn();run();});
   const p=new URLSearchParams(location.search);
   if(p.get('tipo'))  document.getElementById('ft').value=p.get('tipo');
   if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');
