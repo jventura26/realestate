@@ -32,7 +32,16 @@ function cleanArea(area) {
 function normalizeKV(kvProps) {
   return kvProps.map(p => {
     const rawPrice = p.precio || '';
-    const parsedNum = rawPrice ? parseFloat(rawPrice.replace(/[^0-9.]/g, '')) : NaN;
+    // Quitar prefijo de moneda ANTES de extraer dígitos.
+    // Bug anterior: "Q.1,440,000" → el punto de "Q." quedaba → ".1440000" → parseFloat = 0.144
+    const rawPriceStripped = rawPrice
+      .replace(/^\s*Q\.?\s*/i, '')
+      .replace(/^\s*GTQ\s*/i, '')
+      .replace(/^\s*\$\s*/, '')
+      .replace(/^\s*USD\s*/i, '');
+    const parsedNum = rawPriceStripped
+      ? parseFloat(rawPriceStripped.replace(/,/g, '').replace(/[^0-9.]/g, ''))
+      : NaN;
     const safeNum = isNaN(parsedNum) ? 0 : parsedNum;
     return ({
     ...p,
@@ -252,10 +261,10 @@ const urls = [
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
 write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html\n'); console.log('   ✔  google verification');
-write(path.join(OUT,'_redirects'),   generateRedirects(props, DOMAIN)); console.log('   ✔  _redirects (Wix URL migration)');
 
-// Copiar assets
-copyAssets(); console.log('   ✔  assets copied');
+console.log('\n✅  Build completo!\n');
 
-console.log(`\n✅  Zona → dist/zona/  (${props.length * 2 + Object.keys(zonasMap).length + 11} HTML pages)\n`);
-}).catch(e => { console.error('Build error:', e); process.exit(1); });
+}).catch(function(err){
+  console.error('Build failed:', err);
+  process.exit(1);
+});
