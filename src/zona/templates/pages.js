@@ -126,7 +126,7 @@ function renderCaracteristicas(chars) {
 
 function renderDesc(desc) {
   if (!desc) return '';
-  const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripcion</div>';
+  const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripci&oacute;n</div>';
   // JSON de Wix
   if (desc.trim().startsWith('{') || desc.includes('"nodes"')) {
     try {
@@ -565,7 +565,7 @@ function detailPage(prop, all) {
   const specs = [
     { l:'Tipo',              v: prop.tipo },
     { l:'Operación',         v: prop.operacion || prop.cinta },
-    { l:'Municipio',         v: prop.municipio || prop.zona },
+    (prop.zona && prop.zona.trim() && prop.zona.trim() !== (prop.municipio||'').trim()) ? { l:'Zona', v: prop.zona } : null,
     prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones',  v: prop.habitaciones } : null,
     prop.banos&&prop.banos!=='0'               ? { l:'Baños',         v: prop.banos }        : null,
     prop.mediosBanos&&prop.mediosBanos!=='0'   ? { l:'Medios baños',  v: prop.mediosBanos }  : null,
@@ -816,7 +816,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
 
     ${(!esExclusiva&&!cfg.specs&&quickSpecs.length) ? '<div class="dv3-qs">'+quickSpecs.map(function(q){return '<div class="dv3-qs-item">'+q.icon+' '+escapeHtml(String(q.v))+' <span>'+escapeHtml(q.l)+'</span></div>';}).join('')+'</div>' : ''}
 
-    ${prop.descCorta ? '<div class="dv3-hook">&ldquo;'+escapeHtml(prop.descCorta)+'&rdquo;</div>' : ''}
+    ${(prop.descCorta && prop.descCorta.trim().length <= 140) ? '<div class="dv3-hook">&ldquo;'+escapeHtml(prop.descCorta)+'&rdquo;</div>' : ''}
 
     <div class="dv3-tabs">
       <button class="dv3-tab on" onclick="dv3Tab('det',this)">Detalles</button>
