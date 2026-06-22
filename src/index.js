@@ -323,4 +323,9 @@ export default {
       const authed = await requireAuth(request, env);
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
       ctx.waitUntil(triggerRebuild());
-      retu
+      return jsonRes({ ok: true });
+    }
+
+    return jsonRes({ error: 'Not found' }, 404);
+  },
+};
