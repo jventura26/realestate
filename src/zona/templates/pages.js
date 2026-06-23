@@ -897,7 +897,8 @@ function detailPage(prop, all) {
   .dv3-qs-item{padding:7px 11px;font-size:.74rem}
   .dv3-specs-grid{grid-template-columns:1fr}
   .dv3-gal{grid-template-columns:repeat(3,1fr)}
-  .dv3-tab{padding:10px 13px;font-size:.62rem}
+  .dv3-tabs{flex-wrap:wrap!important;overflow-x:unset!important}
+  .dv3-tab{padding:8px 10px!important;font-size:.58rem!important;flex:1 1 auto!important;text-align:center!important}
   .dv3-bread{padding:10px 4%;font-size:.62rem}
   .dv3-wrap{padding:0 4% 80px}
   .dv3-share-btn{display:none}
@@ -938,8 +939,6 @@ function detailPage(prop, all) {
   .dv3-char{font-size:.68rem!important}
   /* Quick specs en 2 filas si necesario */
   .dv3-qs{flex-wrap:wrap!important}
-  /* Tabs: reducir padding para que todos quepan */
-  .dv3-tab{padding:10px 12px!important;font-size:.6rem!important}
 }
 </style>
 
