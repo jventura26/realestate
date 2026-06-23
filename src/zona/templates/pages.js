@@ -171,7 +171,7 @@ function indexPage(props) {
 <!-- HERO -->
 <section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
   <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none">
-    <source src="/assets/reel-hero.mp4" type="video/mp4">
+    <source src="https://ik.imagekit.io/Zona/Reel%20marca2.mp4" type="video/mp4">
   </video>
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.85) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.78) 100%);z-index:1"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.8) 0%,transparent 50%);z-index:1"></div>
