@@ -1,14 +1,14 @@
 const { layout, WA }       = require('./layout');
 const { escapeHtml, uniqueValues, getRelated } = require('../../shared/utils');
- 
+
 const DOMAIN = 'https://zona-innmueble.com';
- 
+
 const WA_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
- 
+
 function waLink(msg) {
   return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
 }
- 
+
 // ── Card ─────────────────────────────────────────────────────────────
 function card(p) {
   const cfg = p.privConfig || {};
@@ -34,18 +34,18 @@ function card(p) {
   const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
   const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(u)));
   const priceLabel = (esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(p.priceFormatted);
- 
+
   // Flechas del carrusel solo si hay galeria
   const arrows = hasGallery ? `
   <button class="card-prev" onclick="event.preventDefault();cardSlide('${cardId}',-1)" aria-label="Anterior">&#8249;</button>
   <button class="card-next" onclick="event.preventDefault();cardSlide('${cardId}',1)" aria-label="Siguiente">&#8250;</button>
   <div class="card-dots" id="${cardId}-dots">${imgs.slice(0,10).map((_,i)=>`<span class="card-dot${i===0?' active':''}" onclick="event.preventDefault();cardGoto('${cardId}',${i})"></span>`).join('')}</div>
   ` : '';
- 
+
   const photoCount = hasGallery ? `<span class="card-photo-count">&#128247; ${imgs.length}</span>` : '';
   const exclusivaBadge = esExclusiva ? `<span class="pc-badge-excl">&#10022; Exclusiva</span>` : '';
   const newBadge = (!esExclusiva && isNewListing) ? `<span class="pc-badge-new">&#10024; Nuevo</span>` : '';
- 
+
   return `<div class="prop-card-wrap" id="${cardId}" data-imgs='${imgsJson}' data-idx="0">
   <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
     data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
@@ -75,7 +75,7 @@ function card(p) {
   ${arrows}
 </div>`;
 }
- 
+
 // ── INDEX ─────────────────────────────────────────────────────────────
 function ca(area) {
   if (!area) return '';
@@ -90,7 +90,7 @@ function ca(area) {
   if (!s) return '';
   return s;
 }
- 
+
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
   const grupos = [
@@ -125,7 +125,7 @@ function renderCaracteristicas(chars) {
   html += `</div>`;
   return html;
 }
- 
+
 function renderDesc(desc) {
   if (!desc) return '';
   const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripci&oacute;n</div>';
@@ -161,27 +161,27 @@ function renderDesc(desc) {
   const html = lines.map(l => '<p style="font-size:.84rem;color:var(--sv);line-height:1.7;margin-bottom:8px">' + escapeHtml(l) + '</p>').join('');
   return label + '<div class="det-desc">' + html + '</div>';
 }
- 
+
 function indexPage(props) {
   const featured = props.slice(0, 6);
   const tiposRaw = uniqueValues(props, 'tipo');
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
- 
+
   const body = `
 <!-- HERO -->
 <section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
- 
+
   <!-- VIDEO DE FONDO -->
   <video autoplay muted loop playsinline
     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.55"
     poster="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70">
     <source src="/assets/reel-hero.mp4" type="video/mp4">
   </video>
- 
+
   <!-- GRADIENTE ENCIMA DEL VIDEO -->
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.75) 100%);z-index:1"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.7) 0%,transparent 45%);z-index:1"></div>
- 
+
   <!-- CONTENIDO HERO -->
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
@@ -258,7 +258,7 @@ function indexPage(props) {
     });
     <\/script>
   </div>
- 
+
   <!-- BARRA DE ESTADÍSTICAS -->
   <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,27,62,.75);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
     ${(()=>{
@@ -276,7 +276,7 @@ function indexPage(props) {
     })()}
   </div>
 </section>
- 
+
 <!-- FEATURED -->
 <section style="padding:80px 0 0;background:var(--ink2)" class="fade-in-up">
   <div style="padding:0 6% 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px">
@@ -292,9 +292,9 @@ function indexPage(props) {
     <a href="/propiedades.html" class="btn-or">Ver catálogo completo</a>
   </div>
 </section>
- 
+
 <!-- TESTIMONIOS (FASE 1) -->
- 
+
 <!-- OFF-MARKET -->
 <section style="padding:80px 6%;background:var(--ink);position:relative;overflow:hidden" class="fade-in-up">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(193,145,75,.06) 0%,transparent 70%)"></div>
@@ -354,7 +354,7 @@ function indexPage(props) {
     </div>
   </div>
 </section>
- 
+
 <!-- CTA INTERMEDIO -->
 <div class="cta-banner fade-in-up">
   <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
@@ -394,7 +394,7 @@ function indexPage(props) {
     </div>
   </div>
 </section>
- 
+
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
@@ -458,9 +458,9 @@ function indexPage(props) {
     </div>
   </div>
 </section>
- 
- 
- 
+
+
+
 <!-- TYPES -->
 <style>.tipo-bg{transform:scale(1)}.tipo-line{height:28px}a:hover .tipo-bg{transform:scale(1.06)}a:hover .tipo-line{height:44px}</style>
 <section style="background:var(--ink)" class="fade-in-up">
@@ -486,9 +486,9 @@ function indexPage(props) {
     </a>`).join('')}
   </div>
 </section>
- 
+
 <!-- CTA -->
- 
+
 <!-- SECCION ASESOR -->
 <section style="padding:80px 6%;background:var(--ink)" class="fade-in-up">
   <div style="max-width:860px;margin:0 auto">
@@ -525,14 +525,14 @@ function indexPage(props) {
   </div>
 </section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
 }
- 
+
 // ── CATALOG ───────────────────────────────────────────────────────────
 function catalogPage(props) {
   const tiposRaw = uniqueValues(props, 'tipo');
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
   const ciudades = uniqueValues(props, 'municipio');
   const cintas   = uniqueValues(props, 'cinta');
- 
+
   const filterJS = `<script>
 (function(){
   const grid=document.getElementById('g'),cnt=document.getElementById('fc');
@@ -590,7 +590,7 @@ function catalogPage(props) {
   if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');
   run();cnt.textContent='${props.length} propiedades';
 })();</script>`;
- 
+
   const body = `
 <div style="background:var(--ink2);padding:42px 6% 34px;border-bottom:1px solid var(--bd)">
   <div class="ey">Catálogo Completo</div>
@@ -630,10 +630,10 @@ function catalogPage(props) {
     <small>Intenta otros filtros o <a href="https://wa.me/${WA}" style="color:var(--or)">contáctanos por WhatsApp</a></small>
   </div>
 </div>`;
- 
+
   return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} casas, fincas y apartamentos en venta en Guatemala. Propiedades en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Filtra por precio y zona.`, canonical: '/propiedades.html', body, scripts: filterJS });
 }
- 
+
 // ── DETAIL ────────────────────────────────────────────────────────────
 function detailPage(prop, all) {
   // Configuración de privacidad (declarado primero para usar en jsonLd, meta, etc.)
@@ -649,12 +649,12 @@ function detailPage(prop, all) {
   const related  = getRelated(prop, all);
   const img      = prop.mainImage || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=70';
   const propUrl  = `${DOMAIN}/propiedades/${prop.slug}.html`;
- 
+
   // WhatsApp messages
   const msgInfo  = `Hola, me interesa la propiedad: ${prop.title}. Quiero solicitar más información. Link: ${propUrl}`;
   const msgVisit = `Hola, me interesa la propiedad: ${prop.title}. Quiero agendar una visita privada. Link: ${propUrl}`;
   const msgFin   = `Hola, me interesa la propiedad: ${prop.title}. Quiero consultar opciones de financiamiento. Link: ${propUrl}`;
- 
+
   const specs = [
     { l:'Tipo',              v: prop.tipo },
     { l:'Operación',         v: prop.operacion || prop.cinta },
@@ -696,14 +696,14 @@ function detailPage(prop, all) {
     prop.fechaPublicacion                      ? { l:'Publicado',     v: prop.fechaPublicacion } : null,
     prop.codigo                                ? { l:'Código',        v: prop.codigo }       : null,
   ].filter(Boolean);
- 
+
   const gal    = prop.gallery.slice(0, 10);
   const galHtml= gal.length > 1
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
- 
+
   const relHtml = related.length
     ? `<section class="related"><div class="ey">Relacionadas</div><h2 class="st">También te puede <em>interesar</em></h2><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></section>` : '';
- 
+
   // JSON-LD structured data
   const cleanDesc = (esExclusiva||cfg.descripcion) ? '' : (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
   const jsonLd = JSON.stringify({
@@ -734,8 +734,8 @@ function detailPage(prop, all) {
       "telephone": "+50245542088"
     }
   });
- 
- 
+
+
   // Banner exclusiva
   const exclusivaBanner = esExclusiva
     ? '<div style="background:linear-gradient(135deg,rgba(245,130,13,.12),rgba(245,130,13,.04));border:1px solid rgba(245,130,13,.3);border-radius:6px;padding:20px 24px;margin-bottom:24px;text-align:center">'
@@ -743,7 +743,7 @@ function detailPage(prop, all) {
       + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:var(--sv);line-height:1.6;font-style:italic">Esta propiedad es de carácter exclusivo.<br>Para más información contacte directamente con su asesor.</div>'
       + '</div>'
     : '';
- 
+
   // Quick specs for hero bar
   const quickSpecs = [
     prop.habitaciones&&prop.habitaciones!=='0' ? {icon:'🛏', v:prop.habitaciones, l:'hab.'} : null,
@@ -753,12 +753,12 @@ function detailPage(prop, all) {
     prop.areaV2                                ? {icon:'📏', v:prop.areaV2, l:'v²'} : null,
     prop.manzanas                              ? {icon:'🌿', v:prop.manzanas, l:'mz'} : null,
   ].filter(Boolean);
- 
+
   const waNum = prop.waAsesor ? prop.waAsesor.replace(/\\D/g,'') : '50245542088';
- 
+
   const body = `
 <script type="application/ld+json">${jsonLd}<\/script>
- 
+
 <style>
 .dv3-hero{position:relative;background:#000;overflow:hidden}
 .dv3-hero-img{width:100%;max-height:580px;object-fit:cover;display:block;opacity:.92}
@@ -871,13 +871,13 @@ function detailPage(prop, all) {
   .dv3-share-btn{display:none}
 }
 </style>
- 
+
 <div class="dv3-bread">
   <a href="/">Inicio</a> <span style="opacity:.3">›</span>
   <a href="/propiedades.html">Propiedades</a> <span style="opacity:.3">›</span>
   <span style="color:var(--sv)">${escapeHtml(prop.title)}</span>
 </div>
- 
+
 <div class="dv3-hero">
   <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer">
   <div class="dv3-hero-overlay"></div>
@@ -891,12 +891,12 @@ function detailPage(prop, all) {
     </div>
   </div>
 </div>
- 
+
 ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
- 
+
 <div class="dv3-wrap">
   <div class="dv3-main">
- 
+
     <div class="dv3-price-row">
       <div>
         <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
@@ -906,11 +906,11 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
         &#8679; Compartir
       </button>
     </div>
- 
+
     ${(!esExclusiva&&!cfg.specs&&quickSpecs.length) ? '<div class="dv3-qs">'+quickSpecs.map(function(q){return '<div class="dv3-qs-item">'+q.icon+' '+escapeHtml(String(q.v))+' <span>'+escapeHtml(q.l)+'</span></div>';}).join('')+'</div>' : ''}
- 
+
     ${(prop.descCorta && prop.descCorta.trim().length <= 140) ? '<div class="dv3-hook">&ldquo;'+escapeHtml(prop.descCorta)+'&rdquo;</div>' : ''}
- 
+
     <div class="dv3-tabs">
       <button class="dv3-tab on" onclick="dv3Tab('det',this)">Detalles</button>
       <button class="dv3-tab" onclick="dv3Tab('desc',this)">Descripci&oacute;n</button>
@@ -919,7 +919,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       ${(!esExclusiva&&!cfg.ubicacion&&prop.lat&&prop.lng) ? '<button class="dv3-tab" onclick="dv3Tab(\'mapa\',this)">Ubicaci&oacute;n</button>' : ''}
       ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? '<button class="dv3-tab" onclick="dv3Tab(\'hipoteca\',this)">Calculadora</button>' : ''}
     </div>
- 
+
     <div class="dv3-tab-panel on" id="dv3-det">
       ${exclusivaBanner}
       ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
@@ -927,7 +927,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       ${prop.produccion ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Producci&oacute;n</span>'+escapeHtml(prop.produccion)+'</div>' : ''}
       ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
     </div>
- 
+
     <div class="dv3-tab-panel" id="dv3-desc">
       ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Descripción disponible previa consulta.</div>' : ''}
       ${(!esExclusiva&&!cfg.descripcion&&prop.hook) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
@@ -935,16 +935,16 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
       ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
- 
+
     <div class="dv3-tab-panel" id="dv3-chars">
       ${(esExclusiva||cfg.caracteristicas) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Características disponibles previa consulta.</div>' : renderCaracteristicas(prop.caracteristicas||[])}
     </div>
- 
+
     <div class="dv3-tab-panel" id="dv3-media">
       ${prop.videoTour ? '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div><div class="dv3-video-wrap"><iframe src="'+prop.videoTour.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div></div>' : ''}
       ${prop.plano ? '<div><div class="dv3-ref-l" style="margin-bottom:12px">Plano de planta</div><img class="dv3-plano" src="'+escapeHtml(prop.plano)+'" alt="Plano '+escapeHtml(prop.title)+'" loading="lazy"></div>' : ''}
     </div>
- 
+
     ${(!esExclusiva&&!cfg.ubicacion&&prop.lat&&prop.lng) ? `<div class="dv3-tab-panel" id="dv3-mapa">
       <div class="dv3-video-wrap" style="padding-bottom:50%">
         <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${parseFloat(prop.lng)-0.01}%2C${parseFloat(prop.lat)-0.01}%2C${parseFloat(prop.lng)+0.01}%2C${parseFloat(prop.lat)+0.01}&layer=mapnik&marker=${prop.lat}%2C${prop.lng}" loading="lazy"></iframe>
@@ -954,7 +954,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
         Abrir en Google Maps
       </a>
     </div>` : ''}
- 
+
     ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? `<div class="dv3-tab-panel" id="dv3-hipoteca">
       <div class="dv3-ref-l" style="margin-bottom:14px">Estimaci&oacute;n de cuota mensual</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
@@ -986,11 +986,11 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       </div>
       <p style="font-size:.68rem;color:var(--mt);line-height:1.6">Esta es una estimaci&oacute;n informativa basada en una tasa de referencia y no constituye una oferta de financiamiento. La aprobaci&oacute;n final, tasa real y condiciones dependen del banco y de tu perfil crediticio.</p>
     </div>` : ''}
- 
+
   </div>
- 
+
   <div class="dv3-side">
- 
+
     <div class="dv3-side-card wa-card">
       <div class="dv3-avail"><span class="dv3-live"></span>Asesor disponible ahora</div>
       <div class="dv3-agent-row">
@@ -1018,22 +1018,22 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
       </form>
       <p style="display:none;font-size:.72rem;color:#4ade80;text-align:center;margin:10px 0 0">&check; Enviado. Te contactamos pronto.</p>
     </div>
- 
+
     <div class="dv3-side-ref">
       <div class="dv3-ref-l">C&oacute;digo de referencia</div>
       <div class="dv3-ref-v">${escapeHtml(prop.codigo||prop.slug.toUpperCase())}</div>
     </div>
- 
+
     <div class="dv3-more-links">
       <div class="dv3-ref-l" style="margin-bottom:10px">M&aacute;s propiedades</div>
       <a class="dv3-more-link" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">&rarr; M&aacute;s ${escapeHtml(prop.tipo)}s disponibles</a>
       <a class="dv3-more-link" href="/propiedades.html?ciudad=${encodeURIComponent(prop.municipio||prop.zona||'')}">&rarr; Propiedades en ${escapeHtml(prop.municipio||prop.zona||'Guatemala')}</a>
       <a class="dv3-more-link" href="/propiedades.html">&rarr; Ver cat&aacute;logo completo</a>
     </div>
- 
+
   </div>
 </div>
- 
+
 <div class="dv3-wa-float" id="dv3waFloat">
   <a href="${waLink(msgInfo)}" target="_blank" rel="noopener">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -1044,9 +1044,9 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
     Visita
   </a>
 </div>
- 
+
 ${relHtml}
- 
+
 <!-- LIGHTBOX -->
 <div class="dv3-lb" id="dv3lb" onclick="if(event.target===this)dv3LightClose()">
   <button class="dv3-lb-close" onclick="dv3LightClose()">&#10005;</button>
@@ -1056,7 +1056,7 @@ ${relHtml}
   <img class="dv3-lb-img" id="dv3lbImg" src="" alt="">
   <div class="dv3-lb-strip" id="dv3lbStrip"></div>
 </div>
- 
+
 <script>
 var _dv3Gal=${JSON.stringify((esExclusiva||cfg.fotos) ? [gal[0]].filter(Boolean) : gal)};
 var _dv3Idx=0;
@@ -1134,9 +1134,9 @@ function dv3CalcHipoteca(){
 }
 if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
 <\/script>`;
- 
- 
- 
+
+
+
   const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${(esExclusiva||cfg.precio)?'Precio a consultar':prop.priceFormatted}. ${(!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0')?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
   // Schema markup para Google
   const schemaProperty = JSON.stringify({
@@ -1162,8 +1162,8 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
   return layout({ title: seoTitle, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body,
     scripts: `<script type="application/ld+json">${schemaProperty}<\/script><script async src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"><\/script>` });
 }
- 
- 
+
+
 // ── PAGINA DE ZONA ───────────────────────────────────────────────────
 const ZONA_INFO = {
   'guatemala': {
@@ -1293,12 +1293,12 @@ const ZONA_INFO = {
     ]
   },
 };
- 
- 
+
+
 function zonaSlug(z) {
   return (z||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 }
- 
+
 function zonaPage(zonaNombre, propsEnZona, allProps) {
   const slug = zonaSlug(zonaNombre);
   const info = ZONA_INFO[slug] || {
@@ -1308,14 +1308,14 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
     datos: ['Ubicación estratégica','Propiedades verificadas','Asesoría personalizada','Respuesta rápida'],
     inversion: null, lifestyle: [], porque: []
   };
- 
+
   const precios = propsEnZona.map(p => p.priceNumeric).filter(n => n > 0);
   const precioProm = precios.length ? Math.round(precios.reduce((a,b)=>a+b,0) / precios.length) : 0;
   const precioPromFmt = precioProm ? '$' + precioProm.toLocaleString('en-US') : null;
   const precioMin = precios.length ? Math.min(...precios) : 0;
   const precioMax = precios.length ? Math.max(...precios) : 0;
   const tiposEnZona = [...new Set(propsEnZona.map(p => p.tipo).filter(Boolean))];
- 
+
   const body = `
 <!-- HERO ZONA -->
 <section style="position:relative;min-height:62vh;display:flex;align-items:flex-end;padding:0;overflow:hidden">
@@ -1335,7 +1335,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
     <p style="font-size:.9rem;color:var(--sv);font-weight:300;max-width:560px;line-height:1.7;margin-bottom:0">${escapeHtml(info.subtitulo)}</p>
   </div>
 </section>
- 
+
 <!-- BARRA DE DATOS -->
 <div style="background:var(--ink2);border-bottom:1px solid var(--bd);padding:0 6%">
   <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap">
@@ -1350,7 +1350,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
     </div>`).join('')}
   </div>
 </div>
- 
+
 <!-- CONTENIDO EDITORIAL -->
 <section style="padding:64px 6%;background:var(--ink)">
   <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:64px;align-items:start">
@@ -1399,7 +1399,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
     </div>
   </div>
 </section>
- 
+
 <!-- POR QUÉ AQUÍ -->
 ${info.porque && info.porque.length ? `
 <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
@@ -1418,7 +1418,7 @@ ${info.porque && info.porque.length ? `
     </div>
   </div>
 </section>` : ''}
- 
+
 <!-- LIFESTYLE -->
 ${info.lifestyle && info.lifestyle.length ? `
 <section style="padding:56px 6%;background:var(--ink)">
@@ -1451,7 +1451,7 @@ ${info.lifestyle && info.lifestyle.length ? `
     </div>
   </div>
 </section>` : ''}
- 
+
 <!-- PROPIEDADES DE LA ZONA -->
 <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
   <div style="max-width:1200px;margin:0 auto">
@@ -1475,7 +1475,7 @@ ${info.lifestyle && info.lifestyle.length ? `
     </div>`}
   </div>
 </section>`;
- 
+
   const schemaZona = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -1490,7 +1490,7 @@ ${info.lifestyle && info.lifestyle.length ? `
       "name": p.title
     }))
   });
- 
+
   return layout({
     title: `${propsEnZona.length > 0 ? propsEnZona.length + ' Propiedades en ' : 'Propiedades en '}${info.titulo} Guatemala - Casas y Fincas en Venta`,
     desc: `${propsEnZona.length > 0 ? propsEnZona.length + ' propiedades' : 'Propiedades'} en venta en ${info.titulo}, Guatemala. ${info.subtitulo}. Casas, fincas y apartamentos con asesoría personalizada.`,
@@ -1500,13 +1500,13 @@ ${info.lifestyle && info.lifestyle.length ? `
     scripts: `<script type="application/ld+json">${schemaZona}</script>`
   });
 }
- 
+
 module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO };
- 
+
 // ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
 function testimonialsSection() {
   return `
- 
+
 <!-- CTA INTERMEDIO -->
 <div class="cta-banner fade-in-up">
   <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
@@ -1546,7 +1546,7 @@ function testimonialsSection() {
     </div>
   </div>
 </section>
- 
+
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
@@ -1586,7 +1586,7 @@ function testimonialsSection() {
 </section>
   `;
 }
- 
+
 // ── TRUST BADGES (FASE 1) ──────────────────────────────────────────
 function trustBadges() {
   return `

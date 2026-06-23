@@ -1,6 +1,6 @@
 const fs   = require('fs');
 const https = require('https');
- 
+
 function fetchKV() {
   return new Promise((resolve) => {
     https.get('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades', (res) => {
@@ -19,8 +19,8 @@ function fetchKV() {
     }).on('error', () => resolve(null));
   });
 }
- 
- 
+
+
 function cleanArea(area) {
   if (!area) return '';
   // Quitar apostrofes, guiones solos, ceros solos
@@ -74,23 +74,23 @@ function normalizeKV(kvProps) {
   });
   });
 }
- 
+
 const path = require('path');
 const { parseProperties }  = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
 const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug } = require('./templates/pages');
 const { sharePage } = require('./templates/share-page');
- 
+
 const DOMAIN = 'https://zona-innmueble.com';
 const CSV    = path.resolve(__dirname, '../../data/propiedades.csv');
 const OUT    = path.resolve(__dirname, '../../dist/zona');
 const PROPS  = path.join(OUT, 'propiedades');
- 
+
 function write(p, c) { fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeFileSync(p,c,'utf-8'); }
 function copyAssets() {
   const dstDir = path.join(OUT, 'assets');
   fs.mkdirSync(dstDir, { recursive: true });
- 
+
   // Copiar desde public/assets (logo, icon)
   const publicDir = path.join(__dirname, '../../public/assets');
   const fileMappings = {
@@ -106,14 +106,14 @@ function copyAssets() {
       }
     });
   }
- 
+
   // Copiar favicon desde src/zona/assets
   const zonaFaviconSrc = path.join(__dirname, 'assets/favicon.png');
   const zonaFaviconDst = path.join(dstDir, 'favicon.png');
   if (fs.existsSync(zonaFaviconSrc)) {
     fs.copyFileSync(zonaFaviconSrc, zonaFaviconDst);
   }
- 
+
   // Copiar images/ si existe
   const imagesDir = path.join(__dirname, 'assets/images');
   const dstImagesDir = path.join(dstDir, 'images');
@@ -121,20 +121,20 @@ function copyAssets() {
     fs.cpSync(imagesDir, dstImagesDir, { recursive: true });
   }
 }
- 
+
 console.log('\n⚡  Building Zona INNmueble…\n');
- 
+
 fetchKV().then(kvData => {
 const props = kvData ? normalizeKV(kvData) : parseProperties(CSV);
 console.log(`   ✔  ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
- 
- 
+
+
 fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
- 
+
 write(path.join(OUT,'index.html'),        indexPage(props));   console.log('   ✔  index.html');
 write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   ✔  propiedades.html');
- 
+
 // Copiar FAQ y About
 const faqSrc = path.join(__dirname, 'faq.html');
 // Copiar dynamic-grid.js
@@ -143,17 +143,17 @@ if(fs.existsSync(dynGridSrc)) {
   fs.copyFileSync(dynGridSrc, path.join(OUT, 'dynamic-grid.js'));
   console.log('   ✔  dynamic-grid.js');
 }
- 
+
 // 404
 const src404 = path.join(__dirname, '404.html');
 if(fs.existsSync(src404)) {
   fs.copyFileSync(src404, path.join(OUT, '404.html'));
   console.log('   ✔  404.html');
 }
- 
+
 const aboutSrc = path.join(__dirname, 'about.html');
 const blogSrc = path.join(__dirname, 'blog.html');
- 
+
 // Todos los artículos de blog que deben copiarse al output.
 // IMPORTANTE: cada artículo nuevo que se cree en src/zona/ debe agregarse aquí,
 // o el build lo dejará fuera silenciosamente (fue la causa de un 404 real en producción).
@@ -169,7 +169,7 @@ const blogArticles = [
   'proceso-comprar-casa-guatemala.html',
   'precios-casas-zona-10-guatemala.html',
 ];
- 
+
 const adminSrc = path.join(__dirname, 'admin.html');
 if(fs.existsSync(adminSrc)) {
   fs.copyFileSync(adminSrc, path.join(OUT, 'admin.html'));
@@ -187,7 +187,7 @@ if(fs.existsSync(blogSrc)) {
   fs.copyFileSync(blogSrc, path.join(OUT, 'blog.html'));
   console.log('   ✔  blog.html');
 }
- 
+
 // ── NUEVO: Política de Privacidad ────────────────────────────────────
 const privacidadSrc = path.join(__dirname, 'privacidad.html');
 if(fs.existsSync(privacidadSrc)) {
@@ -197,7 +197,7 @@ if(fs.existsSync(privacidadSrc)) {
   console.warn('   ⚠️  privacidad.html no encontrado en src/zona/ — agrégalo para Meta Ads compliance');
 }
 // ─────────────────────────────────────────────────────────────────────
- 
+
 blogArticles.forEach(filename => {
   const srcFile = path.join(__dirname, filename);
   if (fs.existsSync(srcFile)) {
@@ -207,10 +207,10 @@ blogArticles.forEach(filename => {
     console.warn('   ⚠️  Artículo listado pero NO encontrado: ' + filename);
   }
 });
- 
+
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(`   ✔  ${props.length} detail pages`);
- 
+
 // Generar paginas de zona /zonas/*.html
 const ZONAS = path.join(OUT, 'zonas');
 fs.mkdirSync(ZONAS, { recursive: true });
@@ -228,13 +228,13 @@ Object.values(zonasMap).forEach(({ nombre, props: propsZona }) => {
   console.log(`   ✔  zona: ${nombre} (${propsZona.length} props) → /zonas/${slug}.html`);
 });
 console.log(`   ✔  ${Object.keys(zonasMap).length} zona pages`);
- 
+
 // Generar paginas compartibles /share/*.html - rebuild 2026-06-16
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
 props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
 console.log(`   ✔  ${props.length} share pages`);
- 
+
 const urls = [
   { loc:'/',                 priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily'  },
@@ -261,12 +261,10 @@ const urls = [
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
 write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html\n'); console.log('   ✔  google verification');
- 
+
 console.log('\n✅  Build completo!\n');
- 
+
 }).catch(function(err){
   console.error('Build failed:', err);
   process.exit(1);
 });
- 
-
