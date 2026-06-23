@@ -301,9 +301,9 @@ function indexPage(props) {
         [vendidas>0?vendidas+'+':'50+','Familias Asesoradas'],
         ['10+','A&ntilde;os en el Mercado'],
         ['100%','Asesor&iacute;a Personal'],
-      ].map(([n,l])=>`<div class="stats-bar-item" style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">${n}</div>
-        <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">${l}</div>
+      ].map(([n,l])=>`<div class="stats-bar-item" style="padding:22px 36px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:130px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:6px;letter-spacing:-.01em">${n}</div>
+        <div style="font-size:.57rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--sv)">${l}</div>
       </div>`).join('');
     })()}
   </div>
@@ -327,66 +327,65 @@ function indexPage(props) {
 
 <!-- TESTIMONIOS (FASE 1) -->
 
-<!-- OFF-MARKET -->
-<section style="padding:80px 6%;background:var(--ink);position:relative;overflow:hidden" class="fade-in-up">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(193,145,75,.06) 0%,transparent 70%)"></div>
-  <div style="max-width:1200px;margin:0 auto;position:relative;z-index:1">
-    <div class="off-market-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
-      <!-- TEXTO -->
-      <div>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:20px">
-          <span style="width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block;animation:pulse-dot 2s infinite"></span>
-          <span style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Acceso Exclusivo</span>
+<!-- OFF-MARKET PREMIUM -->
+<section style="background:var(--ink);padding:100px 6%;border-top:1px solid var(--gl)" class="fade-in-up">
+  <div style="max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+    <div>
+      <div class="ey" style="margin-bottom:20px">Acceso Exclusivo</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:300;color:var(--wh);line-height:1.12;margin-bottom:24px">
+        La mejor propiedad<br><em style="color:var(--or);font-style:italic">no estÃ¡ en el mercado.</em>
+      </h2>
+      <p style="font-size:.85rem;color:var(--sv);line-height:1.9;margin-bottom:36px;max-width:420px;font-weight:300">
+        El mercado premium de Guatemala se mueve en privado. Las residencias mÃ¡s exclusivas de Zona 10, 14 y 15 nunca llegan al mercado abierto.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:40px">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--or);margin-top:7px;flex-shrink:0"></div>
+          <div>
+            <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Residencias en Zona 10, 14 y 15</div>
+            <div style="font-size:.75rem;color:var(--mt)">No listadas pÃºblicamente Â· Solo clientes verificados</div>
+          </div>
         </div>
-        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;line-height:1.12;margin-bottom:22px;color:var(--wh)">
-          Propiedades que <em style="color:var(--or);font-style:italic">no están publicadas</em>
-        </h2>
-        <p style="font-size:.85rem;color:var(--sv);line-height:1.95;margin-bottom:32px;max-width:440px;font-weight:300">
-          El mercado premium de Guatemala mueve sus mejores propiedades en privado. Accede a listados exclusivos antes de que lleguen al mercado abierto.
-        </p>
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:36px">
-          ${[
-            ['Residencias en Zona 10, 14 y 15 no listadas públicamente',''],
-            ['Fincas con potencial de desarrollo en Carretera a El Salvador',''],
-            ['Oportunidades de inversión con ROI proyectado',''],
-          ].map(([t])=>`<div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="width:18px;height:18px;border-radius:50%;background:rgba(193,145,75,.15);border:1px solid rgba(193,145,75,.35);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center">
-              <svg width="8" height="8" viewBox="0 0 10 10"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="var(--or)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <span style="font-size:.82rem;color:var(--sv);line-height:1.7">${t}</span>
-          </div>`).join('')}
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--or);margin-top:7px;flex-shrink:0"></div>
+          <div>
+            <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Fincas sobre Carretera a El Salvador</div>
+            <div style="font-size:.75rem;color:var(--mt)">Con potencial de desarrollo y retorno proyectado</div>
+          </div>
         </div>
-        <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, me interesa acceder a propiedades fuera del mercado. ¿Tienen listados exclusivos?')}" target="_blank" rel="noopener" class="btn-or" style="display:inline-flex;align-items:center;gap:10px">
-          ${WA_SVG} Solicitar acceso privado
-        </a>
-        <p style="margin-top:14px;font-size:.63rem;color:var(--mt)">Respuesta en menos de 2 horas · Sin compromiso</p>
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--or);margin-top:7px;flex-shrink:0"></div>
+          <div>
+            <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Oportunidades de inversiÃ³n</div>
+            <div style="font-size:.75rem;color:var(--mt)">AnÃ¡lisis de ROI antes de oferta. DiscreciÃ³n garantizada</div>
+          </div>
+        </div>
       </div>
-      <!-- VISUAL -->
-      <div style="position:relative">
-        <div style="border-radius:16px;overflow:hidden;aspect-ratio:4/5;position:relative;background:var(--ink2);border:1px solid var(--gl)">
-          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover;opacity:.85" loading="lazy">
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.85) 0%,transparent 50%)"></div>
-          <div style="position:absolute;bottom:0;left:0;right:0;padding:28px">
-            <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px">Off-Market</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:4px">Residencia Privada</div>
-            <div style="font-size:.72rem;color:var(--sv)">Zona 14 · Solo para clientes verificados</div>
-          </div>
-          <!-- LOCK BADGE -->
-          <div style="position:absolute;top:20px;right:20px;background:rgba(13,27,62,.85);backdrop-filter:blur(8px);border:1px solid var(--gl);border-radius:100px;padding:8px 14px;display:flex;align-items:center;gap:7px">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span style="font-size:.6rem;font-weight:600;color:var(--wh);letter-spacing:.08em">Acceso Privado</span>
-          </div>
+      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, me interesa acceder a propiedades fuera del mercado. Â¿Tienen listados exclusivos?')}" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:10px;background:var(--or);color:var(--ink);padding:14px 28px;border-radius:8px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .3s"
+        onmouseover="this.style.background='var(--or2)'" onmouseout="this.style.background='var(--or)'">
+        Solicitar acceso privado
+      </a>
+      <p style="margin-top:14px;font-size:.62rem;color:var(--mt)">Respuesta en menos de 2 horas Â· Sin compromiso</p>
+    </div>
+    <div style="position:relative">
+      <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:4/5">
+        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.85) 0%,transparent 50%)"></div>
+        <div style="position:absolute;bottom:28px;left:28px;right:28px">
+          <div style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Off-Market</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--wh);font-weight:400">Residencia Privada</div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.55);margin-top:4px">Zona 14 Â· Solo para clientes verificados</div>
         </div>
-        <!-- STAT CARD FLOTANTE -->
-        <div style="position:absolute;bottom:-20px;left:-20px;background:var(--ink2);border:1px solid var(--gl);border-radius:12px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:4px">+40%</div>
-          <div style="font-size:.63rem;color:var(--sv);line-height:1.5">propiedades off-market<br>no llegan al público</div>
-        </div>
+      </div>
+      <div style="position:absolute;top:-20px;right:-20px;background:var(--or);color:var(--ink);border-radius:50%;width:90px;height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+        <div style="font-size:1.6rem;font-weight:600;line-height:1">+40%</div>
+        <div style="font-size:.48rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:center;line-height:1.2">propiedades<br>off-market</div>
       </div>
     </div>
   </div>
+  <style>@media(max-width:768px){.off-grid{grid-template-columns:1fr!important;gap:40px!important}}</style>
 </section>
-
 <!-- CTA INTERMEDIO -->
 <div class="cta-banner fade-in-up">
   <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
