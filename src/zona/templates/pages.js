@@ -901,6 +901,45 @@ function detailPage(prop, all) {
   .dv3-bread{padding:10px 4%;font-size:.62rem}
   .dv3-wrap{padding:0 4% 80px}
   .dv3-share-btn{display:none}
+  /* Texto descriptivo — evita overflow horizontal */
+  .dv3-desc,.det-desc,.det-desc-list,.dv3-hook,.dv3-datos{
+    word-break:break-word;
+    overflow-wrap:break-word;
+    max-width:100%;
+  }
+  .dv3-desc p,.det-desc p{
+    word-break:break-word;
+    overflow-wrap:break-word;
+    font-size:.82rem!important;
+    line-height:1.75!important;
+  }
+  /* Descripción emoji-list items */
+  .det-desc-list>div{
+    flex-wrap:nowrap;
+    min-width:0;
+  }
+  .det-desc-list>div>span:last-child{
+    min-width:0;
+    word-break:break-word;
+    overflow-wrap:break-word;
+  }
+  /* Specs de detalle: 1 columna */
+  .dv3-specs-grid{grid-template-columns:1fr!important}
+  /* Calculadora hipoteca: 1 columna */
+  #dv3-hipoteca [style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr!important;
+  }
+  /* Ubicación texto */
+  .dv3-main [style*="font-size:.84rem"]{
+    word-break:break-word;
+    overflow-wrap:break-word;
+    max-width:100%;
+  }
+  /* Caractéristicas wrapping */
+  .dv3-chars-list{gap:5px}
+  .dv3-char{font-size:.68rem!important}
+  /* Quick specs en 2 filas si necesario */
+  .dv3-qs{flex-wrap:wrap!important}
 }
 </style>
 
