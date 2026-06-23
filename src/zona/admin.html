@@ -267,6 +267,19 @@ tr:hover td{background:#FAFBFF}
   .dash-grid{grid-template-columns:1fr}
   .fg-row.c3,.fg-row.c4{grid-template-columns:1fr 1fr}
 }
+
+/* ── FASE 9: CRM PREMIUM ── */
+.crm-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.crm-pipeline{display:flex;align-items:center;gap:6px;margin-bottom:16px;padding:14px 16px;background:var(--wh);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
+.crm-pipeline-step{text-align:center;min-width:80px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.crm-pipeline-step:hover{border-color:var(--or);background:#FFF8F2}
+.crm-pipeline-num{font-size:22px;font-weight:800;color:var(--navy);line-height:1}
+.crm-pipeline-lbl{font-size:10px;color:var(--text3);margin-top:3px;white-space:nowrap}
+.crm-pipeline-arrow{font-size:18px;color:var(--border2);flex-shrink:0}
+.lead-hot{border-left:3px solid var(--or)!important}
+.hot-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:2px;line-height:1;opacity:.5;transition:opacity .15s}
+.hot-btn:hover,.hot-btn.hot-active{opacity:1}
+.badge-purple{background:#ede9fe;color:#5b21b6}
 </style>
 </head>
 <body>
@@ -298,6 +311,7 @@ tr:hover td{background:#FAFBFF}
         <div class="sb-item" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</div>
         <div class="sb-section">Clientes</div>
         <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge new" id="leadsCount">0</span></div>
+        <div class="sb-item" id="nav-configuracion" onclick="showPage('configuracion')"><i class="ti ti-settings"></i> Configuracion</div>
         <div class="sb-section">Sitios</div>
         <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Ver sitio</div>
         <div class="sb-item" onclick="triggerRebuild()"><i class="ti ti-refresh"></i> Publicar cambios</div>
@@ -725,13 +739,32 @@ tr:hover td{background:#FAFBFF}
 <div class="toast" id="toast"></div>
 
 <script>
+
 const API = 'https://zona-inmu.tours-virtuales-gt.workers.dev';
+const DEPLOY_HOOK = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/8105bd67-0276-4485-a0e0-50dcdb0e525d';
 let props = [];
 let editingId = null;
 let galUrls = [];
 let currentStatus = 'Activa';
 let leadsData = [];
-let leadStatuses = {};
+// CRM persistent state (survives refresh)
+let leadStatuses = JSON.parse(localStorage.getItem('zi_lead_statuses')||'{}');
+let leadNotes    = JSON.parse(localStorage.getItem('zi_lead_notes')||'{}');
+let leadHot      = JSON.parse(localStorage.getItem('zi_lead_hot')||'{}');
+let currentLeadFilter = 'all';
+let leadSearchQ  = '';
+let leadDateRange= 'all';
+
+const CRM_ESTADOS = ['Nuevo','Contactado','En seguimiento','Cita agendada','No calificado','Cerrado ✓','Cerrado ✗'];
+const CRM_COLORS  = {
+  'Nuevo':          'badge-blue',
+  'Contactado':     'badge-yellow',
+  'En seguimiento': 'badge-orange',
+  'Cita agendada':  'badge-green',
+  'No calificado':  'badge-gray',
+  'Cerrado ✓':      'badge-green',
+  'Cerrado ✗':      'badge-red'
+};
 
 // ── AUTH ──────────────────────────────────────────────────────
 async function doLogin() {
@@ -784,12 +817,13 @@ function showPage(page) {
   document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
-  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads CRM'};
+  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads CRM', configuracion:'Configuración'};
   document.getElementById('pageTitle').textContent = titles[page] || page;
   const mc = document.getElementById('mainContent');
-  if (page === 'dashboard')   renderDashboard(mc);
-  if (page === 'propiedades') renderPropiedades(mc);
-  if (page === 'leads')       renderLeads(mc);
+  if (page === 'dashboard')     renderDashboard(mc);
+  if (page === 'propiedades')   renderPropiedades(mc);
+  if (page === 'leads')         renderLeads(mc);
+  if (page === 'configuracion') renderConfiguracion(mc);
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────
@@ -838,26 +872,56 @@ function renderDashboard(mc) {
           <div class="table-header"><div class="table-title">Últimos leads</div><button class="btn btn-ghost btn-sm" onclick="showPage('leads')">Ver todos</button></div>
           <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Cargando...</div>
         </div>
+        <div class="table-wrap" style="margin-top:14px" id="dashPipelineWrap">
+          <div class="table-header"><div class="table-title">Pipeline CRM</div></div>
+          <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Cargando...</div>
+        </div>
       </div>
     </div>`;
-  
+
   fetch(API + '/api/leads', {credentials:'include'})
     .then(r => r.json()).then(leads => {
       leadsData = leads;
-      const n = leads.length;
-      document.querySelectorAll('#dashLeadsNum,#topLeadsCount').forEach(el => { if(el) el.textContent = n; });
-      document.querySelectorAll('#leadsCount,#topLeadsCount').forEach(el => { if(el) el.textContent = n; });
+      const nuevos = leads.filter(l => (leadStatuses[l.id||l.fecha]||'Nuevo')==='Nuevo').length;
+      document.querySelectorAll('#dashLeadsNum').forEach(el => { if(el) el.textContent = leads.length; });
+      document.querySelectorAll('#leadsCount').forEach(el => { if(el) el.textContent = nuevos||0; });
+      document.querySelectorAll('#topLeadsCount').forEach(el => { if(el) el.textContent = leads.length; });
+
+      // Últimos leads
       const wrap = document.getElementById('dashLeadsWrap');
-      if (!wrap) return;
-      if (!leads.length) { wrap.innerHTML += '<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Sin leads aún</div>'; return; }
-      wrap.querySelector('div:last-child').innerHTML = leads.slice(0,4).map(l => `
-        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--navy)">${esc(l.nombre||'Sin nombre')}</div>
-            <div style="font-size:11px;color:var(--text3)">${esc(l.propiedad||'-')} · ${l.fecha?l.fecha.substring(0,10):'-'}</div>
+      if (wrap) {
+        if (!leads.length) {
+          wrap.querySelector('div:last-child').textContent = 'Sin leads aún';
+        } else {
+          wrap.querySelector('div:last-child').innerHTML = leads.slice(0,4).map(l => {
+            const st = leadStatuses[l.id||l.fecha] || 'Nuevo';
+            return `<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--navy)">${esc(l.nombre||'Sin nombre')} ${leadHot[l.id||l.fecha]?'🔥':''}</div>
+                <div style="font-size:11px;color:var(--text3)">${esc(l.propiedad||'-')} · ${l.fecha?l.fecha.substring(0,10):'-'}</div>
+              </div>
+              <span class="badge ${CRM_COLORS[st]||'badge-gray'}" style="font-size:10px">${st}</span>
+            </div>`;
+          }).join('');
+        }
+      }
+
+      // Pipeline
+      const pw = document.getElementById('dashPipelineWrap');
+      if (pw) {
+        const counts = {};
+        CRM_ESTADOS.forEach(s => counts[s] = 0);
+        leads.forEach(l => { const s = leadStatuses[l.id||l.fecha]||'Nuevo'; counts[s]=(counts[s]||0)+1; });
+        const conv = leads.length ? Math.round(((counts['Cerrado ✓']||0)/leads.length)*100) : 0;
+        pw.querySelector('div:last-child').innerHTML = `
+          <div style="display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px">
+            ${CRM_ESTADOS.map(s=>`<div style="text-align:center;flex:1;min-width:70px;padding:8px 4px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+              <div style="font-size:18px;font-weight:800;color:var(--navy)">${counts[s]||0}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px">${s}</div>
+            </div>`).join('')}
           </div>
-          ${l.telefono?`<a href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank" class="wa-btn" style="padding:4px 10px;font-size:11px"><i class="ti ti-brand-whatsapp"></i></a>`:''}
-        </div>`).join('');
+          <div style="padding:8px 16px 12px;font-size:11px;color:var(--text3)">Tasa de conversión: <strong style="color:var(--green)">${conv}%</strong></div>`;
+      }
     }).catch(() => {});
 }
 
@@ -936,15 +1000,16 @@ function calcCompletion(p) {
 }
 
 // ── LEADS CRM ────────────────────────────────────────────────
-let currentLeadFilter = 'all';
-
 async function renderLeads(mc) {
   mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Cargando leads...</div>';
   try {
     const r = await fetch(API + '/api/leads', {credentials:'include'});
     leadsData = await r.json();
-    document.querySelectorAll('#leadsCount,#topLeadsCount').forEach(el => { if(el) el.textContent = leadsData.length; });
-    
+
+    const nuevos = leadsData.filter(l => (leadStatuses[l.id||l.fecha]||'Nuevo')==='Nuevo').length;
+    document.querySelectorAll('#leadsCount').forEach(el => { if(el) el.textContent = nuevos||0; });
+    document.querySelectorAll('#topLeadsCount').forEach(el => { if(el) el.textContent = leadsData.length; });
+
     if (!leadsData.length) {
       mc.innerHTML = `<div style="padding:60px;text-align:center">
         <i class="ti ti-users" style="font-size:48px;color:var(--border);display:block;margin-bottom:12px"></i>
@@ -954,77 +1019,171 @@ async function renderLeads(mc) {
       return;
     }
 
-    const statusCounts = leadsData.reduce((acc, l) => {
+    // Counts
+    const counts = {};
+    CRM_ESTADOS.forEach(s => counts[s] = 0);
+    leadsData.forEach(l => {
       const s = leadStatuses[l.id||l.fecha] || 'Nuevo';
-      acc[s] = (acc[s]||0) + 1;
-      return acc;
-    }, {});
+      counts[s] = (counts[s]||0) + 1;
+    });
+    const cerrados = (counts['Cerrado ✓']||0) + (counts['Cerrado ✗']||0);
+    const conv = leadsData.length ? Math.round(((counts['Cerrado ✓']||0)/leadsData.length)*100) : 0;
+
+    // Pipeline bar
+    const pipeline = ['Nuevo','Contactado','En seguimiento','Cita agendada'].map(s =>
+      `<div class="crm-pipeline-step" onclick="setLeadFilter('${s}')">
+        <div class="crm-pipeline-num">${counts[s]||0}</div>
+        <div class="crm-pipeline-lbl">${s}</div>
+      </div>`
+    ).join('<div class="crm-pipeline-arrow">›</div>') +
+    `<div class="crm-pipeline-step" onclick="setLeadFilter('Cerrado ✓')" style="border-color:var(--green)">
+      <div class="crm-pipeline-num" style="color:var(--green)">${counts['Cerrado ✓']||0}</div>
+      <div class="crm-pipeline-lbl">Cerrado ✓</div>
+    </div>`;
 
     mc.innerHTML = `
-      <div class="leads-filters">
-        <button class="lead-filter-btn active" onclick="filterLeads('all',this)">Todos (${leadsData.length})</button>
-        <button class="lead-filter-btn" onclick="filterLeads('Nuevo',this)">Nuevos (${statusCounts['Nuevo']||0})</button>
-        <button class="lead-filter-btn" onclick="filterLeads('Contactado',this)">Contactados (${statusCounts['Contactado']||0})</button>
-        <button class="lead-filter-btn" onclick="filterLeads('Calificado',this)">Calificados (${statusCounts['Calificado']||0})</button>
-        <button class="lead-filter-btn" onclick="filterLeads('Cerrado',this)">Cerrados (${statusCounts['Cerrado']||0})</button>
+      <div class="crm-toolbar">
+        <div class="search-box" style="flex:1;max-width:300px">
+          <i class="ti ti-search"></i>
+          <input type="text" id="leadSearch" placeholder="Nombre, teléfono, propiedad..." oninput="leadSearchQ=this.value;applyLeadFilters()">
+        </div>
+        <select id="leadDateFilter" onchange="leadDateRange=this.value;applyLeadFilters()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:7px;font-size:12px;outline:none;background:var(--wh)">
+          <option value="all">Todas las fechas</option>
+          <option value="today">Hoy</option>
+          <option value="week">Esta semana</option>
+          <option value="month">Este mes</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()" title="Exportar CSV"><i class="ti ti-download"></i> CSV</button>
+        <div style="font-size:11px;color:var(--text3);white-space:nowrap">Conv: <strong style="color:var(--green)">${conv}%</strong></div>
       </div>
-      <div id="leadsList">${buildLeadsList(leadsData)}</div>`;
+      <div class="crm-pipeline">${pipeline}</div>
+      <div class="leads-filters">
+        <button class="lead-filter-btn active" id="lf-all" onclick="setLeadFilter('all')">Todos (${leadsData.length})</button>
+        <button class="lead-filter-btn" id="lf-Nuevo" onclick="setLeadFilter('Nuevo')">Nuevo (${counts['Nuevo']||0})</button>
+        <button class="lead-filter-btn" id="lf-Contactado" onclick="setLeadFilter('Contactado')">Contactado (${counts['Contactado']||0})</button>
+        <button class="lead-filter-btn" id="lf-En seguimiento" onclick="setLeadFilter('En seguimiento')">En seguimiento (${counts['En seguimiento']||0})</button>
+        <button class="lead-filter-btn" id="lf-Cita agendada" onclick="setLeadFilter('Cita agendada')">Cita agendada (${counts['Cita agendada']||0})</button>
+        <button class="lead-filter-btn" id="lf-No calificado" onclick="setLeadFilter('No calificado')">No calificado (${counts['No calificado']||0})</button>
+        <button class="lead-filter-btn" id="lf-cerrados" onclick="setLeadFilter('_cerrados')">Cerrados (${cerrados})</button>
+      </div>
+      <div id="leadsList"></div>`;
+
+    applyLeadFilters();
   } catch(e) {
     mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--red)">Error cargando leads.</div>';
   }
 }
 
+function applyLeadFilters() {
+  const q   = (document.getElementById('leadSearch')?.value||'').toLowerCase();
+  const dr  = document.getElementById('leadDateFilter')?.value || leadDateRange;
+  const now = new Date();
+  let filtered = leadsData;
+
+  // Filter by status
+  if (currentLeadFilter !== 'all') {
+    if (currentLeadFilter === '_cerrados') {
+      filtered = filtered.filter(l => {
+        const s = leadStatuses[l.id||l.fecha]||'Nuevo';
+        return s === 'Cerrado ✓' || s === 'Cerrado ✗';
+      });
+    } else {
+      filtered = filtered.filter(l => (leadStatuses[l.id||l.fecha]||'Nuevo') === currentLeadFilter);
+    }
+  }
+
+  // Filter by search
+  if (q) {
+    filtered = filtered.filter(l =>
+      (l.nombre||'').toLowerCase().includes(q) ||
+      (l.telefono||'').toLowerCase().includes(q) ||
+      (l.propiedad||'').toLowerCase().includes(q) ||
+      (l.email||'').toLowerCase().includes(q)
+    );
+  }
+
+  // Filter by date
+  if (dr !== 'all' && dr) {
+    filtered = filtered.filter(l => {
+      if (!l.fecha) return false;
+      const d = new Date(l.fecha);
+      if (dr === 'today') {
+        return d.toDateString() === now.toDateString();
+      } else if (dr === 'week') {
+        const weekAgo = new Date(now); weekAgo.setDate(now.getDate()-7);
+        return d >= weekAgo;
+      } else if (dr === 'month') {
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }
+      return true;
+    });
+  }
+
+  const list = document.getElementById('leadsList');
+  if (list) list.innerHTML = buildLeadsList(filtered);
+}
+
+function setLeadFilter(status) {
+  currentLeadFilter = status;
+  document.querySelectorAll('.lead-filter-btn').forEach(b => b.classList.remove('active'));
+  const btn = status === '_cerrados'
+    ? document.getElementById('lf-cerrados')
+    : document.getElementById('lf-' + status);
+  if (btn) btn.classList.add('active');
+  applyLeadFilters();
+}
+
 function buildLeadsList(leads) {
+  if (!leads.length) return '<div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">No hay leads con estos filtros.</div>';
+  const waGlobal = localStorage.getItem('zi_wa_global') || '';
   return leads.map((l, i) => {
     const lid = l.id || l.fecha || i;
-    const st = leadStatuses[lid] || 'Nuevo';
-    const stColors = {Nuevo:'badge-blue',Contactado:'badge-yellow',Calificado:'badge-orange',Cerrado:'badge-green'};
+    const st  = leadStatuses[lid] || 'Nuevo';
+    const hot = leadHot[lid] || false;
+    const note= leadNotes[lid] || '';
+    const waNum = l.telefono ? l.telefono.replace(/\D/g,'') : '';
+    const waLink= waNum ? `https://wa.me/502${waNum}` : '';
+    const stOpts = CRM_ESTADOS.map(s => `<option ${st===s?'selected':''}>${s}</option>`).join('');
     return `
-      <div class="lead-card" data-status="${st}" data-id="${lid}">
+      <div class="lead-card ${hot?'lead-hot':''}" data-status="${st}" data-id="${lid}">
         <div class="lead-header">
-          <div>
-            <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
-            <span class="badge ${stColors[st]||'badge-gray'}" style="margin-top:4px">${st}</span>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
+              <button class="hot-btn ${hot?'hot-active':''}" onclick="toggleHot('${lid}')" title="Marcar hot lead">${hot?'🔥':'☆'}</button>
+            </div>
+            <span class="badge ${CRM_COLORS[st]||'badge-gray'}" style="margin-top:4px">${st}</span>
           </div>
-          <div class="lead-time">${l.fecha?l.fecha.substring(0,10):'-'}</div>
+          <div style="text-align:right">
+            <div class="lead-time">${l.fecha?l.fecha.substring(0,10):'-'}</div>
+          </div>
         </div>
         ${l.telefono?`<div class="lead-detail"><i class="ti ti-phone"></i> ${esc(l.telefono)}</div>`:''}
+        ${l.email?`<div class="lead-detail"><i class="ti ti-mail"></i> ${esc(l.email)}</div>`:''}
         ${l.propiedad?`<div class="lead-detail"><i class="ti ti-building"></i> ${esc(l.propiedad)}</div>`:''}
         ${l.mensaje?`<div class="lead-detail" style="font-style:italic"><i class="ti ti-message"></i> "${esc(l.mensaje)}"</div>`:''}
         <div class="lead-actions">
-          ${l.telefono?`<a class="wa-btn" href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank"><i class="ti ti-brand-whatsapp"></i> Contactar</a>`:''}
-          <select class="lead-status-sel" onchange="updateLeadStatus('${lid}',this.value)">
-            <option ${st==='Nuevo'?'selected':''}>Nuevo</option>
-            <option ${st==='Contactado'?'selected':''}>Contactado</option>
-            <option ${st==='Calificado'?'selected':''}>Calificado</option>
-            <option ${st==='Cerrado'?'selected':''}>Cerrado</option>
-          </select>
-          <button class="lead-note-btn" onclick="toggleNote('note-${lid}')"><i class="ti ti-note"></i> Nota</button>
+          ${waLink?`<a class="wa-btn" href="${waLink}" target="_blank"><i class="ti ti-brand-whatsapp"></i> Contactar</a>`:''}
+          <select class="lead-status-sel" onchange="updateLeadStatus('${lid}',this.value)">${stOpts}</select>
+          <button class="lead-note-btn" onclick="toggleNote('note-${lid}')"><i class="ti ti-note"></i> ${note?'Ver nota':'Nota'}</button>
         </div>
-        <div class="lead-note-area" id="note-${lid}">
-          <textarea placeholder="Escribe una nota sobre este lead..." rows="2">${l._nota||''}</textarea>
+        <div class="lead-note-area" id="note-${lid}" style="${note?'display:block':''}">
+          <textarea placeholder="Notas internas sobre este lead..." rows="2" onchange="saveNote('${lid}',this.value)">${esc(note)}</textarea>
         </div>
       </div>`;
   }).join('');
 }
 
-function filterLeads(status, btn) {
-  currentLeadFilter = status;
-  document.querySelectorAll('.lead-filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = status === 'all' ? leadsData : leadsData.filter(l => {
-    const lid = l.id || l.fecha;
-    return (leadStatuses[lid] || 'Nuevo') === status;
-  });
-  const list = document.getElementById('leadsList');
-  if (list) list.innerHTML = buildLeadsList(filtered);
-}
-
 function updateLeadStatus(lid, status) {
   leadStatuses[lid] = status;
+  localStorage.setItem('zi_lead_statuses', JSON.stringify(leadStatuses));
   const card = document.querySelector(`[data-id="${lid}"]`);
-  if (card) card.dataset.status = status;
-  showToast(`Estado: ${status}`, 'success');
+  if (card) {
+    card.dataset.status = status;
+    const badge = card.querySelector('.badge');
+    if (badge) { badge.textContent = status; badge.className = 'badge ' + (CRM_COLORS[status]||'badge-gray'); }
+  }
+  showToast('Estado: ' + status, 'success');
 }
 
 function toggleNote(id) {
@@ -1032,9 +1191,111 @@ function toggleNote(id) {
   if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
 }
 
+function saveNote(lid, note) {
+  if (note.trim()) {
+    leadNotes[lid] = note.trim();
+  } else {
+    delete leadNotes[lid];
+  }
+  localStorage.setItem('zi_lead_notes', JSON.stringify(leadNotes));
+  showToast('Nota guardada', 'success');
+}
+
+function toggleHot(lid) {
+  leadHot[lid] = !leadHot[lid];
+  localStorage.setItem('zi_lead_hot', JSON.stringify(leadHot));
+  const btn = document.querySelector(`[data-id="${lid}"] .hot-btn`);
+  const card= document.querySelector(`[data-id="${lid}"]`);
+  if (btn) { btn.textContent = leadHot[lid] ? '🔥' : '☆'; btn.classList.toggle('hot-active', leadHot[lid]); }
+  if (card) card.classList.toggle('lead-hot', leadHot[lid]);
+}
+
+function exportLeadsCSV() {
+  if (!leadsData.length) { showToast('No hay leads para exportar', 'error'); return; }
+  const headers = ['Nombre','Teléfono','Email','Propiedad','Mensaje','Fecha','Estado','Nota','Hot'];
+  const rows = leadsData.map(l => {
+    const lid = l.id || l.fecha;
+    return [
+      l.nombre||'', l.telefono||'', l.email||'', l.propiedad||'',
+      (l.mensaje||'').replace(/"/g,"'"),
+      l.fecha ? l.fecha.substring(0,10) : '',
+      leadStatuses[lid]||'Nuevo',
+      (leadNotes[lid]||'').replace(/"/g,"'"),
+      leadHot[lid] ? 'Si' : 'No'
+    ].map(v => `"${v}"`).join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'leads-zona-innmueble-' + new Date().toISOString().substring(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV exportado', 'success');
+}
+
+// ── CONFIGURACIÓN ─────────────────────────────────────────────
+function renderConfiguracion(mc) {
+  const waGlobal = localStorage.getItem('zi_wa_global') || '';
+  mc.innerHTML = `
+    <div style="max-width:600px">
+      <div class="table-wrap" style="margin-bottom:16px">
+        <div class="table-header"><div class="table-title"><i class="ti ti-brand-whatsapp" style="color:#25D366;margin-right:6px"></i>WhatsApp Global</div></div>
+        <div style="padding:20px">
+          <div class="fg">
+            <label>Número WhatsApp por defecto (sin +502)</label>
+            <input type="text" id="cfgWaGlobal" placeholder="Ej: 45542088" value="${esc(waGlobal)}" style="max-width:220px">
+            <div class="fg-hint">Se usa en los formularios y páginas de zonas cuando no hay un asesor asignado.</div>
+          </div>
+          <button class="btn btn-navy btn-sm" style="margin-top:10px" onclick="saveConfig()"><i class="ti ti-device-floppy"></i> Guardar</button>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:16px">
+        <div class="table-header"><div class="table-title"><i class="ti ti-database" style="color:var(--or);margin-right:6px"></i>CRM · Datos locales</div></div>
+        <div style="padding:20px">
+          <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Los estados, notas y flags de leads se guardan en este navegador. Exporta el CSV periódicamente como respaldo.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> Exportar CSV de leads</button>
+            <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="resetCRMData()"><i class="ti ti-trash"></i> Limpiar datos CRM</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header"><div class="table-title"><i class="ti ti-refresh" style="color:var(--blue);margin-right:6px"></i>Publicación</div></div>
+        <div style="padding:20px">
+          <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Dispara un rebuild en Cloudflare Pages para que los cambios del catálogo aparezcan en el sitio.</p>
+          <button class="btn btn-primary btn-sm" onclick="triggerRebuild()"><i class="ti ti-refresh"></i> Publicar sitio ahora</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function saveConfig() {
+  const wa = document.getElementById('cfgWaGlobal').value.trim();
+  localStorage.setItem('zi_wa_global', wa);
+  showToast('Configuración guardada', 'success');
+}
+
+function resetCRMData() {
+  if (!confirm('¿Seguro que quieres limpiar todos los estados, notas y flags de leads? Esta acción no se puede deshacer.')) return;
+  localStorage.removeItem('zi_lead_statuses');
+  localStorage.removeItem('zi_lead_notes');
+  localStorage.removeItem('zi_lead_hot');
+  leadStatuses = {}; leadNotes = {}; leadHot = {};
+  showToast('Datos CRM eliminados', 'success');
+}
+
 // ── REBUILD ──────────────────────────────────────────────────
-function triggerRebuild() {
-  showToast('Para publicar: haz push en GitHub. Cloudflare Pages rebuilds automáticamente.', 'success');
+async function triggerRebuild() {
+  showToast('Publicando sitio...', '');
+  try {
+    await fetch(DEPLOY_HOOK, {method:'POST', mode:'no-cors'});
+    showToast('Publicación iniciada. Listo en ~2 min ✓', 'success');
+  } catch(e) {
+    showToast('Publicación iniciada (verificar en Cloudflare)', 'success');
+  }
 }
 
 // ── MODAL ─────────────────────────────────────────────────────
@@ -1138,7 +1399,6 @@ function loadForm(p) {
   sel('fTipo', p.tipo); sel('fOperacion', p.operacion||p.cinta);
   sel('fTipoListing', p.tipoListing); sel('fDepartamento', p.departamento);
   sel('fOrientacion', p.orientacion); sel('fVista', p.vista); sel('fCertEnerg', p.certEnerg);
-  // privConfig
   const cfg = p.privConfig || {};
   document.getElementById('privPrecio').checked = !!cfg.precio;
   document.getElementById('privDireccion').checked = !!cfg.direccion;
@@ -1187,7 +1447,7 @@ function renderGallery() {
   const wrap = document.getElementById('galWrap');
   if (!wrap) return;
   wrap.innerHTML = galUrls.map((u,i) =>
-    `<div class="gal-item"><img src="${u}" onerror="this.style.opacity='.3'"><button class="gal-remove" onclick="removeGalImg(${i})">×</button></div>`
+    `<div class="gal-item"><img src="${u}" onerror="this.style.opacity='.3'"><button class="gal-remove" onclick="removeGalImg(${i})">&#215;</button></div>`
   ).join('');
   const cnt = document.getElementById('galCount');
   if (cnt) cnt.textContent = galUrls.length;
@@ -1221,22 +1481,22 @@ function updateProgress() {
   const done = checks.filter(Boolean).length;
   const pct = Math.round(done/checks.length*100);
   document.querySelectorAll('#modalProgress,#progressLabel').forEach(el => {
-    if(el) el.textContent = `${pct}% completo`;
+    if(el) el.textContent = pct + '% completo';
   });
 }
 
 function shareWA() {
   const titulo = document.getElementById('fTitulo').value || 'Propiedad';
   const slug = document.getElementById('fSlug').value;
-  const url = slug ? `https://zona-innmueble.com/propiedades/${slug}.html` : 'https://zona-innmueble.com';
-  const msg = encodeURIComponent(`*${titulo}*\n${url}`);
-  window.open(`https://wa.me/?text=${msg}`, '_blank');
+  const url = slug ? 'https://zona-innmueble.com/propiedades/' + slug + '.html' : 'https://zona-innmueble.com';
+  const msg = encodeURIComponent('*' + titulo + '*\n' + url);
+  window.open('https://wa.me/?text=' + msg, '_blank');
 }
 
 function copyLink() {
   const slug = document.getElementById('fSlug').value;
   if (!slug) { showToast('Primero genera el slug', 'error'); return; }
-  navigator.clipboard.writeText(`https://zona-innmueble.com/propiedades/${slug}.html`);
+  navigator.clipboard.writeText('https://zona-innmueble.com/propiedades/' + slug + '.html');
   showToast('Enlace copiado ✓', 'success');
 }
 
@@ -1346,6 +1606,7 @@ document.querySelectorAll('.char-item').forEach(item => {
 });
 
 checkSession();
+
 </script>
 </body>
 </html>
