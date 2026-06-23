@@ -893,7 +893,7 @@ function renderDashboard(mc) {
         if (!leads.length) {
           wrap.querySelector('div:last-child').textContent = 'Sin leads aún';
         } else {
-          wrap.querySelector('div:last-child').innerHTML = leads.slice(0,4).map(l => {
+          wrap.querySelector(':scope > div:last-child').innerHTML = leads.slice(0,4).map(l => {
             const st = leadStatuses[l.id||l.fecha] || 'Nuevo';
             return `<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
               <div>
@@ -913,7 +913,7 @@ function renderDashboard(mc) {
         CRM_ESTADOS.forEach(s => counts[s] = 0);
         leads.forEach(l => { const s = leadStatuses[l.id||l.fecha]||'Nuevo'; counts[s]=(counts[s]||0)+1; });
         const conv = leads.length ? Math.round(((counts['Cerrado ✓']||0)/leads.length)*100) : 0;
-        pw.querySelector('div:last-child').innerHTML = `
+        `pw.querySelector(':scope > div:last-child').innerHTML = ``
           <div style="display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px">
             ${CRM_ESTADOS.map(s=>`<div style="text-align:center;flex:1;min-width:70px;padding:8px 4px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
               <div style="font-size:18px;font-weight:800;color:var(--navy)">${counts[s]||0}</div>
