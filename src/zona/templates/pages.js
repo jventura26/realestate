@@ -1830,3 +1830,6 @@ function trustBadges() {
 </div>
   `;
 }
+
+// Export adicional
+if (typeof module !== 'undefined' && module.exports) { module.exports.zonasIndexPage = zonasIndexPage; }
