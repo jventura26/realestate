@@ -1370,12 +1370,12 @@ const ZONA_INFO = {
     ]
   },
   'zona-15': {
-    titulo: 'Zona 15 — El Encinal', subtitulo: 'El equilibrio perfecto entre exclusividad y calidad de vida.',
-    desc: 'Zona 15 combina lo mejor de dos mundos: exclusividad de zonas premium con mayor potencial de apreciación. Vista Hermosa III, El Encinal y sus colonias modernas atraen a familias e inversionistas que entraron antes que el mercado lo reflejara.',
+    titulo: 'Zona 15 — Zona 15', subtitulo: 'El equilibrio perfecto entre exclusividad y calidad de vida.',
+    desc: 'Zona 15 combina lo mejor de dos mundos: exclusividad de zonas premium con mayor potencial de apreciación. Vista Hermosa III, Zona 15 y sus colonias modernas atraen a familias e inversionistas que entraron antes que el mercado lo reflejara.',
     img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80',
     datos: ['Vista Hermosa III','Comunidades modernas','Alta apreciación','Familias e inversión'],
     inversion: { apreciacion: '9–14% anual', demanda: 'Alta', perfil: 'Residencial familiar · Primera inversión premium' },
-    lifestyle: ['Vista Hermosa III — alta demanda','El Encinal y colonias modernas','Centros comerciales en expansión','Colegios privados bilingües','Acceso directo al Periférico','Condominios con amenidades completas'],
+    lifestyle: ['Vista Hermosa III — alta demanda','Zona 15 y colonias modernas','Centros comerciales en expansión','Colegios privados bilingües','Acceso directo al Periférico','Condominios con amenidades completas'],
     porque: [
       { icon: '', titulo: 'Mayor crecimiento de valor en zonas premium', texto: 'Zona 15 ha mostrado apreciación superior al promedio en los últimos 5 años. Ideal para quienes entraron antes que el mercado lo reflejara.' },
       { icon: '', titulo: 'Comunidades planificadas y modernas', texto: 'Proyectos nuevos con diseño contemporáneo, áreas verdes y seguridad. Una alternativa moderna a las zonas más antiguas.' },
@@ -1686,7 +1686,7 @@ function zonasIndexPage(zonasMap) {
   var zonas = [
     { slug:'zona-10',               nombre:'Zona 10',                 desc:'El corazon financiero y residencial de Guatemala City.',       img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80' },
     { slug:'zona-14',               nombre:'Zona 14',                 desc:'Vista Hermosa. La zona mas exclusiva de la capital.',           img:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80' },
-    { slug:'zona-15',               nombre:'Zona 15',                 desc:'El Encinal. Privacidad y naturaleza cerca de la ciudad.',       img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80' },
+    { slug:'zona-15',               nombre:'Zona 15',                 desc:'Privacidad, naturaleza y residencias de alto nivel cerca de la ciudad.',       img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80' },
     { slug:'zona-16',               nombre:'Zona 16',                 desc:'Ciudad Cayala. Urbanismo moderno y vida de comunidad.',         img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80' },
     { slug:'fraijanes',             nombre:'Fraijanes',               desc:'Montana, clima fresco y residencias de alto nivel.',            img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80' },
     { slug:'carretera-el-salvador', nombre:'Carretera a El Salvador', desc:'El corredor de mayor plusvalia fuera de la capital.',           img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80' },
