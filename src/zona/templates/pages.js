@@ -1681,6 +1681,46 @@ ${info.faqs && info.faqs.length ? `
   });
 }
 
+
+function zonasIndexPage(zonasMap) {
+  var zonas = [
+    { slug:'zona-10',               nombre:'Zona 10',                 desc:'El corazon financiero y residencial de Guatemala City.',       img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80' },
+    { slug:'zona-14',               nombre:'Zona 14',                 desc:'Vista Hermosa. La zona mas exclusiva de la capital.',           img:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80' },
+    { slug:'zona-15',               nombre:'Zona 15',                 desc:'El Encinal. Privacidad y naturaleza cerca de la ciudad.',       img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80' },
+    { slug:'zona-16',               nombre:'Zona 16',                 desc:'Ciudad Cayala. Urbanismo moderno y vida de comunidad.',         img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80' },
+    { slug:'fraijanes',             nombre:'Fraijanes',               desc:'Montana, clima fresco y residencias de alto nivel.',            img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80' },
+    { slug:'carretera-el-salvador', nombre:'Carretera a El Salvador', desc:'El corredor de mayor plusvalia fuera de la capital.',           img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80' },
+  ];
+  var cards = zonas.map(function(z) {
+    var count = (zonasMap[z.slug] && zonasMap[z.slug].props) ? zonasMap[z.slug].props.length : 0;
+    var badge = count > 0
+      ? '<div style="position:absolute;top:16px;right:16px;background:var(--or);color:var(--ink);font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:4px 10px">' + count + ' prop.</div>'
+      : '<div style="position:absolute;top:16px;right:16px;background:rgba(13,27,62,.8);color:var(--or);border:1px solid var(--or);font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:4px 10px">Editorial</div>';
+    return '<a href="/zonas/' + z.slug + '.html" style="display:block;position:relative;overflow:hidden;aspect-ratio:4/5;text-decoration:none">'
+      + '<img src="' + z.img + '" alt="' + z.nombre + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1);filter:brightness(.6) saturate(.8)">'
+      + '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,rgba(13,27,62,.2) 60%,transparent 100%)"></div>'
+      + badge
+      + '<div style="position:absolute;bottom:24px;left:22px;right:22px">'
+      + '<div style="font-size:.56rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Guatemala</div>'
+      + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;color:var(--wh);margin-bottom:8px;line-height:1.2">' + z.nombre + '</div>'
+      + '<p style="font-size:.72rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:14px">' + z.desc + '</p>'
+      + '<span style="font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--or)">Explorar &rarr;</span>'
+      + '</div>'
+      + '</a>';
+  }).join('');
+  var body = '<section style="padding:120px 6% 80px;background:linear-gradient(180deg,var(--ink2) 0%,var(--ink) 100%)">'
+    + '<div class="ey">Zonas Premium &middot; Guatemala</div>'
+    + '<h1 class="st">Cada zona, <em>una historia</em><br>diferente.</h1>'
+    + '<p class="ss" style="max-width:520px;margin-top:16px">Descubre las zonas mas exclusivas de Guatemala. Propiedades verificadas, asesoria personalizada y acceso a listados off-market en cada corredor.</p>'
+    + '</section>'
+    + '<section style="padding:0 6% 80px;background:var(--ink)">'
+    + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px">'
+    + cards
+    + '</div></section>';
+  return layout({ title:'Zonas Premium Guatemala', desc:'Explora las mejores zonas de Guatemala para vivir e invertir. Zona 10, 14, 15, 16, Fraijanes y Carretera a El Salvador. Propiedades premium verificadas.', canonical:'/zonas/index.html', body:body });
+}
+
+
 module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO };
 
 // ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
