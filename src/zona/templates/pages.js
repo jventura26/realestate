@@ -168,59 +168,19 @@ function indexPage(props) {
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
 
   const body = `
-<style>
-/* ── MOBILE RESPONSIVE FIXES ────────────────────────────────────── */
-@media(max-width:640px){
-  /* Hero content: espacio para stats bar absoluta */
-  .hero-content-inner{padding-top:80px!important;padding-bottom:100px!important;max-width:100%!important;width:100%!important}
-  /* Buscador hero: apilado vertical */
-  .hero-search-box{flex-direction:column!important;padding:10px!important}
-  .hero-search-box>div{min-width:unset!important;width:100%!important}
-  .hero-search-box>select{min-width:unset!important;width:100%!important;margin:0!important}
-  /* Stats bar: 2×2 en lugar de 4×1 */
-  .stats-bar-item{min-width:42%!important;max-width:50%!important;flex:none!important;padding:12px 10px!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
-  /* Off-market: 1 columna */
-  .off-market-grid{grid-template-columns:1fr!important;gap:28px!important}
-  /* Trust badges: 2×2 */
-  .trust-badge-item{min-width:42%!important;max-width:50%!important;flex:none!important;padding:10px 8px!important}
-  /* Sección contacto: padding lateral */
-  .contacto-inner{padding:40px 5%!important}
-  /* Zona page grids */
-  .zona-content-grid{grid-template-columns:1fr!important;gap:24px!important}
-  .zona-stats-row{flex-wrap:wrap!important}
-  .zona-stats-row>div{min-width:42%!important;padding:14px 10px!important;border-right:none!important;border-bottom:1px solid var(--bd)!important}
-  /* Asesor card: texto sin overflow */
-  .asesor-card p{max-width:100%!important}
-  /* Filter bar en propiedades */
-  .filter-bar{flex-direction:column!important}
-  .filter-bar select,.filter-bar input,.filter-bar>div[style*="min-width:180px"]{width:100%!important;min-width:unset!important}
-}
-@media(max-width:480px){
-  .hero-content-inner{padding-top:60px!important;padding-bottom:90px!important}
-  .off-market-grid>div:last-child{display:none}  /* Ocultar imagen decorativa en mobile muy pequeño */
-}
-</style>
 <!-- HERO -->
 <section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
-
-  <!-- VIDEO DE FONDO -->
-  <video autoplay muted loop playsinline
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.55"
-    poster="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70">
+  <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none">
     <source src="/assets/reel-hero.mp4" type="video/mp4">
   </video>
-
-  <!-- GRADIENTE ENCIMA DEL VIDEO -->
-  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.75) 100%);z-index:1"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.7) 0%,transparent 45%);z-index:1"></div>
-
-  <!-- CONTENIDO HERO -->
-  <div class="hero-content-inner" style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
+  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.85) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.78) 100%);z-index:1"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.8) 0%,transparent 50%);z-index:1"></div>
+  <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="ey" style="margin-bottom:0">Guatemala · Patrimonio Inmobiliario</div>
+      <div class="ey" style="margin-bottom:0">Guatemala &middot; Patrimonio Inmobiliario</div>
       <div style="display:flex;align-items:center;gap:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:100px;padding:5px 12px">
         <span class="live"></span>
-        <span style="font-size:.65rem;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.08em">Disponibles · Respuesta en menos de 2h</span>
+        <span style="font-size:.65rem;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.08em">Disponibles &middot; Respuesta en menos de 2h</span>
       </div>
     </div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.4rem);font-weight:300;line-height:1.06;margin-bottom:22px">
@@ -229,8 +189,7 @@ function indexPage(props) {
     <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
       ${props.length} propiedades verificadas, oportunidades de inversi&oacute;n y un equipo que entiende que cada propiedad cuenta una historia. Asesor&iacute;a privada para quienes saben qu&eacute; buscan.
     </p>
-    <!-- BUSCADOR HERO -->
-    <div class="hero-search-box" style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
       <div style="flex:1;min-width:200px;position:relative">
         <input type="text" id="hero-search"
           placeholder="Buscar por zona, tipo o colonia..."
@@ -247,52 +206,16 @@ function indexPage(props) {
       <button onclick="heroGo()" style="padding:12px 22px;background:var(--or);color:var(--ink);border:none;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;font-family:'Montserrat',sans-serif">Buscar</button>
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero una asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-ol">${WA_SVG} Asesor&iacute;a por WhatsApp</a>
+      <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero una asesorÃ­a privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-ol">${WA_SVG} Asesor&iacute;a por WhatsApp</a>
     </div>
     <script>
     var __heroProps=${JSON.stringify(props.map(p=>({titulo:p.titulo,municipio:p.municipio,tipo:p.tipo,slug:p.slug})))};
-    function heroSearch(q){
-      var s=document.getElementById('hero-suggestions');
-      if(!q||q.length<2){s.style.display='none';return;}
-      var ql=q.toLowerCase();
-      var matches=__heroProps.filter(function(p){
-        return (p.titulo||'').toLowerCase().includes(ql)||(p.municipio||'').toLowerCase().includes(ql);
-      }).slice(0,6);
-      if(!matches.length){s.style.display='none';return;}
-      s.innerHTML=matches.map(function(p){
-        return '<div class="hero-sug-item" data-slug="'+p.slug+'">'
-          +'<span style="font-weight:600">'+p.titulo+'</span>'
-          +' <span style="opacity:.5;font-size:.75rem">'+p.municipio+'</span>'
-          +'</div>';
-      }).join('');
-      s.querySelectorAll('.hero-sug-item').forEach(function(el){
-        el.addEventListener('click', function(){
-          window.location.href = '/propiedades/' + el.getAttribute('data-slug') + '.html';
-        });
-      });
-      s.style.display='block';
-    }
-    function heroGo(){
-      var q=document.getElementById('hero-search').value;
-      var t=document.getElementById('hero-tipo').value;
-      var url='/propiedades.html';
-      var params=[];
-      if(t)params.push('tipo='+encodeURIComponent(t));
-      if(q)params.push('q='+encodeURIComponent(q));
-      if(params.length)url+='?'+params.join('&');
-      window.location.href=url;
-    }
-    document.addEventListener('click',function(e){
-      if(!e.target.closest('#hero-search')&&!e.target.closest('#hero-suggestions')){
-        var s=document.getElementById('hero-suggestions');
-        if(s)s.style.display='none';
-      }
-    });
+    function heroSearch(q){var s=document.getElementById('hero-suggestions');if(!q||q.length<2){s.style.display='none';return;}var ql=q.toLowerCase();var matches=__heroProps.filter(function(p){return (p.titulo||'').toLowerCase().includes(ql)||(p.municipio||'').toLowerCase().includes(ql);}).slice(0,6);if(!matches.length){s.style.display='none';return;}s.innerHTML=matches.map(function(p){return '<div class="hero-sug-item" data-slug="'+p.slug+'"><span style="font-weight:600">'+p.titulo+'</span> <span style="opacity:.5;font-size:.75rem">'+p.municipio+'</span></div>';}).join('');s.querySelectorAll('.hero-sug-item').forEach(function(el){el.addEventListener('click',function(){window.location.href='/propiedades/'+el.getAttribute('data-slug')+'.html';});});s.style.display='block';}
+    function heroGo(){var q=document.getElementById('hero-search').value;var t=document.getElementById('hero-tipo').value;var url='/propiedades.html';var params=[];if(t)params.push('tipo='+encodeURIComponent(t));if(q)params.push('q='+encodeURIComponent(q));if(params.length)url+='?'+params.join('&');window.location.href=url;}
+    document.addEventListener('click',function(e){if(!e.target.closest('#hero-search')&&!e.target.closest('#hero-suggestions')){var s=document.getElementById('hero-suggestions');if(s)s.style.display='none';}});
     <\/script>
   </div>
-
-  <!-- BARRA DE ESTADÍSTICAS -->
-  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(13,27,62,.75);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.85);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
     ${(()=>{
       const vendidas = props.filter(p=>p.estado==='Vendida').length;
       const activas = props.filter(p=>!p.estado||p.estado==='Activa').length;
@@ -301,7 +224,7 @@ function indexPage(props) {
         [vendidas>0?vendidas+'+':'50+','Familias Asesoradas'],
         ['10+','A&ntilde;os en el Mercado'],
         ['100%','Asesor&iacute;a Personal'],
-      ].map(([n,l])=>`<div class="stats-bar-item" style="padding:22px 36px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:130px">
+      ].map(([n,l])=>`<div style="padding:22px 36px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:130px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:6px;letter-spacing:-.01em">${n}</div>
         <div style="font-size:.57rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--sv)">${l}</div>
       </div>`).join('');
@@ -315,17 +238,15 @@ function indexPage(props) {
     <div>
       <div class="ey">Propiedades Verificadas</div>
       <h2 class="st">Cada detalle <em>cuenta una historia</em></h2>
-      <p style="font-size:.8rem;color:var(--sv);max-width:400px;margin-top:12px;line-height:1.7">${props.length} propiedades cuidadosamente seleccionadas en las zonas más exclusivas de Guatemala.</p>
+      <p style="font-size:.8rem;color:var(--sv);max-width:400px;margin-top:12px;line-height:1.7">${props.length} propiedades cuidadosamente seleccionadas en las zonas m&aacute;s exclusivas de Guatemala.</p>
     </div>
-    <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or);transition:all .3s" onmouseover="this.style.color='var(--or2)'" onmouseout="this.style.color='var(--or)'">Ver todas →</a>
+    <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or);transition:all .3s" onmouseover="this.style.color='var(--or2)'" onmouseout="this.style.color='var(--or)'">Ver todas &rarr;</a>
   </div>
   <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
   <div style="text-align:center;padding:44px 6%">
-    <a href="/propiedades.html" class="btn-or">Ver catálogo completo</a>
+    <a href="/propiedades.html" class="btn-or">Ver cat&aacute;logo completo</a>
   </div>
 </section>
-
-<!-- TESTIMONIOS (FASE 1) -->
 
 <!-- OFF-MARKET PREMIUM -->
 <section style="background:var(--ink);padding:100px 6%;border-top:1px solid var(--gl)" class="fade-in-up">
@@ -333,32 +254,23 @@ function indexPage(props) {
     <div>
       <div class="ey" style="margin-bottom:20px">Acceso Exclusivo</div>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:300;color:var(--wh);line-height:1.12;margin-bottom:24px">
-        La mejor propiedad<br><em style="color:var(--or);font-style:italic">no estÃ¡ en el mercado.</em>
+        La mejor propiedad<br><em style="color:var(--or);font-style:italic">no est&aacute; en el mercado.</em>
       </h2>
       <p style="font-size:.85rem;color:var(--sv);line-height:1.9;margin-bottom:36px;max-width:420px;font-weight:300">
-        El mercado premium de Guatemala se mueve en privado. Las residencias mÃ¡s exclusivas de Zona 10, 14 y 15 nunca llegan al mercado abierto.
+        El mercado premium de Guatemala se mueve en privado. Las residencias m&aacute;s exclusivas de Zona 10, 14 y 15 nunca llegan al mercado abierto.
       </p>
-      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:40px">
+      <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:40px">
         <div style="display:flex;align-items:flex-start;gap:14px">
           <div style="width:6px;height:6px;border-radius:50%;background:var(--or);margin-top:7px;flex-shrink:0"></div>
-          <div>
-            <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Residencias en Zona 10, 14 y 15</div>
-            <div style="font-size:.75rem;color:var(--mt)">No listadas pÃºblicamente Â· Solo clientes verificados</div>
-          </div>
+          <div><div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Residencias en Zona 10, 14 y 15</div><div style="font-size:.75rem;color:var(--mt)">No listadas p&uacute;blicamente &middot; Solo clientes verificados</div></div>
         </div>
         <div style="display:flex;align-items:flex-start;gap:14px">
           <div style="width:6px;height:6px;border-radius:50%;background:var(--or);margin-top:7px;flex-shrink:0"></div>
-          <div>
-            <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Fincas sobre Carretera a El Salvador</div>
-            <div style="font-size:.75rem;color:var(--mt)">Con potencial de desarrollo y retorno proyectado</div>
-          </div>
+          <div><div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Fincas sobre Carretera a El Salvador</div><div style="font-size:.75rem;color:var(--mt)">Con potencial de desarrollo y retorno proyectado</div></div>
         </div>
         <div style="display:flex;align-items:flex-start;gap:14px">
           <div style="width:6px;height:6px;border-radius:50%;background:var(--or);margin-top:7px;flex-shrink:0"></div>
-          <div>
-            <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Oportunidades de inversiÃ³n</div>
-            <div style="font-size:.75rem;color:var(--mt)">AnÃ¡lisis de ROI antes de oferta. DiscreciÃ³n garantizada</div>
-          </div>
+          <div><div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:3px">Oportunidades de inversi&oacute;n</div><div style="font-size:.75rem;color:var(--mt)">An&aacute;lisis de ROI antes de oferta. Discreci&oacute;n garantizada</div></div>
         </div>
       </div>
       <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, me interesa acceder a propiedades fuera del mercado. Â¿Tienen listados exclusivos?')}" target="_blank" rel="noopener"
@@ -366,145 +278,104 @@ function indexPage(props) {
         onmouseover="this.style.background='var(--or2)'" onmouseout="this.style.background='var(--or)'">
         Solicitar acceso privado
       </a>
-      <p style="margin-top:14px;font-size:.62rem;color:var(--mt)">Respuesta en menos de 2 horas Â· Sin compromiso</p>
+      <p style="margin-top:14px;font-size:.62rem;color:var(--mt)">Respuesta en menos de 2 horas &middot; Sin compromiso</p>
     </div>
     <div style="position:relative">
       <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:4/5">
-        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover">
+        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover" loading="lazy">
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.85) 0%,transparent 50%)"></div>
         <div style="position:absolute;bottom:28px;left:28px;right:28px">
           <div style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Off-Market</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--wh);font-weight:400">Residencia Privada</div>
-          <div style="font-size:.7rem;color:rgba(255,255,255,.55);margin-top:4px">Zona 14 Â· Solo para clientes verificados</div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.55);margin-top:4px">Zona 14 &middot; Solo para clientes verificados</div>
         </div>
       </div>
       <div style="position:absolute;top:-20px;right:-20px;background:var(--or);color:var(--ink);border-radius:50%;width:90px;height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;box-shadow:0 8px 32px rgba(0,0,0,.3)">
         <div style="font-size:1.6rem;font-weight:600;line-height:1">+40%</div>
-        <div style="font-size:.48rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:center;line-height:1.2">propiedades<br>off-market</div>
+        <div style="font-size:.48rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:center;line-height:1.3">propiedades<br>off-market</div>
       </div>
     </div>
   </div>
-  <style>@media(max-width:768px){.off-grid{grid-template-columns:1fr!important;gap:40px!important}}</style>
+  <style>@media(max-width:900px){.om-grid{grid-template-columns:1fr!important;gap:48px!important}}</style>
 </section>
+
 <!-- CTA INTERMEDIO -->
 <div class="cta-banner fade-in-up">
-  <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
+  <div class="ey" style="justify-content:center;margin-bottom:12px">Asesor&iacute;a privada</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:var(--wh);margin-bottom:16px;line-height:1.2">
-    ¿No encontraste lo que buscas?
+    &iquest;No encontraste lo que buscas?
   </h2>
   <p style="font-size:.85rem;color:var(--sv);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8">
-    Cuéntanos qué necesitas y nuestro equipo te presenta opciones exclusivas que no están publicadas.
+    Cu&eacute;ntanos qu&eacute; necesitas y nuestro equipo te presenta opciones exclusivas que no est&aacute;n publicadas.
   </p>
-  <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, busco una propiedad específica y quisiera asesoría privada.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;justify-content:center;padding:14px 32px;font-size:.72rem">
+  <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, busco una propiedad especÃ­fica y quisiera asesorÃ­a privada.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;justify-content:center;padding:14px 32px;font-size:.72rem">
     ${WA_SVG} Escribir al asesor
   </a>
 </div>
-<!-- SECCION DE CONFIANZA -->
+
+<!-- CONFIANZA -->
 <section style="padding:48px 6%;background:var(--ink);border-top:1px solid var(--gl);border-bottom:1px solid var(--gl)" class="fade-in-up">
   <div style="max-width:1200px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:32px">
-      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt)">Por qué elegirnos</div>
-    </div>
+    <div style="text-align:center;margin-bottom:32px"><div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt)">Por qu&eacute; elegirnos</div></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px">
-      <div style="text-align:center;padding:24px 16px">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">10+</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Años conectando familias con su propiedad ideal en Guatemala</div>
-      </div>
-      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl);border-right:1px solid var(--gl)">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">&lt;2h</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Tiempo promedio de respuesta. Tu consulta no espera</div>
-      </div>
-      <div style="text-align:center;padding:24px 16px">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">100%</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Propiedades verificadas. Papelería en orden, sin sorpresas</div>
-      </div>
-      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl)">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">5★</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Calificación promedio de nuestros clientes en cada cierre</div>
-      </div>
+      <div style="text-align:center;padding:24px 16px"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">10+</div><div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">A&ntilde;os conectando familias con su propiedad ideal en Guatemala</div></div>
+      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl);border-right:1px solid var(--gl)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">&lt;2h</div><div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Tiempo promedio de respuesta. Tu consulta no espera</div></div>
+      <div style="text-align:center;padding:24px 16px"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">100%</div><div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Propiedades verificadas. Papelar&iacute;a en orden, sin sorpresas</div></div>
+      <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl)"><div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">5&#9733;</div><div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Calificaci&oacute;n promedio de nuestros clientes en cada cierre</div></div>
     </div>
   </div>
 </section>
 
+<!-- TESTIMONIOS -->
 <section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">
-      Lo que dicen nuestros clientes
-    </h2>
-    
-    <div class="testimonials-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px">
-      <div class="testimonial-card fade-in-up" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
-        <div style="display:flex;gap:3px;margin-bottom:20px">
-          ${'★'.repeat(5).split('').map(s=>'<span style="color:var(--or);font-size:1.1rem">'+s+'</span>').join('')}
-        </div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Zona INNmueble me ayudó a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo con mis necesidades. Altamente recomendado."</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">Lo que dicen nuestros clientes</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px">
+      <div class="fade-in-up" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
+        <div style="display:flex;gap:3px;margin-bottom:20px">${'&#9733;'.repeat(5)}</div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Zona INNmueble me ayud&oacute; a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo con mis necesidades. Altamente recomendado."</p>
         <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
           <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#1a2a4e,var(--navy));border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">MC</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">María Castillo</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Empresaria · Zona 10 · 2025</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Mar&iacute;a Castillo</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Empresaria &middot; Zona 10 &middot; 2025</div></div>
         </div>
       </div>
-      
-      <div class="testimonial-card fade-in-up delay-1" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
-        <div style="display:flex;gap:3px;margin-bottom:20px">
-          ${'★'.repeat(5).split('').map(s=>'<span style="color:var(--or);font-size:1.1rem">'+s+'</span>').join('')}
-        </div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Excelente asesoría para mi inversión inmobiliaria. Entendieron mi visión y me ofrecieron opciones que superaron mis expectativas. El proceso fue transparente y profesional."</p>
+      <div class="fade-in-up" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
+        <div style="display:flex;gap:3px;margin-bottom:20px">${'&#9733;'.repeat(5)}</div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"Excelente asesor&iacute;a para mi inversi&oacute;n inmobiliaria. Entendieron mi visi&oacute;n y me ofrecieron opciones que superaron mis expectativas. El proceso fue transparente y profesional."</p>
         <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
           <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#0d3d2a,#1a6b4a);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">CG</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Carlos García</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Inversionista · Fraijanes · 2024</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Carlos Garc&iacute;a</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Inversionista &middot; Fraijanes &middot; 2024</div></div>
         </div>
       </div>
-      
-      <div class="testimonial-card fade-in-up delay-2" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
-        <div style="display:flex;gap:3px;margin-bottom:20px">
-          ${'★'.repeat(5).split('').map(s=>'<span style="color:var(--or);font-size:1.1rem">'+s+'</span>').join('')}
-        </div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"El servicio es impecable. Desde la búsqueda hasta la finalización, todo fue smooth y profesional. Definitivamente mi opción número uno para propiedades premium."</p>
+      <div class="fade-in-up" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px">
+        <div style="display:flex;gap:3px;margin-bottom:20px">${'&#9733;'.repeat(5)}</div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.9;font-size:.88rem">"El servicio es impecable. Desde la b&uacute;squeda hasta la finalizaci&oacute;n, todo fue smooth y profesional. Definitivamente mi opci&oacute;n n&uacute;mero uno para propiedades premium."</p>
         <div style="display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--gl)">
           <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#2d1a4e,#4a2d7a);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--or);flex-shrink:0">SL</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Sandra López</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Ejecutiva · Zona 14 · 2025</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem;margin-bottom:2px">Sandra L&oacute;pez</div><div style="color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Ejecutiva &middot; Zona 14 &middot; 2025</div></div>
         </div>
       </div>
     </div>
-    
-    <!-- TRUST BADGES -->
     <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:60px 0 0;border-top:1px solid var(--gl);margin-top:60px">
-      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
-        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">${props.filter(p=>!p.estado||p.estado==='Activa').length}+ Propiedades</div>
-      </div>
-      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
-        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">100% Verificadas</div>
-      </div>
-      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
-        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">10+ Años</div>
-      </div>
-      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
-        <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-        <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">Soporte 24/7</div>
-      </div>
+      <div style="text-align:center;flex:1;min-width:120px"><div style="font-size:2.4rem;margin-bottom:4px">&#10003;</div><div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">${props.filter(p=>!p.estado||p.estado==='Activa').length}+ Propiedades</div></div>
+      <div style="text-align:center;flex:1;min-width:120px"><div style="font-size:2.4rem;margin-bottom:4px">&#10003;</div><div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">100% Verificadas</div></div>
+      <div style="text-align:center;flex:1;min-width:120px"><div style="font-size:2.4rem;margin-bottom:4px">&#10003;</div><div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">10+ A&ntilde;os</div></div>
+      <div style="text-align:center;flex:1;min-width:120px"><div style="font-size:2.4rem;margin-bottom:4px">&#10003;</div><div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">Soporte 24/7</div></div>
     </div>
   </div>
 </section>
 
-
-
-<!-- TYPES -->
+<!-- TIPOS -->
 <style>.tipo-bg{transform:scale(1)}.tipo-line{height:28px}a:hover .tipo-bg{transform:scale(1.06)}a:hover .tipo-line{height:44px}</style>
 <section style="background:var(--ink)" class="fade-in-up">
-  <div style="max-width:560px;margin-bottom:52px">
-    <div class="ey">Encuentra Tu Tipo Ideal</div>
-    <h2 class="st">Un portafolio para <em>cada visión</em> de vida.</h2>
-  </div>
+  <div style="max-width:560px;margin-bottom:52px"><div class="ey">Encuentra Tu Tipo Ideal</div><h2 class="st">Un portafolio para <em>cada visi&oacute;n</em> de vida.</h2></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--bd)">
     ${[
-      ['Residencias Premium','Casas diseñadas para vivir. Zona 10, 14, 15, 16 y Cayalá. Privacidad, acceso y plusvalía.','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70','/propiedades.html?tipo=Casa'],
-      ['Apartamentos Selectos','Penthouse y apartamentos de alto nivel. Ubicaciones estratégicas con retorno de inversión potencial.','https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=70','/propiedades.html?tipo=Apartamento'],
-      ['Fincas & Terrenos','Propiedades rurales con potencial. Espacio, naturaleza y oportunidades de desarrollo.','https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=70','/propiedades.html?tipo=Finca'],
-      ['Inversión Inteligente','Identificamos oportunidades antes que el mercado. Asesoría con análisis de retorno real.','https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=70','/propiedades.html'],
+      ['Residencias Premium','Casas dise&ntilde;adas para vivir. Zona 10, 14, 15, 16 y Cayal&aacute;. Privacidad, acceso y plusval&iacute;a.','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70','/propiedades.html?tipo=Casa'],
+      ['Apartamentos Selectos','Penthouse y apartamentos de alto nivel. Ubicaciones estrat&eacute;gicas con retorno de inversi&oacute;n potencial.','https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=70','/propiedades.html?tipo=Apartamento'],
+      ['Fincas &amp; Terrenos','Propiedades rurales con potencial. Espacio, naturaleza y oportunidades de desarrollo.','https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=70','/propiedades.html?tipo=Finca'],
+      ['Inversi&oacute;n Inteligente','Identificamos oportunidades antes que el mercado. Asesor&iacute;a con an&aacute;lisis de retorno real.','https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=70','/propiedades.html'],
     ].map(([nm,ds,img,href])=>`<a href="${href}" style="position:relative;overflow:hidden;cursor:pointer;display:block;text-decoration:none;min-height:320px;display:flex;align-items:flex-end">
       <div style="position:absolute;inset:0;background:url('${img}') center/cover no-repeat;transition:transform .6s cubic-bezier(.22,1,.36,1)" class="tipo-bg"></div>
       <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.97) 0%,rgba(13,27,62,.4) 60%,rgba(13,27,62,.1) 100%);transition:all .4s"></div>
@@ -512,52 +383,48 @@ function indexPage(props) {
         <div style="width:2px;height:28px;background:var(--or);margin-bottom:16px;transition:height .3s" class="tipo-line"></div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:10px">${nm}</div>
         <p style="font-size:.72rem;color:rgba(255,255,255,.65);line-height:1.8;font-weight:300;margin-bottom:16px">${ds}</p>
-        <span style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Ver propiedades →</span>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Ver propiedades &rarr;</span>
       </div>
     </a>`).join('')}
   </div>
 </section>
 
-<!-- CTA -->
-
-<!-- SECCION ASESOR -->
+<!-- ASESOR -->
 <section style="padding:80px 6%;background:var(--ink)" class="fade-in-up">
   <div style="max-width:860px;margin:0 auto">
     <div class="ey" style="margin-bottom:12px">Tu asesor personal</div>
     <h2 class="st" style="margin-bottom:44px">Un equipo que conoce <em>cada propiedad</em></h2>
     <div class="asesor-card">
-      <div class="asesor-avatar" style="background:transparent;border:none;padding:0;width:88px;height:88px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
-        <img src="/assets/images/logo.png" alt="Zona INNmueble" style="width:80px;height:80px;object-fit:contain;border-radius:50%;background:#0d1b3e;padding:10px;border:1px solid var(--gl)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div style="display:none;width:80px;height:80px;border-radius:50%;background:var(--or);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;align-items:center;justify-content:center">ZI</div>
+      <div class="asesor-avatar" style="background:var(--ink3);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px">
+        <img src="/assets/images/logo.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
       </div>
       <div style="flex:1">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:6px">Equipo Zona INNmueble</div>
-        <div style="font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Asesores Inmobiliarios · Guatemala</div>
-        <p style="font-size:.82rem;color:var(--sv);line-height:1.8;margin-bottom:22px;max-width:480px">Más de 10 años conectando familias e inversionistas con las mejores propiedades en Guatemala. Te acompañamos desde la búsqueda hasta el cierre.</p>
+        <div style="font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Asesores Inmobiliarios &middot; Guatemala</div>
+        <p style="font-size:.82rem;color:var(--sv);line-height:1.8;margin-bottom:22px;max-width:480px">Conectamos a familias e inversionistas con propiedades de alto valor en Guatemala. M&aacute;s de 10 a&ntilde;os de experiencia. Discreci&oacute;n, an&aacute;lisis y acompa&ntilde;amiento en cada etapa del proceso.</p>
         <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-          <div style="display:flex;align-items:center;gap:6px"><span class="live"></span><span style="font-size:.75rem;color:var(--sv)">Disponible Lun–Vie 8:00–18:00</span></div>
-          <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero asesoría privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;padding:10px 20px;font-size:.68rem;margin-bottom:0">${WA_SVG} Contactar ahora</a>
+          <div style="display:flex;align-items:center;gap:6px"><span class="live"></span><span style="font-size:.75rem;color:var(--sv)">Disponible Lun&ndash;Vie 8:00&ndash;18:00</span></div>
+          <a href="https://wa.me/50245542088?text=${encodeURIComponent('Hola, quiero asesorÃ­a privada de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="display:inline-flex;width:auto;padding:10px 20px;font-size:.68rem;margin-bottom:0">${WA_SVG} Contactar ahora</a>
         </div>
       </div>
     </div>
   </div>
 </section>
-<section id="contacto" style="background:var(--ink2);position:relative;overflow:hidden;padding:80px 6%">
+
+<section id="contacto" style="background:var(--ink2);position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=40') center/cover no-repeat;opacity:.03"></div>
-  <div class="contacto-inner" style="position:relative;z-index:1;max-width:620px;margin:0 auto;text-align:center">
-    <div class="ey" style="justify-content:center">Contáctanos</div>
-    <h2 class="st">Tu próxima propiedad empieza <em>con una conversación.</em></h2>
-    <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;font-weight:300">Nuestro equipo está disponible para asesorarte de forma privada. Sin compromiso.</p>
+  <div style="position:relative;z-index:1;max-width:620px;margin:0 auto;text-align:center">
+    <div class="ey" style="justify-content:center">Cont&aacute;ctanos</div>
+    <h2 class="st">Tu pr&oacute;xima propiedad empieza <em>con una conversaci&oacute;n.</em></h2>
+    <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;font-weight:300">Nuestro equipo est&aacute; disponible para asesorarte de forma privada. Sin compromiso.</p>
     <div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto">
-      <a href="${waLink('Hola, me interesa una asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="justify-content:center">${WA_SVG} Escribir por WhatsApp</a>
+      <a href="${waLink('Hola, me interesa una asesorÃ­a de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="justify-content:center">${WA_SVG} Escribir por WhatsApp</a>
       <a href="/propiedades.html" class="btn-ol" style="justify-content:center">Ver propiedades disponibles</a>
     </div>
-    <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
+    <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 &middot; Lun&ndash;Vie 8:00&ndash;18:00</p>
   </div>
-</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. AsesorÃ­a personalizada.`, canonical: '/', body });
 }
-
-// ── CATALOG ───────────────────────────────────────────────────────────
 function catalogPage(props) {
   const tiposRaw = uniqueValues(props, 'tipo');
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
