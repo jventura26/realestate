@@ -90,7 +90,10 @@ export default {
     }
 
     // ── Admin HTML ───────────────────────────────────────────────
-    if (method === 'GET' && (path === '/' || path === '/admin')) {
+    if (method === 'GET' && path === '/admin') {
+        return Response.redirect('https://zona-innmueble.com/admin.html', 302);
+      }
+      if (method === 'GET' && path === '/') {
       return new Response(getAdminHTML(), {
         headers: { 'Content-Type': 'text/html;charset=UTF-8' },
       });
