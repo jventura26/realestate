@@ -1209,8 +1209,11 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
   const _hab  = (!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0') ? prop.habitaciones+' hab.' : '';
   const _area = (ca(prop.areaConst)||prop.area) ? (ca(prop.areaConst)||prop.area)+' m²' : '';
   const _precio = (esExclusiva||cfg.precio) ? 'Precio a consultar' : prop.priceFormatted;
-  const _zona = prop.municipio || prop.locationFull || prop.zona || 'Guatemala';
-  const metaDesc = `${prop.tipo||'Propiedad'} en venta en ${_zona}, Guatemala${_hab?' — '+_hab:''}${_area?' · '+_area:''} · ${_precio}. Ver fotos, mapa y calcular cuota mensual. Zona INNmueble.`;
+  // Zona legible: preferir locationFull (ej: "Zona 10") sobre municipio genérico ("Guatemala")
+  const _zonaRaw = prop.locationFull || prop.municipio || prop.zona || 'Guatemala';
+  // Evitar "Guatemala Guatemala" si la zona ya incluye la palabra Guatemala
+  const _zonaGt = /guatemala/i.test(_zonaRaw) ? _zonaRaw : `${_zonaRaw}, Guatemala`;
+  const metaDesc = `${prop.tipo||'Propiedad'} en venta en ${_zonaGt}${_hab?' — '+_hab:''}${_area?' · '+_area:''} · ${_precio}. Ver fotos, mapa y calcular cuota mensual.`;
 
   // Schema BreadcrumbList para rich results en Google
   const schemaBreadcrumb = JSON.stringify({
@@ -1223,8 +1226,10 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
     ]
   });
 
-  // Titulo SEO: "Casa en Venta Zona 10 Guatemala | Nombre Propiedad | Zona INNmueble"
-  const seoTitle = `${prop.tipo||'Propiedad'} en Venta ${_zona} Guatemala | ${prop.title} | Zona INNmueble`;
+  // Titulo SEO: "Casa en Venta Zona 10, Guatemala | Nombre Propiedad"
+  // El layout.js ya agrega "| Zona INNmueble" — no duplicar
+  const _zonaTitle = prop.locationFull || prop.municipio || prop.zona || 'Guatemala';
+  const seoTitle = `${prop.tipo||'Propiedad'} en Venta ${_zonaTitle} | ${prop.title}`;
   return layout({ title: seoTitle, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body,
     scripts: `<script type="application/ld+json">${jsonLd}<\/script><script type="application/ld+json">${schemaBreadcrumb}<\/script><script async src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"><\/script>` });
 }
