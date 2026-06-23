@@ -414,7 +414,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
       <li><a href="/blog.html">Blog</a></li>
-      <li><a href="/zonas/guatemala.html">Zonas</a></li>
+      <li><a href="/zonas/index.html">Zonas</a></li>
       <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
@@ -455,6 +455,10 @@ ${body}
         <li><a href="/zonas/fraijanes.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fraijanes</a></li>
         <li><a href="/zonas/mixco.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Mixco</a></li>
         <li><a href="/zonas/santa-catarina-pinula.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Santa Catarina Pinula</a></li>
+        <li><a href="/zonas/zona-14.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 14</a></li>
+        <li><a href="/zonas/zona-15.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 15</a></li>
+        <li><a href="/zonas/zona-16.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 16</a></li>
+        <li><a href="/zonas/carretera-el-salvador.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Carretera a El Salvador</a></li>
       </ul>
     </div>
     <div>
