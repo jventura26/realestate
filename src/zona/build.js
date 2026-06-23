@@ -229,6 +229,17 @@ Object.values(zonasMap).forEach(({ nombre, props: propsZona }) => {
 });
 console.log(`   ✔  ${Object.keys(zonasMap).length} zona pages`);
 
+// FASE 3: Zonas editoriales premium
+var ZONAS_PREMIUM = ['zona-10','zona-14','zona-15','zona-16','carretera-el-salvador'];
+ZONAS_PREMIUM.forEach(function(slug) {
+  if (!zonasMap[slug]) {
+    var propsZona = props.filter(function(p) {
+      return zonaSlug(p.municipio || "") === slug;
+    });
+    write(path.join(ZONAS, slug + ".html"), zonaPage(slug, propsZona, props));
+    console.log("   zone editorial: /zonas/" + slug + ".html");
+  }
+});
 // Generar paginas compartibles /share/*.html - rebuild 2026-06-16
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
