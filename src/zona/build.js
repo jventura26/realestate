@@ -78,7 +78,7 @@ function normalizeKV(kvProps) {
 const path = require('path');
 const { parseProperties }  = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
-const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug } = require('./templates/pages');
+const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, zonasIndexPage } = require('./templates/pages');
 const { sharePage } = require('./templates/share-page');
 
 const DOMAIN = 'https://zona-innmueble.com';
@@ -246,6 +246,9 @@ fs.mkdirSync(SHARE, { recursive: true });
 props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
 console.log(`   ✔  ${props.length} share pages`);
 
+// FASE 3: Zonas index
+write(path.join(ZONAS, 'index.html'), zonasIndexPage(zonasMap));
+console.log('   zone index: /zonas/index.html');
 const urls = [
   { loc:'/',                 priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily'  },
