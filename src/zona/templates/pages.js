@@ -734,7 +734,7 @@ function detailPage(prop, all) {
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
 
   const relHtml = related.length
-    ? `<section class="related"><div class="ey">Relacionadas</div><h2 class="st">También te puede <em>interesar</em></h2><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></section>` : '';
+    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">También te puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver más →</a></div><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></div>` : '';
 
   // JSON-LD structured data
   const cleanDesc = (esExclusiva||cfg.descripcion) ? '' : (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
@@ -938,6 +938,32 @@ function detailPage(prop, all) {
   /* Quick specs en 2 filas si necesario */
   .dv3-qs{flex-wrap:wrap!important}
 }
+/* SWIPER MOBILE GALLERY */
+.dv3-swiper{display:none;position:relative;overflow:hidden;background:#000}
+.dv3-swiper-track{display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.dv3-swiper-track::-webkit-scrollbar{display:none}
+.dv3-swiper-slide{flex:0 0 100%;scroll-snap-align:start;position:relative;cursor:pointer}
+.dv3-swiper-slide img{width:100%;height:68vw;max-height:320px;object-fit:cover;display:block}
+.dv3-swiper-counter{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.55);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:20px;pointer-events:none}
+.dv3-swiper-dots{display:flex;justify-content:center;align-items:center;gap:5px;padding:8px 0;background:#000}
+.dv3-swiper-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .25s;cursor:pointer;flex-shrink:0}
+.dv3-swiper-dot.on{background:var(--or);width:18px;border-radius:3px}
+/* RELATED PREMIUM */
+.dv3-related{max-width:1400px;margin:0 auto;padding:48px 5% 64px;border-top:1px solid var(--bd)}
+.dv3-related-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;gap:16px}
+.dv3-related-eyebrow{font-size:.56rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.dv3-related-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:400;color:var(--sv);line-height:1.15}
+.dv3-related-title em{font-style:italic;color:var(--or)}
+.dv3-related-cta{font-size:.68rem;font-weight:600;color:var(--mt);text-decoration:none;border-bottom:1px solid var(--bd);padding-bottom:2px;white-space:nowrap;transition:color .2s;letter-spacing:.04em}
+.dv3-related-cta:hover{color:var(--or);border-color:var(--or)}
+@media(max-width:768px){
+  .dv3-swiper{display:block}
+  .dv3-gal{display:none!important}
+}
+@media(max-width:600px){
+  .dv3-related{padding:32px 4% 48px}
+  .dv3-related-head{flex-direction:column;align-items:flex-start;gap:8px}
+}
 </style>
 
 <div class="dv3-bread">
@@ -961,6 +987,8 @@ function detailPage(prop, all) {
 </div>
 
 ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
+
+${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? `<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">${gal.map((src,i)=>'<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"></div>').join('')}</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / ${gal.length}</div><div class="dv3-swiper-dots" id="dv3swDots">${gal.map((_,i)=>'<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>').join('')}</div></div>` : ''}
 
 <div class="dv3-wrap">
   <div class="dv3-main">
@@ -1201,6 +1229,42 @@ function dv3CalcHipoteca(){
   if(elCuota)elCuota.textContent=dv3FmtMoneda(cuota)+' / mes';
 }
 if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
+// SWIPER MOBILE
+(function(){
+  var track=document.getElementById('dv3swTrack');
+  var dotsEl=document.querySelectorAll('.dv3-swiper-dot');
+  var ctr=document.getElementById('dv3swCtr');
+  var total=dotsEl.length;
+  if(!track||!total)return;
+  function upd(i){
+    if(ctr)ctr.textContent=(i+1)+' / '+total;
+    dotsEl.forEach(function(d,j){d.classList.toggle('on',j===i);});
+  }
+  var ticking=false;
+  track.addEventListener('scroll',function(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      var idx=Math.round(track.scrollLeft/track.offsetWidth);
+      upd(idx);
+      ticking=false;
+    });
+  },{passive:true});
+  window.dv3SwipeTo=function(i){
+    track.scrollTo({left:i*track.offsetWidth,behavior:'smooth'});
+    upd(i);
+  };
+  // Touch swipe support (left/right)
+  var startX=0;
+  track.addEventListener('touchstart',function(e){startX=e.touches[0].clientX;},{passive:true});
+  track.addEventListener('touchend',function(e){
+    var dx=startX-e.changedTouches[0].clientX;
+    if(Math.abs(dx)<30)return;
+    var cur=Math.round(track.scrollLeft/track.offsetWidth);
+    var next=dx>0?Math.min(cur+1,total-1):Math.max(cur-1,0);
+    dv3SwipeTo(next);
+  },{passive:true});
+})();
 <\/script>`;
 
 
