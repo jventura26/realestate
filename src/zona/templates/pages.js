@@ -168,6 +168,38 @@ function indexPage(props) {
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
 
   const body = `
+<style>
+/* ── MOBILE RESPONSIVE FIXES ────────────────────────────────────── */
+@media(max-width:640px){
+  /* Hero content: espacio para stats bar absoluta */
+  .hero-content-inner{padding-top:80px!important;padding-bottom:100px!important;max-width:100%!important;width:100%!important}
+  /* Buscador hero: apilado vertical */
+  .hero-search-box{flex-direction:column!important;padding:10px!important}
+  .hero-search-box>div{min-width:unset!important;width:100%!important}
+  .hero-search-box>select{min-width:unset!important;width:100%!important;margin:0!important}
+  /* Stats bar: 2×2 en lugar de 4×1 */
+  .stats-bar-item{min-width:42%!important;max-width:50%!important;flex:none!important;padding:12px 10px!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+  /* Off-market: 1 columna */
+  .off-market-grid{grid-template-columns:1fr!important;gap:28px!important}
+  /* Trust badges: 2×2 */
+  .trust-badge-item{min-width:42%!important;max-width:50%!important;flex:none!important;padding:10px 8px!important}
+  /* Sección contacto: padding lateral */
+  .contacto-inner{padding:40px 5%!important}
+  /* Zona page grids */
+  .zona-content-grid{grid-template-columns:1fr!important;gap:24px!important}
+  .zona-stats-row{flex-wrap:wrap!important}
+  .zona-stats-row>div{min-width:42%!important;padding:14px 10px!important;border-right:none!important;border-bottom:1px solid var(--bd)!important}
+  /* Asesor card: texto sin overflow */
+  .asesor-card p{max-width:100%!important}
+  /* Filter bar en propiedades */
+  .filter-bar{flex-direction:column!important}
+  .filter-bar select,.filter-bar input,.filter-bar>div[style*="min-width:180px"]{width:100%!important;min-width:unset!important}
+}
+@media(max-width:480px){
+  .hero-content-inner{padding-top:60px!important;padding-bottom:90px!important}
+  .off-market-grid>div:last-child{display:none}  /* Ocultar imagen decorativa en mobile muy pequeño */
+}
+</style>
 <!-- HERO -->
 <section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
 
@@ -183,7 +215,7 @@ function indexPage(props) {
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.7) 0%,transparent 45%);z-index:1"></div>
 
   <!-- CONTENIDO HERO -->
-  <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
+  <div class="hero-content-inner" style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
       <div class="ey" style="margin-bottom:0">Guatemala · Patrimonio Inmobiliario</div>
       <div style="display:flex;align-items:center;gap:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:100px;padding:5px 12px">
@@ -198,7 +230,7 @@ function indexPage(props) {
       ${props.length} propiedades verificadas, oportunidades de inversi&oacute;n y un equipo que entiende que cada propiedad cuenta una historia. Asesor&iacute;a privada para quienes saben qu&eacute; buscan.
     </p>
     <!-- BUSCADOR HERO -->
-    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
+    <div class="hero-search-box" style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
       <div style="flex:1;min-width:200px;position:relative">
         <input type="text" id="hero-search"
           placeholder="Buscar por zona, tipo o colonia..."
@@ -269,7 +301,7 @@ function indexPage(props) {
         [vendidas>0?vendidas+'+':'50+','Familias Asesoradas'],
         ['10+','A&ntilde;os en el Mercado'],
         ['100%','Asesor&iacute;a Personal'],
-      ].map(([n,l])=>`<div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
+      ].map(([n,l])=>`<div class="stats-bar-item" style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">${n}</div>
         <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">${l}</div>
       </div>`).join('');
@@ -299,7 +331,7 @@ function indexPage(props) {
 <section style="padding:80px 6%;background:var(--ink);position:relative;overflow:hidden" class="fade-in-up">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(193,145,75,.06) 0%,transparent 70%)"></div>
   <div style="max-width:1200px;margin:0 auto;position:relative;z-index:1">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div class="off-market-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
       <!-- TEXTO -->
       <div>
         <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:20px">
@@ -439,19 +471,19 @@ function indexPage(props) {
     
     <!-- TRUST BADGES -->
     <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:60px 0 0;border-top:1px solid var(--gl);margin-top:60px">
-      <div style="text-align:center;flex:1;min-width:120px">
+      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
         <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
         <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">${props.filter(p=>!p.estado||p.estado==='Activa').length}+ Propiedades</div>
       </div>
-      <div style="text-align:center;flex:1;min-width:120px">
+      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
         <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
         <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">100% Verificadas</div>
       </div>
-      <div style="text-align:center;flex:1;min-width:120px">
+      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
         <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
         <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">10+ Años</div>
       </div>
-      <div style="text-align:center;flex:1;min-width:120px">
+      <div class="trust-badge-item" style="text-align:center;flex:1;min-width:120px">
         <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
         <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">Soporte 24/7</div>
       </div>
@@ -511,9 +543,9 @@ function indexPage(props) {
     </div>
   </div>
 </section>
-<section id="contacto" style="background:var(--ink2);position:relative;overflow:hidden">
+<section id="contacto" style="background:var(--ink2);position:relative;overflow:hidden;padding:80px 6%">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=40') center/cover no-repeat;opacity:.03"></div>
-  <div style="position:relative;z-index:1;max-width:620px;margin:0 auto;text-align:center">
+  <div class="contacto-inner" style="position:relative;z-index:1;max-width:620px;margin:0 auto;text-align:center">
     <div class="ey" style="justify-content:center">Contáctanos</div>
     <h2 class="st">Tu próxima propiedad empieza <em>con una conversación.</em></h2>
     <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;font-weight:300">Nuestro equipo está disponible para asesorarte de forma privada. Sin compromiso.</p>
@@ -1338,7 +1370,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
 
 <!-- BARRA DE DATOS -->
 <div style="background:var(--ink2);border-bottom:1px solid var(--bd);padding:0 6%">
-  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap">
+  <div class="zona-stats-row" style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap">
     ${[
       [propsEnZona.length + (propsEnZona.length===1?' propiedad':' propiedades'), 'Disponibles ahora'],
       [precioPromFmt || '—', 'Precio promedio'],
@@ -1353,7 +1385,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
 
 <!-- CONTENIDO EDITORIAL -->
 <section style="padding:64px 6%;background:var(--ink)">
-  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:64px;align-items:start">
+  <div class="zona-content-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:64px;align-items:start">
     <!-- DESCRIPCIÓN -->
     <div>
       <div class="ey" style="margin-bottom:14px">Sobre la zona</div>
