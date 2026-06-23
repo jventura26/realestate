@@ -94,17 +94,17 @@ function ca(area) {
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
   const grupos = [
-    { label:'Ubicación',       icon:'📍', items:['Ubicación privilegiada','Sobre carretera principal','Entorno natural y vistas','Cerca de servicios','Zona residencial exclusiva','Acceso pavimentado','Vista al valle','Vista a montañas'] },
-    { label:'Seguridad',       icon:'🛡️', items:['Garita 24/7','Condominio cerrado','Cámaras de seguridad','Sistema de alarma','Muros perimetrales','Portón eléctrico'] },
-    { label:'Servicios',       icon:'💡', items:['Agua municipal','Pozo propio','Cisterna','Luz 110v/220v','Panel solar','Internet fibra disponible','Gas propano','Drenaje municipal'] },
-    { label:'Exteriores',      icon:'🌿', items:['Piscina','Jardín amplio','Área de BBQ','Pérgola','Terraza exterior','Cancha deportiva','Juegos infantiles','Huerto / área de siembra'] },
-    { label:'Interiores',      icon:'🏠', items:['Cocina equipada','Isla de cocina','Walk-in closet','Cuarto de servicio con baño','Bodega','Chimenea','Jacuzzi','Estudio / Oficina','Sala familiar','Sala de cine','Lavandería interna','Bar interior'] },
-    { label:'Vehículos',       icon:'🚗', items:['Garaje cerrado','Parqueo techado','Parqueo descubierto','Acceso para camión'] },
-    { label:'Para fincas',     icon:'🌱', items:['Agua de nacimiento','Río o quebrada','Luz trifásica','Casa del guardián','Corrales','Cultivo activo','Finca inscrita en Registro','Caminos internos'] },
-    { label:'Inversión',       icon:'📈', items:['Alta plusvalía','Zona en crecimiento','Papelería en orden','Sin gravámenes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler','Acepta permuta','Acepta financiamiento bancario','Disponibilidad inmediata'] },
-    { label:'Local / Comercial', icon:'🏬', items:['Sobre avenida principal','Rampa de carga','Uso de suelo comercial','Uso de suelo industrial','Baños para empleados','Luz trifásica disponible'] },
-    { label:'Terreno',          icon:'🗺️', items:['Topografía plana','Uso de suelo autorizado','Servicios disponibles','Apto para construcción inmediata','Estudio topográfico disponible','Permisos municipales tramitados'] },
-    { label:'Renta',            icon:'🔑', items:['Amueblado','Semi amueblado','Mascotas permitidas','Incluye mantenimiento','Incluye internet','Incluye agua'] },
+    { label:'Ubicación',       icon: '', items:['Ubicación privilegiada','Sobre carretera principal','Entorno natural y vistas','Cerca de servicios','Zona residencial exclusiva','Acceso pavimentado','Vista al valle','Vista a montañas'] },
+    { label:'Seguridad',       icon: '', items:['Garita 24/7','Condominio cerrado','Cámaras de seguridad','Sistema de alarma','Muros perimetrales','Portón eléctrico'] },
+    { label:'Servicios',       icon: '', items:['Agua municipal','Pozo propio','Cisterna','Luz 110v/220v','Panel solar','Internet fibra disponible','Gas propano','Drenaje municipal'] },
+    { label:'Exteriores',      icon: '', items:['Piscina','Jardín amplio','Área de BBQ','Pérgola','Terraza exterior','Cancha deportiva','Juegos infantiles','Huerto / área de siembra'] },
+    { label:'Interiores',      icon: '', items:['Cocina equipada','Isla de cocina','Walk-in closet','Cuarto de servicio con baño','Bodega','Chimenea','Jacuzzi','Estudio / Oficina','Sala familiar','Sala de cine','Lavandería interna','Bar interior'] },
+    { label:'Vehículos',       icon: '', items:['Garaje cerrado','Parqueo techado','Parqueo descubierto','Acceso para camión'] },
+    { label:'Para fincas',     icon: '', items:['Agua de nacimiento','Río o quebrada','Luz trifásica','Casa del guardián','Corrales','Cultivo activo','Finca inscrita en Registro','Caminos internos'] },
+    { label:'Inversión',       icon: '', items:['Alta plusvalía','Zona en crecimiento','Papelería en orden','Sin gravámenes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler','Acepta permuta','Acepta financiamiento bancario','Disponibilidad inmediata'] },
+    { label:'Local / Comercial', icon: '', items:['Sobre avenida principal','Rampa de carga','Uso de suelo comercial','Uso de suelo industrial','Baños para empleados','Luz trifásica disponible'] },
+    { label:'Terreno',          icon: '', items:['Topografía plana','Uso de suelo autorizado','Servicios disponibles','Apto para construcción inmediata','Estudio topográfico disponible','Permisos municipales tramitados'] },
+    { label:'Renta',            icon: '', items:['Amueblado','Semi amueblado','Mascotas permitidas','Incluye mantenimiento','Incluye internet','Incluye agua'] },
   ];
   const activas = grupos.map(g => ({ ...g, activos: g.items.filter(i => chars.includes(i)) })).filter(g => g.activos.length);
   if (!activas.length) return '';
@@ -644,12 +644,12 @@ function detailPage(prop, all) {
 
   // Quick specs for hero bar
   const quickSpecs = [
-    prop.habitaciones&&prop.habitaciones!=='0' ? {icon:'🛏', v:prop.habitaciones, l:'hab.'} : null,
-    prop.banos&&prop.banos!=='0'               ? {icon:'🚿', v:prop.banos, l:'baños'} : null,
-    prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon:'🚗', v:prop.parqueos, l:'parqueos'} : null,
-    ca(prop.areaConst)||prop.area              ? {icon:'📐', v:ca(prop.areaConst)||prop.area, l:'m²'} : null,
-    prop.areaV2                                ? {icon:'📏', v:prop.areaV2, l:'v²'} : null,
-    prop.manzanas                              ? {icon:'🌿', v:prop.manzanas, l:'mz'} : null,
+    prop.habitaciones&&prop.habitaciones!=='0' ? {icon: '', v:prop.habitaciones, l:'hab.'} : null,
+    prop.banos&&prop.banos!=='0'               ? {icon: '', v:prop.banos, l:'baños'} : null,
+    prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon: '', v:prop.parqueos, l:'parqueos'} : null,
+    ca(prop.areaConst)||prop.area              ? {icon: '', v:ca(prop.areaConst)||prop.area, l:'m²'} : null,
+    prop.areaV2                                ? {icon: '', v:prop.areaV2, l:'v²'} : null,
+    prop.manzanas                              ? {icon: '', v:prop.manzanas, l:'mz'} : null,
   ].filter(Boolean);
 
   const waNum = prop.waAsesor ? prop.waAsesor.replace(/\\D/g,'') : '50245542088';
@@ -1175,10 +1175,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '8–12% anual', demanda: 'Alta', perfil: 'Residencial premium e inversión' },
     lifestyle: ['Zona Rosa · gastronomía internacional','Centros comerciales: Oakland, Fontabella','Zona financiera y corporativa','Hospitales y clínicas de primer nivel','Colegios bilingües top del país'],
     porque: [
-      { icon: '🏙️', titulo: 'Plusvalía garantizada', texto: 'Las zonas premium de Ciudad de Guatemala mantienen apreciación constante incluso en ciclos económicos adversos.' },
-      { icon: '🔐', titulo: 'Seguridad y privacidad', texto: 'Condominios y residencias con seguridad 24/7, acceso controlado y comunidades establecidas.' },
-      { icon: '📍', titulo: 'Ubicación estratégica', texto: 'A menos de 10 minutos de los principales centros comerciales, restaurantes y el Aeropuerto Internacional.' },
-      { icon: '📈', titulo: 'Inversión blindada', texto: 'Mercado con demanda sostenida. Las propiedades bien ubicadas se venden en semanas, no meses.' },
+      { icon: '', titulo: 'Plusvalía garantizada', texto: 'Las zonas premium de Ciudad de Guatemala mantienen apreciación constante incluso en ciclos económicos adversos.' },
+      { icon: '', titulo: 'Seguridad y privacidad', texto: 'Condominios y residencias con seguridad 24/7, acceso controlado y comunidades establecidas.' },
+      { icon: '', titulo: 'Ubicación estratégica', texto: 'A menos de 10 minutos de los principales centros comerciales, restaurantes y el Aeropuerto Internacional.' },
+      { icon: '', titulo: 'Inversión blindada', texto: 'Mercado con demanda sostenida. Las propiedades bien ubicadas se venden en semanas, no meses.' },
     ],
     faqs: [
       { q: '¿Cuánto cuesta una casa en Zona 10 Guatemala?', a: 'Las residencias en Zona 10 oscilan entre $350,000 y $2,500,000. Los apartamentos parten desde $180,000 en edificios modernos. El precio por m² es el más alto de la capital, reflejo de la demanda permanente y la ubicación.' },
@@ -1196,10 +1196,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '10–14% anual', demanda: 'Muy Alta', perfil: 'Residencial · Inversión · Renta' },
     lifestyle: ['La Zona Viva — centro de entretenimiento','Hotel InterContinental, Marriott, Westin','Gastronomía: Sei, Tamarindos, Taninos','Centro comercial Oakland Mall','Embajada de EE.UU. y delegaciones diplomáticas','Clínicas y hospitales privados'],
     porque: [
-      { icon: '🍷', titulo: 'Lifestyle inigualable', texto: 'Restaurantes de autor, vida cultural activa y entretenimiento de primer nivel a pasos de tu puerta.' },
-      { icon: '💼', titulo: 'Hub corporativo', texto: 'Empresas Fortune 500, firmas legales, bancos internacionales y sedes corporativas en tu misma zona.' },
-      { icon: '🏠', titulo: 'Renta garantizada', texto: 'Alta demanda de ejecutivos expatriados genera rentabilidad de renta superior al promedio del mercado.' },
-      { icon: '📈', titulo: 'Mayor plusvalía de la capital', texto: 'Históricamente la zona con mayor apreciación de Guatemala. Demanda permanentemente insatisfecha.' },
+      { icon: '', titulo: 'Lifestyle inigualable', texto: 'Restaurantes de autor, vida cultural activa y entretenimiento de primer nivel a pasos de tu puerta.' },
+      { icon: '', titulo: 'Hub corporativo', texto: 'Empresas Fortune 500, firmas legales, bancos internacionales y sedes corporativas en tu misma zona.' },
+      { icon: '', titulo: 'Renta garantizada', texto: 'Alta demanda de ejecutivos expatriados genera rentabilidad de renta superior al promedio del mercado.' },
+      { icon: '', titulo: 'Mayor plusvalía de la capital', texto: 'Históricamente la zona con mayor apreciación de Guatemala. Demanda permanentemente insatisfecha.' },
     ]
   },
   'zona-14': {
@@ -1210,10 +1210,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '8–11% anual', demanda: 'Alta', perfil: 'Residencial familiar premium' },
     lifestyle: ['Centro Comercial Santa Fe','Colegios: Colegio Americano, Interamericano','Parques y áreas verdes privadas','Club Social Zona 14','Hospitales: Herrera Llerandi, Bautista','Calles arboladas y tranquilas'],
     porque: [
-      { icon: '🌳', titulo: 'La zona más arbolada de la capital', texto: 'Colonias con grandes áreas verdes, calles tranquilas y ambiente residencial que contrasta con el ruido urbano.' },
-      { icon: '🏫', titulo: 'Los mejores colegios del país', texto: 'Colegio Americano, Interamericano y otros colegios bilingües de excelencia a distancia mínima.' },
-      { icon: '🔒', titulo: 'Comunidad establecida', texto: 'Colonias con décadas de historia, vecinos estables y ambiente de confianza difícil de replicar.' },
-      { icon: '💎', titulo: 'Discreción y exclusividad', texto: 'El verdadero lujo guatemalteco vive aquí — amplio, privado, sin ostentación.' },
+      { icon: '', titulo: 'La zona más arbolada de la capital', texto: 'Colonias con grandes áreas verdes, calles tranquilas y ambiente residencial que contrasta con el ruido urbano.' },
+      { icon: '', titulo: 'Los mejores colegios del país', texto: 'Colegio Americano, Interamericano y otros colegios bilingües de excelencia a distancia mínima.' },
+      { icon: '', titulo: 'Comunidad establecida', texto: 'Colonias con décadas de historia, vecinos estables y ambiente de confianza difícil de replicar.' },
+      { icon: '', titulo: 'Discreción y exclusividad', texto: 'El verdadero lujo guatemalteco vive aquí — amplio, privado, sin ostentación.' },
     ]
   },
   'zona-15': {
@@ -1224,10 +1224,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '7–10% anual', demanda: 'Media-Alta', perfil: 'Residencial — familia y retiro premium' },
     lifestyle: ['Colonias Vista Hermosa I, II, III','Parque Ecológico Vista Hermosa','Colegios privados cercanos','Restaurantes y cafeterías boutique','Acceso rápido a zona 14 y 16','Supermercados y servicios completos'],
     porque: [
-      { icon: '🏔️', titulo: 'Vistas que no tienen precio', texto: 'Amaneceres sobre el valle desde el jardín. Una experiencia de vida que solo Zona 15 puede ofrecer.' },
-      { icon: '🍃', titulo: 'Aire limpio y silencio real', texto: 'Elevación que marca diferencia en calidad del aire y temperatura — fresco todo el año.' },
-      { icon: '📐', titulo: 'Propiedades con espacio real', texto: 'Lotes grandes, jardines amplios y residencias con metros cuadrados que en otras zonas son imposibles.' },
-      { icon: '🤫', titulo: 'Tranquilidad sin sacrificar acceso', texto: 'A 10–15 minutos de Zona 10 y 14. Lejos del ruido, cerca de todo lo que importa.' },
+      { icon: '', titulo: 'Vistas que no tienen precio', texto: 'Amaneceres sobre el valle desde el jardín. Una experiencia de vida que solo Zona 15 puede ofrecer.' },
+      { icon: '', titulo: 'Aire limpio y silencio real', texto: 'Elevación que marca diferencia en calidad del aire y temperatura — fresco todo el año.' },
+      { icon: '', titulo: 'Propiedades con espacio real', texto: 'Lotes grandes, jardines amplios y residencias con metros cuadrados que en otras zonas son imposibles.' },
+      { icon: '', titulo: 'Tranquilidad sin sacrificar acceso', texto: 'A 10–15 minutos de Zona 10 y 14. Lejos del ruido, cerca de todo lo que importa.' },
     ]
   },
   'zona-16': {
@@ -1238,10 +1238,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '12–18% anual', demanda: 'Creciente', perfil: 'Inversión · Residencial · Renta vacacional' },
     lifestyle: ['Ciudad Cayalá — concepto caminable','Hotel Hyatt Centric Cayalá','Restaurantes boutique y cafés','Tiendas de diseñadores locales e internacionales','Eventos culturales y mercados artesanales','Offices y coworking premium'],
     porque: [
-      { icon: '🏛️', titulo: 'El desarrollo más relevante del país', texto: 'Cayalá no es solo un vecindario — es una declaración de hacia dónde va el mercado premium guatemalteco.' },
-      { icon: '🚶', titulo: 'Caminabilidad real', texto: 'Diseño urbano pensado para el peatón. Arquitectura coherente, aceras amplias y plazas que invitan a quedarse.' },
-      { icon: '📊', titulo: 'Mayor potencial de apreciación', texto: 'Proyecto en expansión activa. Cada nueva etapa eleva el valor de las unidades existentes.' },
-      { icon: '🌐', titulo: 'Referente internacional', texto: 'Reconocido en publicaciones de urbanismo como modelo de desarrollo planificado para Latinoamérica.' },
+      { icon: '', titulo: 'El desarrollo más relevante del país', texto: 'Cayalá no es solo un vecindario — es una declaración de hacia dónde va el mercado premium guatemalteco.' },
+      { icon: '', titulo: 'Caminabilidad real', texto: 'Diseño urbano pensado para el peatón. Arquitectura coherente, aceras amplias y plazas que invitan a quedarse.' },
+      { icon: '', titulo: 'Mayor potencial de apreciación', texto: 'Proyecto en expansión activa. Cada nueva etapa eleva el valor de las unidades existentes.' },
+      { icon: '', titulo: 'Referente internacional', texto: 'Reconocido en publicaciones de urbanismo como modelo de desarrollo planificado para Latinoamérica.' },
     ]
   },
   'fraijanes': {
@@ -1252,10 +1252,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '10–16% anual', demanda: 'Creciente alta', perfil: 'Fincas · Residencial · Inversión agrícola' },
     lifestyle: ['Fincas productivas con cacao, café, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansión','Acceso rápido a Carretera a El Salvador','Microclima ideal — sin calor extremo'],
     porque: [
-      { icon: '🌿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
-      { icon: '🌡️', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
-      { icon: '📈', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
-      { icon: '🏡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
+      { icon: '', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
+      { icon: '', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
+      { icon: '', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
+      { icon: '', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
     ]
   },
   'cayala': {
@@ -1266,10 +1266,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '14–20% anual', demanda: 'Muy Alta', perfil: 'Inversión · Renta · Residencial premium' },
     lifestyle: ['Hotel Hyatt Centric','Plazas y calles peatonales','Restaurantes y cafés artesanales','Galería de arte y cultura local','Mercados y eventos semanales','Coworking y oficinas boutique'],
     porque: [
-      { icon: '🏛️', titulo: 'Arquitectura que te enamora', texto: 'Fachadas neoclásicas, calles adoquinadas y plazas diseñadas para la vida al aire libre — único en Guatemala.' },
-      { icon: '💰', titulo: 'Mejor ROI del mercado', texto: 'Unidades en Cayalá generan renta superior al 8% anual con demanda de alquiler permanentemente insatisfecha.' },
-      { icon: '🚶', titulo: 'Sin carro, sin estrés', texto: 'Todo a pie: restaurantes, tiendas, trabajo, cultura. El concepto de ciudad que el resto de Guatemala todavía no tiene.' },
-      { icon: '🌍', titulo: 'Reconocimiento internacional', texto: 'Cayalá aparece en publicaciones de arquitectura y urbanismo de Nueva York, Madrid y Ciudad de México.' },
+      { icon: '', titulo: 'Arquitectura que te enamora', texto: 'Fachadas neoclásicas, calles adoquinadas y plazas diseñadas para la vida al aire libre — único en Guatemala.' },
+      { icon: '', titulo: 'Mejor ROI del mercado', texto: 'Unidades en Cayalá generan renta superior al 8% anual con demanda de alquiler permanentemente insatisfecha.' },
+      { icon: '', titulo: 'Sin carro, sin estrés', texto: 'Todo a pie: restaurantes, tiendas, trabajo, cultura. El concepto de ciudad que el resto de Guatemala todavía no tiene.' },
+      { icon: '', titulo: 'Reconocimiento internacional', texto: 'Cayalá aparece en publicaciones de arquitectura y urbanismo de Nueva York, Madrid y Ciudad de México.' },
     ]
   },
   'mixco': {
@@ -1280,10 +1280,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '5–8% anual', demanda: 'Alta', perfil: 'Primera propiedad · Inversión accesible' },
     lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt — acceso rápido','Colegios y universidades cercanas','Mercados y comercio activo','Expansión de proyectos residenciales','Transporte público conectado'],
     porque: [
-      { icon: '🛣️', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
-      { icon: '💵', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
-      { icon: '📊', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
-      { icon: '🏘️', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
+      { icon: '', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
+      { icon: '', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
+      { icon: '', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
+      { icon: '', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
     ]
   },
   'santa-catarina-pinula': {
@@ -1294,10 +1294,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '7–10% anual', demanda: 'Media-Alta', perfil: 'Residencial familiar · Primera propiedad premium' },
     lifestyle: ['Calzada Aycinena — acceso directo','Colegios privados de referencia','Áreas verdes y parques comunales','Seguridad 24/7 en condominios','Comercios y supermercados completos','Comunidad de alta cohesión social'],
     porque: [
-      { icon: '🌄', titulo: 'Vistas que justifican el precio', texto: 'Desde Santa Catarina Pinula se ve toda la ciudad. Amaneceres sobre el valle que no se olvidan.' },
-      { icon: '🏘️', titulo: 'Condominios con identidad', texto: 'Proyectos bien diseñados, mantenidos y con comunidades activas — más que residencias, un estilo de vida.' },
-      { icon: '🌿', titulo: 'Verde sin salir del área metro', texto: 'Áreas verdes, jardines y un entorno natural que contrasta con la densidad urbana de zonas centrales.' },
-      { icon: '📍', titulo: 'Distancia perfecta', texto: '15 minutos a Zona 10. La distancia ideal para desconectarse sin desconectarse de la ciudad.' },
+      { icon: '', titulo: 'Vistas que justifican el precio', texto: 'Desde Santa Catarina Pinula se ve toda la ciudad. Amaneceres sobre el valle que no se olvidan.' },
+      { icon: '', titulo: 'Condominios con identidad', texto: 'Proyectos bien diseñados, mantenidos y con comunidades activas — más que residencias, un estilo de vida.' },
+      { icon: '', titulo: 'Verde sin salir del área metro', texto: 'Áreas verdes, jardines y un entorno natural que contrasta con la densidad urbana de zonas centrales.' },
+      { icon: '', titulo: 'Distancia perfecta', texto: '15 minutos a Zona 10. La distancia ideal para desconectarse sin desconectarse de la ciudad.' },
     ],
     faqs: [
       { q: '¿Cuánto cuesta una casa en Santa Catarina Pinula?', a: 'Las residencias en Santa Catarina Pinula oscilan entre $180,000 y $650,000 dependiendo del tamaño, vista y condominio. Los apartamentos y townhouses parten desde $120,000.' },
@@ -1314,10 +1314,10 @@ const ZONA_INFO = {
     inversion: { apreciacion: '10–16% anual', demanda: 'Creciente alta', perfil: 'Fincas · Residencial · Inversión agrícola' },
     lifestyle: ['Fincas productivas con cacao, café, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansión','Acceso rápido a Carretera a El Salvador','Microclima ideal — sin calor extremo'],
     porque: [
-      { icon: '🌿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
-      { icon: '🌡️', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
-      { icon: '📈', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
-      { icon: '🏡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
+      { icon: '', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
+      { icon: '', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
+      { icon: '', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
+      { icon: '', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
     ],
     faqs: [
       { q: '¿Cuánto cuesta una finca en Fraijanes Guatemala?', a: 'Las fincas en Fraijanes varían desde $80,000 por lotes de 1–2 manzanas hasta más de $2,000,000 para fincas productivas grandes. El precio promedio por manzana en áreas accesibles es de $40,000–$80,000.' },
@@ -1335,16 +1335,100 @@ const ZONA_INFO = {
     inversion: { apreciacion: '5–8% anual', demanda: 'Alta', perfil: 'Primera propiedad · Inversión accesible' },
     lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt — acceso rápido','Colegios y universidades cercanas','Mercados y comercio activo','Expansión de proyectos residenciales','Transporte público conectado'],
     porque: [
-      { icon: '🛣️', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
-      { icon: '💵', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
-      { icon: '📊', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
-      { icon: '🏘️', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
+      { icon: '', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
+      { icon: '', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
+      { icon: '', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
+      { icon: '', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
     ],
     faqs: [
       { q: '¿Cuánto cuesta una casa en Mixco Guatemala?', a: 'Las casas en Mixco oscilan entre $60,000 y $350,000 según la colonia y el tamaño. Los apartamentos parten desde $45,000 y las residencias en colonias privadas pueden superar los $250,000.' },
       { q: '¿Es buena inversión comprar en Mixco?', a: 'Sí, especialmente para primera propiedad o inversión de renta. Mixco tiene alta demanda de alquiler por su conectividad y precios accesibles, con apreciación anual de 5–8%.' },
       { q: '¿Cuáles son las mejores colonias de Mixco?', a: 'Las colonias más consolidadas incluyen Lomas de Portugal, Santa Marta, Carolingia, Monserrat y las colonias cercanas al Centro Comercial Miraflores. Cada una tiene perfil y precio diferente.' },
       { q: '¿Cuánto tiempo se tarda de Mixco al centro de Guatemala?', a: 'Aproximadamente 15–25 minutos por la Calzada Roosevelt o el anillo periférico. En hora pico puede extenderse a 35–40 minutos.' },
+    ]
+  },
+
+  'zona-14': {
+    titulo: 'Zona 14 — Vista Hermosa', subtitulo: 'Donde la tranquilidad tiene precio. Y vale cada centavo.',
+    desc: 'Zona 14 es la zona residencial más deseada de Guatemala. Calles arboladas, casas con jardín privado, comunidades consolidadas y el equilibrio perfecto entre privacidad y acceso a la ciudad. Vista Hermosa y San Isidro son nombres que definen exclusividad residencial en el país.',
+    img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
+    datos: ['Vista Hermosa y San Isidro','Casas con jardín privado','Comunidad consolidada','Privacidad y acceso'],
+    inversion: { apreciacion: '8–12% anual', demanda: 'Alta', perfil: 'Residencial familiar premium' },
+    lifestyle: ['Vista Hermosa I, II y III','San Isidro — exclusivo y privado','Colegios Oxford y Monte María','Centro Comercial Fontabella','Clínica La Asunción','Boulevard Vista Hermosa'],
+    porque: [
+      { icon: '', titulo: 'La zona residencial por excelencia', texto: 'Vista Hermosa y San Isidro son los nombres que definen exclusividad residencial en Guatemala. Décadas de demanda constante.' },
+      { icon: '', titulo: 'Casas con jardín y espacio real', texto: 'Propiedades con lotes generosos, jardines privados y espacio para vivir de verdad. Lo que otras zonas perdieron hace años.' },
+      { icon: '', titulo: 'Comunidades consolidadas', texto: 'Vecinos establecidos, calles arboladas y servicios de alta calidad. Una zona que ya llegó a su mejor versión.' },
+      { icon: '', titulo: 'Privacidad con acceso inmediato', texto: 'A 10 minutos del centro financiero con la tranquilidad de una comunidad residencial madura y segura.' },
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una casa en Zona 14 Guatemala?', a: 'Las casas en Zona 14 van de $280,000 a $1,800,000 según la colonia y el tamaño. Vista Hermosa y San Isidro tienen los precios más altos.' },
+      { q: '¿Cuál es la mejor colonia de Zona 14?', a: 'Vista Hermosa I y San Isidro son históricamente las más cotizadas. Vista Hermosa III tiene gran demanda por su relación precio-calidad.' },
+      { q: '¿Es tranquila Zona 14?', a: 'Sí. Zona 14 es predominantemente residencial con baja densidad comercial. Una de las zonas más tranquilas de la capital.' },
+      { q: '¿Hay colegios buenos cerca de Zona 14?', a: 'Sí. Oxford School y Monte María están en Zona 14, algunos de los mejores colegios privados de Guatemala.' },
+      { q: '¿Zona 14 es buena inversión?', a: 'Sí. La demanda residencial es constante y la oferta limitada. Las propiedades bien mantenidas mantienen y aumentan su valor de forma sostenida.' },
+    ]
+  },
+  'zona-15': {
+    titulo: 'Zona 15 — El Encinal', subtitulo: 'El equilibrio perfecto entre exclusividad y calidad de vida.',
+    desc: 'Zona 15 combina lo mejor de dos mundos: exclusividad de zonas premium con mayor potencial de apreciación. Vista Hermosa III, El Encinal y sus colonias modernas atraen a familias e inversionistas que entraron antes que el mercado lo reflejara.',
+    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80',
+    datos: ['Vista Hermosa III','Comunidades modernas','Alta apreciación','Familias e inversión'],
+    inversion: { apreciacion: '9–14% anual', demanda: 'Alta', perfil: 'Residencial familiar · Primera inversión premium' },
+    lifestyle: ['Vista Hermosa III — alta demanda','El Encinal y colonias modernas','Centros comerciales en expansión','Colegios privados bilingües','Acceso directo al Periférico','Condominios con amenidades completas'],
+    porque: [
+      { icon: '', titulo: 'Mayor crecimiento de valor en zonas premium', texto: 'Zona 15 ha mostrado apreciación superior al promedio en los últimos 5 años. Ideal para quienes entraron antes que el mercado lo reflejara.' },
+      { icon: '', titulo: 'Comunidades planificadas y modernas', texto: 'Proyectos nuevos con diseño contemporáneo, áreas verdes y seguridad. Una alternativa moderna a las zonas más antiguas.' },
+      { icon: '', titulo: 'Infraestructura completa en expansión', texto: 'Colegios, centros comerciales, restaurantes y servicios de salud en constante desarrollo. La zona crece con sus residentes.' },
+      { icon: '', titulo: 'Precio por m² con mayor potencial', texto: 'Frente a Zona 10 y 14, Zona 15 ofrece más metros cuadrados por quetzal con proyección de apreciación sostenida.' },
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una casa en Zona 15 Guatemala?', a: 'Las casas en Zona 15 van de $250,000 a $1,200,000. Excelente calidad por menos que en Zona 10 o 14.' },
+      { q: '¿Zona 15 es segura?', a: 'Sí. La mayoría de residencias en Zona 15 están en condominios privados con acceso controlado y seguridad 24 horas.' },
+      { q: '¿Vale la pena invertir en Zona 15?', a: 'Sí. Zona 15 ha mostrado apreciación superior al promedio en los últimos años, con proyección positiva por la demanda creciente de familias.' },
+      { q: '¿Hay proyectos nuevos en Zona 15?', a: 'Sí. Zona 15 tiene actualmente algunos de los proyectos residenciales nuevos más activos de la capital.' },
+    ]
+  },
+  'zona-16': {
+    titulo: 'Zona 16 — Ciudad Cayalá', subtitulo: 'El nuevo estándar. Cayalá redefinió lo que significa vivir en Guatemala.',
+    desc: 'Zona 16 y Ciudad Cayalá representan la visión más ambiciosa del urbanismo guatemalteco. Un ecosistema planificado donde arquitectura, comercio, cultura y residencia coexisten con una coherencia que ninguna otra zona puede ofrecer.',
+    img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
+    datos: ['Ciudad Cayalá','Arquitectura neoclásica','Mayor apreciación proyectada','Lifestyle autónomo'],
+    inversion: { apreciacion: '10–15% anual', demanda: 'Muy Alta', perfil: 'Residencial moderno · Inversión de alto retorno' },
+    lifestyle: ['Ciudad Cayalá — arquitectura neoclásica','Kanajuyú — residencial exclusivo','Centro Comercial Cayalá','Colegio Interamericano','Vistas panorámicas de la ciudad','Restaurantes y vida cultural activa'],
+    porque: [
+      { icon: '', titulo: 'Ciudad Cayalá — la joya de Zona 16', texto: 'El proyecto de desarrollo urbano más importante de Guatemala. Arquitectura neoclásica, calles peatonales y una comunidad que ya es referente regional.' },
+      { icon: '', titulo: 'La mayor apreciación proyectada', texto: 'Las propiedades en Zona 16 tienen la mayor proyección de apreciación de toda la capital. El mercado lo sabe y la demanda lo confirma.' },
+      { icon: '', titulo: 'Todo en un mismo lugar', texto: 'Restaurantes, tiendas, colegios, clínicas, cine y hoteles — diseñados para minimizar desplazamientos. Un estilo de vida autónomo y premium.' },
+      { icon: '', titulo: 'Comunidad moderna y aspiracional', texto: 'Los residentes de Zona 16 comparten valores de diseño, calidad y modernidad. Una comunidad que crece en la misma dirección.' },
+    ],
+    faqs: [
+      { q: '¿Qué es Ciudad Cayalá en Guatemala?', a: 'Ciudad Cayalá es el desarrollo urbano planificado más importante de Guatemala, en Zona 16. Combina residencias, comercio, colegios, restaurantes y espacios culturales en arquitectura neoclásica.' },
+      { q: '¿Cuánto cuesta vivir en Zona 16 Guatemala?', a: 'Las propiedades van de $300,000 a $1,500,000+. Ciudad Cayalá tiene rangos específicos según tipo de unidad y ubicación.' },
+      { q: '¿Es buena inversión Zona 16?', a: 'Sí. Zona 16 tiene la mayor proyección de apreciación de la capital, impulsada por Ciudad Cayalá y el desarrollo continuo.' },
+      { q: '¿Hay apartamentos en Zona 16?', a: 'Sí. Ciudad Cayalá y otros proyectos en Zona 16 ofrecen apartamentos modernos desde 80 m² hasta penthouses de alto nivel.' },
+      { q: '¿Zona 16 es segura?', a: 'Sí. Ciudad Cayalá tiene seguridad perimetral, cámaras y accesos controlados. Uno de los entornos residenciales más seguros y planificados de Guatemala.' },
+    ]
+  },
+  'carretera-el-salvador': {
+    titulo: 'Carretera a El Salvador', subtitulo: 'El corredor de inversión más activo de Guatemala.',
+    desc: 'La Carretera a El Salvador es el eje de desarrollo más dinámico del país. Residencias exclusivas, fincas con potencial, proyectos nuevos y acceso rápido a la capital — en el corredor que más crece y donde más oportunidades de inversión se concentran hoy.',
+    img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80',
+    datos: ['Corredor en expansión activa','Fincas con potencial','Proyectos nuevos','Acceso rápido a la capital'],
+    inversion: { apreciacion: '11–18% anual', demanda: 'Muy Alta', perfil: 'Inversión · Residencial · Fincas con potencial' },
+    lifestyle: ['Km. 12 a Km. 35 — todo el corredor','Proyectos nuevos en constante desarrollo','Santa Catarina Pinula — exclusivo','Acceso a Fraijanes y el oriente','Fincas desde 1 manzana hasta proyectos','Clubs, colegios y servicios en expansión'],
+    porque: [
+      { icon: '', titulo: 'El corredor que más crece', texto: 'Más proyectos nuevos, más inversión y más demanda que cualquier otro corredor de Guatemala. La infraestructura sigue al capital privado.' },
+      { icon: '', titulo: 'Acceso sin sacrificar espacio', texto: 'Propiedades amplias a 15–30 minutos de Zona 10. La mejor ecuación entre tamaño de lote y tiempo de traslado.' },
+      { icon: '', titulo: 'Fincas con potencial de desarrollo', texto: 'Terrenos con factibilidad para proyectos residenciales, comerciales o turísticos. El mercado más activo para inversionistas con visión.' },
+      { icon: '', titulo: 'Mayor retorno proyectado del mercado', texto: 'La apreciación en este corredor supera consistentemente a las zonas consolidadas. Quien entró hace 5 años ya tiene retornos significativos.' },
+    ],
+    faqs: [
+      { q: '¿Por qué invertir en Carretera a El Salvador?', a: 'Es el corredor con mayor apreciación de Guatemala. Combina acceso rápido a la capital con espacio, naturaleza y proyectos de alta calidad.' },
+      { q: '¿Cuánto tiempo a la ciudad desde Carretera a El Salvador?', a: 'Entre 15 y 40 minutos a Zona 10 dependiendo del kilómetro. El tráfico matutino puede extender tiempos en hora pico.' },
+      { q: '¿Hay casas en condominio en Carretera a El Salvador?', a: 'Sí. Proyectos como Villas de Alcalá, Arrazola y Fontana ofrecen seguridad, jardines y amenidades completas.' },
+      { q: '¿Qué tipo de fincas hay en Carretera a El Salvador?', a: 'Desde lotes de 1 manzana para construir hasta fincas de 50+ manzanas con potencial productivo o de desarrollo.' },
+      { q: '¿Cuánto vale una finca en Carretera a El Salvador?', a: 'Los precios van de $80,000 para lotes pequeños hasta varios millones para fincas grandes con infraestructura.' },
     ]
   },
 };
@@ -1466,7 +1550,7 @@ ${info.porque && info.porque.length ? `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
       ${info.porque.map(r=>`
       <div style="background:var(--ink);border:1px solid var(--gl);border-radius:14px;padding:28px 24px;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(193,145,75,.4)'" onmouseout="this.style.borderColor='var(--gl)'">
-        <div style="font-size:1.8rem;margin-bottom:14px">${r.icon}</div>
+        <div style="width:28px;height:2px;background:var(--or);margin-bottom:20px"></div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;color:var(--wh);margin-bottom:10px;line-height:1.3">${escapeHtml(r.titulo)}</div>
         <p style="font-size:.78rem;color:var(--sv);line-height:1.8;margin:0;font-weight:300">${escapeHtml(r.texto)}</p>
       </div>`).join('')}
