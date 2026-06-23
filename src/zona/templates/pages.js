@@ -1249,6 +1249,13 @@ const ZONA_INFO = {
       { icon: '🔐', titulo: 'Seguridad y privacidad', texto: 'Condominios y residencias con seguridad 24/7, acceso controlado y comunidades establecidas.' },
       { icon: '📍', titulo: 'Ubicación estratégica', texto: 'A menos de 10 minutos de los principales centros comerciales, restaurantes y el Aeropuerto Internacional.' },
       { icon: '📈', titulo: 'Inversión blindada', texto: 'Mercado con demanda sostenida. Las propiedades bien ubicadas se venden en semanas, no meses.' },
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una casa en Zona 10 Guatemala?', a: 'Las residencias en Zona 10 oscilan entre $350,000 y $2,500,000. Los apartamentos parten desde $180,000 en edificios modernos. El precio por m² es el más alto de la capital, reflejo de la demanda permanente y la ubicación.' },
+      { q: '¿Cuánto cuesta una casa en Zona 14 Guatemala?', a: 'En Zona 14 las casas van de $280,000 a $1,800,000 según la colonia y el tamaño. Vista Hermosa y San Isidro son las colonias con mayor precio por metro cuadrado. Los lotes a construir parten desde $150,000.' },
+      { q: '¿Es buen momento para invertir en propiedades en Guatemala?', a: 'Sí. Guatemala tiene uno de los mercados inmobiliarios más estables de Centroamérica, con apreciación constante de 8–12% anual en zonas premium. La quetzal ha mantenido estabilidad y la demanda de compradores locales es alta.' },
+      { q: '¿Cuál es la zona más exclusiva de Ciudad de Guatemala?', a: 'Zona 10 (La Zona Viva) y Zona 14 (Vista Hermosa) son históricamente las más exclusivas. Zona 16 con Ciudad Cayalá es el nuevo referente de lujo planificado con mayor proyección de apreciación.' },
+      { q: '¿Necesito ser guatemalteco para comprar una propiedad en Guatemala?', a: 'No. Los extranjeros pueden comprar propiedades en Guatemala con los mismos derechos que los ciudadanos nacionales. El proceso incluye escritura pública ante notario y registro en el Registro General de la Propiedad.' },
     ]
   },
   'zona-10': {
@@ -1361,6 +1368,53 @@ const ZONA_INFO = {
       { icon: '🏘️', titulo: 'Condominios con identidad', texto: 'Proyectos bien diseñados, mantenidos y con comunidades activas — más que residencias, un estilo de vida.' },
       { icon: '🌿', titulo: 'Verde sin salir del área metro', texto: 'Áreas verdes, jardines y un entorno natural que contrasta con la densidad urbana de zonas centrales.' },
       { icon: '📍', titulo: 'Distancia perfecta', texto: '15 minutos a Zona 10. La distancia ideal para desconectarse sin desconectarse de la ciudad.' },
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una casa en Santa Catarina Pinula?', a: 'Las residencias en Santa Catarina Pinula oscilan entre $180,000 y $650,000 dependiendo del tamaño, vista y condominio. Los apartamentos y townhouses parten desde $120,000.' },
+      { q: '¿Está lejos Santa Catarina Pinula de la capital?', a: 'No. Está a aproximadamente 15 minutos del centro de Zona 10, con acceso por la Calzada Aycinena. El tráfico en horas pico puede extender el tiempo a 25–30 minutos.' },
+      { q: '¿Es segura Santa Catarina Pinula?', a: 'Sí. La mayoría de proyectos residenciales son condominios cerrados con seguridad 24/7, cámaras y control de acceso. El municipio tiene baja incidencia delictiva comparado con zonas urbanas.' },
+      { q: '¿Vale la pena invertir en Santa Catarina Pinula?', a: 'Sí, especialmente para compradores de primera propiedad o quienes buscan calidad de vida. La apreciación anual es de 7–10% y la demanda de alquiler es estable por la cercanía a la capital.' },
+    ]
+  },
+  'fraijanes': {
+    titulo: 'Fraijanes', subtitulo: 'Naturaleza, privacidad y retorno — a 25 minutos de la capital',
+    desc: 'Fraijanes representa todo lo que la capital no puede ofrecer: hectáreas, bosque, silencio, clima fresco y propiedades con espacio real. En los últimos 5 años se ha consolidado como el mercado de mayor crecimiento del área metropolitana, atrayendo a familias, agricultores premium e inversionistas visionarios que anticiparon la tendencia.',
+    img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=80',
+    datos: ['Clima fresco 18–22°C todo el año','Fincas desde 1 a 100+ manzanas','Mayor crecimiento del área metro','Acceso pavimentado a 25 min'],
+    inversion: { apreciacion: '10–16% anual', demanda: 'Creciente alta', perfil: 'Fincas · Residencial · Inversión agrícola' },
+    lifestyle: ['Fincas productivas con cacao, café, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansión','Acceso rápido a Carretera a El Salvador','Microclima ideal — sin calor extremo'],
+    porque: [
+      { icon: '🌿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
+      { icon: '🌡️', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
+      { icon: '📈', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
+      { icon: '🏡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una finca en Fraijanes Guatemala?', a: 'Las fincas en Fraijanes varían desde $80,000 por lotes de 1–2 manzanas hasta más de $2,000,000 para fincas productivas grandes. El precio promedio por manzana en áreas accesibles es de $40,000–$80,000.' },
+      { q: '¿Cuánto tiempo se tarda de Fraijanes a Ciudad de Guatemala?', a: 'Entre 20 y 35 minutos desde los accesos principales de Fraijanes hasta Zona 10, dependiendo del tráfico. La Carretera a El Salvador es la ruta principal, con acceso pavimentado en todo el trayecto.' },
+      { q: '¿Es rentable invertir en fincas en Fraijanes?', a: 'Sí. Fraijanes tiene la mayor apreciación del área metropolitana en los últimos 5 años, con retornos de 10–16% anual. Las fincas productivas generan ingresos adicionales por cultivos de café, aguacate o cacao.' },
+      { q: '¿Se puede vivir permanentemente en Fraijanes?', a: 'Sí. Fraijanes cuenta con supermercados, colegios privados, clínicas, restaurantes y servicios completos. Muchas familias han migrado definitivamente desde la capital atraídas por el clima y la calidad de vida.' },
+      { q: '¿Qué tipo de propiedades hay en Fraijanes?', a: 'Encontrarás fincas de uso mixto, residencias en condominios privados, lotes para construir y propiedades rurales productivas. La oferta es amplia desde $80,000 hasta varios millones.' },
+    ]
+  },
+  'mixco': {
+    titulo: 'Mixco', subtitulo: 'Conectividad, diversidad y oportunidad de inversión',
+    desc: 'Mixco es el municipio más poblado del departamento de Guatemala y uno con mayor diversidad de oferta inmobiliaria. Desde proyectos de apartamentos modernos hasta residencias familiares en colonias consolidadas, Mixco ofrece una relación precio-valor muy atractiva para compradores de primera propiedad e inversionistas con visión de largo plazo.',
+    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80',
+    datos: ['Acceso a Calzada Roosevelt','Diversidad de oferta residencial','Precios accesibles vs capital','Proyección de crecimiento'],
+    inversion: { apreciacion: '5–8% anual', demanda: 'Alta', perfil: 'Primera propiedad · Inversión accesible' },
+    lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt — acceso rápido','Colegios y universidades cercanas','Mercados y comercio activo','Expansión de proyectos residenciales','Transporte público conectado'],
+    porque: [
+      { icon: '🛣️', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
+      { icon: '💵', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
+      { icon: '📊', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
+      { icon: '🏘️', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una casa en Mixco Guatemala?', a: 'Las casas en Mixco oscilan entre $60,000 y $350,000 según la colonia y el tamaño. Los apartamentos parten desde $45,000 y las residencias en colonias privadas pueden superar los $250,000.' },
+      { q: '¿Es buena inversión comprar en Mixco?', a: 'Sí, especialmente para primera propiedad o inversión de renta. Mixco tiene alta demanda de alquiler por su conectividad y precios accesibles, con apreciación anual de 5–8%.' },
+      { q: '¿Cuáles son las mejores colonias de Mixco?', a: 'Las colonias más consolidadas incluyen Lomas de Portugal, Santa Marta, Carolingia, Monserrat y las colonias cercanas al Centro Comercial Miraflores. Cada una tiene perfil y precio diferente.' },
+      { q: '¿Cuánto tiempo se tarda de Mixco al centro de Guatemala?', a: 'Aproximadamente 15–25 minutos por la Calzada Roosevelt o el anillo periférico. En hora pico puede extenderse a 35–40 minutos.' },
     ]
   },
 };
@@ -1545,7 +1599,26 @@ ${info.lifestyle && info.lifestyle.length ? `
       </div>
     </div>`}
   </div>
-</section>`;
+</section>
+
+${info.faqs && info.faqs.length ? `
+<!-- FAQ SECTION -->
+<section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
+  <div style="max-width:800px;margin:0 auto">
+    <div class="ey" style="margin-bottom:14px">Preguntas frecuentes</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:300;color:var(--wh);margin-bottom:40px;line-height:1.2">Lo que más nos preguntan sobre <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split('—')[0].trim().split('·')[0].trim())}</em></h2>
+    <div style="display:flex;flex-direction:column;gap:0">
+      ${info.faqs.map((faq, i) => `
+      <details style="border-top:1px solid var(--bd);padding:20px 0" ${i===0?'open':''}>
+        <summary style="cursor:pointer;font-size:.85rem;font-weight:600;color:var(--wh);line-height:1.5;list-style:none;display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+          <span>${escapeHtml(faq.q)}</span>
+          <svg style="flex-shrink:0;margin-top:3px;transition:transform .25s" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p style="font-size:.82rem;color:var(--sv);line-height:1.85;margin-top:14px;margin-bottom:0;padding-right:32px">${escapeHtml(faq.a)}</p>
+      </details>`).join('')}
+    </div>
+  </div>
+</section>` : ''}`;
 
   const schemaZona = JSON.stringify({
     "@context": "https://schema.org",
@@ -1562,13 +1635,35 @@ ${info.lifestyle && info.lifestyle.length ? `
     }))
   });
 
+  const schemaFaq = info.faqs && info.faqs.length ? JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": info.faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+    }))
+  }) : null;
+
+  const schemaBreadcrumbZona = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Inicio","item":"https://zona-innmueble.com"},
+      {"@type":"ListItem","position":2,"name":"Propiedades","item":"https://zona-innmueble.com/propiedades.html"},
+      {"@type":"ListItem","position":3,"name":info.titulo,"item":`https://zona-innmueble.com/zonas/${slug}.html`}
+    ]
+  });
+
+  // Título limpio sin "Guatemala Guatemala"
+  const zonaEnTitle = /guatemala/i.test(info.titulo) ? info.titulo : `${info.titulo}, Guatemala`;
   return layout({
-    title: `${propsEnZona.length > 0 ? propsEnZona.length + ' Propiedades en ' : 'Propiedades en '}${info.titulo} Guatemala - Casas y Fincas en Venta`,
+    title: `Propiedades en ${zonaEnTitle} — Casas y Fincas en Venta`,
     desc: `${propsEnZona.length > 0 ? propsEnZona.length + ' propiedades' : 'Propiedades'} en venta en ${info.titulo}, Guatemala. ${info.subtitulo}. Casas, fincas y apartamentos con asesoría personalizada.`,
     canonical: `/zonas/${slug}.html`,
     ogImage: info.img,
     body,
-    scripts: `<script type="application/ld+json">${schemaZona}</script>`
+    scripts: `<script type="application/ld+json">${schemaZona}<\/script><script type="application/ld+json">${schemaBreadcrumbZona}<\/script>${schemaFaq ? `<script type="application/ld+json">${schemaFaq}<\/script>` : ''}`
   });
 }
 
