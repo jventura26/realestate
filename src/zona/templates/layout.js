@@ -414,7 +414,18 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
       <li><a href="/blog.html">Blog</a></li>
-      <li><a href="/zonas/index.html">Zonas</a></li>
+            <li class="nav-has-dd">
+        <a href="/zonas/index.html" class="nav-dd-toggle">Zonas <span style="font-size:.55rem;opacity:.7">&#9660;</span></a>
+        <ul class="nav-dropdown">
+          <li><a href="/zonas/zona-10.html">Zona 10</a></li>
+          <li><a href="/zonas/zona-14.html">Zona 14</a></li>
+          <li><a href="/zonas/zona-15.html">Zona 15</a></li>
+          <li><a href="/zonas/zona-16.html">Zona 16</a></li>
+          <li><a href="/zonas/fraijanes.html">Fraijanes</a></li>
+          <li><a href="/zonas/carretera-el-salvador.html">Carretera El Salvador</a></li>
+          <li style="border-top:1px solid rgba(245,130,13,.2);margin-top:6px;padding-top:6px"><a href="/zonas/index.html" style="color:var(--or)">Ver todas &rarr;</a></li>
+        </ul>
+      </li>
       <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
@@ -484,7 +495,45 @@ ${body}
     @media(max-width:480px){
       footer > div:first-child{grid-template-columns:1fr !important;}
     }
-  </style>
+  
+/* NAV DROPDOWN */
+.nav-has-dd { position: relative; }
+.nav-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: rgba(13,27,62,.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gl);
+  border-radius: 4px;
+  padding: 10px 0;
+  list-style: none;
+  z-index: 300;
+  box-shadow: 0 16px 48px rgba(0,0,0,.5);
+}
+.nav-has-dd:hover .nav-dropdown { display: block; }
+.nav-dropdown li a {
+  display: block;
+  padding: 9px 18px;
+  font-size: .67rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sv);
+  transition: color .2s, background .2s;
+  white-space: nowrap;
+}
+.nav-dropdown li a:hover { color: var(--wh); background: rgba(245,130,13,.08); }
+.nav-dd-toggle { cursor: pointer; }
+@media(max-width:768px) {
+  .nav-dropdown { position: static; transform: none; border: none; background: rgba(255,255,255,.04); box-shadow: none; border-radius: 0; padding: 0; display: none; }
+  .nav-has-dd.dd-open .nav-dropdown { display: block; }
+  .nav-dropdown li a { padding: 10px 6% 10px 10%; font-size: .65rem; border-bottom: 1px solid var(--bd); }
+}
+</style>
 </footer>
 ${scripts}
 
@@ -703,6 +752,18 @@ document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.pc-fav').forEach(function(btn){
     var slug=btn.getAttribute('data-slug');
     if(favs.indexOf(slug)>=0)btn.classList.add('active');
+  });
+});
+
+// Dropdown mobile toggle
+document.querySelectorAll(".nav-has-dd").forEach(function(li) {
+  var toggle = li.querySelector(".nav-dd-toggle");
+  if (!toggle) return;
+  toggle.addEventListener("click", function(e) {
+    if (window.innerWidth <= 768) {
+      e.preventDefault();
+      li.classList.toggle("dd-open");
+    }
   });
 });
 </script>
