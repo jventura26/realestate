@@ -926,9 +926,7 @@ function detailPage(prop, all) {
   /* Specs de detalle: 1 columna */
   .dv3-specs-grid{grid-template-columns:1fr!important}
   /* Calculadora hipoteca: 1 columna */
-  #dv3-hipoteca [style*="grid-template-columns:1fr 1fr"]{
-    grid-template-columns:1fr!important;
-  }
+  .hip-grid{grid-template-columns:1fr!important;}
   /* Ubicación texto */
   .dv3-main [style*="font-size:.84rem"]{
     word-break:break-word;
@@ -940,6 +938,8 @@ function detailPage(prop, all) {
   .dv3-char{font-size:.68rem!important}
   /* Quick specs en 2 filas si necesario */
   .dv3-qs{flex-wrap:wrap!important}
+  /* Tabs: reducir padding para que todos quepan */
+  .dv3-tab{padding:10px 12px!important;font-size:.6rem!important}
 }
 </style>
 
@@ -1028,7 +1028,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
 
     ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? `<div class="dv3-tab-panel" id="dv3-hipoteca">
       <div class="dv3-ref-l" style="margin-bottom:14px">Estimaci&oacute;n de cuota mensual</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      <div class="hip-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
         <div>
           <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Enganche (%)</label>
           <input type="range" id="hipEnganche" min="10" max="50" step="5" value="20" oninput="dv3CalcHipoteca()" style="width:100%">
@@ -1040,7 +1040,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.sli
           <div style="font-size:.78rem;color:var(--sv);margin-top:4px"><span id="hipPlazoVal">20</span> a&ntilde;os</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      <div class="hip-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
         <div>
           <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Tasa de inter&eacute;s anual (%)</label>
           <input type="number" id="hipTasa" value="9.5" step="0.1" min="1" max="25" oninput="dv3CalcHipoteca()" style="width:100%;padding:8px 10px;background:var(--ink2);border:1px solid var(--bd);border-radius:4px;color:var(--wh);font-size:.85rem">
