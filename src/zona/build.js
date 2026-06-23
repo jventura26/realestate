@@ -254,9 +254,9 @@ const urls = [
   { loc:'/maximizar-roi-propiedades-alquiler.html',   priority:'0.7', changefreq:'monthly', lastmod:'2026-06-10' },
   ...props.map(p=>({
     loc:`/propiedades/${p.slug}.html`, priority:'0.8', changefreq:'weekly',
-    lastmod: (p.fechaPublicacion || p.createdAt || '').toString().substring(0,10) || undefined
+    lastmod: (p.fechaPublicacion || p.createdAt || '').toString().substring(0,10) || new Date().toISOString().substring(0,10)
   })),
-  ...Object.keys(zonasMap).map(slug=>({ loc:`/zonas/${slug}.html`, priority:'0.7', changefreq:'weekly', lastmod:'2026-06-19' })),
+  ...Object.keys(zonasMap).map(slug=>({ loc:`/zonas/${slug}.html`, priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) })),
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');

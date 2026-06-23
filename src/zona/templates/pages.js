@@ -789,8 +789,6 @@ function detailPage(prop, all) {
   const waNum = prop.waAsesor ? prop.waAsesor.replace(/\\D/g,'') : '50245542088';
 
   const body = `
-<script type="application/ld+json">${jsonLd}<\/script>
-
 <style>
 .dv3-hero{position:relative;background:#000;overflow:hidden}
 .dv3-hero-img{width:100%;max-height:580px;object-fit:cover;display:block;opacity:.92}
@@ -1207,30 +1205,28 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
 
 
 
-  const metaDesc = `${prop.tipo} en ${prop.locationFull}. ${(esExclusiva||cfg.precio)?'Precio a consultar':prop.priceFormatted}. ${(!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0')?prop.habitaciones+' habitaciones. ':''}Consulta disponibilidad por WhatsApp.`;
-  // Schema markup para Google
-  const schemaProperty = JSON.stringify({
+  // Meta description con keywords reales para SEO
+  const _hab  = (!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0') ? prop.habitaciones+' hab.' : '';
+  const _area = (ca(prop.areaConst)||prop.area) ? (ca(prop.areaConst)||prop.area)+' m²' : '';
+  const _precio = (esExclusiva||cfg.precio) ? 'Precio a consultar' : prop.priceFormatted;
+  const _zona = prop.municipio || prop.locationFull || prop.zona || 'Guatemala';
+  const metaDesc = `${prop.tipo||'Propiedad'} en venta en ${_zona}, Guatemala${_hab?' — '+_hab:''}${_area?' · '+_area:''} · ${_precio}. Ver fotos, mapa y calcular cuota mensual. Zona INNmueble.`;
+
+  // Schema BreadcrumbList para rich results en Google
+  const schemaBreadcrumb = JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "RealEstateListing",
-    "name": prop.title,
-    "description": (esExclusiva||cfg.descripcion) ? prop.title : (prop.description || prop.title),
-    "url": `https://zona-innmueble.com/propiedades/${prop.slug}.html`,
-    "image": prop.mainImage || '',
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": prop.municipio || prop.zona || 'Guatemala',
-      "addressCountry": "GT"
-    },
-    "offers": (prop.priceNumeric && !esExclusiva && !cfg.precio) ? {
-      "@type": "Offer",
-      "price": prop.priceNumeric,
-      "priceCurrency": "USD"
-    } : undefined
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Inicio","item":"https://zona-innmueble.com"},
+      {"@type":"ListItem","position":2,"name":"Propiedades","item":"https://zona-innmueble.com/propiedades.html"},
+      {"@type":"ListItem","position":3,"name":prop.title,"item":`https://zona-innmueble.com/propiedades/${prop.slug}.html`}
+    ]
   });
-  // Titulo SEO optimizado: "Casa en Venta Zona 16 Guatemala | Zona INNmueble"
-  const seoTitle = `${prop.title} | ${prop.tipo||'Propiedad'} en ${prop.municipio||prop.zona||'Guatemala'}`;
+
+  // Titulo SEO: "Casa en Venta Zona 10 Guatemala | Nombre Propiedad | Zona INNmueble"
+  const seoTitle = `${prop.tipo||'Propiedad'} en Venta ${_zona} Guatemala | ${prop.title} | Zona INNmueble`;
   return layout({ title: seoTitle, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body,
-    scripts: `<script type="application/ld+json">${schemaProperty}<\/script><script async src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"><\/script>` });
+    scripts: `<script type="application/ld+json">${jsonLd}<\/script><script type="application/ld+json">${schemaBreadcrumb}<\/script><script async src="https://zona-inmu.tours-virtuales-gt.workers.dev/dynamic-grid.js"><\/script>` });
 }
 
 
