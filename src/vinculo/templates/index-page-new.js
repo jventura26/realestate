@@ -104,7 +104,70 @@ function indexPageNew(props) {
     <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:300;color:#0a1628;margin-bottom:48px">Herramientas para <em style="font-style:italic">invertir mejor</em></h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px">${herramientas}</div>
   </div>
-</section>`;
+</section>
+<section style="padding:100px 6%;background:linear-gradient(135deg,#0a1628 0%,#0f1e38 50%,#0a1628 100%);position:relative;overflow:hidden">
+<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(201,168,76,.07) 0%,transparent 65%);pointer-events:none"></div>
+<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent)"></div>
+<div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center" class="agent-grid">
+<style>.agent-grid{grid-template-columns:1fr 1fr!important}@media(max-width:768px){.agent-grid{grid-template-columns:1fr!important;gap:40px!important}}</style>
+<div>
+<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:100px;padding:6px 16px;margin-bottom:28px">
+<span style="width:6px;height:6px;background:#c9a84c;border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>
+<span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c9a84c">Para Asesores Inmobiliarios</span>
+</div>
+<style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
+<h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:300;color:white;line-height:1.1;margin-bottom:20px">
+Publica tus propiedades.<br>
+<em style="font-style:italic;color:#c9a84c">Recibe leads directamente.</em>
+</h2>
+<p style="font-size:.95rem;color:rgba(255,255,255,.55);line-height:1.9;max-width:460px;margin-bottom:40px;font-weight:300">
+InmuHub conecta tus propiedades con compradores activos en Guatemala. Sin comisión por venta, sin intermediarios. Solo tú, tu cliente y WhatsApp.
+</p>
+<div style="display:flex;flex-direction:column;gap:16px;margin-bottom:44px">
+<div style="display:flex;align-items:flex-start;gap:12px"><span style="flex-shrink:0;width:20px;height:20px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#c9a84c;margin-top:1px">✓</span><span style="font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.6">Publica desde 5 propiedades hasta inventario ilimitado</span></div><div style="display:flex;align-items:flex-start;gap:12px"><span style="flex-shrink:0;width:20px;height:20px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#c9a84c;margin-top:1px">✓</span><span style="font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.6">Los leads llegan directo a tu WhatsApp personal</span></div><div style="display:flex;align-items:flex-start;gap:12px"><span style="flex-shrink:0;width:20px;height:20px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#c9a84c;margin-top:1px">✓</span><span style="font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.6">Presencia en zonas premium: Z10, Z14, Z15, Z16, Fraijanes</span></div><div style="display:flex;align-items:flex-start;gap:12px"><span style="flex-shrink:0;width:20px;height:20px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#c9a84c;margin-top:1px">✓</span><span style="font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.6">Sin pago por lead. Sin comisión. Precio fijo mensual</span></div>
+</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap">
+<a href="/planes.html" style="display:inline-flex;align-items:center;gap:8px;background:#c9a84c;color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:15px 32px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='#dbb85a'" onmouseout="this.style.background='#c9a84c'">Ver planes y precios &rarr;</a>
+<a href="https://wa.me/50245542088?text=Hola%2C%20me%20interesa%20publicar%20mis%20propiedades%20en%20InmuHub" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15);font-size:14px;font-weight:500;padding:15px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">Consultar por WhatsApp</a>
+</div>
+</div>
+<div style="position:relative">
+<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:40px;backdrop-filter:blur(10px)">
+<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:28px">Nuestros planes</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-radius:12px;margin-bottom:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
+<div>
+<div style="font-size:13px;font-weight:700;color:#64748b;letter-spacing:.04em;margin-bottom:4px">Básico</div>
+<div style="font-size:11px;color:rgba(255,255,255,.35)">5 propiedades activas · Zonas estándar</div>
+</div>
+<div style="text-align:right">
+<div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:500;color:white;line-height:1">Q499</div>
+<div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.06em">/mes</div>
+</div>
+</div><div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-radius:12px;margin-bottom:10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3)">
+<div>
+<div style="font-size:13px;font-weight:700;color:#c9a84c;letter-spacing:.04em;margin-bottom:4px">Pro</div>
+<div style="font-size:11px;color:rgba(255,255,255,.35)">20 propiedades activas · Destacado en zonas</div>
+</div>
+<div style="text-align:right">
+<div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:500;color:white;line-height:1">Q999</div>
+<div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.06em">/mes</div>
+</div>
+</div><div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-radius:12px;margin-bottom:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
+<div>
+<div style="font-size:13px;font-weight:700;color:#e6c06a;letter-spacing:.04em;margin-bottom:4px">Premium</div>
+<div style="font-size:11px;color:rgba(255,255,255,.35)">Inventario ilimitado · Zona exclusiva</div>
+</div>
+<div style="text-align:right">
+<div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:500;color:white;line-height:1">Q1,999</div>
+<div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.06em">/mes</div>
+</div>
+</div>
+<a href="/planes.html" style="display:block;text-align:center;margin-top:20px;font-size:12px;font-weight:600;color:#c9a84c;text-decoration:none;letter-spacing:.06em" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">VER DETALLES COMPLETOS &rarr;</a>
+</div>
+</div>
+</div>
+</section>
+`;
 
 
 
