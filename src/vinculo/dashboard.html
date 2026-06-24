@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel de Asesor — INMUHUB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--gold2:#e6c46a;--navy:#060e1a;--navy2:#0a1628;--navy3:#0f2040;--sidebar:220px}
+body{font-family:'Inter',sans-serif;background:#0b131f;color:#fff;min-height:100vh;display:flex}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--navy);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-logo a{font-weight:700;font-size:1.1rem;letter-spacing:.05em;color:rgba(255,255,255,.9);text-decoration:none}
+.sidebar-logo span{color:var(--gold)}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-section{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:12px 8px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,.55);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(201,168,76,.1);color:var(--gold)}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.sidebar-footer{padding:16px 12px;border-top:1px solid rgba(255,255,255,.06)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04)}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--navy);flex-shrink:0}
+.user-name{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-plan{font-size:.68rem;color:var(--gold);font-weight:500;margin-top:1px}
+.logout-btn{display:block;width:100%;text-align:center;padding:9px;background:rgba(255,255,255,.04);border:none;border-radius:8px;color:rgba(255,255,255,.35);font-family:'Inter',sans-serif;font-size:.78rem;cursor:pointer;margin-top:8px;transition:all .2s}
+.logout-btn:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.08)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{padding:20px 32px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;background:var(--navy)}
+.topbar-title{font-size:1.1rem;font-weight:600}
+.topbar-subtitle{font-size:.8rem;color:rgba(255,255,255,.4);margin-top:2px}
+.topbar-cta{padding:9px 18px;background:var(--gold);color:var(--navy);border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;text-decoration:none;transition:background .2s}
+.topbar-cta:hover{background:var(--gold2)}
+.content{padding:32px;flex:1}
+
+/* PLAN BANNER */
+.plan-banner{background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.plan-banner-left{display:flex;align-items:center;gap:12px}
+.plan-badge{background:var(--gold);color:var(--navy);font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase}
+.plan-banner-text{font-size:.85rem;color:rgba(255,255,255,.6)}
+.plan-banner-text strong{color:#fff}
+.upgrade-btn{padding:8px 16px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:var(--gold);font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap}
+.upgrade-btn:hover{background:rgba(201,168,76,.25)}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--navy);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px 22px}
+.stat-label{font-size:.72rem;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.stat-value{font-size:1.8rem;font-weight:700;color:#fff;line-height:1}
+.stat-sub{font-size:.72rem;color:rgba(255,255,255,.3);margin-top:6px}
+.stat-card.gold .stat-value{color:var(--gold)}
+
+/* SECTIONS */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.85)}
+.section-link{font-size:.78rem;color:var(--gold);text-decoration:none;font-weight:500}
+.section-link:hover{color:var(--gold2)}
+
+/* TABLE */
+.table-wrap{background:var(--navy);border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden;margin-bottom:28px}
+table{width:100%;border-collapse:collapse}
+th{padding:12px 20px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:left;border-bottom:1px solid rgba(255,255,255,.06)}
+td{padding:14px 20px;font-size:.84rem;color:rgba(255,255,255,.75);border-bottom:1px solid rgba(255,255,255,.04)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:600;letter-spacing:.04em}
+.badge-active{background:rgba(34,197,94,.12);color:#4ade80}
+.badge-draft{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.prop-name{color:#fff;font-weight:500}
+.prop-zona{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:2px}
+
+/* QUICK ACTIONS */
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.quick-card{background:var(--navy);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;cursor:pointer;text-decoration:none;transition:all .2s;display:block}
+.quick-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.04)}
+.quick-icon{font-size:1.4rem;margin-bottom:10px}
+.quick-title{font-size:.85rem;font-weight:600;color:#fff;margin-bottom:4px}
+.quick-desc{font-size:.75rem;color:rgba(255,255,255,.35)}
+
+/* EMPTY STATE */
+.empty-state{padding:48px 20px;text-align:center}
+.empty-icon{font-size:2rem;margin-bottom:12px;opacity:.4}
+.empty-title{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px}
+.empty-sub{font-size:.78rem;color:rgba(255,255,255,.3)}
+.empty-btn{display:inline-block;margin-top:16px;padding:10px 20px;background:var(--gold);color:var(--navy);border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;transition:background .2s}
+.empty-btn:hover{background:var(--gold2)}
+
+/* MOBILE */
+.menu-toggle{display:none;background:none;border:none;color:#fff;cursor:pointer;padding:4px}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .quick-grid{grid-template-columns:1fr 1fr}
+  .topbar{padding:16px 20px}
+  .content{padding:20px}
+  .menu-toggle{display:block}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+  .overlay.show{display:block}
+}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <a href="/">INMU<span>HUB</span></a>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+    <a href="/dashboard.html" class="nav-item active">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="/publicar.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Publicar propiedad
+    </a>
+    <div class="nav-section">Mis datos</div>
+    <a href="/mis-propiedades.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Mis propiedades
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Leads recibidos
+    </a>
+    <div class="nav-section">Cuenta</div>
+    <a href="/perfil.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Mi perfil
+    </a>
+    <a href="/planes.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Planes y membresía
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div>
+        <div class="user-name" id="user-name">Cargando...</div>
+        <div class="user-plan" id="user-plan">Plan Gratis</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:14px">
+      <button class="menu-toggle" onclick="openSidebar()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="topbar-title" id="topbar-greeting">Buenos días</div>
+        <div class="topbar-subtitle">Panel de asesor · INMUHUB</div>
+      </div>
+    </div>
+    <a href="/publicar.html" class="topbar-cta">+ Publicar propiedad</a>
+  </div>
+
+  <div class="content">
+
+    <!-- PLAN BANNER -->
+    <div class="plan-banner" id="plan-banner">
+      <div class="plan-banner-left">
+        <span class="plan-badge" id="plan-badge">Gratis</span>
+        <span class="plan-banner-text">Tienes <strong id="props-remaining">2</strong> propiedades disponibles en tu plan actual.</span>
+      </div>
+      <a href="/planes.html" class="upgrade-btn">Mejorar plan →</a>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Propiedades activas</div>
+        <div class="stat-value" id="stat-props">0</div>
+        <div class="stat-sub" id="stat-props-sub">de 2 disponibles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Leads recibidos</div>
+        <div class="stat-value" id="stat-leads">0</div>
+        <div class="stat-sub">Este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Vistas totales</div>
+        <div class="stat-value" id="stat-vistas">0</div>
+        <div class="stat-sub">Últimos 30 días</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Días activo</div>
+        <div class="stat-value" id="stat-dias">0</div>
+        <div class="stat-sub">Desde tu registro</div>
+      </div>
+    </div>
+
+    <!-- ACCIONES RÁPIDAS -->
+    <div class="section-header">
+      <div class="section-title">Acciones rápidas</div>
+    </div>
+    <div class="quick-grid">
+      <a href="/publicar.html" class="quick-card">
+        <div class="quick-icon">🏠</div>
+        <div class="quick-title">Publicar propiedad</div>
+        <div class="quick-desc">Sube fotos, precio y descripción en minutos</div>
+      </a>
+      <a href="/perfil.html" class="quick-card">
+        <div class="quick-icon">👤</div>
+        <div class="quick-title">Completar perfil</div>
+        <div class="quick-desc">Agrega tu foto y zonas donde trabajas</div>
+      </a>
+      <a href="/planes.html" class="quick-card">
+        <div class="quick-icon">⭐</div>
+        <div class="quick-title">Mejorar plan</div>
+        <div class="quick-desc">Publica más propiedades y destaca tu perfil</div>
+      </a>
+    </div>
+
+    <!-- MIS PROPIEDADES -->
+    <div class="section-header">
+      <div class="section-title">Mis propiedades</div>
+      <a href="/mis-propiedades.html" class="section-link">Ver todas →</a>
+    </div>
+    <div class="table-wrap" id="props-table-wrap">
+      <div class="empty-state" id="props-empty">
+        <div class="empty-icon">🏘️</div>
+        <div class="empty-title">Aún no tienes propiedades</div>
+        <div class="empty-sub">Publica tu primera propiedad y empieza a recibir leads directamente en tu WhatsApp.</div>
+        <a href="/publicar.html" class="empty-btn">Publicar primera propiedad</a>
+      </div>
+      <table id="props-table" style="display:none">
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Vistas</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="props-tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// AUTH GUARD
+const session = JSON.parse(localStorage.getItem('inmu_session') || 'null');
+if (!session) window.location.href = '/login.html';
+
+// POPULATE UI
+function init() {
+  if (!session) return;
+  // Greeting
+  const h = new Date().getHours();
+  const g = h < 12 ? 'Buenos días' : h < 18 ? 'Buenas tardes' : 'Buenas noches';
+  document.getElementById('topbar-greeting').textContent = g + ', ' + session.nombre;
+
+  // User card
+  document.getElementById('user-avatar').textContent = (session.nombre||'?')[0].toUpperCase();
+  document.getElementById('user-name').textContent = session.nombre + ' ' + (session.apellido||'');
+  const planLabels = {gratis:'Plan Gratis',basico:'Plan Básico',pro:'Plan Pro',premium:'Plan Premium'};
+  const planLimits = {gratis:2,basico:8,pro:25,premium:999};
+  const plan = session.plan || 'gratis';
+  document.getElementById('user-plan').textContent = planLabels[plan] || 'Plan Gratis';
+  document.getElementById('plan-badge').textContent = planLabels[plan] || 'Gratis';
+
+  // Stats
+  const propiedades = session.propiedades || [];
+  const limit = planLimits[plan];
+  document.getElementById('stat-props').textContent = propiedades.length;
+  document.getElementById('stat-props-sub').textContent = 'de ' + (limit === 999 ? '∞' : limit) + ' disponibles';
+  document.getElementById('props-remaining').textContent = limit === 999 ? 'ilimitadas' : (limit - propiedades.length);
+  document.getElementById('stat-leads').textContent = session.leads || 0;
+  document.getElementById('stat-vistas').textContent = session.vistas || 0;
+
+  // Días activo
+  if (session.creado) {
+    const dias = Math.floor((Date.now() - new Date(session.creado)) / 86400000);
+    document.getElementById('stat-dias').textContent = dias;
+  }
+
+  // Propiedades table
+  if (propiedades.length > 0) {
+    document.getElementById('props-empty').style.display = 'none';
+    document.getElementById('props-table').style.display = 'table';
+    const tbody = document.getElementById('props-tbody');
+    propiedades.slice(0,5).forEach(p => {
+      tbody.innerHTML += `<tr>
+        <td><div class="prop-name">${p.titulo||'Sin título'}</div><div class="prop-zona">${p.zona||''}</div></td>
+        <td>${p.tipo||'-'}</td>
+        <td>${p.precio ? 'Q'+Number(p.precio).toLocaleString() : '-'}</td>
+        <td><span class="badge badge-active">Activa</span></td>
+        <td>${p.vistas||0}</td>
+        <td><a href="/publicar.html?id=${p.id}" style="color:var(--gold);font-size:.78rem;text-decoration:none">Editar</a></td>
+      </tr>`;
+    });
+  }
+}
+
+function logout() {
+  localStorage.removeItem('inmu_session');
+  window.location.href = '/login.html';
+}
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+init();
+</script>
+</body>
+</html>
