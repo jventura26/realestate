@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Publicar Propiedad — INMUHUB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--gold2:#e6c46a;--navy:#060e1a;--navy2:#0a1628;--navy3:#0f2040;--sidebar:220px}
+body{font-family:'Inter',sans-serif;background:#0b131f;color:#fff;min-height:100vh;display:flex}
+
+/* SIDEBAR (same as dashboard) */
+.sidebar{width:var(--sidebar);background:var(--navy);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-logo a{font-weight:700;font-size:1.1rem;letter-spacing:.05em;color:rgba(255,255,255,.9);text-decoration:none}
+.sidebar-logo span{color:var(--gold)}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-section{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:12px 8px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,.55);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(201,168,76,.1);color:var(--gold)}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.sidebar-footer{padding:16px 12px;border-top:1px solid rgba(255,255,255,.06)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04)}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--navy);flex-shrink:0}
+.user-name{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.85)}
+.user-plan{font-size:.68rem;color:var(--gold);font-weight:500;margin-top:1px}
+.logout-btn{display:block;width:100%;text-align:center;padding:9px;background:rgba(255,255,255,.04);border:none;border-radius:8px;color:rgba(255,255,255,.35);font-family:'Inter',sans-serif;font-size:.78rem;cursor:pointer;margin-top:8px;transition:all .2s}
+.logout-btn:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.08)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{padding:20px 32px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;background:var(--navy)}
+.topbar-title{font-size:1.1rem;font-weight:600}
+.topbar-subtitle{font-size:.8rem;color:rgba(255,255,255,.4);margin-top:2px}
+.content{padding:32px;flex:1;max-width:760px}
+
+/* FORM */
+.form-card{background:var(--navy);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:32px;margin-bottom:20px}
+.form-card-title{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
+.form-card-title span{font-size:1rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form-row{display:flex;flex-direction:column;gap:7px}
+.form-row.full{grid-column:1/-1}
+.form-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:.06em;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:12px 14px;color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(255,255,255,.2)}
+.form-textarea{resize:vertical;min-height:100px;line-height:1.6}
+.form-select{cursor:pointer}
+.form-select option{background:#0f2040}
+.input-prefix{display:flex;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:9px;overflow:hidden;transition:border-color .2s;focus-within:border-color:var(--gold)}
+.input-prefix:focus-within{border-color:var(--gold)}
+.prefix-label{padding:12px 14px;font-size:.88rem;color:rgba(255,255,255,.35);border-right:1px solid rgba(255,255,255,.09);white-space:nowrap}
+.input-prefix input{flex:1;background:none;border:none;padding:12px 14px;color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;outline:none}
+.input-prefix input::placeholder{color:rgba(255,255,255,.2)}
+
+/* PHOTO UPLOAD */
+.photo-zone{border:2px dashed rgba(255,255,255,.12);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.photo-zone:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.03)}
+.photo-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.photo-zone-icon{font-size:1.8rem;margin-bottom:10px}
+.photo-zone-text{font-size:.84rem;color:rgba(255,255,255,.45);line-height:1.6}
+.photo-zone-text strong{color:var(--gold)}
+.photo-preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.photo-thumb{width:80px;height:80px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,.1)}
+
+/* LIMIT WARNING */
+.limit-warn{background:rgba(220,150,0,.1);border:1px solid rgba(220,150,0,.25);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.limit-warn-icon{font-size:1.1rem}
+.limit-warn-text{font-size:.82rem;color:rgba(255,200,80,.85);line-height:1.5}
+.limit-warn-text a{color:var(--gold);text-decoration:none;font-weight:600}
+
+/* SUBMIT */
+.submit-row{display:flex;gap:12px;margin-top:24px}
+.btn-primary{padding:14px 28px;background:var(--gold);color:var(--navy);border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-primary:hover{background:var(--gold2)}
+.btn-secondary{padding:14px 22px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-secondary:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* SUCCESS */
+.success-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;align-items:center;justify-content:center}
+.success-modal.show{display:flex}
+.success-box{background:var(--navy);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:48px 40px;text-align:center;max-width:400px;width:90%}
+.success-icon{font-size:3rem;margin-bottom:16px}
+.success-title{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.success-sub{font-size:.85rem;color:rgba(255,255,255,.45);line-height:1.6;margin-bottom:28px}
+.success-btns{display:flex;flex-direction:column;gap:10px}
+
+/* MOBILE */
+.menu-toggle{display:none;background:none;border:none;color:#fff;cursor:pointer;padding:4px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+.overlay.show{display:block}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .topbar{padding:16px 20px}
+  .content{padding:20px}
+  .form-grid{grid-template-columns:1fr}
+  .menu-toggle{display:block}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><a href="/">INMU<span>HUB</span></a></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+    <a href="/dashboard.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="/publicar.html" class="nav-item active">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Publicar propiedad
+    </a>
+    <div class="nav-section">Mis datos</div>
+    <a href="/mis-propiedades.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Mis propiedades
+    </a>
+    <a href="#" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Leads recibidos
+    </a>
+    <div class="nav-section">Cuenta</div>
+    <a href="/perfil.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Mi perfil
+    </a>
+    <a href="/planes.html" class="nav-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Planes y membresía
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div>
+        <div class="user-name" id="user-name">Cargando...</div>
+        <div class="user-plan" id="user-plan">Plan Gratis</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:14px">
+      <button class="menu-toggle" onclick="openSidebar()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="topbar-title">Publicar propiedad</div>
+        <div class="topbar-subtitle">Completa los datos y aparece en el catálogo en minutos</div>
+      </div>
+    </div>
+    <a href="/dashboard.html" class="btn-secondary" style="font-size:.8rem;padding:8px 16px">← Volver</a>
+  </div>
+
+  <div class="content">
+
+    <div class="limit-warn" id="limit-warn" style="display:none">
+      <div class="limit-warn-icon">⚠️</div>
+      <div class="limit-warn-text">
+        Has alcanzado el límite de propiedades de tu plan actual.
+        <a href="/planes.html">Mejora tu plan</a> para publicar más.
+      </div>
+    </div>
+
+    <!-- DATOS BÁSICOS -->
+    <div class="form-card">
+      <div class="form-card-title"><span>🏠</span> Información básica</div>
+      <div class="form-grid">
+        <div class="form-row full">
+          <label class="form-label">Título de la propiedad *</label>
+          <input type="text" class="form-input" id="f-titulo" placeholder="Ej: Casa moderna en Zona 15 con piscina y jardín">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Tipo de operación *</label>
+          <select class="form-select" id="f-operacion">
+            <option value="">Selecciona</option>
+            <option value="Venta">En venta</option>
+            <option value="Alquiler">En alquiler</option>
+            <option value="Venta o alquiler">Venta o alquiler</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Tipo de propiedad *</label>
+          <select class="form-select" id="f-tipo">
+            <option value="">Selecciona</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Local comercial">Local comercial</option>
+            <option value="Bodega">Bodega</option>
+            <option value="Terreno">Terreno</option>
+            <option value="Finca">Finca</option>
+            <option value="Oficina">Oficina</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Precio (Q) *</label>
+          <div class="input-prefix">
+            <span class="prefix-label">Q</span>
+            <input type="number" id="f-precio" placeholder="1,500,000">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Zona / Ubicación *</label>
+          <select class="form-select" id="f-zona">
+            <option value="">Selecciona</option>
+            <option value="Zona 10">Zona 10</option>
+            <option value="Zona 14">Zona 14</option>
+            <option value="Zona 15">Zona 15</option>
+            <option value="Zona 16">Zona 16</option>
+            <option value="Cayalá">Cayalá</option>
+            <option value="Fraijanes">Fraijanes</option>
+            <option value="Carretera a El Salvador">Carretera a El Salvador</option>
+            <option value="Santa Catarina Pinula">Santa Catarina Pinula</option>
+            <option value="San Lucas Sacatepéquez">San Lucas Sacatepéquez</option>
+            <option value="Otra zona">Otra zona</option>
+          </select>
+        </div>
+        <div class="form-row full">
+          <label class="form-label">Descripción *</label>
+          <textarea class="form-textarea" id="f-desc" placeholder="Describe las características, acabados, amenidades y puntos destacados de la propiedad..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETALLES -->
+    <div class="form-card">
+      <div class="form-card-title"><span>📐</span> Detalles de la propiedad</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label class="form-label">Área construida (m²)</label>
+          <input type="number" class="form-input" id="f-area" placeholder="350">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Área de terreno (m²)</label>
+          <input type="number" class="form-input" id="f-terreno" placeholder="600">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Habitaciones</label>
+          <select class="form-select" id="f-hab">
+            <option value="">—</option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6+</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Baños</label>
+          <select class="form-select" id="f-ban">
+            <option value="">—</option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5+</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Parqueos</label>
+          <select class="form-select" id="f-park">
+            <option value="">—</option>
+            <option>1</option><option>2</option><option>3</option><option>4+</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Año de construcción</label>
+          <input type="number" class="form-input" id="f-anio" placeholder="2020">
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTOS -->
+    <div class="form-card">
+      <div class="form-card-title"><span>📸</span> Fotos <span id="foto-limit-label" style="font-size:.72rem;color:rgba(255,255,255,.3);font-weight:400;margin-left:auto">(máx. 5 en plan Gratis)</span></div>
+      <div class="photo-zone" onclick="document.getElementById('f-fotos').click()">
+        <input type="file" id="f-fotos" accept="image/*" multiple onchange="previewPhotos(this)" style="display:none">
+        <div class="photo-zone-icon">📷</div>
+        <div class="photo-zone-text">
+          <strong>Haz clic para agregar fotos</strong><br>
+          JPG, PNG — Máximo <span id="foto-max-txt">5</span> fotos
+        </div>
+        <div class="photo-preview" id="photo-preview"></div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-row">
+      <button class="btn-primary" onclick="publicar()">Publicar propiedad →</button>
+      <a href="/dashboard.html" class="btn-secondary">Cancelar</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="success-modal" id="success-modal">
+  <div class="success-box">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">¡Propiedad publicada!</div>
+    <div class="success-sub">Tu propiedad ya aparece en el catálogo de INMUHUB. Los compradores interesados te contactarán directamente por WhatsApp.</div>
+    <div class="success-btns">
+      <button class="btn-primary" onclick="window.location.href='/dashboard.html'">Ir al dashboard</button>
+      <button class="btn-secondary" style="background:rgba(255,255,255,.06);border:none" onclick="window.location.reload()">Publicar otra propiedad</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const session = JSON.parse(localStorage.getItem('inmu_session') || 'null');
+if (!session) window.location.href = '/login.html';
+
+const planLimits = {gratis:2,basico:8,pro:25,premium:999};
+const photoLimits = {gratis:5,basico:15,pro:30,premium:999};
+const plan = session ? (session.plan || 'gratis') : 'gratis';
+const propLimit = planLimits[plan];
+const photoLimit = photoLimits[plan];
+const currentProps = (session.propiedades || []).length;
+
+function init() {
+  if (!session) return;
+  document.getElementById('user-avatar').textContent = (session.nombre||'?')[0].toUpperCase();
+  document.getElementById('user-name').textContent = session.nombre + ' ' + (session.apellido||'');
+  const planLabels = {gratis:'Plan Gratis',basico:'Plan Básico',pro:'Plan Pro',premium:'Plan Premium'};
+  document.getElementById('user-plan').textContent = planLabels[plan] || 'Plan Gratis';
+
+  const maxFotos = photoLimit === 999 ? 'ilimitadas' : photoLimit;
+  document.getElementById('foto-limit-label').textContent = '(máx. ' + maxFotos + ' en tu plan)';
+  document.getElementById('foto-max-txt').textContent = maxFotos;
+
+  if (currentProps >= propLimit && propLimit !== 999) {
+    document.getElementById('limit-warn').style.display = 'flex';
+    document.querySelector('.btn-primary').disabled = true;
+    document.querySelector('.btn-primary').style.opacity = '.4';
+    document.querySelector('.btn-primary').style.cursor = 'not-allowed';
+  }
+}
+
+function previewPhotos(input) {
+  const preview = document.getElementById('photo-preview');
+  preview.innerHTML = '';
+  const maxF = photoLimit === 999 ? 999 : photoLimit;
+  const files = Array.from(input.files).slice(0, maxF);
+  files.forEach(f => {
+    const img = document.createElement('img');
+    img.className = 'photo-thumb';
+    img.src = URL.createObjectURL(f);
+    preview.appendChild(img);
+  });
+}
+
+function publicar() {
+  const titulo = document.getElementById('f-titulo').value.trim();
+  const operacion = document.getElementById('f-operacion').value;
+  const tipo = document.getElementById('f-tipo').value;
+  const precio = document.getElementById('f-precio').value;
+  const zona = document.getElementById('f-zona').value;
+  const desc = document.getElementById('f-desc').value.trim();
+
+  if (!titulo || !operacion || !tipo || !precio || !zona || !desc) {
+    alert('Por favor completa todos los campos obligatorios (*).');
+    return;
+  }
+
+  const prop = {
+    id: Date.now(),
+    titulo, operacion, tipo, precio, zona, desc,
+    area: document.getElementById('f-area').value,
+    terreno: document.getElementById('f-terreno').value,
+    hab: document.getElementById('f-hab').value,
+    ban: document.getElementById('f-ban').value,
+    park: document.getElementById('f-park').value,
+    anio: document.getElementById('f-anio').value,
+    vistas: 0,
+    leads: 0,
+    fecha: new Date().toISOString()
+  };
+
+  // Save to session
+  const users = JSON.parse(localStorage.getItem('inmu_users') || '[]');
+  const userIdx = users.findIndex(u => u.email === session.email);
+  if (!session.propiedades) session.propiedades = [];
+  session.propiedades.push(prop);
+  if (userIdx >= 0) {
+    users[userIdx].propiedades = session.propiedades;
+    localStorage.setItem('inmu_users', JSON.stringify(users));
+  }
+  localStorage.setItem('inmu_session', JSON.stringify(session));
+
+  document.getElementById('success-modal').classList.add('show');
+}
+
+function logout() { localStorage.removeItem('inmu_session'); window.location.href='/login.html'; }
+function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+
+init();
+</script>
+</body>
+</html>
