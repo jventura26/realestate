@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Acceso Asesores — INMUHUB</title>
+<meta name="description" content="Accede a tu panel de asesor en INMUHUB. Publica propiedades, recibe leads y gestiona tu cartera.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#C9A84C;--gold2:#e6c46a;--navy:#060e1a;--navy2:#0a1628;--navy3:#0f2040}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:#fff;min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{padding:20px 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-logo{font-weight:700;font-size:1.15rem;letter-spacing:.05em;color:rgba(255,255,255,.9);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-back{font-size:.8rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--gold)}
+
+/* MAIN */
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.auth-wrap{width:100%;max-width:460px}
+
+/* TABS */
+.tabs{display:flex;gap:0;background:rgba(255,255,255,.04);border-radius:12px;padding:4px;margin-bottom:32px}
+.tab-btn{flex:1;padding:10px;border:none;background:none;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;font-size:.875rem;font-weight:500;border-radius:9px;cursor:pointer;transition:all .2s}
+.tab-btn.active{background:var(--navy3);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+
+/* FORM */
+.auth-form{display:none}
+.auth-form.active{display:block}
+.form-title{font-size:1.5rem;font-weight:700;margin-bottom:6px}
+.form-sub{font-size:.85rem;color:rgba(255,255,255,.45);margin-bottom:28px;line-height:1.5}
+.form-row{margin-bottom:18px}
+.form-label{display:block;font-size:.78rem;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:7px;letter-spacing:.03em;text-transform:uppercase}
+.form-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:13px 16px;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--gold)}
+.form-input::placeholder{color:rgba(255,255,255,.25)}
+.form-btn{width:100%;padding:15px;background:var(--gold);color:#060e1a;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:background .2s;margin-top:8px}
+.form-btn:hover{background:var(--gold2)}
+.form-note{font-size:.75rem;color:rgba(255,255,255,.3);text-align:center;margin-top:14px;line-height:1.6}
+.form-note a{color:rgba(255,255,255,.45);text-decoration:none}
+.error-msg{background:rgba(220,60,60,.15);border:1px solid rgba(220,60,60,.3);color:#ff8080;font-size:.8rem;padding:10px 14px;border-radius:8px;margin-bottom:16px;display:none}
+.error-msg.show{display:block}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:rgba(255,255,255,.2);font-size:.75rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+
+/* FOOTER */
+footer{padding:20px 6%;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+footer p{font-size:.72rem;color:rgba(255,255,255,.2)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">INMU<span>HUB</span></a>
+  <a href="/" class="nav-back">← Volver al inicio</a>
+</nav>
+
+<main>
+  <div class="auth-wrap">
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Iniciar sesión</button>
+      <button class="tab-btn" onclick="switchTab('registro')">Crear cuenta</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-form active" id="form-login">
+      <div class="form-title">Bienvenido de nuevo</div>
+      <div class="form-sub">Accede a tu panel de asesor y gestiona tus propiedades y leads.</div>
+      <div class="error-msg" id="login-error">Correo o contraseña incorrectos.</div>
+      <div class="form-row">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input" id="login-email" placeholder="tu@email.com">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-input" id="login-pass" placeholder="••••••••">
+      </div>
+      <button class="form-btn" onclick="doLogin()">Entrar al panel →</button>
+      <p class="form-note">¿No tienes cuenta? <a href="#" onclick="switchTab('registro'); return false;">Créala gratis aquí</a></p>
+    </div>
+
+    <!-- REGISTRO -->
+    <div class="auth-form" id="form-registro">
+      <div class="form-title">Empieza gratis hoy</div>
+      <div class="form-sub">Primera semana sin costo. Sin tarjeta de crédito. Activa tu cuenta en 5 minutos.</div>
+      <div class="error-msg" id="reg-error">Por favor completa todos los campos.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Nombre</label>
+          <input type="text" class="form-input" id="reg-nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Apellido</label>
+          <input type="text" class="form-input" id="reg-apellido" placeholder="Apellido">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:18px">
+        <label class="form-label">WhatsApp</label>
+        <input type="tel" class="form-input" id="reg-wa" placeholder="+502 ____-____">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="tu@email.com">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-input" id="reg-pass" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Plan de interés</label>
+        <select class="form-input" id="reg-plan" style="cursor:pointer">
+          <option value="gratis">Gratis — Q0 (siempre gratis)</option>
+          <option value="basico">Básico — Q149/mes</option>
+          <option value="pro">Pro — Q349/mes (Más popular)</option>
+          <option value="premium">Premium — Q699/mes</option>
+        </select>
+      </div>
+      <button class="form-btn" onclick="doRegistro()">Activar mi cuenta gratis →</button>
+      <p class="form-note">Al registrarte aceptas nuestros <a href="/privacidad.html">Términos y Política de Privacidad</a>.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 INMUHUB.COM · La plataforma de real estate premium en Guatemala</p>
+</footer>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (tab==='login'&&i===0)||(tab==='registro'&&i===1));
+  });
+  document.getElementById('form-login').classList.toggle('active', tab==='login');
+  document.getElementById('form-registro').classList.toggle('active', tab==='registro');
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  if (!email || !pass) { err.classList.add('show'); err.textContent='Completa todos los campos.'; return; }
+  const users = JSON.parse(localStorage.getItem('inmu_users') || '[]');
+  const user = users.find(u => u.email === email && u.pass === pass);
+  if (!user) { err.classList.add('show'); err.textContent='Correo o contraseña incorrectos.'; return; }
+  localStorage.setItem('inmu_session', JSON.stringify(user));
+  window.location.href = '/dashboard.html';
+}
+
+function doRegistro() {
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const apellido = document.getElementById('reg-apellido').value.trim();
+  const wa = document.getElementById('reg-wa').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const plan = document.getElementById('reg-plan').value;
+  const err = document.getElementById('reg-error');
+  if (!nombre || !email || !pass || pass.length < 6) {
+    err.classList.add('show'); err.textContent='Completa todos los campos (contraseña mínimo 6 caracteres).'; return;
+  }
+  const users = JSON.parse(localStorage.getItem('inmu_users') || '[]');
+  if (users.find(u => u.email === email)) {
+    err.classList.add('show'); err.textContent='Ya existe una cuenta con ese correo.'; return;
+  }
+  const user = { id: Date.now(), nombre, apellido, wa, email, pass, plan, propiedades: [], leads: 0, vistas: 0, creado: new Date().toISOString() };
+  users.push(user);
+  localStorage.setItem('inmu_users', JSON.stringify(users));
+  localStorage.setItem('inmu_session', JSON.stringify(user));
+  window.location.href = '/dashboard.html';
+}
+
+// Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const activeForm = document.querySelector('.auth-form.active');
+    if (activeForm.id === 'form-login') doLogin();
+    else doRegistro();
+  }
+});
+</script>
+</body>
+</html>
