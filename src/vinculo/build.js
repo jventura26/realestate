@@ -150,4 +150,13 @@ console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
 // Copiar assets
 copyAssets(); console.log(' Assets copiados (favicon, logo)\n');
 
+// Copiar planes.html (página estática de membresía para asesores)
+const planesSrc = path.join(__dirname, 'planes.html');
+if (fs.existsSync(planesSrc)) {
+  fs.copyFileSync(planesSrc, path.join(OUT, 'planes.html'));
+  console.log(' planes.html copiado ✅');
+} else {
+  console.warn(' [WARN] planes.html no encontrado en src/vinculo/');
+}
+
 }).catch(e => { console.error('Build error:', e); process.exit(1); });
