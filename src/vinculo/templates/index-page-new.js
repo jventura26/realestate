@@ -46,7 +46,7 @@ function indexPageNew(props) {
       </p>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px">
         <a href="/propiedades.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
-        <a href="https://wa.me/50245542088" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.2);font-size:14px;font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">Asesoria privada</a>
+        <a href="/planes.html">Ver planes</a>
       </div>
       <div>
         <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px">Zonas destacadas</div>
@@ -128,7 +128,7 @@ InmuHub conecta tus propiedades con compradores activos en Guatemala. Sin comisi
 </div>
 <div style="display:flex;gap:14px;flex-wrap:wrap">
 <a href="/planes.html" style="display:inline-flex;align-items:center;gap:8px;background:#c9a84c;color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:15px 32px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='#dbb85a'" onmouseout="this.style.background='#c9a84c'">Ver planes y precios &rarr;</a>
-<a href="https://wa.me/50245542088?text=Hola%2C%20me%20interesa%20publicar%20mis%20propiedades%20en%20InmuHub" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15);font-size:14px;font-weight:500;padding:15px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">Consultar por WhatsApp</a>
+
 </div>
 </div>
 <div style="position:relative">
