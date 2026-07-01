@@ -1,9 +1,7 @@
 const { escapeHtml } = require('../../shared/utils');
 
 const DOMAIN    = 'https://zona-innmueble.com';
-const WA        = '50245542088';
 
-const WA_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
 // CAMBIO 3: ogType = 'website' como parámetro por defecto
 function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scripts = '',
@@ -11,7 +9,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
   const pageTitle = title
     ? `${escapeHtml(title)} | Zona INNmueble`
     : 'Casas y Fincas en Venta Guatemala | Zona INNmueble';
-  const metaDesc  = escapeHtml(desc || 'Casas, fincas y apartamentos en venta en Guatemala. Propiedades premium en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada por WhatsApp.');
+  const metaDesc  = escapeHtml(desc || 'Casas, fincas y apartamentos en venta en Guatemala. Propiedades premium en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador..');
   const ogImg     = ogImage || 'https://ik.imagekit.io/Zona/Imagen%201%20Reel.png';
   const canon     = `${DOMAIN}${canonical || '/'}`;
 
@@ -34,17 +32,13 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
   "logo": "https://zona-innmueble.com/assets/images/logo.png",
   "image": "https://zona-innmueble.com/assets/og.jpg",
   "description": "Inmobiliaria premium en Guatemala. Casas, fincas y apartamentos en venta en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador.",
-  "telephone": "+50245542088",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Ciudad de Guatemala",
     "addressCountry": "GT"
   },
   "areaServed": ["Guatemala", "Fraijanes", "Mixco", "Santa Catarina Pinula", "Escuintla"],
-  "openingHours": "Mo-Fr 08:00-18:00",
-  "sameAs": [
-    "https://www.facebook.com/Zona-INNmueble-1616853578595692/"
-  ]
+  "openingHours": "Mo-Fr 08:00-18:00"
 }
 </script>
 <meta property="og:type"        content="${ogType}">
@@ -60,11 +54,6 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <!-- Google Analytics 4 — configurado: G-5KVQZYZ7B3 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=${ga4Id}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${ga4Id}');</script>
-
-<!-- Meta Pixel — configurado: 1668269500330907 -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${pixelId}');fbq('track','PageView');</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1" alt=""></noscript>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
 <link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
@@ -173,10 +162,10 @@ section{padding:20px 6%}
 .hero-sug-item{padding:10px 14px;cursor:pointer;font-size:.82rem;color:rgba(255,255,255,.85);border-bottom:1px solid rgba(255,255,255,.06);transition:background .15s}
 .hero-sug-item:hover{background:rgba(245,130,13,.15)}
 .hero-sug-item:last-child{border-bottom:none}
-.wa-float{position:fixed;bottom:26px;right:26px;z-index:300;width:52px;height:52px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(245,130,13,.4);transition:all .3s;animation:wfp 3s ease-in-out infinite}
-.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(245,130,13,.5)}
-@keyframes wfp{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.07)}}
-.wa-float svg{width:24px;height:24px;fill:white}
+
+
+50%{box-shadow:0 4px 32px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.07)}}
+
 /* NO RESULTS */
 .no-res{text-align:center;padding:72px;color:var(--sv);grid-column:1/-1}
 .no-res p{font-family:'Cormorant Garamond',serif;font-size:1.7rem;margin-bottom:8px}
@@ -211,7 +200,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
   .ft{grid-template-columns:1fr;gap:32px}
   .det-body{padding:30px 5%;gap:32px}.gal-mini{grid-template-columns:repeat(4,1fr)}
-  .specs{grid-template-columns:1fr}.wa-float{right:14px;bottom:14px;width:48px;height:48px}
+  .specs{grid-template-columns:1fr}
   .related{padding:52px 5%}
 }
 @media(max-width:480px){
@@ -249,7 +238,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   footer{padding:20px 4% 12px!important}
   .ft{grid-template-columns:1fr!important;gap:16px!important}
   .btn-or,.btn-ol,.wa-btn{width:100%!important;padding:8px 12px!important;margin-bottom:4px!important;font-size:.6rem!important}
-  .wa-float{width:48px!important;height:48px!important;right:10px!important;bottom:10px!important}
+  
 }
 
 /* ── RESPONSIVE NUEVOS ELEMENTOS ─────────────────────────────────── */
@@ -414,41 +403,21 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
       <li><a href="/blog.html">Blog</a></li>
-            <li class="nav-has-dd">
-        <a href="/zonas/index.html" class="nav-dd-toggle">Zonas <span style="font-size:.55rem;opacity:.7">&#9660;</span></a>
-        <ul class="nav-dropdown">
-          <li><a href="/zonas/zona-10.html">Zona 10</a></li>
-          <li><a href="/zonas/zona-14.html">Zona 14</a></li>
-          <li><a href="/zonas/zona-15.html">Zona 15</a></li>
-          <li><a href="/zonas/zona-16.html">Zona 16</a></li>
-          <li><a href="/zonas/fraijanes.html">Fraijanes</a></li>
-          <li><a href="/zonas/carretera-el-salvador.html">Carretera El Salvador</a></li>
-          <li style="border-top:1px solid rgba(245,130,13,.2);margin-top:6px;padding-top:6px"><a href="/zonas/index.html" style="color:var(--or)">Ver todas &rarr;</a></li>
-        </ul>
-      </li>
+      <li><a href="/zonas/guatemala.html">Zonas</a></li>
       <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
-    <a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="nav-cta">Asesoría</a>
+    <a href="/planes.html" class="nav-cta">Asesores</a>
   </div>
 </nav>
 
 ${body}
-
-<!-- WhatsApp Float -->
-<a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, me interesa una propiedad de Zona INNmueble.')}" class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
-
 
 <footer style="background:var(--ink);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto;padding:60px 6% 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px">
     <div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--wh);margin-bottom:16px"><em style="color:var(--or);font-style:normal">ZONA</em> INNmueble</div>
       <p style="font-size:.82rem;color:var(--sv);line-height:1.8;max-width:280px;margin-bottom:24px">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
-      <a href="https://wa.me/${WA}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--or);color:var(--ink);font-size:.75rem;font-weight:700;padding:10px 18px;border-radius:4px;text-decoration:none;letter-spacing:.04em;transition:all .3s" onmouseover="this.style.background='var(--or2)'" onmouseout="this.style.background='var(--or)'">
-        ${WA_SVG} WhatsApp +502 4554-2088
-      </a>
     </div>
     <div>
       <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Propiedades</h4>
@@ -466,17 +435,13 @@ ${body}
         <li><a href="/zonas/fraijanes.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fraijanes</a></li>
         <li><a href="/zonas/mixco.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Mixco</a></li>
         <li><a href="/zonas/santa-catarina-pinula.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Santa Catarina Pinula</a></li>
-        <li><a href="/zonas/zona-14.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 14</a></li>
-        <li><a href="/zonas/zona-15.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 15</a></li>
-        <li><a href="/zonas/zona-16.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 16</a></li>
-        <li><a href="/zonas/carretera-el-salvador.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Carretera a El Salvador</a></li>
       </ul>
     </div>
     <div>
       <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Contacto</h4>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
         <li style="font-size:.8rem;color:var(--sv)">📍 Guatemala City</li>
-        <li style="font-size:.8rem;color:var(--sv)">📞 +502 4554-2088</li>
+        
         <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
         <li><a href="/about.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Nosotros</a></li>
         <li><a href="/privacidad.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Privacidad</a></li>
@@ -495,45 +460,7 @@ ${body}
     @media(max-width:480px){
       footer > div:first-child{grid-template-columns:1fr !important;}
     }
-  
-/* NAV DROPDOWN */
-.nav-has-dd { position: relative; }
-.nav-dropdown {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 220px;
-  background: rgba(13,27,62,.98);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--gl);
-  border-radius: 4px;
-  padding: 10px 0;
-  list-style: none;
-  z-index: 300;
-  box-shadow: 0 16px 48px rgba(0,0,0,.5);
-}
-.nav-has-dd:hover .nav-dropdown { display: block; }
-.nav-dropdown li a {
-  display: block;
-  padding: 9px 18px;
-  font-size: .67rem;
-  font-weight: 500;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--sv);
-  transition: color .2s, background .2s;
-  white-space: nowrap;
-}
-.nav-dropdown li a:hover { color: var(--wh); background: rgba(245,130,13,.08); }
-.nav-dd-toggle { cursor: pointer; }
-@media(max-width:768px) {
-  .nav-dropdown { position: static; transform: none; border: none; background: rgba(255,255,255,.04); box-shadow: none; border-radius: 0; padding: 0; display: none; }
-  .nav-has-dd.dd-open .nav-dropdown { display: block; }
-  .nav-dropdown li a { padding: 10px 6% 10px 10%; font-size: .65rem; border-bottom: 1px solid var(--bd); }
-}
-</style>
+  </style>
 </footer>
 ${scripts}
 
@@ -752,18 +679,6 @@ document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.pc-fav').forEach(function(btn){
     var slug=btn.getAttribute('data-slug');
     if(favs.indexOf(slug)>=0)btn.classList.add('active');
-  });
-});
-
-// Dropdown mobile toggle
-document.querySelectorAll(".nav-has-dd").forEach(function(li) {
-  var toggle = li.querySelector(".nav-dd-toggle");
-  if (!toggle) return;
-  toggle.addEventListener("click", function(e) {
-    if (window.innerWidth <= 768) {
-      e.preventDefault();
-      li.classList.toggle("dd-open");
-    }
   });
 });
 </script>
