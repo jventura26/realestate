@@ -13,14 +13,6 @@ const canon = `${DOMAIN}${canonical || '/'}`;
 return `<!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1003403445392993');
-fbq('track','PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1003403445392993&ev=PageView&noscript=1"/></noscript>
-<!-- End Meta Pixel Code -->
 
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="/assets/favicon2.png">
@@ -591,10 +583,7 @@ ${body}
       <div>
         <div style="margin-bottom:20px"><span style="font-size:22px;font-weight:900;color:white;letter-spacing:-.5px">INMU</span><span style="font-size:22px;font-weight:900;color:var(--gold);letter-spacing:-.5px">HUB</span></div>
         <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin:0 0 24px;max-width:280px">Conectamos compradores e inversionistas con las mejores propiedades en Guatemala. Verificadas, asesoradas y sin sorpresas.</p>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span style="width:8px;height:8px;background:#25d366;border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>
-          <span style="font-size:12px;color:rgba(255,255,255,.4)">Disponibles Lun-Vie 8:00-18:00</span>
-        </div>
+        
       </div>
       <!-- PROPIEDADES -->
       <div>
@@ -631,7 +620,7 @@ ${body}
     <!-- BOTTOM BAR -->
     <div style="border-top:1px solid rgba(255,255,255,.06);padding:24px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
       <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">&copy; 2026 INMUHUB.COM — Todos los derechos reservados</p>
-      <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">Guatemala City, Guatemala &middot; +502 4554-2088</p>
+      
     </div>
   </div>
   <!-- MOBILE RESPONSIVE -->
