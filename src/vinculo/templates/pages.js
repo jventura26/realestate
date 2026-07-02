@@ -83,7 +83,7 @@ const body = `
       </p>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px">
         <a href="/propiedades.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
-        <a href="https://wa.me/50245542088" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.2);font-size:14px;font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">Asesoria privada</a>
+        <a href="/propiedades.html" style="display:inline-block;background:#1a2a4e;color:white;padding:12px 32px;border-radius:6px;font-weight:600;text-decoration:none">Ver propiedades →</a>
       </div>
       <div>
         <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px">Zonas destacadas</div>
@@ -216,7 +216,7 @@ const body=`<div class="detail-container"><div style="margin-bottom:32px"><div c
 </div>
 </div>
 </section>` + + `</div>`;
-const schema={"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":(prop.description||(prop.title+' en '+prop.locationFull)).substring(0,300),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"offers":{"@type":"Offer","price":prop.priceNumeric||0,"priceCurrency":(prop.priceFormatted||'').includes('$')?'USD':'GTQ',"availability":"https://schema.org/InStock"},"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":"Guatemala","addressCountry":"GT"},"seller":{"@type":"RealEstateAgent","name":"InmuHub","url":"https://inmuhub.com","telephone":"+50245542088"}};
+const schema={"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":(prop.description||(prop.title+' en '+prop.locationFull)).substring(0,300),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"offers":{"@type":"Offer","price":prop.priceNumeric||0,"priceCurrency":(prop.priceFormatted||'').includes('$')?'USD':'GTQ',"availability":"https://schema.org/InStock"},"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":"Guatemala","addressCountry":"GT"},"seller":{"@type":"RealEstateAgent","name":"InmuHub","url":"https://inmuhub.com","telephone":"+"}};
 if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop.habitaciones);
 if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
 const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
