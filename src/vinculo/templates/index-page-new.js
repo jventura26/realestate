@@ -16,7 +16,7 @@ function indexPageNew(props) {
     [props.length+'+','Propiedades'],
     ['10+','Anos mercado'],
     ['6','Zonas premium'],
-    ['100%','Asesoria personal'],
+    ['500+','Compradores/mes'],
   ].map(([n,l])=>`<div style="flex:1;min-width:140px;padding:20px 0;border-right:1px solid rgba(255,255,255,.08);text-align:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:500;color:var(--gold);line-height:1;margin-bottom:4px">${n}</div><div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4)">${l}</div></div>`).join('');
 
   const herramientas = [
@@ -46,7 +46,7 @@ function indexPageNew(props) {
       </p>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px">
         <a href="/propiedades.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
-        <a href="/planes.html">Ver planes</a>
+        <a href="/planes.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.35);font-size:14px;font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='rgba(201,169,110,.25)'" onmouseout="this.style.background='rgba(201,169,110,.15)'">Para asesores &rarr;</a>
       </div>
       <div>
         <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px">Zonas destacadas</div>
