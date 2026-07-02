@@ -177,203 +177,327 @@ return layout({
 }
 
 function detailPage(prop) {
-const gallery=(prop.gallery||[]).slice(0,10);
-const mainImg=escapeHtml(prop.mainImageThumb||prop.mainImage||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=75');
+  const esc = s => escapeHtml ? escapeHtml(String(s||'')) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const gallery = (prop.gallery||[]).slice(0,10);
+  const mainImg = prop.mainImageThumb||prop.mainImage||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80';
+  const imgs = gallery.length ? gallery : [mainImg];
 
-// Gallery thumbnails (shown inside hero strip)
-const thumbsHTML=gallery.length>1?`<div class="dv3-gal">
-  ${gallery.map((img,i)=>`<button class="dv3-gal-thumb${i===0?' on':''}" onclick="(function(b){document.getElementById('dv3MainImg').src='${escapeHtml(img)}';document.querySelectorAll('.dv3-gal-thumb').forEach(x=>x.classList.remove('on'));b.classList.add('on')})(this)" title="Foto ${i+1}"><img src="${escapeHtml(img)}" alt="foto ${i+1}" loading="lazy"></button>`).join('')}
-</div>`:'';
+  // Gallery grid: main (left) + up to 4 thumbs (right 2x2)
+  const g1 = imgs[0]||mainImg;
+  const g2 = imgs[1]||'';
+  const g3 = imgs[2]||'';
+  const g4 = imgs[3]||'';
+  const g5 = imgs[4]||'';
+  const totalPhotos = imgs.length;
 
-// Quick specs
-const qsItems=[];
-if(prop.habitaciones&&prop.habitaciones!=='0')qsItems.push(`<div class="dv3-qs-item">🛏 ${prop.habitaciones} hab.</div>`);
-if(prop.banos&&prop.banos!=='0')qsItems.push(`<div class="dv3-qs-item">🚿 ${prop.banos}${prop.mediosBanos&&prop.mediosBanos!=='0'?'+½':''} baños</div>`);
-if(prop.parqueos&&prop.parqueos!=='0')qsItems.push(`<div class="dv3-qs-item">🚗 ${prop.parqueos} parqueo${prop.parqueos!=='1'?'s':''}</div>`);
-if(prop.areaConst&&prop.areaConst!=='0'&&prop.areaConst!=='')qsItems.push(`<div class="dv3-qs-item">📐 ${prop.areaConst} m²</div>`);
-if(prop.area&&prop.area!==''&&prop.area!==prop.areaConst)qsItems.push(`<div class="dv3-qs-item">🌳 ${prop.area} m² terreno</div>`);
-if(prop.niveles&&prop.niveles!=='0')qsItems.push(`<div class="dv3-qs-item">🏠 ${prop.niveles} nivel${prop.niveles!=='1'?'es':''}</div>`);
-const qsHTML=qsItems.length?`<div class="dv3-qs">${qsItems.join('')}</div>`:'';
-
-// Tab: Detalles
-const detallesHTML=(()=>{
-  const items=[];
-  if(prop.tipoConstruccion)items.push(['Construcción',prop.tipoConstruccion]);
-  if(prop.estadoConstruccion)items.push(['Estado',prop.estadoConstruccion]);
-  if(prop.anioConstruccion&&prop.anioConstruccion!=='0')items.push(['Año',prop.anioConstruccion]);
-  if(prop.acabados)items.push(['Acabados',prop.acabados]);
-  if(prop.techo)items.push(['Techo',prop.techo]);
-  if(prop.piso)items.push(['Piso',prop.piso]);
-  if(prop.orientacion)items.push(['Orientación',prop.orientacion]);
-  if(prop.cuotaMant)items.push(['Cuota mant.',prop.cuotaMant]);
-  if(prop.disponibleDesde)items.push(['Disponible',prop.disponibleDesde]);
-  if(prop.tipo)items.push(['Tipo propiedad',prop.tipo]);
-  if(prop.operacion)items.push(['Operación',prop.operacion]);
-  if(prop.moneda)items.push(['Moneda',prop.moneda]);
-  if(prop.municipio)items.push(['Municipio',prop.municipio]);
-  if(prop.datosTecnicos)items.push(['Detalles',prop.datosTecnicos]);
-  if(!items.length)return'<p style="color:var(--text-muted);font-size:14px">Sin datos técnicos disponibles.</p>';
-  return`<div class="dv3-specs-grid">${items.map(([l,v])=>`<div class="dv3-spec"><span class="dv3-spec-l">${escapeHtml(l)}</span><span class="dv3-spec-v">${escapeHtml(String(v))}</span></div>`).join('')}</div>`;
-})();
-
-// Tab: Descripción
-const descTabHTML=(()=>{
-  if(!prop.description)return'<p style="color:var(--text-muted)">Sin descripción disponible.</p>';
-  const clean=prop.description.replace(/[\u{1F000}-\u{1FBFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u{2702}-\u{27B0}\u{25B0}-\u{25FF}]+/gu,' ').replace(/\n{3,}/g,'\n\n').trim();
-  const paras=clean.split(/\n\n+/).map(p=>p.replace(/\n/g,' ').replace(/\s+/g,' ').trim()).filter(p=>p.length>8);
-  if(!paras.length)return'';
-  const preview=paras.slice(0,2).map(p=>`<p class="dv3-desc-p">${escapeHtml(p)}</p>`).join('');
-  const more=paras.slice(2);
-  const moreId='dm-'+prop.slug.replace(/[^a-z0-9]/g,'');
-  const moreBlock=more.length?`<div id="${moreId}" style="display:none">${more.map(p=>`<p class="dv3-desc-p">${escapeHtml(p)}</p>`).join('')}</div><button class="dv3-desc-toggle" onclick="var el=document.getElementById('${moreId}'),open=el.style.display!=='none';el.style.display=open?'none':'block';this.textContent=open?'Ver más ↓':'Mostrar menos ↑'">Ver más ↓</button>`:'';
-  return preview+moreBlock;
-})();
-
-// Tab: Características
-const caracTabHTML=(()=>{
-  const c=prop.caracteristicas;
-  if(!c||!Array.isArray(c)||!c.length)return'<p style="color:var(--text-muted)">Sin características registradas.</p>';
-  const half=Math.ceil(c.length/2);
-  const item=x=>`<li class="dv3-carac-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,4"/></svg>${escapeHtml(x)}</li>`;
-  return`<div class="dv3-carac-grid"><ul>${c.slice(0,half).map(item).join('')}</ul><ul>${c.slice(half).map(item).join('')}</ul></div>`;
-})();
-
-// Tab: Ubicación
-const ubicTabHTML=(()=>{
-  const parts=[];
-  if(prop.lat&&prop.lng&&prop.lat!=='0'&&prop.lng!=='0'){
-    const lat=parseFloat(prop.lat),lng=parseFloat(prop.lng);
-    if(!isNaN(lat)&&!isNaN(lng))parts.push(`<div class="dv3-map"><iframe src="https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed&hl=es" width="100%" height="320" frameborder="0" loading="lazy"></iframe></div>`);
-  }
-  if(prop.videoTour){
-    let src=prop.videoTour;
-    const m=src.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-    if(m)src='https://www.youtube.com/embed/'+m[1];
-    parts.push(`<div class="dv3-video-wrap" style="margin-top:24px"><h3 style="font-size:15px;font-weight:700;margin:0 0 12px">Video Tour</h3><div style="position:relative;padding-bottom:56.25%;border-radius:10px;overflow:hidden"><iframe src="${escapeHtml(src)}" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allow="accelerometer;autoplay;encrypted-media;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>`);
-  }
-  if(!parts.length)return'<p style="color:var(--text-muted)">Ubicación no disponible.</p>';
-  return parts.join('');
-})();
-
-// Sidebar
-const propUrl='https://inmuhub.com/propiedades/'+prop.slug+'.html';
-const shareText=encodeURIComponent('Mira esta propiedad: '+prop.title+' '+propUrl);
-const sideHTML=`
-  <div class="dv3-side-card wa-card">
-    ${prop.esExclusiva?'<div class="dv3-excl">★ Propiedad Exclusiva</div>':''}
-    <div class="dv3-avail"><span class="dv3-live"></span>Disponible</div>
-    <a href="https://wa.me/?text=${shareText}" target="_blank" rel="noopener" class="dv3-wa-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-      Compartir propiedad
-    </a>
-  </div>
-  ${prop.codigo?'<div class="dv3-side-ref"><span class="dv3-ref-l">Código de referencia</span><span class="dv3-ref-v">'+escapeHtml(prop.codigo)+'</span></div>':''}
-  ${prop.plano?'<div class="dv3-more-links"><a href="'+escapeHtml(prop.plano)+'" target="_blank" rel="noopener" class="dv3-more-link">Ver plano →</a></div>':''}
-`;
-
-const tabsJS=`<script>(function(){var tabs=document.querySelectorAll('.dv3-tab'),panels=document.querySelectorAll('.dv3-tab-panel');tabs.forEach(function(t,i){t.addEventListener('click',function(){tabs.forEach(function(x){x.classList.remove('on')});panels.forEach(function(x){x.style.display='none'});t.classList.add('on');panels[i].style.display='block'});});})();<\/script>`;
-
-const body=`<style>
-.dv3-hero{position:relative;background:#000;overflow:hidden}
-.dv3-hero-img{width:100%;max-height:580px;object-fit:cover;display:block;opacity:.92}
-.dv3-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.25) 45%,transparent 100%)}
-.dv3-hero-content{position:absolute;bottom:0;left:0;right:0;padding:28px 32px;color:#fff}
-.dv3-bread{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:10px}
-.dv3-bread a{color:rgba(255,255,255,.6)}
-.dv3-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:10px}
-.dv3-title{font-size:clamp(20px,3.5vw,34px);font-weight:800;color:#fff;margin:0 0 8px;line-height:1.15;text-shadow:0 2px 8px rgba(0,0,0,.4)}
-.dv3-loc{display:flex;align-items:center;gap:6px;font-size:14px;color:rgba(255,255,255,.85);margin-bottom:16px}
-.dv3-gal{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
-.dv3-gal-thumb{flex:0 0 64px;height:44px;border:2px solid rgba(255,255,255,.3);border-radius:6px;overflow:hidden;cursor:pointer;background:none;padding:0;transition:border-color .2s}
-.dv3-gal-thumb.on{border-color:#fff}
-.dv3-gal-thumb img{width:100%;height:100%;object-fit:cover}
-.dv3-wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 320px;gap:36px;padding:28px 24px 60px;align-items:start}
-.dv3-main{}
-.dv3-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.dv3-price{font-size:32px;font-weight:800;color:var(--blue);line-height:1}
-.dv3-price-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
-.dv3-share-btn{display:flex;align-items:center;gap:6px;background:var(--gray-50);border:1px solid var(--border);color:var(--gray-700);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:border-color .2s;text-decoration:none}
-.dv3-share-btn:hover{border-color:var(--blue);color:var(--blue)}
-.dv3-qs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
-.dv3-qs-item{background:var(--gray-50);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--gray-800)}
-.dv3-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px;overflow-x:auto}
-.dv3-tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
-.dv3-tab:hover{color:var(--gray-900)}
-.dv3-tab.on{color:var(--blue);border-bottom-color:var(--blue)}
-.dv3-tab-panel{}
-.dv3-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.dv3-spec{padding:12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:3px}
-.dv3-spec-l{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
-.dv3-spec-v{font-size:14px;font-weight:600;color:var(--gray-900)}
-.dv3-desc-p{margin:0 0 14px;color:var(--gray-700);line-height:1.78;font-size:15px}
-.dv3-desc-toggle{background:none;border:none;color:var(--blue);font-weight:600;font-size:14px;cursor:pointer;padding:0;margin-top:-4px}
-.dv3-carac-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
-.dv3-carac-grid ul{list-style:none;margin:0;padding:0}
-.dv3-carac-item{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13px;color:var(--gray-700);border-bottom:1px solid var(--gray-100)}
-.dv3-map{border-radius:10px;overflow:hidden;border:1px solid var(--border)}
-.dv3-map iframe{display:block}
-.dv3-side{position:sticky;top:72px}
-.dv3-side-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:16px;box-shadow:0 2px 16px rgba(0,0,0,.07)}
-.dv3-excl{background:linear-gradient(135deg,#c9a96e,#a07840);color:#fff;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.5px;text-align:center;margin-bottom:14px}
-.dv3-avail{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:16px}
-.dv3-live{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
-.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;padding:13px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;transition:opacity .2s}
-.dv3-wa-btn:hover{opacity:.88}
-.dv3-side-ref{background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;display:flex;flex-direction:column;gap:4px}
-.dv3-ref-l{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px}
-.dv3-ref-v{font-size:14px;font-weight:700;color:var(--gray-900)}
-.dv3-more-links{display:flex;flex-direction:column;gap:8px}
-.dv3-more-link{display:flex;align-items:center;justify-content:center;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-700);text-decoration:none;transition:border-color .2s,color .2s}
-.dv3-more-link:hover{border-color:var(--blue);color:var(--blue)}
-@media(max-width:768px){.dv3-wrap{grid-template-columns:1fr}.dv3-side{position:static}.dv3-hero-img{max-height:280px}.dv3-hero-content{padding:16px 18px}.dv3-title{font-size:20px}.dv3-specs-grid{grid-template-columns:1fr 1fr}.dv3-carac-grid{grid-template-columns:1fr}.dv3-price{font-size:26px}}
-</style>
-<div class="dv3-hero">
-  <img class="dv3-hero-img" id="dv3MainImg" src="${mainImg}" alt="${escapeHtml(prop.title)} - INMUHUB.COM" loading="eager">
-  <div class="dv3-hero-overlay"></div>
-  <div class="dv3-hero-content">
-    <div class="dv3-bread"><a href="/">Inicio</a> / <a href="/propiedades.html">Propiedades</a> / ${escapeHtml(prop.title)}</div>
-    <div class="dv3-badge">${escapeHtml(prop.tipo||'Propiedad')} &middot; ${escapeHtml(prop.operacion||'Venta')}</div>
-    <h1 class="dv3-title">${escapeHtml(prop.title)}</h1>
-    <div class="dv3-loc"><svg width="13" height="15" viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1a4 4 0 0 1 4 4c0 3-4 8-4 8S2 8 2 5a4 4 0 0 1 4-4z"/><circle cx="6" cy="5" r="1.3"/></svg>${escapeHtml(prop.ubicacionGeneral||prop.locationFull)}</div>
-    ${thumbsHTML}
-  </div>
-</div>
-<div class="dv3-wrap">
-  <div class="dv3-main">
-    <div class="dv3-price-row">
-      <div>
-        <div class="dv3-price">${escapeHtml(prop.priceFormatted)}</div>
-        ${prop.moneda||prop.precioRenta?'<div class="dv3-price-sub">'+(prop.moneda?escapeHtml(prop.moneda):'')+(prop.precioRenta?' &middot; Renta: '+escapeHtml(prop.precioRenta):'')+'</div>':''}
-      </div>
-      <a href="https://wa.me/?text=${encodeURIComponent('Mira esta propiedad: '+prop.title+' https://inmuhub.com/propiedades/'+prop.slug+'.html')}" target="_blank" rel="noopener" class="dv3-share-btn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-        Compartir
-      </a>
+  const galHTML = `<div class="zp-gal">
+    <div class="zp-gal-main"><img src="${esc(g1)}" alt="" loading="eager"></div>
+    <div class="zp-gal-grid">
+      ${g2?`<div class="zp-gal-cell"><img src="${esc(g2)}" alt="" loading="lazy"></div>`:''}
+      ${g3?`<div class="zp-gal-cell"><img src="${esc(g3)}" alt="" loading="lazy"></div>`:''}
+      ${g4?`<div class="zp-gal-cell"><img src="${esc(g4)}" alt="" loading="lazy"></div>`:''}
+      ${g5?`<div class="zp-gal-cell zp-gal-last"><img src="${esc(g5)}" alt="" loading="lazy"><button class="zp-gal-all" onclick="zpOpenGallery()">${totalPhotos > 5 ? '+ ' + (totalPhotos-5) + ' fotos' : 'Ver todas'}</button></div>`:''}
     </div>
-    ${qsHTML}
-    <div class="dv3-tabs">
-      <button class="dv3-tab on">Detalles</button>
-      <button class="dv3-tab">Descripción</button>
-      <button class="dv3-tab">Características</button>
-      <button class="dv3-tab">Ubicación</button>
-    </div>
-    <div class="dv3-tab-panel">${detallesHTML}</div>
-    <div class="dv3-tab-panel" style="display:none">${descTabHTML}</div>
-    <div class="dv3-tab-panel" style="display:none">${caracTabHTML}</div>
-    <div class="dv3-tab-panel" style="display:none">${ubicTabHTML}</div>
-    ${tabsJS}
-  </div>
-  <aside class="dv3-side">${sideHTML}</aside>
-</div>`;
+  </div>`;
 
-const schema={"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":prop.description||(prop.title+' en '+prop.locationFull),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"price":prop.priceFormatted||'',"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":prop.departamento||'Guatemala',"addressCountry":"GT"}};
-if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop.habitaciones);
-if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
-const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
-const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
-return layout({title:prop.title,desc:prop.title+' - '+(prop.ubicacionGeneral||prop.locationFull)+'. '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
+  // Price
+  const precio = prop.priceFormatted || (prop.precio ? Number(prop.precio).toLocaleString('en-US') : '');
+  const moneda = prop.moneda||'USD';
+  const precioStr = precio ? moneda + ' ' + precio : '';
+  const operStr = prop.operacion||'';
+
+  // Quick specs
+  const specs = [];
+  if(prop.habitaciones && prop.habitaciones!=='0') specs.push({icon:'bed',val:prop.habitaciones,lbl:'Hab.'});
+  if(prop.banos && prop.banos!=='0') specs.push({icon:'bath',val:prop.banos,lbl:'Baños'});
+  if(prop.mediosBanos && prop.mediosBanos!=='0') specs.push({icon:'droplets',val:prop.mediosBanos,lbl:'½ Baño'});
+  if(prop.parqueos && prop.parqueos!=='0') specs.push({icon:'car',val:prop.parqueos,lbl:'Parqueos'});
+  if(prop.areaConst && prop.areaConst!=='0') specs.push({icon:'ruler-square',val:prop.areaConst+' m²',lbl:'Const.'});
+  if(prop.area && prop.area!=='0') specs.push({icon:'polygon',val:prop.area+' m²',lbl:'Terreno'});
+  if(prop.niveles && prop.niveles!=='0') specs.push({icon:'layers',val:prop.niveles,lbl:'Niveles'});
+
+  const specsHTML = specs.map(s=>`<div class="zp-spec">
+    <i class="ti ti-${s.icon}"></i>
+    <strong>${esc(s.val)}</strong>
+    <span>${s.lbl}</span>
+  </div>`).join('');
+
+  // Description - strip emojis, clean paragraphs
+  const rawDesc = String(prop.descripcion||'');
+  const cleanDesc = rawDesc.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]/gu,'').trim();
+  const descParas = cleanDesc.split(/\n+/).map(p=>p.trim()).filter(p=>p.length>10);
+  const descPreview = descParas.slice(0,3).map(p=>`<p>${esc(p)}</p>`).join('');
+  const descRest = descParas.slice(3).map(p=>`<p>${esc(p)}</p>`).join('');
+  const descHTML = descPreview + (descRest ? `<div class="zp-desc-more" id="zpDescMore" style="display:none">${descRest}</div>
+    <button class="zp-link-btn" onclick="zpToggleDesc()"><span id="zpDescLbl">Ver descripción completa <i class='ti ti-chevron-down'></i></span></button>` : '');
+
+  // Caracteristicas
+  const caract = Array.isArray(prop.caracteristicas) ? prop.caracteristicas : typeof prop.caracteristicas === 'string' ? prop.caracteristicas.split(/[,\n]+/).map(s=>s.trim()).filter(Boolean) : [];
+  const caractHTML = caract.length ? `<div class="zp-feat-grid">${caract.map(c=>`<div class="zp-feat-item"><i class="ti ti-check"></i>${esc(c)}</div>`).join('')}</div>` : '';
+
+  // Technical details
+  const tech = [];
+  if(prop.tipo) tech.push(['Tipo',prop.tipo]);
+  if(prop.tipoListing) tech.push(['Categoría',prop.tipoListing]);
+  if(prop.estadoConstruccion) tech.push(['Estado',prop.estadoConstruccion]);
+  if(prop.tipoConstruccion) tech.push(['Construcción',prop.tipoConstruccion]);
+  if(prop.anioConstruccion && prop.anioConstruccion!=='0') tech.push(['Año',prop.anioConstruccion]);
+  if(prop.techo) tech.push(['Techo',prop.techo]);
+  if(prop.piso) tech.push(['Piso',prop.piso]);
+  if(prop.acabados) tech.push(['Acabados',prop.acabados]);
+  if(prop.privConfig) tech.push(['Privada',prop.privConfig]);
+  if(prop.cuotaMant && prop.cuotaMant!=='0') tech.push(['Cuota mant.',prop.cuotaMant]);
+  if(prop.datosTecnicos) {
+    const dt = typeof prop.datosTecnicos === 'string' ? prop.datosTecnicos.split(/[,\n]+/).map(s=>s.trim()).filter(Boolean) : [];
+    dt.forEach(d=>{ const p=d.split(/[:：]/); if(p.length>1) tech.push([p[0].trim(),p.slice(1).join(':').trim()]); else tech.push(['',d]); });
+  }
+  const techHTML = tech.length ? `<div class="zp-tech-grid">${tech.map(([k,v])=>`<div class="zp-tech-item"><span class="zp-tech-k">${esc(k)}</span><span class="zp-tech-v">${esc(v)}</span></div>`).join('')}</div>` : '';
+
+  // Map & video
+  const hasMap = prop.lat && prop.lng;
+  const mapHTML = hasMap ? `<div class="zp-map"><iframe src="https://maps.google.com/maps?q=${prop.lat},${prop.lng}&z=16&output=embed" width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
+  const videoHTML = prop.videoTour ? `<div class="zp-video-wrap"><iframe src="${esc(prop.videoTour)}" allow="autoplay; fullscreen" allowfullscreen width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
+
+  // Location breadcrumb
+  const locParts = [prop.zona, prop.municipio, prop.ubicacionGeneral||prop.departamento].filter(Boolean);
+  const locStr = locParts.map(s=>esc(s)).join(' · ');
+
+  // Cinta badge
+  const cintaColor = {'En Venta':'#1a3a5c','En Renta':'#15803d','Preventa':'#92400e','Negociable':'#6b21a8'}[prop.cinta]||'#1a3a5c';
+  const cintaHTML = prop.cinta ? `<span class="zp-badge" style="background:${cintaColor}">${esc(prop.cinta)}</span>` : '';
+  const exclHTML = prop.esExclusiva ? `<span class="zp-badge zp-badge-gold">Exclusiva</span>` : '';
+
+  // Sidebar WA share
+  const propUrl = `https://inmuhub.com/propiedades/${esc(prop.slug||prop.id||'')}.html`;
+  const waMsg = encodeURIComponent(`Hola, me interesa esta propiedad en INMUHUB:\n${prop.titulo}\n${propUrl}`);
+  const waHref = `https://wa.me/?text=${waMsg}`;
+
+  // Plano
+  const planoHTML = prop.plano ? `<a href="${esc(prop.plano)}" target="_blank" class="zp-plano-btn"><i class="ti ti-file-description"></i> Ver plano / PDF</a>` : '';
+
+  // Gallery lightbox thumbnails
+  const lightboxHTML = `<div class="zp-lb" id="zpLb" onclick="this.style.display='none'">
+    <button class="zp-lb-close" onclick="document.getElementById('zpLb').style.display='none'">×</button>
+    <div class="zp-lb-strip">${imgs.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
+    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgs[0])}" alt=""></div>
+  </div>`;
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(prop.titulo||'Propiedad')} | INMUHUB.COM</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#1a1a1a;font-size:15px;line-height:1.6}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* GALLERY */
+.zp-gal{display:grid;grid-template-columns:1fr 1fr;gap:4px;height:480px;margin-bottom:0;background:#000}
+.zp-gal-main{overflow:hidden}
+.zp-gal-main img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform .4s}
+.zp-gal-main img:hover{transform:scale(1.02)}
+.zp-gal-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px}
+.zp-gal-cell{overflow:hidden;position:relative}
+.zp-gal-cell img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform .4s}
+.zp-gal-cell img:hover{transform:scale(1.02)}
+.zp-gal-last{position:relative}
+.zp-gal-all{position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,.95);border:1.5px solid #ddd;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;color:#1a1a1a;backdrop-filter:blur(4px)}
+.zp-gal-all:hover{background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+@media(max-width:700px){
+  .zp-gal{grid-template-columns:1fr;height:260px}
+  .zp-gal-grid{display:none}
 }
 
+/* LAYOUT */
+.zp-body{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 360px;gap:40px;padding-top:36px;padding-bottom:60px;align-items:start}
+@media(max-width:900px){.zp-body{grid-template-columns:1fr;padding:24px 16px 48px}}
+
+/* MAIN COLUMN */
+.zp-main{}
+
+/* BREADCRUMB */
+.zp-loc{font-size:13px;color:#666;margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.zp-loc i{font-size:14px;color:#999}
+
+/* BADGES */
+.zp-badges{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.zp-badge{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;color:#fff}
+.zp-badge-gold{background:linear-gradient(135deg,#b8960c,#d4af37)}
+
+/* TITLE + PRICE */
+.zp-title{font-size:26px;font-weight:700;line-height:1.2;margin-bottom:10px;color:#111;letter-spacing:-.01em}
+@media(max-width:700px){.zp-title{font-size:21px}}
+.zp-price{font-size:28px;font-weight:800;color:#1a3a5c;margin-bottom:4px;letter-spacing:-.02em}
+.zp-price-sub{font-size:13px;color:#888;margin-bottom:20px}
+
+/* SPECS BAR */
+.zp-specs{display:flex;gap:0;flex-wrap:wrap;border-top:1px solid #eee;border-bottom:1px solid #eee;margin:20px 0;padding:4px 0}
+.zp-spec{display:flex;align-items:center;gap:6px;padding:12px 20px 12px 0;margin-right:20px;border-right:1px solid #eee;font-size:14px}
+.zp-spec:last-child{border-right:none}
+.zp-spec i{font-size:18px;color:#1a3a5c}
+.zp-spec strong{font-weight:700;color:#111}
+.zp-spec span{color:#888;font-size:12px;margin-left:2px}
+@media(max-width:600px){.zp-spec{padding:10px 14px 10px 0;margin-right:14px}}
+
+/* SECTIONS */
+.zp-section{margin-bottom:36px}
+.zp-section-title{font-size:17px;font-weight:700;color:#111;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #f0f0f0}
+
+/* DESCRIPTION */
+.zp-desc p{color:#444;font-size:15px;line-height:1.7;margin-bottom:12px}
+.zp-link-btn{background:none;border:none;cursor:pointer;color:#1a3a5c;font-size:14px;font-weight:600;padding:4px 0;display:flex;align-items:center;gap:4px;margin-top:4px}
+.zp-link-btn:hover{text-decoration:underline}
+
+/* FEATURES */
+.zp-feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.zp-feat-item{display:flex;align-items:center;gap:8px;font-size:14px;color:#333;padding:6px 0}
+.zp-feat-item i{color:#1a3a5c;font-size:16px;flex-shrink:0}
+
+/* TECH GRID */
+.zp-tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border:1px solid #eee;border-radius:12px;overflow:hidden}
+.zp-tech-item{padding:12px 16px;border-bottom:1px solid #eee;border-right:1px solid #eee}
+.zp-tech-item:nth-child(odd):last-child{grid-column:1/-1}
+.zp-tech-k{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#999;font-weight:600;margin-bottom:2px}
+.zp-tech-v{display:block;font-size:14px;color:#1a1a1a;font-weight:500}
+
+/* VIDEO */
+.zp-video-wrap{border-radius:12px;overflow:hidden;margin-bottom:8px}
+
+/* SIDEBAR */
+.zp-side{position:sticky;top:24px}
+.zp-card{background:#fff;border:1.5px solid #e0e0e0;border-radius:16px;padding:24px;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.zp-card-price{font-size:24px;font-weight:800;color:#1a3a5c;margin-bottom:2px}
+.zp-card-op{font-size:13px;color:#888;margin-bottom:20px}
+.zp-avail{display:flex;align-items:center;gap:8px;font-size:13px;color:#444;margin-bottom:20px;background:#f9f9f9;padding:10px 14px;border-radius:8px}
+.zp-avail .dot{width:8px;height:8px;background:#22c55e;border-radius:50%;flex-shrink:0}
+.zp-wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;background:#25D366;color:#fff;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;transition:background .2s,transform .15s;margin-bottom:12px}
+.zp-wa-btn:hover{background:#1ebe5d;transform:translateY(-1px)}
+.zp-wa-btn i{font-size:20px}
+.zp-share-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-weight:600;color:#444;cursor:pointer;background:#fff;transition:border-color .2s}
+.zp-share-btn:hover{border-color:#1a3a5c;color:#1a3a5c}
+.zp-divider{border:none;border-top:1px solid #eee;margin:16px 0}
+.zp-meta{font-size:12px;color:#bbb;text-align:center;margin-top:4px}
+.zp-code{font-size:13px;color:#666;background:#f5f5f5;padding:8px 12px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between}
+.zp-code span{font-weight:700;color:#111}
+.zp-plano-btn{display:flex;align-items:center;gap:8px;color:#1a3a5c;font-size:13px;font-weight:600;padding:10px 0;text-decoration:none}
+.zp-plano-btn:hover{text-decoration:underline}
+.zp-plano-btn i{font-size:16px}
+
+/* LIGHTBOX */
+.zp-lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;flex-direction:column;align-items:center;justify-content:center}
+.zp-lb.open{display:flex}
+.zp-lb-close{position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1}
+.zp-lb-main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 20px 20px;width:100%}
+.zp-lb-main img{max-width:100%;max-height:70vh;object-fit:contain;border-radius:8px}
+.zp-lb-strip{display:flex;gap:8px;padding:16px 20px;overflow-x:auto;width:100%;position:absolute;bottom:0;left:0}
+.zp-lb-strip::-webkit-scrollbar{height:4px}
+.zp-lb-strip::-webkit-scrollbar-thumb{background:#444;border-radius:2px}
+.zp-lb-thumb{width:80px;height:56px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.6;transition:opacity .2s;flex-shrink:0;border:2px solid transparent}
+.zp-lb-thumb:hover,.zp-lb-thumb.active{opacity:1;border-color:#fff}
+
+/* NAV BACK */
+.zp-topbar{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #f0f0f0}
+.zp-back{display:flex;align-items:center;gap:6px;font-size:14px;color:#666;text-decoration:none;font-weight:500}
+.zp-back:hover{color:#1a3a5c}
+.zp-back i{font-size:16px}
+.zp-topbar-brand{font-weight:800;font-size:16px;letter-spacing:.08em;color:#1a1a1a}
+.zp-topbar-brand span{color:#F5820D}
+</style>
+</head>
+<body>
+
+<div class="zp-topbar">
+  <a href="/propiedades.html" class="zp-back"><i class="ti ti-arrow-left"></i> Propiedades</a>
+  <div style="flex:1"></div>
+  <span class="zp-topbar-brand">INMU<span>HUB</span></span>
+</div>
+
+${galHTML}
+
+<div class="zp-body">
+
+  <!-- MAIN -->
+  <div class="zp-main">
+
+    <div class="zp-loc"><i class="ti ti-map-pin"></i>${locStr||esc(prop.zona||'Guatemala')}</div>
+
+    <div class="zp-badges">${cintaHTML}${exclHTML}</div>
+
+    <h1 class="zp-title">${esc(prop.titulo||'Propiedad')}</h1>
+
+    ${precioStr ? `<div class="zp-price">${esc(precioStr)}</div><div class="zp-price-sub">${esc(operStr)}</div>` : ''}
+
+    ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
+
+    ${descHTML ? `<div class="zp-section">
+      <h2 class="zp-section-title">Descripción</h2>
+      <div class="zp-desc">${descHTML}</div>
+    </div>` : ''}
+
+    ${caractHTML ? `<div class="zp-section">
+      <h2 class="zp-section-title">Características</h2>
+      ${caractHTML}
+    </div>` : ''}
+
+    ${techHTML ? `<div class="zp-section">
+      <h2 class="zp-section-title">Detalles de la propiedad</h2>
+      ${techHTML}
+    </div>` : ''}
+
+    ${videoHTML ? `<div class="zp-section">
+      <h2 class="zp-section-title">Video tour</h2>
+      ${videoHTML}
+    </div>` : ''}
+
+    ${hasMap || prop.ubicacionGeneral ? `<div class="zp-section">
+      <h2 class="zp-section-title">Ubicación</h2>
+      ${prop.ubicacionGeneral ? `<p style="color:#555;margin-bottom:14px;font-size:14px">${esc(prop.ubicacionGeneral)}</p>` : ''}
+      ${mapHTML}
+    </div>` : ''}
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="zp-side">
+    <div class="zp-card">
+      ${precioStr ? `<div class="zp-card-price">${esc(precioStr)}</div><div class="zp-card-op">${esc(operStr)}</div>` : ''}
+
+      <div class="zp-avail"><span class="dot"></span>Disponible</div>
+
+      <a href="${waHref}" target="_blank" class="zp-wa-btn">
+        <i class="ti ti-brand-whatsapp"></i> Compartir propiedad
+      </a>
+
+      <button class="zp-share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Enlace copiado'))">
+        <i class="ti ti-share"></i> Copiar enlace
+      </button>
+
+      <hr class="zp-divider">
+
+      ${prop.codigo ? `<div class="zp-code">Código <span>${esc(prop.codigo)}</span></div>` : ''}
+
+      ${planoHTML}
+
+      <p class="zp-meta">inmuhub.com — Real Estate Guatemala</p>
+    </div>
+  </div>
+
+</div>
+
+${lightboxHTML}
+
+<script>
+function zpOpenGallery(){ var lb=document.getElementById('zpLb'); lb.classList.add('open'); lb.style.display='flex'; }
+function zpLbShow(i){ var imgs=${JSON.stringify(imgs)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
+function zpToggleDesc(){ var m=document.getElementById('zpDescMore'); var open=m.style.display!=='none'; m.style.display=open?'none':'block'; document.getElementById('zpDescLbl').innerHTML=open?'Ver descripción completa <i class=\"ti ti-chevron-down\"></i>':'Ver menos <i class=\"ti ti-chevron-up\"></i>'; }
+document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(img,i){ img.addEventListener('click',function(){ zpOpenGallery(); zpLbShow(i); }); });
+</script>
+</body></html>`;
+}
 function mortgageCalcPage(props) {
   const body = mortgageCalculator();
   return layout({
