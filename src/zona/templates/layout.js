@@ -31,7 +31,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
   "@type": "RealEstateAgent",
   "name": "Zona INNmueble",
   "url": "https://zona-innmueble.com",
-  "logo": "https://zona-innmueble.com/assets/images/logo.png",
+  "logo": "https://zona-innmueble.comhttps://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png",
   "image": "https://zona-innmueble.com/assets/og.jpg",
   "description": "Inmobiliaria premium en Guatemala. Casas, fincas y apartamentos en venta en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador.",
   "telephone": "+50245542088",
@@ -406,7 +406,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
