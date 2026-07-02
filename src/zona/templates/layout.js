@@ -31,7 +31,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
   "@type": "RealEstateAgent",
   "name": "Zona INNmueble",
   "url": "https://zona-innmueble.com",
-  "logo": "https://zona-innmueble.comhttps://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png",
+  "logo": "https://ik.imagekit.io/Zona/logo.png",
   "image": "https://zona-innmueble.com/assets/og.jpg",
   "description": "Inmobiliaria premium en Guatemala. Casas, fincas y apartamentos en venta en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador.",
   "telephone": "+50245542088",
@@ -100,10 +100,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,27,62,.97
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
 /* SHARED */
-section{padding:20px 6%}
+section{padding:48px 6%}
 .ey{display:flex;align-items:center;gap:12px;margin-bottom:4px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
 .ey::before{content:'';width:26px;height:1px;background:var(--or)}
-.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:8px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
+.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.8rem,5.5vw,4.5rem);font-weight:300;line-height:1.15;margin-bottom:8px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
 .st em{font-style:italic;color:var(--or)}
 .ss{font-size:1.1rem;font-weight:300;line-height:2;letter-spacing:.02em;color:var(--sv);line-height:1.9;max-width:500px;font-weight:300}
 .description-premium{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;line-height:1.8;color:var(--wh);margin-bottom:24px;letter-spacing:.01em}
@@ -406,7 +406,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+    <a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>

@@ -169,12 +169,12 @@ function indexPage(props) {
 
   const body = `
 <!-- HERO -->
-<section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
+<section style="min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
   <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none">
     <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
   </video>
-  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.85) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.78) 100%);z-index:1"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.8) 0%,transparent 50%);z-index:1"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.6) 55%,rgba(20,34,64,.82) 100%);z-index:1"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,rgba(13,27,62,.4) 35%,transparent 60%);z-index:1"></div>
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
       <div class="ey" style="margin-bottom:0">Guatemala &middot; Patrimonio Inmobiliario</div>
@@ -233,7 +233,7 @@ function indexPage(props) {
 </section>
 
 <!-- FEATURED -->
-<section style="padding:80px 0 0;background:var(--ink2)" class="fade-in-up">
+<section style="padding:100px 0 0;background:var(--ink2)" class="fade-in-up">
   <div style="padding:0 6% 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px">
     <div>
       <div class="ey">Propiedades Verificadas</div>
@@ -321,7 +321,7 @@ function indexPage(props) {
 </section>
 
 <!-- TESTIMONIOS -->
-<section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
+<section style="padding:100px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">Lo que dicen nuestros clientes</h2>
@@ -384,13 +384,13 @@ function indexPage(props) {
 </section>
 
 <!-- ASESOR -->
-<section style="padding:80px 6%;background:var(--ink)" class="fade-in-up">
+<section style="padding:100px 6%;background:var(--ink)" class="fade-in-up">
   <div style="max-width:860px;margin:0 auto">
     <div class="ey" style="margin-bottom:12px">Tu asesor personal</div>
     <h2 class="st" style="margin-bottom:44px">Un equipo que conoce <em>cada propiedad</em></h2>
     <div class="asesor-card">
       <div class="asesor-avatar" style="background:var(--ink3);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px">
-        <img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
+        <img src="https://ik.imagekit.io/Zona/logo.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
       </div>
       <div style="flex:1">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:6px">Equipo Zona INNmueble</div>
@@ -1657,7 +1657,7 @@ function testimonialsSection() {
   </div>
 </section>
 
-<section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
+<section style="padding:100px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">
