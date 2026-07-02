@@ -274,7 +274,7 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
         <li class="plan-feature"><span class="plan-feature-icon">✓</span>Badge verificado</li>
         <li class="plan-feature"><span class="plan-feature-icon">✓</span>Zona exclusiva asignada</li>
       </ul>
-      <a href="#registro" class="plan-btn plan-btn-outline">Contactar</a>
+      <a href="#registro" class="plan-btn plan-btn-outline" onclick="document.getElementById('agentForm').scrollIntoView({behavior:'smooth'});return false;">Solicitar plan Premium</a>
     </div>
 
   </div>
@@ -415,28 +415,28 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
       <h2 class="section-title" style="color:#fff;font-size:clamp(1.6rem,3vw,2.2rem)">Empieza hoy.<br><em>Primera semana gratis.</em></h2>
       <p class="section-sub" style="color:rgba(255,255,255,.55);margin-top:12px">Sin tarjeta de crédito. Activa tu cuenta en 5 minutos.</p>
     </div>
-    <div class="register-form">
+    <div class="register-form" id="agentForm">
       <div class="form-grid">
         <div class="form-row">
           <label class="form-label">Nombre</label>
-          <input type="text" class="form-input" placeholder="Tu nombre">
+          <input type="text" class="form-input" placeholder="Tu nombre" id="f-nombre">
         </div>
         <div class="form-row">
           <label class="form-label">Apellido</label>
-          <input type="text" class="form-input" placeholder="Tu apellido">
+          <input type="text" class="form-input" placeholder="Tu apellido" id="f-apellido">
         </div>
       </div>
       <div class="form-row">
         <label class="form-label">WhatsApp / Teléfono</label>
-        <input type="tel" class="form-input" placeholder="+502 ____-____">
+        <input type="tel" class="form-input" placeholder="+502 ____-____" id="f-telefono">
       </div>
       <div class="form-row">
         <label class="form-label">Correo electrónico</label>
-        <input type="email" class="form-input" placeholder="tu@email.com">
+        <input type="email" class="form-input" placeholder="tu@email.com" id="f-email">
       </div>
       <div class="form-row">
         <label class="form-label">Plan de interés</label>
-        <select class="form-select form-input">
+        <select class="form-select form-input" id="f-plan">
           <option value="">Selecciona un plan</option>
           <option value="gratis">Gratis — Q0 (siempre gratis)</option>
           <option value="basico">Básico — Q149/mes</option>
@@ -446,9 +446,9 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
       </div>
       <div class="form-row">
         <label class="form-label">Zonas donde trabajas</label>
-        <input type="text" class="form-input" placeholder="Ej: Zona 10, Fraijanes, Santa Catarina">
+        <input type="text" class="form-input" placeholder="Ej: Zona 10, Fraijanes, Santa Catarina" id="f-zonas">
       </div>
-      <button class="form-btn" onclick="submitAsesor()">Activar mi cuenta gratis →</button>
+      <p id="form-msg" style="font-size:.75rem;min-height:18px;margin-bottom:8px;text-align:center"></p><button class="form-btn" onclick="submitAsesor()">Activar mi cuenta gratis →</button>
       <p class="form-note">Al registrarte aceptas nuestros <a href="/privacidad.html" style="color:rgba(255,255,255,.5)">Términos y Política de Privacidad</a>. Primera semana sin costo, sin compromiso.</p>
     </div>
   </div>
@@ -466,14 +466,40 @@ function toggleFaq(el) {
   item.classList.toggle('open');
 }
 
-function submitAsesor() {
+async function submitAsesor() {
   const btn = document.querySelector('.form-btn');
+  const box = document.getElementById('agentForm');
+  const nombre   = (document.getElementById('f-nombre')   ||{}).value||'';
+  const apellido = (document.getElementById('f-apellido') ||{}).value||'';
+  const telefono = (document.getElementById('f-telefono') ||{}).value||'';
+  const email    = (document.getElementById('f-email')    ||{}).value||'';
+  const plan     = (document.getElementById('f-plan')     ||{}).value||'';
+  const zonas    = (document.getElementById('f-zonas')    ||{}).value||'';
+  const msg = document.getElementById('form-msg');
+
+  if (!nombre.trim() || !email.trim() || !telefono.trim()) {
+    if(msg){ msg.textContent = 'Completa nombre, telefono y correo.'; msg.style.color='#f87171'; }
+    return;
+  }
+
   btn.textContent = 'Enviando...';
   btn.disabled = true;
-  setTimeout(() => {
-    btn.textContent = 'Solicitud enviada ✓';
-    btn.style.background = '#10B981';
-  }, 800);
+
+  try {
+    const res = await fetch('https://formspree.io/f/REEMPLAZA_CON_TU_ID', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, apellido, telefono, email, plan, zonas,
+        _subject: 'Nuevo asesor INMUHUB: ' + nombre + ' ' + apellido })
+    });
+    if (res.ok) {
+      box.innerHTML = '<div style="text-align:center;padding:48px 24px"><div style="font-size:3.5rem;margin-bottom:20px">&#10003;</div><h3 style="color:white;font-size:1.5rem;font-weight:700;margin-bottom:12px">Solicitud recibida</h3><p style="color:rgba(255,255,255,.6);line-height:1.8;max-width:340px;margin:0 auto">Revisaremos tu informacion y te contactaremos en las proximas 24 horas.</p></div>';
+    } else { throw new Error(); }
+  } catch(e) {
+    btn.textContent = 'Activar mi cuenta gratis →';
+    btn.disabled = false;
+    if(msg){ msg.textContent = 'Error al enviar. Intenta de nuevo.'; msg.style.color='#f87171'; }
+  }
 }
 </script>
 </body>
