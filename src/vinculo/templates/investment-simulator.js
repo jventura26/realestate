@@ -64,9 +64,7 @@ function investmentSimulator() {
       <!-- CTA -->
       <div style="text-align:center;padding-top:32px;border-top:1px solid #e5e7eb">
         <p style="color:#666;margin-bottom:16px;font-size:15px">¿Listo para invertir en propiedades premium de Guatemala?</p>
-        <a href="https://wa.me/502XXXXXXXX?text=Quiero%20analizar%20opciones%20de%20inversión" target="_blank" style="display:inline-block;background:#1a2a4e;color:white;padding:14px 40px;border-radius:8px;font-weight:600;text-decoration:none">
-          Consultar Asesor de Inversión →
-        </a>
+        <a href="/propiedades.html" target="_blank" style="display:inline-block;background:#1a2a4e;color:white;padding:14px 40px;border-radius:8px;font-weight:600;text-decoration:none">Ver propiedades disponibles &rarr;</a>
       </div>
     </div>
   </div>
