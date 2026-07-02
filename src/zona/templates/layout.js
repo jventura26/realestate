@@ -3,7 +3,7 @@ const { escapeHtml } = require('../../shared/utils');
 const DOMAIN    = 'https://zona-innmueble.com';
 
 
-// CAMBIO 3: ogType = 'website' como parámetro por defecto
+// CAMBIO 3: ogType = 'website' como parÃ¡metro por defecto
 function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scripts = '',
                   pixelId = '1668269500330907', ga4Id = 'G-5KVQZYZ7B3' }) {
   const pageTitle = title
@@ -51,7 +51,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <meta name="theme-color"        content="#0D1B3E">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 
-<!-- Google Analytics 4 — configurado: G-5KVQZYZ7B3 -->
+<!-- Google Analytics 4 â configurado: G-5KVQZYZ7B3 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=${ga4Id}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${ga4Id}');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -241,7 +241,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   
 }
 
-/* ── RESPONSIVE NUEVOS ELEMENTOS ─────────────────────────────────── */
+/* ââ RESPONSIVE NUEVOS ELEMENTOS âââââââââââââââââââââââââââââââââââ */
 @media(max-width:768px){
   /* Tipos de propiedad - 2 columnas en tablet */
   section[style*="background:var(--ink)"] > div[style*="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))"],
@@ -283,9 +283,9 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .cta-banner h2 { font-size: 1.6rem !important; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════ */
+/* âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 /* FASE 1: ANIMACIONES PREMIUM + TESTIMONIOS + VIDEO HERO              */
-/* ═══════════════════════════════════════════════════════════════════ */
+/* âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
 
 
 /* Fade in al scroll */
@@ -440,17 +440,17 @@ ${body}
     <div>
       <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Contacto</h4>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <li style="font-size:.8rem;color:var(--sv)">📍 Guatemala City</li>
+        <li style="font-size:.8rem;color:var(--sv)">ð Guatemala City</li>
         
-        <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
+        <li style="font-size:.8rem;color:var(--sv)">â° LunâVie 8:00â18:00</li>
         <li><a href="/about.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Nosotros</a></li>
         <li><a href="/privacidad.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Privacidad</a></li>
       </ul>
     </div>
   </div>
   <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
-    <span style="font-size:.72rem;color:var(--mt)">© 2026 Zona INNmueble Real Estate · Guatemala</span>
-    <a href="/privacidad.html" style="font-size:.72rem;color:var(--mt);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">Política de Privacidad</a>
+    <span style="font-size:.72rem;color:var(--mt)">Â© 2026 Zona INNmueble Real Estate Â· Guatemala</span>
+    <a href="/privacidad.html" style="font-size:.72rem;color:var(--mt);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">PolÃ­tica de Privacidad</a>
   </div>
   <style>
     @media(max-width:768px){
@@ -554,13 +554,13 @@ async function subscribeNewsletter(email) {
     });
 
     if (response.ok || response.status === 400) {
-      return { success: true, message: '¡Gracias por suscribirte!' };
+      return { success: true, message: 'Â¡Gracias por suscribirte!' };
     } else {
-      return { success: false, message: 'Error en la suscripción. Intenta de nuevo.' };
+      return { success: false, message: 'Error en la suscripciÃ³n. Intenta de nuevo.' };
     }
   } catch (error) {
     console.error('Newsletter error:', error);
-    return { success: false, message: 'Error de conexión. Intenta de nuevo.' };
+    return { success: false, message: 'Error de conexiÃ³n. Intenta de nuevo.' };
   }
 }
 
@@ -624,7 +624,7 @@ document.querySelectorAll('.newsletter-form').forEach(form => {
 
     if (result.success) {
       input.value = '';
-      btn.textContent = '¡Suscrito!';
+      btn.textContent = 'Â¡Suscrito!';
       btn.style.background = '#25D366';
       setTimeout(() => {
         btn.disabled = false;
@@ -685,4 +685,5 @@ document.addEventListener('DOMContentLoaded',function(){
 </html>`;
 }
 
+const WA = '50245542088';
 module.exports = { layout, WA };
