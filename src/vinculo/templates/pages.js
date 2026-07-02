@@ -177,103 +177,84 @@ return layout({
 }
 
 function detailPage(prop) {
-  var gallery = (prop.gallery || []).slice(0, 8);
-  var mainImg = escapeHtml(prop.mainImageThumb || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70');
-
-  // Thumbnails (data-src to avoid quote hell)
-  var thumbsHTML = gallery.length > 0
-    ? '<div class="dv2-thumbs">' + gallery.map(function(img, i) {
-        return '<button class="dv2-thumb" data-src="' + escapeHtml(img) + '" title="Foto ' + (i+1) + '">'
-          + '<img src="' + escapeHtml(img) + '" alt="Foto ' + (i+1) + '" loading="lazy"></button>';
-      }).join('') + '</div>'
-    : '';
-
-  // Specs horizontal row
-  var specs = [];
-  if (prop.habitaciones && prop.habitaciones !== '0') specs.push({ val: prop.habitaciones, label: 'Hab.' });
-  if (prop.banos && prop.banos !== '0') specs.push({ val: prop.banos, label: 'Ba\u00F1os' });
-  if (prop.areaConst) specs.push({ val: prop.areaConst, label: 'm\u00B2' });
-  var specsHTML = specs.length
-    ? '<div class="dv2-specs">' + specs.map(function(s, i) {
-        return (i > 0 ? '<div class="dv2-sep"></div>' : '')
-          + '<div class="dv2-spec"><span class="dv2-spec-val">' + escapeHtml(String(s.val))
-          + '</span><span class="dv2-spec-label">' + s.label + '</span></div>';
-      }).join('') + '</div>'
-    : '';
-
-  // Description — clean, no duplicate IIFEs
-  var descHTML = '';
-  if (prop.description) {
-    var descRaw = prop.description;
-    var descLines = descRaw.split(/\n+/).map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 5; });
-    if (descLines.length <= 1) {
-      descHTML = '<div class="dv2-desc"><h2>Descripci\u00F3n</h2><p>' + escapeHtml(descRaw) + '</p></div>';
-    } else {
-      descHTML = '<div class="dv2-desc"><h2>Descripci\u00F3n</h2><ul class="desc-list">'
-        + descLines.map(function(l){ return '<li class="desc-item"><span class="desc-bullet"></span><span>' + escapeHtml(l) + '</span></li>'; }).join('')
-        + '</ul></div>';
-    }
-  }
-
-  // Info card
-  var infoItems = [];
-  infoItems.push('<div class="dv2-info-item"><span class="dv2-info-label">Ubicaci\u00F3n</span><span class="dv2-info-val">' + escapeHtml(prop.locationFull || '') + '</span></div>');
-  if (prop.tipo) infoItems.push('<div class="dv2-info-item"><span class="dv2-info-label">Tipo</span><span class="dv2-info-val">' + escapeHtml(prop.tipo) + '</span></div>');
-  if (prop.codigoInmueble) infoItems.push('<div class="dv2-info-item"><span class="dv2-info-label">C\u00F3digo</span><span class="dv2-info-val">' + escapeHtml(prop.codigoInmueble) + '</span></div>');
-
-  // WhatsApp share (no phone — agents share the listing)
-  var shareMsg = encodeURIComponent('\uD83C\uDFE0 ' + (prop.title || '') + ' — ' + (prop.priceFormatted || '') + '\nhttps://inmuhub.com/propiedades/' + (prop.slug || '') + '.html');
-  var waHref = escapeHtml('https://wa.me/?text=' + shareMsg);
-
-  // Thumb click script
-  var thumbScript = gallery.length > 0
-    ? '<script>(function(){ var m=document.getElementById("dv2Main"); document.querySelectorAll(".dv2-thumb").forEach(function(b){ b.addEventListener("click",function(){ m.src=this.dataset.src; document.querySelectorAll(".dv2-thumb").forEach(function(x){x.classList.remove("active")}); this.classList.add("active"); }); }); })();<\/script>'
-    : '';
-
-  const body = `
-<div class="dv2-wrap">
-  <div class="dv2-crumb">
-    <a href="/">Inicio</a><span>/</span>
-    <a href="/propiedades.html">Propiedades</a><span>/</span>
-    <span>${escapeHtml(prop.title)}</span>
-  </div>
-  <div class="dv2-grid">
-    <div class="dv2-gallery">
-      <div class="dv2-hero">
-        <img id="dv2Main" src="${mainImg}" alt="${escapeHtml(prop.title)}" loading="eager">
-      </div>
-      ${thumbsHTML}
-    </div>
-    <div class="dv2-sidebar">
-      <div class="dv2-price">${escapeHtml(prop.priceFormatted)}</div>
-      <div class="dv2-title">${escapeHtml(prop.title)}</div>
-      ${specsHTML}
-      <a href="${waHref}" class="dv2-wa" target="_blank" rel="noopener noreferrer">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-        Compartir propiedad
-      </a>
-      <div class="dv2-info">${infoItems.join('')}</div>
-    </div>
-  </div>
-  ${descHTML}
-</div>
-${thumbScript}`;
-
-  var schema = {"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":prop.description||(prop.title+' en '+prop.locationFull),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"price":prop.priceFormatted||'',"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":prop.departamento||'Guatemala',"addressCountry":"GT"}};
-  if(prop.habitaciones&&prop.habitaciones!=='0') schema.numberOfRooms=parseInt(prop.habitaciones);
-  if(prop.areaConst) schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
-  var breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
-  var jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
-  return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
+const gallery=(prop.gallery||[]).slice(0,8);
+const galleryHTML=gallery.length>0?`<div class="gallery-thumbs">${gallery.map(img=>`<button onclick="document.getElementById('mainImg').src='${escapeHtml(img)}'" title="Ver imagen"><img src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)} - foto galeria" loading="lazy" width="400" height="300"></button>`).join('')}</div>`:'';
+const specHTML=(()=>{
+  const items=[];
+  if(prop.habitaciones&&prop.habitaciones!=='0')items.push(`<li class="dspec-item"><svg width="16" height="14" viewBox="0 0 16 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="5.5" rx="1.5"/><path d="M1 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><rect x="4" y="4" width="3" height="2" rx=".5"/></svg><span class="dspec-label">Habitaciones</span><strong class="dspec-val">${prop.habitaciones}</strong></li>`);
+  if(prop.banos&&prop.banos!=='0')items.push(`<li class="dspec-item"><svg width="15" height="14" viewBox="0 0 15 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 8h12v1.5a3.5 3.5 0 0 1-3.5 3H4A3.5 3.5 0 0 1 .5 9v-.5z"/><path d="M1.5 8V4A2.5 2.5 0 0 1 6.5 4"/></svg><span class="dspec-label">Ba\u00f1os</span><strong class="dspec-val">${prop.banos}${prop.mediosBanos&&prop.mediosBanos!=='0'?' + '+prop.mediosBanos+' med.':''}</strong></li>`);
+  if(prop.areaConst&&prop.areaConst!=='0'&&prop.areaConst!=='')items.push(`<li class="dspec-item"><svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="1.5"/><path d="M1 5h12M5 1v12"/></svg><span class="dspec-label">\u00c1rea construida</span><strong class="dspec-val">${prop.areaConst} m\u00b2</strong></li>`);
+  if(prop.area&&prop.area!==''&&prop.area!==prop.areaConst)items.push(`<li class="dspec-item"><svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="1.5"/></svg><span class="dspec-label">\u00c1rea terreno</span><strong class="dspec-val">${prop.area} m\u00b2</strong></li>`);
+  if(prop.parqueos&&prop.parqueos!=='0')items.push(`<li class="dspec-item"><svg width="16" height="14" viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="14" height="8" rx="1.5"/><path d="M4 11v2M12 11v2M1 7h14"/></svg><span class="dspec-label">Parqueos</span><strong class="dspec-val">${prop.parqueos}</strong></li>`);
+  if(prop.niveles&&prop.niveles!=='0')items.push(`<li class="dspec-item"><svg width="14" height="16" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="1" width="12" height="14" rx="1.5"/><path d="M1 6h12M1 11h12"/></svg><span class="dspec-label">Niveles</span><strong class="dspec-val">${prop.niveles}</strong></li>`);
+  return items.length?`<ul class="dspec-list">${items.join('')}</ul>`:'';
+})();
+const descHTML=(()=>{
+  if(!prop.description)return'';
+  const raw=prop.description;
+  const parts=raw.split(/([\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{1F300}-\u{1F9FF}\u{2702}-\u{27B0}\u{25B2}]+)/u).filter(Boolean);
+  if(parts.length<3)return`<div class="description"><h2>Descripci\u00f3n</h2><p>${escapeHtml(raw)}</p></div>`;
+  const rows=[];let i=0;
+  if(parts[0]&&!/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{1F300}-\u{1F9FF}\u{2702}-\u{27B0}\u{25B2}]/u.test(parts[0])){rows.push('<li class="desc-intro">'+escapeHtml(parts[0].trim())+'</li>');i=1;}
+  for(;i<parts.length;i+=2){const e=parts[i];const t=(parts[i+1]||'').replace(/^[\s,]+/,'').trim();if(!e)continue;const isH=t.length<65&&!t.includes(',');rows.push(isH?'<li class="desc-section"><span class="desc-emoji">'+e+'</span><strong>'+escapeHtml(t)+'</strong></li>':'<li class="desc-row"><span class="desc-emoji">'+e+'</span><span>'+escapeHtml(t)+'</span></li>');}
+  return`<div class="description"><h2>Descripci\u00f3n</h2><ul class="desc-list">${rows.join('')}</ul></div>`;
+})();
+const caracHTML=(()=>{
+  const carac=prop.caracteristicas;
+  if(!carac||!Array.isArray(carac)||carac.length===0)return'';
+  const pills=carac.map(c=>`<span style="display:inline-flex;align-items:center;gap:5px;background:var(--gray-50);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--gray-700)">\u2713 ${escapeHtml(c)}</span>`).join('');
+  return`<div class="info-card" style="margin-bottom:24px"><h3 style="font-size:14px;font-weight:700;color:var(--gray-900);margin:0 0 14px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/><path d="M6 8l1.5 1.5L10 6"/></svg> Caracter\u00edsticas</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${pills}</div></div>`;
+})();
+const datosHTML=(()=>{
+  const items=[];
+  if(prop.tipoConstruccion)items.push(['Construcci\u00f3n',prop.tipoConstruccion]);
+  if(prop.estadoConstruccion)items.push(['Estado',prop.estadoConstruccion]);
+  if(prop.anioConstruccion&&prop.anioConstruccion!=='0')items.push(['A\u00f1o',prop.anioConstruccion]);
+  if(prop.acabados)items.push(['Acabados',prop.acabados]);
+  if(prop.techo)items.push(['Techo',prop.techo]);
+  if(prop.piso)items.push(['Piso',prop.piso]);
+  if(prop.cuotaMant)items.push(['Cuota mant.',prop.cuotaMant]);
+  if(prop.disponibleDesde)items.push(['Disponible',prop.disponibleDesde]);
+  if(prop.datosTecnicos)items.push(['Detalle',prop.datosTecnicos]);
+  if(items.length===0)return'';
+  const rows=items.map(([l,v])=>`<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text-muted);font-weight:500">${escapeHtml(l)}</span><span style="color:var(--gray-900);font-weight:600;text-align:right;max-width:60%">${escapeHtml(String(v))}</span></div>`).join('');
+  return`<div class="info-card" style="margin-bottom:24px"><h3 style="font-size:14px;font-weight:700;color:var(--gray-900);margin:0 0 4px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M2 6h12M6 2v12"/></svg> Datos T\u00e9cnicos</h3><div style="border-top:1px solid var(--border);margin-top:10px">${rows}</div></div>`;
+})();
+const infoHTML=(()=>{
+  const items=[`<li class="dinfo-item"><svg width="13" height="16" viewBox="0 0 12 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1a4 4 0 0 1 4 4c0 3-4 8-4 8S2 8 2 5a4 4 0 0 1 4-4z"/><circle cx="6" cy="5" r="1.4"/></svg><span class="dinfo-label">Ubicaci\u00f3n</span><span class="dinfo-val">${escapeHtml(prop.ubicacionGeneral||prop.locationFull)}</span></li>`];
+  if(prop.tipo)items.push(`<li class="dinfo-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="2"/><path d="M4 4h6M4 7h6M4 10h4"/></svg><span class="dinfo-label">Tipo</span><span class="dinfo-val">${escapeHtml(prop.tipo)}</span></li>`);
+  if(prop.operacion)items.push(`<li class="dinfo-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h10M7 2l5 5-5 5"/></svg><span class="dinfo-label">Operaci\u00f3n</span><span class="dinfo-val">${escapeHtml(prop.operacion)}</span></li>`);
+  if(prop.moneda)items.push(`<li class="dinfo-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="6"/><path d="M7 4v6M5 5.5h3a1.5 1.5 0 0 1 0 3H5"/></svg><span class="dinfo-label">Moneda</span><span class="dinfo-val">${escapeHtml(prop.moneda)}</span></li>`);
+  if(prop.municipio)items.push(`<li class="dinfo-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="10" height="7" rx="1"/><path d="M5 6V4a2 2 0 0 1 4 0v2"/><path d="M5 9h4"/></svg><span class="dinfo-label">Municipio</span><span class="dinfo-val">${escapeHtml(prop.municipio)}</span></li>`);
+  if(prop.codigo)items.push(`<li class="dinfo-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="2" width="12" height="10" rx="1.5"/><path d="M4 5h2m2 0h2M4 9h6"/></svg><span class="dinfo-label">C\u00f3digo</span><span class="dinfo-val">${escapeHtml(prop.codigo)}</span></li>`);
+  if(prop.asesor)items.push(`<li class="dinfo-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="4" r="2.5"/><path d="M2 13c0-3.5 10-3.5 10 0"/></svg><span class="dinfo-label">Asesor</span><span class="dinfo-val">${escapeHtml(prop.asesor)}</span></li>`);
+  return`<ul class="dinfo-list">${items.join('')}</ul>`;
+})();
+const videoHTML=(()=>{
+  if(!prop.videoTour)return'';
+  let embedUrl=prop.videoTour;
+  const ytMatch=embedUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if(ytMatch)embedUrl='https://www.youtube.com/embed/'+ytMatch[1];
+  return`<div style="margin-bottom:24px"><h3 style="font-size:14px;font-weight:700;color:var(--gray-900);margin:0 0 12px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="7"/><polygon points="6,5 12,8 6,11" fill="currentColor" stroke="none"/></svg> Video Tour</h3><div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;background:#000"><iframe src="${escapeHtml(embedUrl)}" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>`;
+})();
+const mapHTML=(()=>{
+  if(!prop.lat||!prop.lng||prop.lat==='0'||prop.lng==='0')return'';
+  const lat=parseFloat(prop.lat),lng=parseFloat(prop.lng);
+  if(isNaN(lat)||isNaN(lng))return'';
+  return`<div style="margin-bottom:24px"><h3 style="font-size:14px;font-weight:700;color:var(--gray-900);margin:0 0 12px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2a4 4 0 0 1 4 4c0 3.5-4 9-4 9S4 9.5 4 6a4 4 0 0 1 4-4z"/><circle cx="8" cy="6" r="1.5"/></svg> Ubicaci\u00f3n en mapa</h3><div style="border-radius:12px;overflow:hidden;border:1px solid var(--border)"><iframe width="100%" height="260" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" loading="lazy" src="https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed&hl=es"></iframe></div></div>`;
+})();
+const planoHTML=prop.plano?`<div style="margin-bottom:24px"><h3 style="font-size:14px;font-weight:700;color:var(--gray-900);margin:0 0 12px">\ud83d\udcd0 Plano</h3><a href="${escapeHtml(prop.plano)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--gray-50);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:500;color:var(--gray-700)">Ver plano de la propiedad \u2192</a></div>`:'';
+const exclusivaBadge=prop.esExclusiva?`<span style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#c9a96e,#a07840);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:12px">\u2605 EXCLUSIVA</span>`:'';
+const rentaHTML=prop.precioRenta?`<div style="font-size:14px;color:var(--text-muted);margin-top:-16px;margin-bottom:24px">Precio renta: <strong>${escapeHtml(prop.precioRenta)}</strong></div>`:'';
+const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} en ${escapeHtml(prop.locationFull)} - INMUHUB.COM" loading="eager" width="800" height="500"></div>${galleryHTML}</div><div class="detail-content">${exclusivaBadge}<h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div>${rentaHTML}<div class="specs-grid">${specHTML}</div>${descHTML}${caracHTML}${datosHTML}${videoHTML}${planoHTML}${mapHTML}<div class="info-card">${infoHTML}</div></div></div>`;
+const schema={"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":prop.description||(prop.title+' en '+prop.locationFull),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"price":prop.priceFormatted||'',"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":prop.departamento||'Guatemala',"addressCountry":"GT"}};
+if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop.habitaciones);
+if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
+const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
+const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
+return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
 }
 
-module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
-
-const { mortgageCalculator } = require('./mortgage-calculator');
-const { investmentSimulator } = require('./investment-simulator');
-const { leadsMagnet } = require('./leads-magnet');
-
-// Página: Calculadora Hipotecaria
 function mortgageCalcPage(props) {
   const body = mortgageCalculator();
   return layout({
