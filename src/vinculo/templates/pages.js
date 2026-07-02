@@ -177,51 +177,95 @@ return layout({
 }
 
 function detailPage(prop) {
-const gallery=(prop.gallery||[]).slice(0,8);
-const galleryHTML=(function(){
-  if(!gallery.length) return '';
-  var t = gallery.map(function(img,i){
-    var s=escapeHtml(img);
-    return '<div style="flex-shrink:0;cursor:pointer;border-radius:6px;overflow:hidden;border:2.5px solid transparent;transition:border-color .2s" onclick="document.getElementById(\'mainImg\').src=\''+s+'\'" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'transparent\'">'
-      +'<img src="'+s+'" alt="foto '+(i+1)+'" loading="lazy" style="width:80px;height:60px;object-fit:cover;display:block"></div>';
-  }).join('');
-  return '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+t+'</div>';
-})();
-const specHTML=`${prop.habitaciones&&prop.habitaciones!=='0'?`<div class="spec"><div class="spec-value">${prop.habitaciones}</div><div class="spec-label">Habitaciones</div></div>`:''}${prop.banos&&prop.banos!=='0'?`<div class="spec"><div class="spec-value">${prop.banos}</div><div class="spec-label">Banos</div></div>`:''}${prop.areaConst?`<div class="spec"><div class="spec-value">${prop.areaConst}</div><div class="spec-label">Area</div></div>`:''}`;
-const descHTML=renderDesc(prop.description);
-const charsHTML=renderCaracteristicas(prop.caracteristicas||prop.amenities||[]);;
-const infoHTML=`<div class="info-item"><span class="label">Ubicacion</span><span class="value">${escapeHtml(prop.locationFull)}</span></div>${prop.codigoInmueble?`<div class="info-item"><span class="label">Codigo</span><span class="value">${escapeHtml(prop.codigoInmueble)}</span></div>`:''}${prop.tipo?`<div class="info-item"><span class="label">Tipo</span><span class="value">${escapeHtml(prop.tipo)}</span></div>`:''}`;
-const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main" style="border-radius:12px;overflow:hidden"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} - INMUHUB.COM" loading="eager" width="1200" height="700" style="width:100%;height:auto;min-height:380px;object-fit:cover;display:block;cursor:zoom-in" onclick="window.open(this.src,'_blank')"></div>${galleryHTML}</div><div class="detail-content"><h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div><div class="specs-grid">${specHTML}</div>${descHTML}${charsHTML}<div class="info-card">${infoHTML}</div>` + `` + `<section style="padding:48px 6%;background:white">
-<div style="max-width:1200px;margin:0 auto">
-<h3 style="font-size:28px;font-weight:700;color:#1a2a4e;margin-bottom:40px;text-align:center">Herramientas para Invertir</h3>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">
-<a href="/herramientas/valuador.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
-<div style="font-size:48px;margin-bottom:20px">🏠</div>
-<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Valuador de Propiedades</h4>
-<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Calcula el valor estimado de tu propiedad en Guatemala</p>
-<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Valuador →</div>
-</a>
-<a href="/herramientas/simulador-inversion.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
-<div style="font-size:48px;margin-bottom:20px">📈</div>
-<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Simulador de Inversión</h4>
-<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Analiza el ROI y rentabilidad proyectada de cualquier propiedad</p>
-<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Simulador →</div>
-</a>
-<a href="/herramientas/guia-compra.html" style="background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:white;display:flex;flex-direction:column;align-items:center">
-<div style="font-size:48px;margin-bottom:20px">📚</div>
-<h4 style="font-weight:700;margin-bottom:12px;font-size:18px">Guía de Compra Gratis</h4>
-<p style="font-size:14px;opacity:0.95;line-height:1.6;flex-grow:1">Descarga la guía premium para invertir en real estate sin errores</p>
-<div style="margin-top:20px;font-weight:600;font-size:14px">Descargar →</div>
-</a>
+  var gallery = (prop.gallery || []).slice(0, 8);
+  var mainImg = escapeHtml(prop.mainImageThumb || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70');
+
+  // Thumbnails (data-src to avoid quote hell)
+  var thumbsHTML = gallery.length > 0
+    ? '<div class="dv2-thumbs">' + gallery.map(function(img, i) {
+        return '<button class="dv2-thumb" data-src="' + escapeHtml(img) + '" title="Foto ' + (i+1) + '">'
+          + '<img src="' + escapeHtml(img) + '" alt="Foto ' + (i+1) + '" loading="lazy"></button>';
+      }).join('') + '</div>'
+    : '';
+
+  // Specs horizontal row
+  var specs = [];
+  if (prop.habitaciones && prop.habitaciones !== '0') specs.push({ val: prop.habitaciones, label: 'Hab.' });
+  if (prop.banos && prop.banos !== '0') specs.push({ val: prop.banos, label: 'Ba\u00F1os' });
+  if (prop.areaConst) specs.push({ val: prop.areaConst, label: 'm\u00B2' });
+  var specsHTML = specs.length
+    ? '<div class="dv2-specs">' + specs.map(function(s, i) {
+        return (i > 0 ? '<div class="dv2-sep"></div>' : '')
+          + '<div class="dv2-spec"><span class="dv2-spec-val">' + escapeHtml(String(s.val))
+          + '</span><span class="dv2-spec-label">' + s.label + '</span></div>';
+      }).join('') + '</div>'
+    : '';
+
+  // Description — clean, no duplicate IIFEs
+  var descHTML = '';
+  if (prop.description) {
+    var descRaw = prop.description;
+    var descLines = descRaw.split(/\n+/).map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 5; });
+    if (descLines.length <= 1) {
+      descHTML = '<div class="dv2-desc"><h2>Descripci\u00F3n</h2><p>' + escapeHtml(descRaw) + '</p></div>';
+    } else {
+      descHTML = '<div class="dv2-desc"><h2>Descripci\u00F3n</h2><ul class="desc-list">'
+        + descLines.map(function(l){ return '<li class="desc-item"><span class="desc-bullet"></span><span>' + escapeHtml(l) + '</span></li>'; }).join('')
+        + '</ul></div>';
+    }
+  }
+
+  // Info card
+  var infoItems = [];
+  infoItems.push('<div class="dv2-info-item"><span class="dv2-info-label">Ubicaci\u00F3n</span><span class="dv2-info-val">' + escapeHtml(prop.locationFull || '') + '</span></div>');
+  if (prop.tipo) infoItems.push('<div class="dv2-info-item"><span class="dv2-info-label">Tipo</span><span class="dv2-info-val">' + escapeHtml(prop.tipo) + '</span></div>');
+  if (prop.codigoInmueble) infoItems.push('<div class="dv2-info-item"><span class="dv2-info-label">C\u00F3digo</span><span class="dv2-info-val">' + escapeHtml(prop.codigoInmueble) + '</span></div>');
+
+  // WhatsApp CTA
+  var WA_NUM = '50245542088';
+  var waText = encodeURIComponent('Hola, me interesa esta propiedad: ' + (prop.title || '') + ' — ' + (prop.priceFormatted || '') + '. Me puedes dar m\u00E1s informaci\u00F3n?');
+  var waHref = escapeHtml('https://wa.me/' + WA_NUM + '?text=' + waText);
+
+  // Thumb click script
+  var thumbScript = gallery.length > 0
+    ? '<script>(function(){ var m=document.getElementById("dv2Main"); document.querySelectorAll(".dv2-thumb").forEach(function(b){ b.addEventListener("click",function(){ m.src=this.dataset.src; document.querySelectorAll(".dv2-thumb").forEach(function(x){x.classList.remove("active")}); this.classList.add("active"); }); }); })();<\/script>'
+    : '';
+
+  const body = `
+<div class="dv2-wrap">
+  <div class="dv2-crumb">
+    <a href="/">Inicio</a><span>/</span>
+    <a href="/propiedades.html">Propiedades</a><span>/</span>
+    <span>${escapeHtml(prop.title)}</span>
+  </div>
+  <div class="dv2-grid">
+    <div class="dv2-gallery">
+      <div class="dv2-hero">
+        <img id="dv2Main" src="${mainImg}" alt="${escapeHtml(prop.title)}" loading="eager">
+      </div>
+      ${thumbsHTML}
+    </div>
+    <div class="dv2-sidebar">
+      <div class="dv2-price">${escapeHtml(prop.priceFormatted)}</div>
+      <div class="dv2-title">${escapeHtml(prop.title)}</div>
+      ${specsHTML}
+      <a href="${waHref}" class="dv2-wa" target="_blank" rel="noopener noreferrer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Consultar por WhatsApp
+      </a>
+      <div class="dv2-info">${infoItems.join('')}</div>
+    </div>
+  </div>
+  ${descHTML}
 </div>
-</div>
-</section></div>`;
-const schema={"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":(prop.description||(prop.title+' en '+prop.locationFull)).substring(0,300),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"offers":{"@type":"Offer","price":prop.priceNumeric||0,"priceCurrency":(prop.priceFormatted||'').includes('$')?'USD':'GTQ',"availability":"https://schema.org/InStock"},"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":"Guatemala","addressCountry":"GT"},"seller":{"@type":"RealEstateAgent","name":"InmuHub","url":"https://inmuhub.com","telephone":"+"}};
-if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop.habitaciones);
-if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
-const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
-const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
-return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
+${thumbScript}`;
+
+  var schema = {"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":prop.description||(prop.title+' en '+prop.locationFull),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"price":prop.priceFormatted||'',"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":prop.departamento||'Guatemala',"addressCountry":"GT"}};
+  if(prop.habitaciones&&prop.habitaciones!=='0') schema.numberOfRooms=parseInt(prop.habitaciones);
+  if(prop.areaConst) schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
+  var breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
+  var jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
+  return layout({title:prop.title,desc:prop.title+' - '+prop.locationFull+'. Precio: '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
 }
 
 module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
