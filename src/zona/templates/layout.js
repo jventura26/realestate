@@ -69,7 +69,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
 <link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --ink:#0D1B3E;--ink2:#142240;--ink3:#1A3060;
@@ -604,7 +604,7 @@ document.querySelectorAll('.counter').forEach(el => {
 });
 
 // NEWSLETTER BREVO INTEGRATION
-const BREVO_API_KEY = window.BREVO_API_KEY || 'CONFIGURE_IN_CLOUDFLARE_ENV';
+const BREVO_API_KEY = window.__BREVO_KEY || '';
 const BREVO_LIST_ID = 3;
 
 async function subscribeNewsletter(email) {
