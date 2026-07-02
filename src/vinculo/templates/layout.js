@@ -383,6 +383,64 @@ input, textarea, select, button { font-size: 16px !important; width: 100% !impor
 @media(max-width:640px){.pc-info,.pc-body{padding:12px 14px 14px}.pc-price{font-size:16px}}
 /* ------------------------------------------ */
 
+/* --- DETAIL PAGE v2 (dv2-*) --- */
+.dv2-wrap{max-width:1200px;margin:0 auto;padding:32px 6% 64px}
+.dv2-crumb{font-size:13px;color:var(--gray-400);margin-bottom:24px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dv2-crumb a{color:var(--gray-400);transition:color .2s}.dv2-crumb a:hover{color:var(--gray-900)}
+.dv2-crumb span{color:var(--gray-300)}
+.dv2-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start;margin-bottom:40px}
+.dv2-gallery{}
+.dv2-hero{aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--gray-100);margin-bottom:10px}
+.dv2-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dv2-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dv2-thumb{aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:none;padding:0;transition:border-color .2s}
+.dv2-thumb:hover,.dv2-thumb.active{border-color:var(--gold)}
+.dv2-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.dv2-sidebar{position:sticky;top:96px}
+.dv2-price{font-size:30px;font-weight:800;color:var(--gray-900);letter-spacing:-.04em;line-height:1;margin-bottom:8px}
+.dv2-title{font-size:15px;font-weight:500;color:var(--gray-600);line-height:1.5;margin-bottom:16px}
+.dv2-specs{display:flex;align-items:center;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:20px;gap:0}
+.dv2-spec{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 8px}
+.dv2-spec:first-child{align-items:flex-start;padding-left:0}
+.dv2-spec:last-child{align-items:flex-end;padding-right:0}
+.dv2-spec-val{font-size:22px;font-weight:700;color:var(--gray-900)}
+.dv2-spec-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.dv2-sep{width:1px;height:36px;background:var(--border);flex-shrink:0}
+.dv2-wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#25d366;color:#fff;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;text-decoration:none;transition:opacity .2s;margin-bottom:16px;box-sizing:border-box}
+.dv2-wa:hover{opacity:.9;color:#fff}
+.dv2-info{background:var(--gray-50);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.dv2-info-item{display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.dv2-info-item:last-child{border-bottom:none}
+.dv2-info-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.dv2-info-val{font-size:14px;font-weight:600;color:var(--gray-900)}
+.dv2-desc{margin-bottom:48px}
+.dv2-desc h2{font-size:20px;font-weight:700;margin-bottom:14px;color:var(--gray-900)}
+.dv2-desc p{color:var(--gray-600);line-height:1.85;font-size:15px}
+/* Responsive — tablet */
+@media(max-width:900px){
+  .dv2-grid{grid-template-columns:1fr;gap:0}
+  .dv2-sidebar{position:static;padding-top:24px}
+  .dv2-thumbs{grid-template-columns:repeat(4,1fr)}
+}
+/* Responsive — mobile */
+@media(max-width:640px){
+  .dv2-wrap{padding:0 0 48px}
+  .dv2-crumb{padding:16px 4% 12px;margin-bottom:0;font-size:12px}
+  .dv2-hero{border-radius:0;margin-bottom:6px}
+  .dv2-thumbs{grid-template-columns:repeat(4,1fr);gap:6px;padding:0 4%;margin-bottom:4px}
+  .dv2-thumb{border-radius:6px}
+  .dv2-sidebar{padding:16px 4% 0}
+  .dv2-price{font-size:26px}
+  .dv2-spec-val{font-size:18px}
+  .dv2-desc{padding:0 4%}
+  .dv2-wa{font-size:14px;padding:13px 16px}
+}
+@media(max-width:380px){
+  .dv2-thumbs{display:none}
+  .dv2-price{font-size:22px}
+}
+/* ------------------------------------------ */
+
 /* FOOTER SIMPLE Y RESPONSIVE */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;width:100%;box-sizing:border-box}
 .footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;width:100%;box-sizing:border-box;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;align-items:flex-start}
