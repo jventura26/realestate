@@ -390,7 +390,7 @@ function indexPage(props) {
     <h2 class="st" style="margin-bottom:44px">Un equipo que conoce <em>cada propiedad</em></h2>
     <div class="asesor-card">
       <div class="asesor-avatar" style="background:var(--ink3);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px">
-        <img src="/assets/images/logo.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
+        <img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
       </div>
       <div style="flex:1">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:6px">Equipo Zona INNmueble</div>
