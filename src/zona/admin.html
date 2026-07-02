@@ -398,7 +398,7 @@ tr:hover td{background:#FAFBFF}
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-tag"></i> Etiqueta / Cinta</div>
             <div class="cinta-pills" id="cintaPills">
-              <div class="cinta-pill active" data-val="" onclick="setCinta('')">Nin�٥�na</div>
+              <div class="cinta-pill active" data-val="" onclick="setCinta('')">Nin�٥�na</div>
               <div class="cinta-pill" data-val="Exclusiva" onclick="setCinta('Exclusiva')">Exclusiva</div>
               <div class="cinta-pill" data-val="Premium" onclick="setCinta('Premium')">Premium</div>
               <div class="cinta-pill" data-val="Nueva" onclick="setCinta('Nueva')">Nueva</div>
@@ -421,7 +421,7 @@ tr:hover td{background:#FAFBFF}
               <div class="fg"><label>Parqueos</label><input type="number" id="fParqueos" placeholder="0" min="0"></div>
               <div class="fg"><label>Niveles</label><input type="number" id="fNiveles" placeholder="1" min="1"></div>
             </div>
-            <div class="fg"><label>Datos técnicos (resumen)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m�  · Terreno 2,400 m�"></div>
+            <div class="fg"><label>Datos técnicos (resumen)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m�  · Terreno 2,400 m�"></div>
           </div>
 
           <div class="fsec">
@@ -961,7 +961,7 @@ function renderLeads(mc) {
     </div>
     ${filtered.length === 0
       ? `<div class="empty-state"><i class="ti ti-users"></i><p>${leadFilter==='todos'?'Sin leads aún':'Sin leads en esta etapa'}</p></div>`
-      : g<div class="lead-grid">${filtered.map(l=>buildLeadCard(l)).join('')}</div>`}`;
+      : `<div class="lead-grid">${filtered.map(l=>buildLeadCard(l)).join('')}</div>`}`;
 }
 
 function setLeadFilter(f) {
