@@ -361,7 +361,29 @@ div[style*="display:grid"][style*="grid-template-columns:1fr 1fr"] { grid-templa
 .nav-inner { align-items:flex-start !important;  padding: 0 12px !important; }
 a[style*="padding:16px 48px"] { padding: 12px 24px !important; }
 input, textarea, select, button { font-size: 16px !important; width: 100% !important; max-width: 100% !important; }
-}/* FOOTER SIMPLE Y RESPONSIVE */
+}/* --- PROPERTY CARDS (pc-*) --- */
+.prop-card{display:block;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:box-shadow .25s,transform .25s;text-decoration:none;color:inherit;cursor:pointer}
+.prop-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.10);transform:translateY(-2px)}
+.pc-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--gray-100)}
+.pc-img img,.prop-card>img{width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block}
+.prop-card:hover .pc-img img{transform:scale(1.04)}
+.pc-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none}
+.pc-badge,.pc-badge-tipo{background:rgba(0,0,0,.52);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.pc-badge.renta,.pc-badge-cinta.renta{background:#374151!important;color:#fff!important}
+.pc-badge.venta,.pc-badge-cinta.venta{background:var(--blue)!important;color:#fff!important}
+.pc-badge.nueva,.pc-badge-cinta.nueva,.pc-badge.precio-reducido{background:var(--gold)!important;color:#2d2416!important}
+.pc-ov{display:none}
+.pc-info,.pc-body{padding:14px 16px 16px}
+.pc-price{font-size:19px;font-weight:800;color:var(--gray-900);line-height:1;margin-bottom:6px;letter-spacing:-.03em}
+.pc-tipo{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pc-title{font-size:14px;font-weight:500;color:var(--gray-600);line-height:1.4;margin-bottom:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.pc-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-600);font-weight:500;padding-top:10px;border-top:1px solid var(--gray-100)}
+.pc-meta span{white-space:nowrap}
+.pc-arr{display:none}
+@media(max-width:640px){.pc-info,.pc-body{padding:12px 14px 14px}.pc-price{font-size:16px}}
+/* ------------------------------------------ */
+
+/* FOOTER SIMPLE Y RESPONSIVE */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;width:100%;box-sizing:border-box}
 .footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;width:100%;box-sizing:border-box;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;align-items:flex-start}
 .footer-col{display:flex;flex-direction:column;gap:0}
@@ -558,19 +580,19 @@ footer > div:last-child > div { text-align: center !important; }
   <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
     <img src="/assets/logo-horizontal.png" alt="INMUHUB - Conecta tu inversion inmobiliaria" style="height:50px;width:auto;" loading="lazy">
   </a>
-  <div style="display:flex;align-items:center;gap:4px;margin:0 auto;padding:0 32px">
+    <div style="display:flex;align-items:center;gap:2px;margin:0 auto;padding:0 24px">
     <a href="/propiedades.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Propiedades</a>
     <a href="/herramientas/valuador.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Valuador</a>
     <a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Calculadora</a>
-    <a href="/herramientas/simulador-inversion.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Simulador</a>
-    <a href="/herramientas/guia-compra.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Guia</a>
-    <a href="/planes.html" style="font-size:13px;font-weight:600;color:#c9a96e;padding:8px 16px;border-radius:6px;text-decoration:none;border:1px solid rgba(201,169,110,.4);transition:all .2s;white-space:nowrap;background:rgba(201,169,110,.06)" onmouseover="this.style.background='rgba(201,169,110,.15)';this.style.borderColor='#c9a96e'" onmouseout="this.style.background='rgba(201,169,110,.06)';this.style.borderColor='rgba(201,169,110,.4)'">Para Asesores</a>
+    <span style="width:1px;height:18px;background:#e2e8f0;margin:0 8px;flex-shrink:0;display:inline-block"></span>
+    <a href="/planes.html" style="font-size:13px;font-weight:500;color:#C9A96E;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.background='#fdf8f0'" onmouseout="this.style.background='transparent'">Publicar</a>
+    <a href="/como-funciona.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Cómo funciona</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div style="display:flex;align-items:center;background:#f7f8fa;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-      <input type="text" id="navSearch" placeholder="Buscar..." style="border:none;background:transparent;padding:8px 12px;font-size:13px;width:160px;outline:none;color:#1a2a4e">
-      <button aria-label="Buscar" style="background:none;border:none;padding:8px 12px;cursor:pointer;font-size:14px;color:#4a5568">🔍</button>
-    </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <a href="/planes.html" style="font-size:13px;font-weight:700;color:#2d2416;background:#C9A96E;padding:9px 18px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Para Asesores</a>
+    <a href="/registro.html" style="font-size:13px;font-weight:600;color:#1a2a4e;border:1.5px solid #d1d5db;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='#1a2a4e';this.style.background='#f9fafb'" onmouseout="this.style.borderColor='#d1d5db';this.style.background='transparent'">Iniciar sesión</a>
+  </div>
   </div>
 </div>
 </nav>
