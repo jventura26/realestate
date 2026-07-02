@@ -124,6 +124,7 @@ write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.lo
 
 // Generar páginas de herramientas DENTRO del then para que no las borre rmSync
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
+const { simuladorInversionPage } = require('./templates/simulador-page');
 const { valuacionPage } = require('./templates/valuacion-page');
 const { guiaCompraPae } = require('./templates/guia-compra-page');
 const { dashboardInversionistasPage } = require('./templates/dashboard-inversionistas-page');
@@ -138,6 +139,9 @@ console.log(' herramientas: valuador.html ✅');
 
 write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPae()); 
 console.log(' herramientas: guia-compra.html ✅');
+
+write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), simuladorInversionPage()); 
+console.log(' herramientas: simulador-inversion.html ✅');
 
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
 console.log(' herramientas: dashboard-inversionistas.html ✅');
