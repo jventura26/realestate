@@ -178,9 +178,8 @@ return layout({
 
 function detailPage(prop) {
 const gallery=(prop.gallery||[]).slice(0,8);
-// Gallery
 const galleryHTML=gallery.length>0?`<div class="gallery-thumbs">${gallery.map(img=>`<button onclick="document.getElementById('mainImg').src='${escapeHtml(img)}';this.parentNode.querySelectorAll('button').forEach(b=>b.style.borderColor='');this.style.borderColor='var(--blue)'" title="Ver imagen"><img src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}" loading="lazy" width="120" height="80"></button>`).join('')}</div>`:'';
-// Stats horizontal bar
+// Stats bar
 const statItems=[];
 if(prop.habitaciones&&prop.habitaciones!=='0')statItems.push(`<div class="zstat"><span class="zstat-n">${prop.habitaciones}</span><span class="zstat-l">Habitaciones</span></div>`);
 if(prop.banos&&prop.banos!=='0')statItems.push(`<div class="zstat"><span class="zstat-n">${prop.banos}${prop.mediosBanos&&prop.mediosBanos!=='0'?'+\u00bd':''}</span><span class="zstat-l">Ba\u00f1os</span></div>`);
@@ -189,46 +188,50 @@ if(prop.area&&prop.area!==''&&prop.area!==prop.areaConst)statItems.push(`<div cl
 if(prop.parqueos&&prop.parqueos!=='0')statItems.push(`<div class="zstat"><span class="zstat-n">${prop.parqueos}</span><span class="zstat-l">Parqueos</span></div>`);
 if(prop.niveles&&prop.niveles!=='0')statItems.push(`<div class="zstat"><span class="zstat-n">${prop.niveles}</span><span class="zstat-l">Niveles</span></div>`);
 const statsBar=statItems.length?`<div class="zstats-bar">${statItems.join('<span class="zstat-div"></span>')}</div>`:'';
-// Description
+// Description - Zillow style: clean paragraphs, strip emojis, show/hide toggle
 const descHTML=(()=>{
   if(!prop.description)return'';
-  const raw=prop.description;
-  const parts=raw.split(/([\u{1F000}-\u{1FBFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u{2702}-\u{27B0}\u{25B0}-\u{25FF}]+)/u).filter(Boolean);
-  if(parts.length<3)return`<div class="zsect"><h2 class="zsect-h">Descripci\u00f3n</h2><p style="color:var(--gray-700);line-height:1.7;font-size:15px">${escapeHtml(raw)}</p></div>`;
-  const rows=[];let i=0;
-  if(parts[0]&&!/[\u{1F000}-\u{1FBFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u{2702}-\u{27B0}\u{25B0}-\u{25FF}]/u.test(parts[0])){rows.push('<li class="desc-intro">'+escapeHtml(parts[0].trim())+'</li>');i=1;}
-  for(;i<parts.length;i+=2){const e=parts[i];const t=(parts[i+1]||'').replace(/^[\s,]+/,'').trim();if(!e)continue;const isH=t.length<65&&!t.includes(',');rows.push(isH?'<li class="desc-section"><span class="desc-emoji">'+e+'</span><strong>'+escapeHtml(t)+'</strong></li>':'<li class="desc-row"><span class="desc-emoji">'+e+'</span><span>'+escapeHtml(t)+'</span></li>');}
-  return`<div class="zsect"><h2 class="zsect-h">Descripci\u00f3n</h2><ul class="desc-list">${rows.join('')}</ul></div>`;
+  // Strip leading emojis and clean up text into paragraphs
+  const clean=prop.description
+    .replace(/[\u{1F000}-\u{1FBFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u{2702}-\u{27B0}\u{25B0}-\u{25FF}]+/gu,' ')
+    .replace(/\n{3,}/g,'\n\n')
+    .trim();
+  const paras=clean.split(/\n\n+/).map(p=>p.replace(/\n/g,' ').replace(/\s+/g,' ').trim()).filter(p=>p.length>10);
+  if(!paras.length)return'';
+  const previewParas=paras.slice(0,2);
+  const moreParas=paras.slice(2);
+  const previewHTML=previewParas.map(p=>`<p style="margin:0 0 14px;color:var(--gray-700);line-height:1.75;font-size:15px">${escapeHtml(p)}</p>`).join('');
+  const moreHTML=moreParas.length?moreParas.map(p=>`<p style="margin:0 0 14px;color:var(--gray-700);line-height:1.75;font-size:15px">${escapeHtml(p)}</p>`).join(''):'';
+  const toggleId='desc-'+prop.slug.replace(/[^a-z0-9]/g,'');
+  const moreBlock=moreHTML?`<div id="${toggleId}" style="display:none">${moreHTML}</div><button onclick="var el=document.getElementById('${toggleId}');var open=el.style.display!=='none';el.style.display=open?'none':'block';this.textContent=open?'Ver descripci\u00f3n completa \u2193':'Mostrar menos \u2191'" style="background:none;border:none;color:var(--blue);font-weight:600;font-size:14px;cursor:pointer;padding:4px 0;margin-top:-4px">Ver descripci\u00f3n completa \u2193</button>`:'';
+  return`<div class="zsect"><h2 class="zsect-h">Descripci\u00f3n</h2>${previewHTML}${moreBlock}</div>`;
 })();
-// Características
+// Características - 2 col checkmarks
 const caracHTML=(()=>{
   const carac=prop.caracteristicas;
   if(!carac||!Array.isArray(carac)||carac.length===0)return'';
-  const cols=[];const half=Math.ceil(carac.length/2);
-  const colA=carac.slice(0,half).map(c=>`<li style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:var(--gray-700)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,4"/></svg>${escapeHtml(c)}</li>`).join('');
-  const colB=carac.slice(half).map(c=>`<li style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;color:var(--gray-700)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,4"/></svg>${escapeHtml(c)}</li>`).join('');
-  return`<div class="zsect"><h2 class="zsect-h">Caracter\u00edsticas</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px"><ul style="list-style:none;margin:0;padding:0">${colA}</ul><ul style="list-style:none;margin:0;padding:0">${colB}</ul></div></div>`;
+  const half=Math.ceil(carac.length/2);
+  const renderItem=c=>`<li style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;color:var(--gray-700)"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,4"/></svg>${escapeHtml(c)}</li>`;
+  return`<div class="zsect"><h2 class="zsect-h">Caracter\u00edsticas</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px"><ul style="list-style:none;margin:0;padding:0">${carac.slice(0,half).map(renderItem).join('')}</ul><ul style="list-style:none;margin:0;padding:0">${carac.slice(half).map(renderItem).join('')}</ul></div></div>`;
 })();
-// Datos técnicos
+// Datos técnicos - 2 col label/value
 const datosHTML=(()=>{
   const items=[];
   if(prop.tipoConstruccion)items.push(['Construcci\u00f3n',prop.tipoConstruccion]);
   if(prop.estadoConstruccion)items.push(['Estado',prop.estadoConstruccion]);
-  if(prop.anioConstruccion&&prop.anioConstruccion!=='0')items.push(['A\u00f1o construcci\u00f3n',prop.anioConstruccion]);
+  if(prop.anioConstruccion&&prop.anioConstruccion!=='0')items.push(['A\u00f1o',prop.anioConstruccion]);
   if(prop.acabados)items.push(['Acabados',prop.acabados]);
   if(prop.techo)items.push(['Techo',prop.techo]);
   if(prop.piso)items.push(['Piso',prop.piso]);
   if(prop.cuotaMant)items.push(['Cuota mant.',prop.cuotaMant]);
-  if(prop.disponibleDesde)items.push(['Disponible desde',prop.disponibleDesde]);
-  if(prop.datosTecnicos)items.push(['Notas',prop.datosTecnicos]);
-  if(items.length===0)return'';
+  if(prop.disponibleDesde)items.push(['Disponible',prop.disponibleDesde]);
+  if(prop.datosTecnicos)items.push(['Detalle',prop.datosTecnicos]);
+  if(!items.length)return'';
   const half=Math.ceil(items.length/2);
-  const renderItem=([l,v])=>`<div style="padding:12px 0;border-bottom:1px solid var(--border)"><div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">${escapeHtml(l)}</div><div style="font-size:14px;font-weight:600;color:var(--gray-900)">${escapeHtml(String(v))}</div></div>`;
-  const colA=items.slice(0,half).map(renderItem).join('');
-  const colB=items.slice(half).map(renderItem).join('');
-  return`<div class="zsect"><h2 class="zsect-h">Datos T\u00e9cnicos</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">${colA}${colB}</div></div>`;
+  const renderItem=([l,v])=>`<div style="padding:12px 0;border-bottom:1px solid var(--border)"><div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">${escapeHtml(l)}</div><div style="font-size:14px;font-weight:600;color:var(--gray-900)">${escapeHtml(String(v))}</div></div>`;
+  return`<div class="zsect"><h2 class="zsect-h">Datos T\u00e9cnicos</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">${items.slice(0,half).map(renderItem).join('')}${items.slice(half).map(renderItem).join('')}</div></div>`;
 })();
-// Video
+// Video tour
 const videoHTML=(()=>{
   if(!prop.videoTour)return'';
   let src=prop.videoTour;
@@ -243,16 +246,17 @@ const mapHTML=(()=>{
   if(isNaN(lat)||isNaN(lng))return'';
   return`<div class="zsect"><h2 class="zsect-h">Ubicaci\u00f3n en mapa</h2><div style="border-radius:10px;overflow:hidden;border:1px solid var(--border)"><iframe width="100%" height="300" frameborder="0" scrolling="no" loading="lazy" src="https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed&hl=es"></iframe></div></div>`;
 })();
-// Sidebar card
-const waText=encodeURIComponent('Hola, me interesa la propiedad: '+prop.title+' en '+( prop.ubicacionGeneral||prop.locationFull)+(prop.codigo?' (C\u00f3d. '+prop.codigo+')':''));
+// Sidebar - share link (no phone)
+const propUrl='https://inmuhub.com/propiedades/'+prop.slug+'.html';
+const shareText=encodeURIComponent('Mira esta propiedad: '+prop.title+' en '+(prop.ubicacionGeneral||prop.locationFull)+' '+propUrl);
 const sidebarHTML=`<div class="zside-card">
   ${prop.esExclusiva?'<div style="background:linear-gradient(135deg,#c9a96e,#a07840);color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.5px;text-align:center;margin-bottom:16px">\u2605 PROPIEDAD EXCLUSIVA</div>':''}
-  <div style="font-size:28px;font-weight:800;color:var(--blue);margin-bottom:4px">${escapeHtml(prop.priceFormatted)}</div>
-  ${prop.moneda?'<div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">'+escapeHtml(prop.moneda)+(prop.operacion?' &middot; '+escapeHtml(prop.operacion):'')+'</div>':''}
-  ${prop.precioRenta?'<div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Renta: <strong>'+escapeHtml(prop.precioRenta)+'</strong></div>':''}
-  <a href="https://wa.me/?text=${waText}" target="_blank" rel="noopener" class="zbtn-wa">
+  <div style="font-size:30px;font-weight:800;color:var(--blue);margin-bottom:4px;line-height:1">${escapeHtml(prop.priceFormatted)}</div>
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">${escapeHtml(prop.moneda||'')}${prop.operacion?' &middot; '+escapeHtml(prop.operacion):''}</div>
+  ${prop.precioRenta?'<div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Precio renta: <strong>'+escapeHtml(prop.precioRenta)+'</strong></div>':''}
+  <a href="https://wa.me/?text=${shareText}" target="_blank" rel="noopener" class="zbtn-wa">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-    Solicitar informaci\u00f3n
+    Compartir propiedad
   </a>
   ${prop.plano?'<a href="'+escapeHtml(prop.plano)+'" target="_blank" rel="noopener" class="zbtn-sec">Ver plano \u2192</a>':''}
   <div class="zside-list">
@@ -266,38 +270,38 @@ const body=`
 <style>
 .zdetail-wrap{max-width:1200px;margin:0 auto;padding:0 24px 60px}
 .zdetail-gallery{margin-bottom:0}
-.zdetail-gallery .gallery-main img{width:100%;max-height:520px;object-fit:cover;border-radius:12px 12px 0 0}
+.zdetail-gallery .gallery-main img,.zgallery-hero .gallery-main img{width:100%;max-height:520px;object-fit:cover;border-radius:12px 12px 0 0}
 .gallery-thumbs{display:flex;gap:6px;padding:6px;background:var(--gray-900);border-radius:0 0 12px 12px;overflow-x:auto}
 .gallery-thumbs button{flex:0 0 80px;height:56px;border:2px solid transparent;border-radius:6px;overflow:hidden;cursor:pointer;background:none;padding:0;transition:border-color .2s}
 .gallery-thumbs button img{width:100%;height:100%;object-fit:cover}
-.zgallery-hero{margin-bottom:32px}
-.zheader{margin-bottom:24px}
+.zgallery-hero{margin-bottom:28px}
+.zheader{margin-bottom:20px}
 .zbadges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .zbadge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.3px}
 .zbadge-op{background:var(--blue);color:#fff}
 .zbadge-tip{background:var(--gray-100);color:var(--gray-700)}
-.zdetail-h1{font-size:clamp(22px,3vw,32px);font-weight:800;color:var(--gray-900);margin:0 0 8px;line-height:1.2}
+.zdetail-h1{font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--gray-900);margin:0 0 8px;line-height:1.2}
 .zloc{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--gray-600)}
-.zstats-bar{display:flex;flex-wrap:wrap;align-items:center;gap:0;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:0 8px;margin-bottom:32px;overflow:hidden}
-.zstat{padding:16px 20px;text-align:center;flex:1;min-width:80px}
-.zstat-n{display:block;font-size:20px;font-weight:800;color:var(--gray-900);line-height:1}
+.zstats-bar{display:flex;flex-wrap:wrap;align-items:center;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:0 8px;margin-bottom:28px}
+.zstat{padding:16px 20px;text-align:center;flex:1;min-width:72px}
+.zstat-n{display:block;font-size:22px;font-weight:800;color:var(--gray-900);line-height:1}
 .zstat-l{display:block;font-size:11px;color:var(--text-muted);margin-top:3px;font-weight:500}
-.zstat-div{width:1px;background:var(--border);align-self:stretch;margin:12px 0}
-.zlayout{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start}
+.zstat-div{width:1px;background:var(--border);align-self:stretch;margin:10px 0}
+.zlayout{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start}
 .zsect{padding:28px 0;border-bottom:1px solid var(--border)}
 .zsect:last-child{border-bottom:none}
-.zsect-h{font-size:18px;font-weight:700;color:var(--gray-900);margin:0 0 18px}
-.zside-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;position:sticky;top:80px}
+.zsect-h{font-size:17px;font-weight:700;color:var(--gray-900);margin:0 0 16px}
+.zside-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;position:sticky;top:80px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .zbtn-wa{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;padding:13px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;margin-bottom:10px;transition:opacity .2s}
 .zbtn-wa:hover{opacity:.9}
-.zbtn-sec{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border);color:var(--gray-700);padding:11px;border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;margin-bottom:16px;transition:border-color .2s}
+.zbtn-sec{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);color:var(--gray-700);padding:10px;border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;margin-bottom:16px;transition:border-color .2s}
 .zbtn-sec:hover{border-color:var(--blue);color:var(--blue)}
-.zside-list{border-top:1px solid var(--border);padding-top:16px}
+.zside-list{border-top:1px solid var(--border);padding-top:14px}
 .zside-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;border-bottom:1px solid var(--gray-100)}
 .zside-row:last-child{border-bottom:none}
 .zside-row span{color:var(--text-muted)}
 .zside-row strong{color:var(--gray-900);font-weight:600;text-align:right;max-width:60%}
-@media(max-width:768px){.zlayout{grid-template-columns:1fr}.zside-card{position:static}.zstats-bar{gap:0}.zstat{padding:12px 10px;min-width:60px}.zstat-n{font-size:16px}.zgallery-hero .gallery-main img{max-height:260px}}
+@media(max-width:768px){.zlayout{grid-template-columns:1fr}.zside-card{position:static}.zstats-bar{gap:0}.zstat{padding:12px 8px;min-width:60px}.zstat-n{font-size:17px}.zgallery-hero .gallery-main img{max-height:240px}}
 </style>
 <div class="zdetail-wrap">
   <div class="breadcrumb" style="padding:16px 0;font-size:13px"><a href="/">Inicio</a> / <a href="/propiedades.html">${escapeHtml(prop.tipo||'Propiedades')}</a> / <span>${escapeHtml(prop.title)}</span></div>
@@ -316,9 +320,7 @@ const body=`
   </div>
   ${statsBar}
   <div class="zlayout">
-    <div class="zmain">
-      ${descHTML}${caracHTML}${datosHTML}${videoHTML}${mapHTML}
-    </div>
+    <div class="zmain">${descHTML}${caracHTML}${datosHTML}${videoHTML}${mapHTML}</div>
     <aside>${sidebarHTML}</aside>
   </div>
 </div>`;
@@ -327,7 +329,7 @@ if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop
 if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
 const breadcrumb={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://inmuhub.com/"},{"@type":"ListItem","position":2,"name":"Propiedades","item":"https://inmuhub.com/propiedades.html"},{"@type":"ListItem","position":3,"name":prop.title,"item":'https://inmuhub.com/propiedades/'+prop.slug+'.html'}]};
 const jsonLd='<script type="application/ld+json">'+JSON.stringify(schema)+'<\/script>\n<script type="application/ld+json">'+JSON.stringify(breadcrumb)+'<\/script>';
-return layout({title:prop.title,desc:prop.title+' - '+( prop.ubicacionGeneral||prop.locationFull)+'. '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
+return layout({title:prop.title,desc:prop.title+' - '+(prop.ubicacionGeneral||prop.locationFull)+'. '+prop.priceFormatted,canonical:'/propiedades/'+prop.slug+'.html',ogImage:prop.mainImageThumb,scripts:jsonLd,body});
 }
 
 function mortgageCalcPage(props) {
