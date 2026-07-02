@@ -38,9 +38,7 @@ function leadsMagnet() {
           📥 Descargar PDF Ahora
         </button>
 
-        <a href="https://wa.me/50245542088?text=Hola,%20descargué%20tu%20guía%20de%20compra.%20Quiero%20conocer%20más%20opciones%20de%20inversión%20inmobiliaria" target="_blank" style="display:block;background:#25D366;color:white;padding:14px;border-radius:8px;text-decoration:none;font-weight:600;text-align:center;margin-bottom:15px;transition:background 0.2s" onmouseover="this.style.background='#20BA5C'" onmouseout="this.style.background='#25D366'">
-          💬 Contactar por WhatsApp
-        </a>
+        
 
         <p style="font-size:12px;color:#666;margin-top:15px;text-align:center">
           ✓ Sin formulario • ✓ 100% gratis • ✓ Descarga directa
