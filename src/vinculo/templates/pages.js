@@ -255,7 +255,7 @@ function detailPage(prop) {
     [/comedor|dining/i,'ti-armchair'],
     [/cuarto|habitaci[oó]n|dormitorio/i,'ti-bed'],
     [/ba[ñn]o|bath/i,'ti-bath'],
-    [/aire|a/c|clima/i,'ti-air-conditioning'],
+    [/aire|a\/c|clima/i,'ti-air-conditioning'],
     [/calefacci[oó]n|calefactor/i,'ti-flame'],
     [/ascensor|elevador|lift/i,'ti-elevator'],
     [/parqueo|garage|estacion/i,'ti-car-garage'],
