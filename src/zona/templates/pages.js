@@ -1,4 +1,4 @@
-﻿const { layout, WA }       = require('./layout');
+ï»¿const { layout, WA }       = require('./layout');
 const { escapeHtml, uniqueValues, getRelated } = require('../../shared/utils');
 
 const DOMAIN = 'https://zona-innmueble.com';
@@ -9,7 +9,7 @@ function waLink(msg) {
   return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
 }
 
-// ── Card ─────────────────────────────────────────────────────────────
+// ââ Card âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function card(p) {
   const cfg = p.privConfig || {};
   const esExclusiva = p.esExclusiva || cfg.exclusiva || false;
@@ -28,7 +28,7 @@ function card(p) {
   const meta = [];
   if (!esExclusiva && !cfg.specs) {
     if (p.habitaciones && p.habitaciones !== '0') meta.push(p.habitaciones + ' Hab.');
-    if (p.banos        && p.banos        !== '0') meta.push(p.banos + ' Baños');
+    if (p.banos        && p.banos        !== '0') meta.push(p.banos + ' BaÃ±os');
     if (ca(p.areaConst)) meta.push(ca(p.areaConst));
   }
   const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
@@ -63,12 +63,12 @@ function card(p) {
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
     <div class="pc-info">
-      <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(p.municipio)}</div>
+      <div class="pc-tipo">${escapeHtml(p.tipo)} Â· ${escapeHtml(p.municipio)}</div>
       <div class="pc-title">${escapeHtml(p.title)}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div class="pc-price">${priceLabel}</div>
-        <span class="pc-arr">→</span>
+        <span class="pc-arr">â</span>
       </div>
     </div>
   </a>
@@ -76,17 +76,17 @@ function card(p) {
 </div>`;
 }
 
-// ── INDEX ─────────────────────────────────────────────────────────────
+// ââ INDEX âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function ca(area) {
   if (!area) return '';
   let s = String(area).trim().replace(/^'+/, '');
   if (!s || s === '0' || s === '-' || s === '--' || s === '---') return '';
-  if (/^0\s*(v²|m²|v2|m2)?$/.test(s)) return '';
-  // Si el valor viene con unidad de varas (dato legado mal cargado como "Área m²"),
-  // no lo mostramos como m² — el campo areaV2 ya cubre esa medida correctamente.
-  if (/v[²2]/i.test(s)) return '';
-  // Limpiar cualquier unidad de metros sobrante para dejar solo el número
-  s = s.replace(/\s*m[²2]\s*$/i, '').trim();
+  if (/^0\s*(vÂ²|mÂ²|v2|m2)?$/.test(s)) return '';
+  // Si el valor viene con unidad de varas (dato legado mal cargado como "Ãrea mÂ²"),
+  // no lo mostramos como mÂ² â el campo areaV2 ya cubre esa medida correctamente.
+  if (/v[Â²2]/i.test(s)) return '';
+  // Limpiar cualquier unidad de metros sobrante para dejar solo el nÃºmero
+  s = s.replace(/\s*m[Â²2]\s*$/i, '').trim();
   if (!s) return '';
   return s;
 }
@@ -94,22 +94,22 @@ function ca(area) {
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
   const grupos = [
-    { label:'Ubicación',       icon:'📍', items:['Ubicación privilegiada','Sobre carretera principal','Entorno natural y vistas','Cerca de servicios','Zona residencial exclusiva','Acceso pavimentado','Vista al valle','Vista a montañas'] },
-    { label:'Seguridad',       icon:'🛡️', items:['Garita 24/7','Condominio cerrado','Cámaras de seguridad','Sistema de alarma','Muros perimetrales','Portón eléctrico'] },
-    { label:'Servicios',       icon:'💡', items:['Agua municipal','Pozo propio','Cisterna','Luz 110v/220v','Panel solar','Internet fibra disponible','Gas propano','Drenaje municipal'] },
-    { label:'Exteriores',      icon:'🌿', items:['Piscina','Jardín amplio','Área de BBQ','Pérgola','Terraza exterior','Cancha deportiva','Juegos infantiles','Huerto / área de siembra'] },
-    { label:'Interiores',      icon:'🏠', items:['Cocina equipada','Isla de cocina','Walk-in closet','Cuarto de servicio con baño','Bodega','Chimenea','Jacuzzi','Estudio / Oficina','Sala familiar','Sala de cine','Lavandería interna','Bar interior'] },
-    { label:'Vehículos',       icon:'🚗', items:['Garaje cerrado','Parqueo techado','Parqueo descubierto','Acceso para camión'] },
-    { label:'Para fincas',     icon:'🌱', items:['Agua de nacimiento','Río o quebrada','Luz trifásica','Casa del guardián','Corrales','Cultivo activo','Finca inscrita en Registro','Caminos internos'] },
-    { label:'Inversión',       icon:'📈', items:['Alta plusvalía','Zona en crecimiento','Papelería en orden','Sin gravámenes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler','Acepta permuta','Acepta financiamiento bancario','Disponibilidad inmediata'] },
-    { label:'Local / Comercial', icon:'🏬', items:['Sobre avenida principal','Rampa de carga','Uso de suelo comercial','Uso de suelo industrial','Baños para empleados','Luz trifásica disponible'] },
-    { label:'Terreno',          icon:'🗺️', items:['Topografía plana','Uso de suelo autorizado','Servicios disponibles','Apto para construcción inmediata','Estudio topográfico disponible','Permisos municipales tramitados'] },
-    { label:'Renta',            icon:'🔑', items:['Amueblado','Semi amueblado','Mascotas permitidas','Incluye mantenimiento','Incluye internet','Incluye agua'] },
+    { label:'UbicaciÃ³n',       icon:'ð', items:['UbicaciÃ³n privilegiada','Sobre carretera principal','Entorno natural y vistas','Cerca de servicios','Zona residencial exclusiva','Acceso pavimentado','Vista al valle','Vista a montaÃ±as'] },
+    { label:'Seguridad',       icon:'ð¡ï¸', items:['Garita 24/7','Condominio cerrado','CÃ¡maras de seguridad','Sistema de alarma','Muros perimetrales','PortÃ³n elÃ©ctrico'] },
+    { label:'Servicios',       icon:'ð¡', items:['Agua municipal','Pozo propio','Cisterna','Luz 110v/220v','Panel solar','Internet fibra disponible','Gas propano','Drenaje municipal'] },
+    { label:'Exteriores',      icon:'ð¿', items:['Piscina','JardÃ­n amplio','Ãrea de BBQ','PÃ©rgola','Terraza exterior','Cancha deportiva','Juegos infantiles','Huerto / Ã¡rea de siembra'] },
+    { label:'Interiores',      icon:'ð ', items:['Cocina equipada','Isla de cocina','Walk-in closet','Cuarto de servicio con baÃ±o','Bodega','Chimenea','Jacuzzi','Estudio / Oficina','Sala familiar','Sala de cine','LavanderÃ­a interna','Bar interior'] },
+    { label:'VehÃ­culos',       icon:'ð', items:['Garaje cerrado','Parqueo techado','Parqueo descubierto','Acceso para camiÃ³n'] },
+    { label:'Para fincas',     icon:'ð±', items:['Agua de nacimiento','RÃ­o o quebrada','Luz trifÃ¡sica','Casa del guardiÃ¡n','Corrales','Cultivo activo','Finca inscrita en Registro','Caminos internos'] },
+    { label:'InversiÃ³n',       icon:'ð', items:['Alta plusvalÃ­a','Zona en crecimiento','PapelerÃ­a en orden','Sin gravÃ¡menes','Financiamiento disponible','Negociable','Potencial de desarrollo','Apta para alquiler','Acepta permuta','Acepta financiamiento bancario','Disponibilidad inmediata'] },
+    { label:'Local / Comercial', icon:'ð¬', items:['Sobre avenida principal','Rampa de carga','Uso de suelo comercial','Uso de suelo industrial','BaÃ±os para empleados','Luz trifÃ¡sica disponible'] },
+    { label:'Terreno',          icon:'ðºï¸', items:['TopografÃ­a plana','Uso de suelo autorizado','Servicios disponibles','Apto para construcciÃ³n inmediata','Estudio topogrÃ¡fico disponible','Permisos municipales tramitados'] },
+    { label:'Renta',            icon:'ð', items:['Amueblado','Semi amueblado','Mascotas permitidas','Incluye mantenimiento','Incluye internet','Incluye agua'] },
   ];
   const activas = grupos.map(g => ({ ...g, activos: g.items.filter(i => chars.includes(i)) })).filter(g => g.activos.length);
   if (!activas.length) return '';
   let html = `<div style="margin-top:36px;padding-top:32px;border-top:1px solid var(--bd)">
-    <div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:24px">Características y amenidades</div>`;
+    <div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:24px">CaracterÃ­sticas y amenidades</div>`;
   activas.forEach(g => {
     html += `<div style="margin-bottom:20px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -118,7 +118,7 @@ function renderCaracteristicas(chars) {
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:7px">`;
     g.activos.forEach(item => {
-      html += `<span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.72rem;color:var(--wh);font-weight:400;letter-spacing:.02em">✓ ${item}</span>`;
+      html += `<span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.2);border-radius:4px;font-size:.72rem;color:var(--wh);font-weight:400;letter-spacing:.02em">â ${item}</span>`;
     });
     html += `</div></div>`;
   });
@@ -144,9 +144,9 @@ function renderDesc(desc) {
     const parts = desc.split(/(?=\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu).map(s => s.trim()).filter(s => s);
     if (parts.length > 1) {
       const html = parts.map(part => {
-        const em = part.match(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]️?/u);
+        const em = part.match(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]ï¸?/u);
         const emoji = em ? em[0] : '';
-        const text = part.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]️?\s*/u, '').trim();
+        const text = part.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]ï¸?\s*/u, '').trim();
         if (!text) return '';
         return '<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 10px;margin-bottom:5px;background:rgba(255,255,255,.03);border-radius:5px;border-left:2px solid var(--or)">'
           + '<span style="font-size:1rem;flex-shrink:0">' + emoji + '</span>'
@@ -412,12 +412,12 @@ function indexPage(props) {
     <h2 class="st">Tu pr&oacute;xima propiedad empieza <em>con una conversaci&oacute;n.</em></h2>
     <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;font-weight:300">Nuestro equipo est&aacute; disponible para asesorarte de forma privada. Sin compromiso.</p>
     <div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto">
-      <a href="${waLink('Hola, me interesa una asesorÃ­a de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="justify-content:center">${WA_SVG} Escribir por WhatsApp</a>
+      <a href="${waLink('Hola, me interesa una asesorÃÂ­a de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="justify-content:center">${WA_SVG} Escribir por WhatsApp</a>
       <a href="/propiedades.html" class="btn-ol" style="justify-content:center">Ver propiedades disponibles</a>
     </div>
     
   </div>
-</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. AsesorÃ­a personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. AsesorÃÂ­a personalizada.`, canonical: '/', body });
 }
 function catalogPage(props) {
   const tiposRaw = uniqueValues(props, 'tipo');
@@ -464,8 +464,8 @@ function catalogPage(props) {
     var mn=document.getElementById('fp-min').value;
     var mx=document.getElementById('fp-max').value;
     var btn=document.getElementById('price-btn');
-    if(!mn&&!mx){btn.textContent='Precio: Cualquiera ▾';}
-    else{btn.textContent='Precio: '+(mn?'$'+parseInt(mn).toLocaleString():'0')+' – '+(mx?'$'+parseInt(mx).toLocaleString():'sin límite')+' ▾';}
+    if(!mn&&!mx){btn.textContent='Precio: Cualquiera â¾';}
+    else{btn.textContent='Precio: '+(mn?'$'+parseInt(mn).toLocaleString():'0')+' â '+(mx?'$'+parseInt(mx).toLocaleString():'sin lÃ­mite')+' â¾';}
     run();
   };
   window.applyPrice=function(){
@@ -485,27 +485,27 @@ function catalogPage(props) {
 
   const body = `
 <div style="background:var(--ink2);padding:42px 6% 34px;border-bottom:1px solid var(--bd)">
-  <div class="ey">Catálogo Completo</div>
+  <div class="ey">CatÃ¡logo Completo</div>
   <h1 class="st" style="margin-bottom:0">Propiedades <em>disponibles</em></h1>
 </div>
 <div class="filter-bar">
   <input id="fq" type="text" placeholder="Buscar propiedad, zona..." style="flex:1;min-width:170px">
   <select id="ft"><option value="">Tipo</option>${tipos.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select>
   <select id="fc2"><option value="">Municipio</option>${ciudades.map(c=>`<option>${escapeHtml(c)}</option>`).join('')}</select>
-  <select id="fsort"><option value="">Ordenar por</option><option value="price_asc">Precio: menor a mayor</option><option value="price_desc">Precio: mayor a menor</option><option value="newest">Más recientes</option><option value="area_desc">Mayor área</option></select>
+  <select id="fsort"><option value="">Ordenar por</option><option value="price_asc">Precio: menor a mayor</option><option value="price_desc">Precio: mayor a menor</option><option value="newest">MÃ¡s recientes</option><option value="area_desc">Mayor Ã¡rea</option></select>
   <select id="fc3"><option value="">Estado</option>${cintas.map(c=>`<option>${escapeHtml(c)}</option>`).join('')}</select>
   <div style="position:relative;min-width:180px">
-    <button onclick="document.getElementById('price-dropdown').style.display=document.getElementById('price-dropdown').style.display==='block'?'none':'block'" id="price-btn" style="padding:9px 14px;background:var(--ink2);border:1px solid var(--gl);border-radius:6px;color:var(--sv);font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap;width:100%;text-align:left">Precio: Cualquiera ▾</button>
+    <button onclick="document.getElementById('price-dropdown').style.display=document.getElementById('price-dropdown').style.display==='block'?'none':'block'" id="price-btn" style="padding:9px 14px;background:var(--ink2);border:1px solid var(--gl);border-radius:6px;color:var(--sv);font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap;width:100%;text-align:left">Precio: Cualquiera â¾</button>
     <div id="price-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#0d1b3e;border:1px solid var(--gl);border-radius:8px;padding:16px;z-index:50;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.4)">
       <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Rango de precio</div>
       <div style="display:flex;gap:8px;margin-bottom:12px">
-        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">Mínimo</div>
+        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">MÃ­nimo</div>
         <input type="number" id="fp-min" placeholder="0" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
-        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">Máximo</div>
-        <input type="number" id="fp-max" placeholder="Sin límite" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
+        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">MÃ¡ximo</div>
+        <input type="number" id="fp-max" placeholder="Sin lÃ­mite" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-        ${[['Hasta $100K','0','100000'],['$100K–$300K','100000','300000'],['$300K–$600K','300000','600000'],['$600K–$1M','600000','1000000'],['Más de $1M','1000000',''],['Sin filtro','','']].map(([l,mn,mx])=>`<button onclick="document.getElementById('fp-min').value='${mn}';document.getElementById('fp-max').value='${mx}';updatePriceBtn();document.getElementById('price-dropdown').style.display='none';" style="padding:6px 8px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:5px;color:var(--sv);font-size:.72rem;cursor:pointer;text-align:center;font-family:inherit">${l}</button>`).join('')}
+        ${[['Hasta $100K','0','100000'],['$100Kâ$300K','100000','300000'],['$300Kâ$600K','300000','600000'],['$600Kâ$1M','600000','1000000'],['MÃ¡s de $1M','1000000',''],['Sin filtro','','']].map(([l,mn,mx])=>`<button onclick="document.getElementById('fp-min').value='${mn}';document.getElementById('fp-max').value='${mx}';updatePriceBtn();document.getElementById('price-dropdown').style.display='none';" style="padding:6px 8px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:5px;color:var(--sv);font-size:.72rem;cursor:pointer;text-align:center;font-family:inherit">${l}</button>`).join('')}
       </div>
       <button onclick="applyPrice()" style="width:100%;padding:8px;background:var(--or);color:var(--ink);border:none;border-radius:6px;font-weight:700;font-size:.75rem;cursor:pointer;font-family:inherit">Aplicar</button>
     </div>
@@ -523,12 +523,12 @@ function catalogPage(props) {
   </div>
 </div>`;
 
-  return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} casas, fincas y apartamentos en venta en Guatemala. Propiedades en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Filtra por precio y zona.`, canonical: '/propiedades.html', body, scripts: filterJS });
+  return layout({ title: 'CatÃ¡logo Propiedades Premium Guatemala', desc: `${props.length} casas, fincas y apartamentos en venta en Guatemala. Propiedades en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Filtra por precio y zona.`, canonical: '/propiedades.html', body, scripts: filterJS });
 }
 
-// ── DETAIL ────────────────────────────────────────────────────────────
+// ââ DETAIL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function detailPage(prop, all) {
-  // Configuración de privacidad (declarado primero para usar en jsonLd, meta, etc.)
+  // ConfiguraciÃ³n de privacidad (declarado primero para usar en jsonLd, meta, etc.)
   const cfg = prop.privConfig || {};
   const esExclusiva = prop.esExclusiva || cfg.exclusiva || false;
   const isNewListing = (() => {
@@ -543,50 +543,50 @@ function detailPage(prop, all) {
   const propUrl  = `${DOMAIN}/propiedades/${prop.slug}.html`;
 
   // WhatsApp messages
-  const msgInfo  = `Hola, me interesa la propiedad: ${prop.title}. Quiero solicitar más información. Link: ${propUrl}`;
+  const msgInfo  = `Hola, me interesa la propiedad: ${prop.title}. Quiero solicitar mÃ¡s informaciÃ³n. Link: ${propUrl}`;
   const msgVisit = `Hola, me interesa la propiedad: ${prop.title}. Quiero agendar una visita privada. Link: ${propUrl}`;
   const msgFin   = `Hola, me interesa la propiedad: ${prop.title}. Quiero consultar opciones de financiamiento. Link: ${propUrl}`;
 
   const specs = [
     { l:'Tipo',              v: prop.tipo },
-    { l:'Operación',         v: prop.operacion || prop.cinta },
+    { l:'OperaciÃ³n',         v: prop.operacion || prop.cinta },
     (prop.zona && prop.zona.trim() && prop.zona.trim() !== (prop.municipio||'').trim()) ? { l:'Zona', v: prop.zona } : null,
     prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones',  v: prop.habitaciones } : null,
-    prop.banos&&prop.banos!=='0'               ? { l:'Baños',         v: prop.banos }        : null,
-    prop.mediosBanos&&prop.mediosBanos!=='0'   ? { l:'Medios baños',  v: prop.mediosBanos }  : null,
+    prop.banos&&prop.banos!=='0'               ? { l:'BaÃ±os',         v: prop.banos }        : null,
+    prop.mediosBanos&&prop.mediosBanos!=='0'   ? { l:'Medios baÃ±os',  v: prop.mediosBanos }  : null,
     prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? { l:'Parqueos', v: prop.parqueos } : null,
     prop.niveles&&prop.niveles!=='0'           ? { l:'Niveles',       v: prop.niveles }      : null,
-    ca(prop.areaConst)||prop.area ? { l:'Área m²', v: ca(prop.areaConst)||prop.area } : null,
-    prop.areaV2                                ? { l:'Área v²',       v: prop.areaV2 }       : null,
+    ca(prop.areaConst)||prop.area ? { l:'Ãrea mÂ²', v: ca(prop.areaConst)||prop.area } : null,
+    prop.areaV2                                ? { l:'Ãrea vÂ²',       v: prop.areaV2 }       : null,
     prop.terreno                               ? { l:'Terreno',       v: prop.terreno }      : null,
-    prop.anioConstruccion                      ? { l:'Año construcción', v: prop.anioConstruccion } : null,
-    prop.estadoConstruccion                    ? { l:'Condición',     v: prop.estadoConstruccion } : null,
-    prop.tipoConstruccion                      ? { l:'Construcción',  v: prop.tipoConstruccion }   : null,
+    prop.anioConstruccion                      ? { l:'AÃ±o construcciÃ³n', v: prop.anioConstruccion } : null,
+    prop.estadoConstruccion                    ? { l:'CondiciÃ³n',     v: prop.estadoConstruccion } : null,
+    prop.tipoConstruccion                      ? { l:'ConstrucciÃ³n',  v: prop.tipoConstruccion }   : null,
     prop.techo                                 ? { l:'Techo',         v: prop.techo }        : null,
     prop.piso                                  ? { l:'Piso',          v: prop.piso }         : null,
     prop.acabados                              ? { l:'Acabados',      v: prop.acabados }     : null,
-    prop.orientacion                           ? { l:'Orientación',   v: prop.orientacion }  : null,
-    prop.antiguedad                            ? { l:'Antigüedad',    v: prop.antiguedad + ' años' } : null,
+    prop.orientacion                           ? { l:'OrientaciÃ³n',   v: prop.orientacion }  : null,
+    prop.antiguedad                            ? { l:'AntigÃ¼edad',    v: prop.antiguedad + ' aÃ±os' } : null,
     prop.ventanas                              ? { l:'Ventanas',      v: prop.ventanas }     : null,
     prop.cielos                                ? { l:'Cielos',        v: prop.cielos }       : null,
     prop.calentador                            ? { l:'Calentador',    v: prop.calentador }   : null,
     prop.cuotaMant                             ? { l:'Mantenimiento', v: prop.cuotaMant }    : null,
     prop.numeroPiso                            ? { l:'Piso',          v: prop.numeroPiso }   : null,
-    prop.areaBalcon                            ? { l:'Balcón',        v: prop.areaBalcon + ' m²' } : null,
+    prop.areaBalcon                            ? { l:'BalcÃ³n',        v: prop.areaBalcon + ' mÂ²' } : null,
     prop.vista                                 ? { l:'Vista',         v: prop.vista }        : null,
     prop.alturaTecho                           ? { l:'Altura techo',  v: prop.alturaTecho + ' m' } : null,
     prop.frenteML                              ? { l:'Frente',        v: prop.frenteML + ' ml' } : null,
-    prop.manzanas                              ? { l:'Extensión',     v: prop.manzanas + ' mz' } : null,
+    prop.manzanas                              ? { l:'ExtensiÃ³n',     v: prop.manzanas + ' mz' } : null,
     prop.cultivo                               ? { l:'Cultivo',       v: prop.cultivo }      : null,
-    prop.tituloFinca                           ? { l:'Título',        v: prop.tituloFinca }  : null,
+    prop.tituloFinca                           ? { l:'TÃ­tulo',        v: prop.tituloFinca }  : null,
     prop.tiempoCarretera                       ? { l:'A carretera',   v: prop.tiempoCarretera } : null,
     prop.precioRenta                           ? { l:'Renta mensual', v: prop.precioRenta }  : null,
     prop.disponibleDesde                       ? { l:'Disponible',    v: prop.disponibleDesde } : null,
     prop.bancoFin                              ? { l:'Banco',         v: prop.bancoFin }     : null,
-    prop.certEnerg                             ? { l:'Cert. energético', v: prop.certEnerg } : null,
+    prop.certEnerg                             ? { l:'Cert. energÃ©tico', v: prop.certEnerg } : null,
     prop.asesor                                ? { l:'Asesor',        v: prop.asesor }       : null,
     prop.fechaPublicacion                      ? { l:'Publicado',     v: prop.fechaPublicacion } : null,
-    prop.codigo                                ? { l:'Código',        v: prop.codigo }       : null,
+    prop.codigo                                ? { l:'CÃ³digo',        v: prop.codigo }       : null,
   ].filter(Boolean);
 
   const gal    = prop.gallery.slice(0, 10);
@@ -594,7 +594,7 @@ function detailPage(prop, all) {
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
 
   const relHtml = related.length
-    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">También te puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver más →</a></div><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></div>` : '';
+    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">TambiÃ©n te puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver mÃ¡s â</a></div><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></div>` : '';
 
   // JSON-LD structured data
   const cleanDesc = (esExclusiva||cfg.descripcion) ? '' : (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
@@ -631,19 +631,19 @@ function detailPage(prop, all) {
   // Banner exclusiva
   const exclusivaBanner = esExclusiva
     ? '<div style="background:linear-gradient(135deg,rgba(245,130,13,.12),rgba(245,130,13,.04));border:1px solid rgba(245,130,13,.3);border-radius:6px;padding:20px 24px;margin-bottom:24px;text-align:center">'
-      + '<div style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">🏷️ Propiedad exclusiva</div>'
-      + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:var(--sv);line-height:1.6;font-style:italic">Esta propiedad es de carácter exclusivo.<br>Para más información contacte directamente con su asesor.</div>'
+      + '<div style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">ð·ï¸ Propiedad exclusiva</div>'
+      + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:var(--sv);line-height:1.6;font-style:italic">Esta propiedad es de carÃ¡cter exclusivo.<br>Para mÃ¡s informaciÃ³n contacte directamente con su asesor.</div>'
       + '</div>'
     : '';
 
   // Quick specs for hero bar
   const quickSpecs = [
-    prop.habitaciones&&prop.habitaciones!=='0' ? {icon:'🛏', v:prop.habitaciones, l:'hab.'} : null,
-    prop.banos&&prop.banos!=='0'               ? {icon:'🚿', v:prop.banos, l:'baños'} : null,
-    prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon:'🚗', v:prop.parqueos, l:'parqueos'} : null,
-    ca(prop.areaConst)||prop.area              ? {icon:'📐', v:ca(prop.areaConst)||prop.area, l:'m²'} : null,
-    prop.areaV2                                ? {icon:'📏', v:prop.areaV2, l:'v²'} : null,
-    prop.manzanas                              ? {icon:'🌿', v:prop.manzanas, l:'mz'} : null,
+    prop.habitaciones&&prop.habitaciones!=='0' ? {icon:'ð', v:prop.habitaciones, l:'hab.'} : null,
+    prop.banos&&prop.banos!=='0'               ? {icon:'ð¿', v:prop.banos, l:'baÃ±os'} : null,
+    prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon:'ð', v:prop.parqueos, l:'parqueos'} : null,
+    ca(prop.areaConst)||prop.area              ? {icon:'ð', v:ca(prop.areaConst)||prop.area, l:'mÂ²'} : null,
+    prop.areaV2                                ? {icon:'ð', v:prop.areaV2, l:'vÂ²'} : null,
+    prop.manzanas                              ? {icon:'ð¿', v:prop.manzanas, l:'mz'} : null,
   ].filter(Boolean);
 
   const waNum = prop.waAsesor ? prop.waAsesor.replace(/\D/g,'') : '';
@@ -694,7 +694,7 @@ function detailPage(prop, all) {
 .dv3-chars-group-title{display:flex;align-items:center;gap:8px;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv);margin-bottom:10px}
 .dv3-chars-list{display:flex;flex-wrap:wrap;gap:7px}
 .dv3-char{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(245,130,13,.06);border:1px solid rgba(245,130,13,.18);border-radius:4px;font-size:.73rem;color:var(--sv)}
-.dv3-char::before{content:'✓';color:var(--or);font-weight:700;font-size:.8rem}
+.dv3-char::before{content:'â';color:var(--or);font-weight:700;font-size:.8rem}
 .dv3-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:6px;border:1px solid var(--bd);margin-bottom:20px}
 .dv3-video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
 .dv3-plano{width:100%;border-radius:6px;border:1px solid var(--bd);display:block}
@@ -760,7 +760,7 @@ function detailPage(prop, all) {
   .dv3-bread{padding:10px 4%;font-size:.62rem}
   .dv3-wrap{padding:0 4% 80px}
   .dv3-share-btn{display:none}
-  /* Texto descriptivo — evita overflow horizontal */
+  /* Texto descriptivo â evita overflow horizontal */
   .dv3-desc,.det-desc,.det-desc-list,.dv3-hook,.dv3-datos{
     word-break:break-word;
     overflow-wrap:break-word;
@@ -772,7 +772,7 @@ function detailPage(prop, all) {
     font-size:.82rem!important;
     line-height:1.75!important;
   }
-  /* Descripción emoji-list items */
+  /* DescripciÃ³n emoji-list items */
   .det-desc-list>div{
     flex-wrap:nowrap;
     min-width:0;
@@ -786,13 +786,13 @@ function detailPage(prop, all) {
   .dv3-specs-grid{grid-template-columns:1fr!important}
   /* Calculadora hipoteca: 1 columna */
   .hip-grid{grid-template-columns:1fr!important;}
-  /* Ubicación texto */
+  /* UbicaciÃ³n texto */
   .dv3-main [style*="font-size:.84rem"]{
     word-break:break-word;
     overflow-wrap:break-word;
     max-width:100%;
   }
-  /* Caractéristicas wrapping */
+  /* CaractÃ©risticas wrapping */
   .dv3-chars-list{gap:5px}
   .dv3-char{font-size:.68rem!important}
   /* Quick specs en 2 filas si necesario */
@@ -827,8 +827,8 @@ function detailPage(prop, all) {
 </style>
 
 <div class="dv3-bread">
-  <a href="/">Inicio</a> <span style="opacity:.3">›</span>
-  <a href="/propiedades.html">Propiedades</a> <span style="opacity:.3">›</span>
+  <a href="/">Inicio</a> <span style="opacity:.3">âº</span>
+  <a href="/propiedades.html">Propiedades</a> <span style="opacity:.3">âº</span>
   <span style="color:var(--sv)">${escapeHtml(prop.title)}</span>
 </div>
 
@@ -858,7 +858,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
         <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
         ${(!esExclusiva&&!cfg.precio&&prop.precioRenta) ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
       </div>
-      <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
+      <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='â Copiado';}">
         &#8679; Compartir
       </button>
     </div>
@@ -885,7 +885,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     </div>
 
     <div class="dv3-tab-panel" id="dv3-desc">
-      ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Descripción disponible previa consulta.</div>' : ''}
+      ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">DescripciÃ³n disponible previa consulta.</div>' : ''}
       ${(!esExclusiva&&!cfg.descripcion&&prop.hook) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
       <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
       <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
@@ -893,7 +893,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     </div>
 
     <div class="dv3-tab-panel" id="dv3-chars">
-      ${(esExclusiva||cfg.caracteristicas) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Características disponibles previa consulta.</div>' : renderCaracteristicas(prop.caracteristicas||[])}
+      ${(esExclusiva||cfg.caracteristicas) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">CaracterÃ­sticas disponibles previa consulta.</div>' : renderCaracteristicas(prop.caracteristicas||[])}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-media">
@@ -1131,13 +1131,13 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
 
   // Meta description con keywords reales para SEO
   const _hab  = (!esExclusiva&&!cfg.specs&&prop.habitaciones&&prop.habitaciones!=='0') ? prop.habitaciones+' hab.' : '';
-  const _area = (ca(prop.areaConst)||prop.area) ? (ca(prop.areaConst)||prop.area)+' m²' : '';
+  const _area = (ca(prop.areaConst)||prop.area) ? (ca(prop.areaConst)||prop.area)+' mÂ²' : '';
   const _precio = (esExclusiva||cfg.precio) ? 'Precio a consultar' : prop.priceFormatted;
-  // Zona legible: preferir locationFull (ej: "Zona 10") sobre municipio genérico ("Guatemala")
+  // Zona legible: preferir locationFull (ej: "Zona 10") sobre municipio genÃ©rico ("Guatemala")
   const _zonaRaw = prop.locationFull || prop.municipio || prop.zona || 'Guatemala';
   // Evitar "Guatemala Guatemala" si la zona ya incluye la palabra Guatemala
   const _zonaGt = /guatemala/i.test(_zonaRaw) ? _zonaRaw : `${_zonaRaw}, Guatemala`;
-  const metaDesc = `${prop.tipo||'Propiedad'} en venta en ${_zonaGt}${_hab?' — '+_hab:''}${_area?' · '+_area:''} · ${_precio}. Ver fotos, mapa y calcular cuota mensual.`;
+  const metaDesc = `${prop.tipo||'Propiedad'} en venta en ${_zonaGt}${_hab?' â '+_hab:''}${_area?' Â· '+_area:''} Â· ${_precio}. Ver fotos, mapa y calcular cuota mensual.`;
 
   // Schema BreadcrumbList para rich results en Google
   const schemaBreadcrumb = JSON.stringify({
@@ -1151,7 +1151,7 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
   });
 
   // Titulo SEO: "Casa en Venta Zona 10, Guatemala | Nombre Propiedad"
-  // El layout.js ya agrega "| Zona INNmueble" — no duplicar
+  // El layout.js ya agrega "| Zona INNmueble" â no duplicar
   const _zonaTitle = prop.locationFull || prop.municipio || prop.zona || 'Guatemala';
   const seoTitle = `${prop.tipo||'Propiedad'} en Venta ${_zonaTitle} | ${prop.title}`;
   return layout({ title: seoTitle, desc: metaDesc, canonical: `/propiedades/${prop.slug}.html`, ogImage: prop.mainImage, body,
@@ -1159,186 +1159,186 @@ if(document.getElementById('dv3-hipoteca')){dv3CalcHipoteca();}
 }
 
 
-// ── PAGINA DE ZONA ───────────────────────────────────────────────────
+// ââ PAGINA DE ZONA âââââââââââââââââââââââââââââââââââââââââââââââââââ
 const ZONA_INFO = {
   'guatemala': {
-    titulo: 'Guatemala — Zona 10, 14, 15 y 16', subtitulo: 'El corazón premium de la capital',
-    desc: 'Las zonas 10, 14, 15 y 16 de Ciudad de Guatemala concentran las residencias más exclusivas, los edificios corporativos de mayor altura y los centros comerciales que definen el estilo de vida premium de la región. Invertir aquí no es solo comprar una propiedad — es adquirir un activo en el mercado más sólido de Centroamérica.',
+    titulo: 'Guatemala â Zona 10, 14, 15 y 16', subtitulo: 'El corazÃ³n premium de la capital',
+    desc: 'Las zonas 10, 14, 15 y 16 de Ciudad de Guatemala concentran las residencias mÃ¡s exclusivas, los edificios corporativos de mayor altura y los centros comerciales que definen el estilo de vida premium de la regiÃ³n. Invertir aquÃ­ no es solo comprar una propiedad â es adquirir un activo en el mercado mÃ¡s sÃ³lido de CentroamÃ©rica.',
     img: 'https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=1200&q=80',
-    datos: ['Alta plusvalía histórica','Acceso a centros financieros','Infraestructura clase A','Servicios premium 24/7'],
-    inversion: { apreciacion: '8–12% anual', demanda: 'Alta', perfil: 'Residencial premium e inversión' },
-    lifestyle: ['Zona Rosa · gastronomía internacional','Centros comerciales: Oakland, Fontabella','Zona financiera y corporativa','Hospitales y clínicas de primer nivel','Colegios bilingües top del país'],
+    datos: ['Alta plusvalÃ­a histÃ³rica','Acceso a centros financieros','Infraestructura clase A','Servicios premium 24/7'],
+    inversion: { apreciacion: '8â12% anual', demanda: 'Alta', perfil: 'Residencial premium e inversiÃ³n' },
+    lifestyle: ['Zona Rosa Â· gastronomÃ­a internacional','Centros comerciales: Oakland, Fontabella','Zona financiera y corporativa','Hospitales y clÃ­nicas de primer nivel','Colegios bilingÃ¼es top del paÃ­s'],
     porque: [
-      { icon: '🏙️', titulo: 'Plusvalía garantizada', texto: 'Las zonas premium de Ciudad de Guatemala mantienen apreciación constante incluso en ciclos económicos adversos.' },
-      { icon: '🔐', titulo: 'Seguridad y privacidad', texto: 'Condominios y residencias con seguridad 24/7, acceso controlado y comunidades establecidas.' },
-      { icon: '📍', titulo: 'Ubicación estratégica', texto: 'A menos de 10 minutos de los principales centros comerciales, restaurantes y el Aeropuerto Internacional.' },
-      { icon: '📈', titulo: 'Inversión blindada', texto: 'Mercado con demanda sostenida. Las propiedades bien ubicadas se venden en semanas, no meses.' },
+      { icon: 'ðï¸', titulo: 'PlusvalÃ­a garantizada', texto: 'Las zonas premium de Ciudad de Guatemala mantienen apreciaciÃ³n constante incluso en ciclos econÃ³micos adversos.' },
+      { icon: 'ð', titulo: 'Seguridad y privacidad', texto: 'Condominios y residencias con seguridad 24/7, acceso controlado y comunidades establecidas.' },
+      { icon: 'ð', titulo: 'UbicaciÃ³n estratÃ©gica', texto: 'A menos de 10 minutos de los principales centros comerciales, restaurantes y el Aeropuerto Internacional.' },
+      { icon: 'ð', titulo: 'InversiÃ³n blindada', texto: 'Mercado con demanda sostenida. Las propiedades bien ubicadas se venden en semanas, no meses.' },
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una casa en Zona 10 Guatemala?', a: 'Las residencias en Zona 10 oscilan entre $350,000 y $2,500,000. Los apartamentos parten desde $180,000 en edificios modernos. El precio por m² es el más alto de la capital, reflejo de la demanda permanente y la ubicación.' },
-      { q: '¿Cuánto cuesta una casa en Zona 14 Guatemala?', a: 'En Zona 14 las casas van de $280,000 a $1,800,000 según la colonia y el tamaño. Vista Hermosa y San Isidro son las colonias con mayor precio por metro cuadrado. Los lotes a construir parten desde $150,000.' },
-      { q: '¿Es buen momento para invertir en propiedades en Guatemala?', a: 'Sí. Guatemala tiene uno de los mercados inmobiliarios más estables de Centroamérica, con apreciación constante de 8–12% anual en zonas premium. La quetzal ha mantenido estabilidad y la demanda de compradores locales es alta.' },
-      { q: '¿Cuál es la zona más exclusiva de Ciudad de Guatemala?', a: 'Zona 10 (La Zona Viva) y Zona 14 (Vista Hermosa) son históricamente las más exclusivas. Zona 16 con Ciudad Cayalá es el nuevo referente de lujo planificado con mayor proyección de apreciación.' },
-      { q: '¿Necesito ser guatemalteco para comprar una propiedad en Guatemala?', a: 'No. Los extranjeros pueden comprar propiedades en Guatemala con los mismos derechos que los ciudadanos nacionales. El proceso incluye escritura pública ante notario y registro en el Registro General de la Propiedad.' },
+      { q: 'Â¿CuÃ¡nto cuesta una casa en Zona 10 Guatemala?', a: 'Las residencias en Zona 10 oscilan entre $350,000 y $2,500,000. Los apartamentos parten desde $180,000 en edificios modernos. El precio por mÂ² es el mÃ¡s alto de la capital, reflejo de la demanda permanente y la ubicaciÃ³n.' },
+      { q: 'Â¿CuÃ¡nto cuesta una casa en Zona 14 Guatemala?', a: 'En Zona 14 las casas van de $280,000 a $1,800,000 segÃºn la colonia y el tamaÃ±o. Vista Hermosa y San Isidro son las colonias con mayor precio por metro cuadrado. Los lotes a construir parten desde $150,000.' },
+      { q: 'Â¿Es buen momento para invertir en propiedades en Guatemala?', a: 'SÃ­. Guatemala tiene uno de los mercados inmobiliarios mÃ¡s estables de CentroamÃ©rica, con apreciaciÃ³n constante de 8â12% anual en zonas premium. La quetzal ha mantenido estabilidad y la demanda de compradores locales es alta.' },
+      { q: 'Â¿CuÃ¡l es la zona mÃ¡s exclusiva de Ciudad de Guatemala?', a: 'Zona 10 (La Zona Viva) y Zona 14 (Vista Hermosa) son histÃ³ricamente las mÃ¡s exclusivas. Zona 16 con Ciudad CayalÃ¡ es el nuevo referente de lujo planificado con mayor proyecciÃ³n de apreciaciÃ³n.' },
+      { q: 'Â¿Necesito ser guatemalteco para comprar una propiedad en Guatemala?', a: 'No. Los extranjeros pueden comprar propiedades en Guatemala con los mismos derechos que los ciudadanos nacionales. El proceso incluye escritura pÃºblica ante notario y registro en el Registro General de la Propiedad.' },
     ]
   },
   'zona-10': {
-    titulo: 'Zona 10', subtitulo: 'La Zona Viva · Lifestyle premium en el centro del poder',
-    desc: 'Zona 10 es el epicentro financiero, gastronómico y residencial de Guatemala. La Zona Viva concentra los mejores restaurantes, hoteles 5 estrellas, galerías de arte y vida nocturna sofisticada. Residir aquí significa estar en el corazón de todo — sin sacrificar tranquilidad en sus colonias residenciales internas.',
+    titulo: 'Zona 10', subtitulo: 'La Zona Viva Â· Lifestyle premium en el centro del poder',
+    desc: 'Zona 10 es el epicentro financiero, gastronÃ³mico y residencial de Guatemala. La Zona Viva concentra los mejores restaurantes, hoteles 5 estrellas, galerÃ­as de arte y vida nocturna sofisticada. Residir aquÃ­ significa estar en el corazÃ³n de todo â sin sacrificar tranquilidad en sus colonias residenciales internas.',
     img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80',
     datos: ['Zona Viva y vida nocturna','Hoteles 5 estrellas','Restaurantes internacionales','Embajadas y consulados'],
-    inversion: { apreciacion: '10–14% anual', demanda: 'Muy Alta', perfil: 'Residencial · Inversión · Renta' },
-    lifestyle: ['La Zona Viva — centro de entretenimiento','Hotel InterContinental, Marriott, Westin','Gastronomía: Sei, Tamarindos, Taninos','Centro comercial Oakland Mall','Embajada de EE.UU. y delegaciones diplomáticas','Clínicas y hospitales privados'],
+    inversion: { apreciacion: '10â14% anual', demanda: 'Muy Alta', perfil: 'Residencial Â· InversiÃ³n Â· Renta' },
+    lifestyle: ['La Zona Viva â centro de entretenimiento','Hotel InterContinental, Marriott, Westin','GastronomÃ­a: Sei, Tamarindos, Taninos','Centro comercial Oakland Mall','Embajada de EE.UU. y delegaciones diplomÃ¡ticas','ClÃ­nicas y hospitales privados'],
     porque: [
-      { icon: '🍷', titulo: 'Lifestyle inigualable', texto: 'Restaurantes de autor, vida cultural activa y entretenimiento de primer nivel a pasos de tu puerta.' },
-      { icon: '💼', titulo: 'Hub corporativo', texto: 'Empresas Fortune 500, firmas legales, bancos internacionales y sedes corporativas en tu misma zona.' },
-      { icon: '🏠', titulo: 'Renta garantizada', texto: 'Alta demanda de ejecutivos expatriados genera rentabilidad de renta superior al promedio del mercado.' },
-      { icon: '📈', titulo: 'Mayor plusvalía de la capital', texto: 'Históricamente la zona con mayor apreciación de Guatemala. Demanda permanentemente insatisfecha.' },
+      { icon: 'ð·', titulo: 'Lifestyle inigualable', texto: 'Restaurantes de autor, vida cultural activa y entretenimiento de primer nivel a pasos de tu puerta.' },
+      { icon: 'ð¼', titulo: 'Hub corporativo', texto: 'Empresas Fortune 500, firmas legales, bancos internacionales y sedes corporativas en tu misma zona.' },
+      { icon: 'ð ', titulo: 'Renta garantizada', texto: 'Alta demanda de ejecutivos expatriados genera rentabilidad de renta superior al promedio del mercado.' },
+      { icon: 'ð', titulo: 'Mayor plusvalÃ­a de la capital', texto: 'HistÃ³ricamente la zona con mayor apreciaciÃ³n de Guatemala. Demanda permanentemente insatisfecha.' },
     ]
   },
   'zona-14': {
-    titulo: 'Zona 14', subtitulo: 'Santa Fe · Residencial exclusivo para familias premium',
-    desc: 'Zona 14 es el destino preferido de las familias guatemaltecas más establecidas. Sus colonias privadas — Vista Hermosa, San Isidro, Oakland — ofrecen amplitud, arbolado, seguridad y una calidad de vida que pocas zonas de Latinoamérica pueden igualar. Aquí el lujo no se exhibe — se vive.',
+    titulo: 'Zona 14', subtitulo: 'Santa Fe Â· Residencial exclusivo para familias premium',
+    desc: 'Zona 14 es el destino preferido de las familias guatemaltecas mÃ¡s establecidas. Sus colonias privadas â Vista Hermosa, San Isidro, Oakland â ofrecen amplitud, arbolado, seguridad y una calidad de vida que pocas zonas de LatinoamÃ©rica pueden igualar. AquÃ­ el lujo no se exhibe â se vive.',
     img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
-    datos: ['Colonias privadas consolidadas','Colegios bilingües premium','Acceso a Santa Fe','Ambiente familiar seguro'],
-    inversion: { apreciacion: '8–11% anual', demanda: 'Alta', perfil: 'Residencial familiar premium' },
-    lifestyle: ['Centro Comercial Santa Fe','Colegios: Colegio Americano, Interamericano','Parques y áreas verdes privadas','Club Social Zona 14','Hospitales: Herrera Llerandi, Bautista','Calles arboladas y tranquilas'],
+    datos: ['Colonias privadas consolidadas','Colegios bilingÃ¼es premium','Acceso a Santa Fe','Ambiente familiar seguro'],
+    inversion: { apreciacion: '8â11% anual', demanda: 'Alta', perfil: 'Residencial familiar premium' },
+    lifestyle: ['Centro Comercial Santa Fe','Colegios: Colegio Americano, Interamericano','Parques y Ã¡reas verdes privadas','Club Social Zona 14','Hospitales: Herrera Llerandi, Bautista','Calles arboladas y tranquilas'],
     porque: [
-      { icon: '🌳', titulo: 'La zona más arbolada de la capital', texto: 'Colonias con grandes áreas verdes, calles tranquilas y ambiente residencial que contrasta con el ruido urbano.' },
-      { icon: '🏫', titulo: 'Los mejores colegios del país', texto: 'Colegio Americano, Interamericano y otros colegios bilingües de excelencia a distancia mínima.' },
-      { icon: '🔒', titulo: 'Comunidad establecida', texto: 'Colonias con décadas de historia, vecinos estables y ambiente de confianza difícil de replicar.' },
-      { icon: '💎', titulo: 'Discreción y exclusividad', texto: 'El verdadero lujo guatemalteco vive aquí — amplio, privado, sin ostentación.' },
+      { icon: 'ð³', titulo: 'La zona mÃ¡s arbolada de la capital', texto: 'Colonias con grandes Ã¡reas verdes, calles tranquilas y ambiente residencial que contrasta con el ruido urbano.' },
+      { icon: 'ð«', titulo: 'Los mejores colegios del paÃ­s', texto: 'Colegio Americano, Interamericano y otros colegios bilingÃ¼es de excelencia a distancia mÃ­nima.' },
+      { icon: 'ð', titulo: 'Comunidad establecida', texto: 'Colonias con dÃ©cadas de historia, vecinos estables y ambiente de confianza difÃ­cil de replicar.' },
+      { icon: 'ð', titulo: 'DiscreciÃ³n y exclusividad', texto: 'El verdadero lujo guatemalteco vive aquÃ­ â amplio, privado, sin ostentaciÃ³n.' },
     ]
   },
   'zona-15': {
-    titulo: 'Zona 15', subtitulo: 'Vista Hermosa · Residencial premium con vistas únicas al valle',
-    desc: 'Zona 15 ofrece algo que el resto de la capital no puede dar: vistas panorámicas al valle de Guatemala desde sus barrancos. Sus colonias elevadas — Vista Hermosa I, II y III — combinan altitud, aire limpio, silencio y propiedades de gran tamaño. Es la elección natural de quienes buscan espacio real sin salir de la ciudad.',
+    titulo: 'Zona 15', subtitulo: 'Vista Hermosa Â· Residencial premium con vistas Ãºnicas al valle',
+    desc: 'Zona 15 ofrece algo que el resto de la capital no puede dar: vistas panorÃ¡micas al valle de Guatemala desde sus barrancos. Sus colonias elevadas â Vista Hermosa I, II y III â combinan altitud, aire limpio, silencio y propiedades de gran tamaÃ±o. Es la elecciÃ³n natural de quienes buscan espacio real sin salir de la ciudad.',
     img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=80',
-    datos: ['Vistas panorámicas al valle','Lotes amplios y jardines','Tranquilidad residencial','Clima más fresco que el centro'],
-    inversion: { apreciacion: '7–10% anual', demanda: 'Media-Alta', perfil: 'Residencial — familia y retiro premium' },
-    lifestyle: ['Colonias Vista Hermosa I, II, III','Parque Ecológico Vista Hermosa','Colegios privados cercanos','Restaurantes y cafeterías boutique','Acceso rápido a zona 14 y 16','Supermercados y servicios completos'],
+    datos: ['Vistas panorÃ¡micas al valle','Lotes amplios y jardines','Tranquilidad residencial','Clima mÃ¡s fresco que el centro'],
+    inversion: { apreciacion: '7â10% anual', demanda: 'Media-Alta', perfil: 'Residencial â familia y retiro premium' },
+    lifestyle: ['Colonias Vista Hermosa I, II, III','Parque EcolÃ³gico Vista Hermosa','Colegios privados cercanos','Restaurantes y cafeterÃ­as boutique','Acceso rÃ¡pido a zona 14 y 16','Supermercados y servicios completos'],
     porque: [
-      { icon: '🏔️', titulo: 'Vistas que no tienen precio', texto: 'Amaneceres sobre el valle desde el jardín. Una experiencia de vida que solo Zona 15 puede ofrecer.' },
-      { icon: '🍃', titulo: 'Aire limpio y silencio real', texto: 'Elevación que marca diferencia en calidad del aire y temperatura — fresco todo el año.' },
-      { icon: '📐', titulo: 'Propiedades con espacio real', texto: 'Lotes grandes, jardines amplios y residencias con metros cuadrados que en otras zonas son imposibles.' },
-      { icon: '🤫', titulo: 'Tranquilidad sin sacrificar acceso', texto: 'A 10–15 minutos de Zona 10 y 14. Lejos del ruido, cerca de todo lo que importa.' },
+      { icon: 'ðï¸', titulo: 'Vistas que no tienen precio', texto: 'Amaneceres sobre el valle desde el jardÃ­n. Una experiencia de vida que solo Zona 15 puede ofrecer.' },
+      { icon: 'ð', titulo: 'Aire limpio y silencio real', texto: 'ElevaciÃ³n que marca diferencia en calidad del aire y temperatura â fresco todo el aÃ±o.' },
+      { icon: 'ð', titulo: 'Propiedades con espacio real', texto: 'Lotes grandes, jardines amplios y residencias con metros cuadrados que en otras zonas son imposibles.' },
+      { icon: 'ð¤«', titulo: 'Tranquilidad sin sacrificar acceso', texto: 'A 10â15 minutos de Zona 10 y 14. Lejos del ruido, cerca de todo lo que importa.' },
     ]
   },
   'zona-16': {
-    titulo: 'Zona 16', subtitulo: 'Cayalá y el nuevo lujo planificado de Guatemala',
-    desc: 'Zona 16 alberga uno de los desarrollos urbanísticos más importantes de Centroamérica: Ciudad Cayalá. Un concepto de ciudad dentro de la ciudad — caminable, segura, con arquitectura neoclásica, hoteles boutique, restaurantes, tiendas y residencias diseñadas para vivir sin usar el carro. La apuesta de largo plazo en Real Estate guatemalteco.',
+    titulo: 'Zona 16', subtitulo: 'CayalÃ¡ y el nuevo lujo planificado de Guatemala',
+    desc: 'Zona 16 alberga uno de los desarrollos urbanÃ­sticos mÃ¡s importantes de CentroamÃ©rica: Ciudad CayalÃ¡. Un concepto de ciudad dentro de la ciudad â caminable, segura, con arquitectura neoclÃ¡sica, hoteles boutique, restaurantes, tiendas y residencias diseÃ±adas para vivir sin usar el carro. La apuesta de largo plazo en Real Estate guatemalteco.',
     img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80',
-    datos: ['Ciudad Cayalá planificada','Arquitectura premium uniforme','Ciudad caminable sin carros','Alta apreciación proyectada'],
-    inversion: { apreciacion: '12–18% anual', demanda: 'Creciente', perfil: 'Inversión · Residencial · Renta vacacional' },
-    lifestyle: ['Ciudad Cayalá — concepto caminable','Hotel Hyatt Centric Cayalá','Restaurantes boutique y cafés','Tiendas de diseñadores locales e internacionales','Eventos culturales y mercados artesanales','Offices y coworking premium'],
+    datos: ['Ciudad CayalÃ¡ planificada','Arquitectura premium uniforme','Ciudad caminable sin carros','Alta apreciaciÃ³n proyectada'],
+    inversion: { apreciacion: '12â18% anual', demanda: 'Creciente', perfil: 'InversiÃ³n Â· Residencial Â· Renta vacacional' },
+    lifestyle: ['Ciudad CayalÃ¡ â concepto caminable','Hotel Hyatt Centric CayalÃ¡','Restaurantes boutique y cafÃ©s','Tiendas de diseÃ±adores locales e internacionales','Eventos culturales y mercados artesanales','Offices y coworking premium'],
     porque: [
-      { icon: '🏛️', titulo: 'El desarrollo más relevante del país', texto: 'Cayalá no es solo un vecindario — es una declaración de hacia dónde va el mercado premium guatemalteco.' },
-      { icon: '🚶', titulo: 'Caminabilidad real', texto: 'Diseño urbano pensado para el peatón. Arquitectura coherente, aceras amplias y plazas que invitan a quedarse.' },
-      { icon: '📊', titulo: 'Mayor potencial de apreciación', texto: 'Proyecto en expansión activa. Cada nueva etapa eleva el valor de las unidades existentes.' },
-      { icon: '🌐', titulo: 'Referente internacional', texto: 'Reconocido en publicaciones de urbanismo como modelo de desarrollo planificado para Latinoamérica.' },
+      { icon: 'ðï¸', titulo: 'El desarrollo mÃ¡s relevante del paÃ­s', texto: 'CayalÃ¡ no es solo un vecindario â es una declaraciÃ³n de hacia dÃ³nde va el mercado premium guatemalteco.' },
+      { icon: 'ð¶', titulo: 'Caminabilidad real', texto: 'DiseÃ±o urbano pensado para el peatÃ³n. Arquitectura coherente, aceras amplias y plazas que invitan a quedarse.' },
+      { icon: 'ð', titulo: 'Mayor potencial de apreciaciÃ³n', texto: 'Proyecto en expansiÃ³n activa. Cada nueva etapa eleva el valor de las unidades existentes.' },
+      { icon: 'ð', titulo: 'Referente internacional', texto: 'Reconocido en publicaciones de urbanismo como modelo de desarrollo planificado para LatinoamÃ©rica.' },
     ]
   },
   'fraijanes': {
-    titulo: 'Fraijanes', subtitulo: 'Naturaleza, privacidad y retorno — a 25 minutos de la capital',
-    desc: 'Fraijanes representa todo lo que la capital no puede ofrecer: hectáreas, bosque, silencio, clima fresco y propiedades con espacio real. En los últimos 5 años se ha consolidado como el mercado de mayor crecimiento del área metropolitana, atrayendo a familias, agricultores premium e inversionistas visionarios que anticiparon la tendencia.',
+    titulo: 'Fraijanes', subtitulo: 'Naturaleza, privacidad y retorno â a 25 minutos de la capital',
+    desc: 'Fraijanes representa todo lo que la capital no puede ofrecer: hectÃ¡reas, bosque, silencio, clima fresco y propiedades con espacio real. En los Ãºltimos 5 aÃ±os se ha consolidado como el mercado de mayor crecimiento del Ã¡rea metropolitana, atrayendo a familias, agricultores premium e inversionistas visionarios que anticiparon la tendencia.',
     img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=80',
-    datos: ['Clima fresco 18–22°C todo el año','Fincas desde 1 a 100+ manzanas','Mayor crecimiento del área metro','Acceso pavimentado a 25 min'],
-    inversion: { apreciacion: '10–16% anual', demanda: 'Creciente alta', perfil: 'Fincas · Residencial · Inversión agrícola' },
-    lifestyle: ['Fincas productivas con cacao, café, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansión','Acceso rápido a Carretera a El Salvador','Microclima ideal — sin calor extremo'],
+    datos: ['Clima fresco 18â22Â°C todo el aÃ±o','Fincas desde 1 a 100+ manzanas','Mayor crecimiento del Ã¡rea metro','Acceso pavimentado a 25 min'],
+    inversion: { apreciacion: '10â16% anual', demanda: 'Creciente alta', perfil: 'Fincas Â· Residencial Â· InversiÃ³n agrÃ­cola' },
+    lifestyle: ['Fincas productivas con cacao, cafÃ©, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansiÃ³n','Acceso rÃ¡pido a Carretera a El Salvador','Microclima ideal â sin calor extremo'],
     porque: [
-      { icon: '🌿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
-      { icon: '🌡️', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
-      { icon: '📈', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
-      { icon: '🏡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
+      { icon: 'ð¿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El Ãºnico mercado donde el metro cuadrado aÃºn tiene precio razonable.' },
+      { icon: 'ð¡ï¸', titulo: 'El mejor clima del Ã¡rea metropolitana', texto: '18 a 22Â°C durante todo el aÃ±o. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
+      { icon: 'ð', titulo: 'Mayor apreciaciÃ³n del Ã¡rea', texto: 'Fraijanes lleva 5 aÃ±os consecutivos de apreciaciÃ³n superior al promedio del mercado guatemalteco.' },
+      { icon: 'ð¡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace dÃ©cadas.' },
     ]
   },
   'cayala': {
-    titulo: 'Cayalá', subtitulo: 'El estilo de vida premium planificado de Guatemala',
-    desc: 'Ciudad Cayalá es el proyecto de desarrollo urbano más sofisticado de Guatemala y uno de los más reconocidos de Centroamérica. Su diseño neoclásico, calles peatonales, arquitectura uniforme y mezcla de usos crea un entorno de vida que atrae tanto a residentes nacionales como a expatriados e inversionistas internacionales.',
+    titulo: 'CayalÃ¡', subtitulo: 'El estilo de vida premium planificado de Guatemala',
+    desc: 'Ciudad CayalÃ¡ es el proyecto de desarrollo urbano mÃ¡s sofisticado de Guatemala y uno de los mÃ¡s reconocidos de CentroamÃ©rica. Su diseÃ±o neoclÃ¡sico, calles peatonales, arquitectura uniforme y mezcla de usos crea un entorno de vida que atrae tanto a residentes nacionales como a expatriados e inversionistas internacionales.',
     img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80',
-    datos: ['Proyecto urbanístico premiado','Zona caminable y segura','Alta demanda de alquiler','Expansión activa en nuevas etapas'],
-    inversion: { apreciacion: '14–20% anual', demanda: 'Muy Alta', perfil: 'Inversión · Renta · Residencial premium' },
-    lifestyle: ['Hotel Hyatt Centric','Plazas y calles peatonales','Restaurantes y cafés artesanales','Galería de arte y cultura local','Mercados y eventos semanales','Coworking y oficinas boutique'],
+    datos: ['Proyecto urbanÃ­stico premiado','Zona caminable y segura','Alta demanda de alquiler','ExpansiÃ³n activa en nuevas etapas'],
+    inversion: { apreciacion: '14â20% anual', demanda: 'Muy Alta', perfil: 'InversiÃ³n Â· Renta Â· Residencial premium' },
+    lifestyle: ['Hotel Hyatt Centric','Plazas y calles peatonales','Restaurantes y cafÃ©s artesanales','GalerÃ­a de arte y cultura local','Mercados y eventos semanales','Coworking y oficinas boutique'],
     porque: [
-      { icon: '🏛️', titulo: 'Arquitectura que te enamora', texto: 'Fachadas neoclásicas, calles adoquinadas y plazas diseñadas para la vida al aire libre — único en Guatemala.' },
-      { icon: '💰', titulo: 'Mejor ROI del mercado', texto: 'Unidades en Cayalá generan renta superior al 8% anual con demanda de alquiler permanentemente insatisfecha.' },
-      { icon: '🚶', titulo: 'Sin carro, sin estrés', texto: 'Todo a pie: restaurantes, tiendas, trabajo, cultura. El concepto de ciudad que el resto de Guatemala todavía no tiene.' },
-      { icon: '🌍', titulo: 'Reconocimiento internacional', texto: 'Cayalá aparece en publicaciones de arquitectura y urbanismo de Nueva York, Madrid y Ciudad de México.' },
+      { icon: 'ðï¸', titulo: 'Arquitectura que te enamora', texto: 'Fachadas neoclÃ¡sicas, calles adoquinadas y plazas diseÃ±adas para la vida al aire libre â Ãºnico en Guatemala.' },
+      { icon: 'ð°', titulo: 'Mejor ROI del mercado', texto: 'Unidades en CayalÃ¡ generan renta superior al 8% anual con demanda de alquiler permanentemente insatisfecha.' },
+      { icon: 'ð¶', titulo: 'Sin carro, sin estrÃ©s', texto: 'Todo a pie: restaurantes, tiendas, trabajo, cultura. El concepto de ciudad que el resto de Guatemala todavÃ­a no tiene.' },
+      { icon: 'ð', titulo: 'Reconocimiento internacional', texto: 'CayalÃ¡ aparece en publicaciones de arquitectura y urbanismo de Nueva York, Madrid y Ciudad de MÃ©xico.' },
     ]
   },
   'mixco': {
-    titulo: 'Mixco', subtitulo: 'Conectividad, diversidad y oportunidad de inversión',
-    desc: 'Mixco es el municipio más poblado del departamento de Guatemala y uno con mayor diversidad de oferta inmobiliaria. Desde proyectos de apartamentos modernos hasta residencias familiares en colonias consolidadas, Mixco ofrece una relación precio-valor muy atractiva para compradores de primera propiedad e inversionistas con visión de largo plazo.',
+    titulo: 'Mixco', subtitulo: 'Conectividad, diversidad y oportunidad de inversiÃ³n',
+    desc: 'Mixco es el municipio mÃ¡s poblado del departamento de Guatemala y uno con mayor diversidad de oferta inmobiliaria. Desde proyectos de apartamentos modernos hasta residencias familiares en colonias consolidadas, Mixco ofrece una relaciÃ³n precio-valor muy atractiva para compradores de primera propiedad e inversionistas con visiÃ³n de largo plazo.',
     img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80',
-    datos: ['Acceso a Calzada Roosevelt','Diversidad de oferta residencial','Precios accesibles vs capital','Proyección de crecimiento'],
-    inversion: { apreciacion: '5–8% anual', demanda: 'Alta', perfil: 'Primera propiedad · Inversión accesible' },
-    lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt — acceso rápido','Colegios y universidades cercanas','Mercados y comercio activo','Expansión de proyectos residenciales','Transporte público conectado'],
+    datos: ['Acceso a Calzada Roosevelt','Diversidad de oferta residencial','Precios accesibles vs capital','ProyecciÃ³n de crecimiento'],
+    inversion: { apreciacion: '5â8% anual', demanda: 'Alta', perfil: 'Primera propiedad Â· InversiÃ³n accesible' },
+    lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt â acceso rÃ¡pido','Colegios y universidades cercanas','Mercados y comercio activo','ExpansiÃ³n de proyectos residenciales','Transporte pÃºblico conectado'],
     porque: [
-      { icon: '🛣️', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
-      { icon: '💵', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
-      { icon: '📊', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
-      { icon: '🏘️', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
+      { icon: 'ð£ï¸', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo perifÃ©rico. A 20 minutos del centro de la capital.' },
+      { icon: 'ðµ', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace aÃ±os.' },
+      { icon: 'ð', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificaciÃ³n de Mixco garantiza apreciaciÃ³n progresiva en todos los segmentos del mercado.' },
+      { icon: 'ðï¸', titulo: 'Comunidades establecidas', texto: 'Colonias con dÃ©cadas de historia, vecinos estables y servicios completos.' },
     ]
   },
   'santa-catarina-pinula': {
-    titulo: 'Santa Catarina Pinula', subtitulo: 'Vistas, privacidad y el mejor estándar residencial del oriente',
-    desc: 'Santa Catarina Pinula combina lo mejor de dos mundos: la proximidad a la capital con la calidad de vida de zona residencial tranquila. Sus condominios y residencias de alto nivel ofrecen algunas de las mejores vistas panorámicas al valle de Guatemala, clima agradable y comunidades bien planificadas que atraen a familias que buscan calidad sin el bullicio urbano.',
+    titulo: 'Santa Catarina Pinula', subtitulo: 'Vistas, privacidad y el mejor estÃ¡ndar residencial del oriente',
+    desc: 'Santa Catarina Pinula combina lo mejor de dos mundos: la proximidad a la capital con la calidad de vida de zona residencial tranquila. Sus condominios y residencias de alto nivel ofrecen algunas de las mejores vistas panorÃ¡micas al valle de Guatemala, clima agradable y comunidades bien planificadas que atraen a familias que buscan calidad sin el bullicio urbano.',
     img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=80',
-    datos: ['Vistas panorámicas al valle','Condominios privados establecidos','Clima agradable todo el año','15 min al centro de la capital'],
-    inversion: { apreciacion: '7–10% anual', demanda: 'Media-Alta', perfil: 'Residencial familiar · Primera propiedad premium' },
-    lifestyle: ['Calzada Aycinena — acceso directo','Colegios privados de referencia','Áreas verdes y parques comunales','Seguridad 24/7 en condominios','Comercios y supermercados completos','Comunidad de alta cohesión social'],
+    datos: ['Vistas panorÃ¡micas al valle','Condominios privados establecidos','Clima agradable todo el aÃ±o','15 min al centro de la capital'],
+    inversion: { apreciacion: '7â10% anual', demanda: 'Media-Alta', perfil: 'Residencial familiar Â· Primera propiedad premium' },
+    lifestyle: ['Calzada Aycinena â acceso directo','Colegios privados de referencia','Ãreas verdes y parques comunales','Seguridad 24/7 en condominios','Comercios y supermercados completos','Comunidad de alta cohesiÃ³n social'],
     porque: [
-      { icon: '🌄', titulo: 'Vistas que justifican el precio', texto: 'Desde Santa Catarina Pinula se ve toda la ciudad. Amaneceres sobre el valle que no se olvidan.' },
-      { icon: '🏘️', titulo: 'Condominios con identidad', texto: 'Proyectos bien diseñados, mantenidos y con comunidades activas — más que residencias, un estilo de vida.' },
-      { icon: '🌿', titulo: 'Verde sin salir del área metro', texto: 'Áreas verdes, jardines y un entorno natural que contrasta con la densidad urbana de zonas centrales.' },
-      { icon: '📍', titulo: 'Distancia perfecta', texto: '15 minutos a Zona 10. La distancia ideal para desconectarse sin desconectarse de la ciudad.' },
+      { icon: 'ð', titulo: 'Vistas que justifican el precio', texto: 'Desde Santa Catarina Pinula se ve toda la ciudad. Amaneceres sobre el valle que no se olvidan.' },
+      { icon: 'ðï¸', titulo: 'Condominios con identidad', texto: 'Proyectos bien diseÃ±ados, mantenidos y con comunidades activas â mÃ¡s que residencias, un estilo de vida.' },
+      { icon: 'ð¿', titulo: 'Verde sin salir del Ã¡rea metro', texto: 'Ãreas verdes, jardines y un entorno natural que contrasta con la densidad urbana de zonas centrales.' },
+      { icon: 'ð', titulo: 'Distancia perfecta', texto: '15 minutos a Zona 10. La distancia ideal para desconectarse sin desconectarse de la ciudad.' },
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una casa en Santa Catarina Pinula?', a: 'Las residencias en Santa Catarina Pinula oscilan entre $180,000 y $650,000 dependiendo del tamaño, vista y condominio. Los apartamentos y townhouses parten desde $120,000.' },
-      { q: '¿Está lejos Santa Catarina Pinula de la capital?', a: 'No. Está a aproximadamente 15 minutos del centro de Zona 10, con acceso por la Calzada Aycinena. El tráfico en horas pico puede extender el tiempo a 25–30 minutos.' },
-      { q: '¿Es segura Santa Catarina Pinula?', a: 'Sí. La mayoría de proyectos residenciales son condominios cerrados con seguridad 24/7, cámaras y control de acceso. El municipio tiene baja incidencia delictiva comparado con zonas urbanas.' },
-      { q: '¿Vale la pena invertir en Santa Catarina Pinula?', a: 'Sí, especialmente para compradores de primera propiedad o quienes buscan calidad de vida. La apreciación anual es de 7–10% y la demanda de alquiler es estable por la cercanía a la capital.' },
+      { q: 'Â¿CuÃ¡nto cuesta una casa en Santa Catarina Pinula?', a: 'Las residencias en Santa Catarina Pinula oscilan entre $180,000 y $650,000 dependiendo del tamaÃ±o, vista y condominio. Los apartamentos y townhouses parten desde $120,000.' },
+      { q: 'Â¿EstÃ¡ lejos Santa Catarina Pinula de la capital?', a: 'No. EstÃ¡ a aproximadamente 15 minutos del centro de Zona 10, con acceso por la Calzada Aycinena. El trÃ¡fico en horas pico puede extender el tiempo a 25â30 minutos.' },
+      { q: 'Â¿Es segura Santa Catarina Pinula?', a: 'SÃ­. La mayorÃ­a de proyectos residenciales son condominios cerrados con seguridad 24/7, cÃ¡maras y control de acceso. El municipio tiene baja incidencia delictiva comparado con zonas urbanas.' },
+      { q: 'Â¿Vale la pena invertir en Santa Catarina Pinula?', a: 'SÃ­, especialmente para compradores de primera propiedad o quienes buscan calidad de vida. La apreciaciÃ³n anual es de 7â10% y la demanda de alquiler es estable por la cercanÃ­a a la capital.' },
     ]
   },
   'fraijanes': {
-    titulo: 'Fraijanes', subtitulo: 'Naturaleza, privacidad y retorno — a 25 minutos de la capital',
-    desc: 'Fraijanes representa todo lo que la capital no puede ofrecer: hectáreas, bosque, silencio, clima fresco y propiedades con espacio real. En los últimos 5 años se ha consolidado como el mercado de mayor crecimiento del área metropolitana, atrayendo a familias, agricultores premium e inversionistas visionarios que anticiparon la tendencia.',
+    titulo: 'Fraijanes', subtitulo: 'Naturaleza, privacidad y retorno â a 25 minutos de la capital',
+    desc: 'Fraijanes representa todo lo que la capital no puede ofrecer: hectÃ¡reas, bosque, silencio, clima fresco y propiedades con espacio real. En los Ãºltimos 5 aÃ±os se ha consolidado como el mercado de mayor crecimiento del Ã¡rea metropolitana, atrayendo a familias, agricultores premium e inversionistas visionarios que anticiparon la tendencia.',
     img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=80',
-    datos: ['Clima fresco 18–22°C todo el año','Fincas desde 1 a 100+ manzanas','Mayor crecimiento del área metro','Acceso pavimentado a 25 min'],
-    inversion: { apreciacion: '10–16% anual', demanda: 'Creciente alta', perfil: 'Fincas · Residencial · Inversión agrícola' },
-    lifestyle: ['Fincas productivas con cacao, café, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansión','Acceso rápido a Carretera a El Salvador','Microclima ideal — sin calor extremo'],
+    datos: ['Clima fresco 18â22Â°C todo el aÃ±o','Fincas desde 1 a 100+ manzanas','Mayor crecimiento del Ã¡rea metro','Acceso pavimentado a 25 min'],
+    inversion: { apreciacion: '10â16% anual', demanda: 'Creciente alta', perfil: 'Fincas Â· Residencial Â· InversiÃ³n agrÃ­cola' },
+    lifestyle: ['Fincas productivas con cacao, cafÃ©, aguacate','Clubes ecuestres y deportivos','Aire limpio y baja densidad urbana','Comunidades cerradas en expansiÃ³n','Acceso rÃ¡pido a Carretera a El Salvador','Microclima ideal â sin calor extremo'],
     porque: [
-      { icon: '🌿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El único mercado donde el metro cuadrado aún tiene precio razonable.' },
-      { icon: '🌡️', titulo: 'El mejor clima del área metropolitana', texto: '18 a 22°C durante todo el año. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
-      { icon: '📈', titulo: 'Mayor apreciación del área', texto: 'Fraijanes lleva 5 años consecutivos de apreciación superior al promedio del mercado guatemalteco.' },
-      { icon: '🏡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace décadas.' },
+      { icon: 'ð¿', titulo: 'Espacio que la ciudad no tiene', texto: 'Fincas de 1 a 100+ manzanas. El Ãºnico mercado donde el metro cuadrado aÃºn tiene precio razonable.' },
+      { icon: 'ð¡ï¸', titulo: 'El mejor clima del Ã¡rea metropolitana', texto: '18 a 22Â°C durante todo el aÃ±o. Sin lluvia excesiva, sin calor. El clima que los capitalinos buscan.' },
+      { icon: 'ð', titulo: 'Mayor apreciaciÃ³n del Ã¡rea', texto: 'Fraijanes lleva 5 aÃ±os consecutivos de apreciaciÃ³n superior al promedio del mercado guatemalteco.' },
+      { icon: 'ð¡', titulo: 'Calidad de vida sin igual', texto: 'Silencio, naturaleza, seguridad y comunidad. Lo que las zonas urbanas perdieron hace dÃ©cadas.' },
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una finca en Fraijanes Guatemala?', a: 'Las fincas en Fraijanes varían desde $80,000 por lotes de 1–2 manzanas hasta más de $2,000,000 para fincas productivas grandes. El precio promedio por manzana en áreas accesibles es de $40,000–$80,000.' },
-      { q: '¿Cuánto tiempo se tarda de Fraijanes a Ciudad de Guatemala?', a: 'Entre 20 y 35 minutos desde los accesos principales de Fraijanes hasta Zona 10, dependiendo del tráfico. La Carretera a El Salvador es la ruta principal, con acceso pavimentado en todo el trayecto.' },
-      { q: '¿Es rentable invertir en fincas en Fraijanes?', a: 'Sí. Fraijanes tiene la mayor apreciación del área metropolitana en los últimos 5 años, con retornos de 10–16% anual. Las fincas productivas generan ingresos adicionales por cultivos de café, aguacate o cacao.' },
-      { q: '¿Se puede vivir permanentemente en Fraijanes?', a: 'Sí. Fraijanes cuenta con supermercados, colegios privados, clínicas, restaurantes y servicios completos. Muchas familias han migrado definitivamente desde la capital atraídas por el clima y la calidad de vida.' },
-      { q: '¿Qué tipo de propiedades hay en Fraijanes?', a: 'Encontrarás fincas de uso mixto, residencias en condominios privados, lotes para construir y propiedades rurales productivas. La oferta es amplia desde $80,000 hasta varios millones.' },
+      { q: 'Â¿CuÃ¡nto cuesta una finca en Fraijanes Guatemala?', a: 'Las fincas en Fraijanes varÃ­an desde $80,000 por lotes de 1â2 manzanas hasta mÃ¡s de $2,000,000 para fincas productivas grandes. El precio promedio por manzana en Ã¡reas accesibles es de $40,000â$80,000.' },
+      { q: 'Â¿CuÃ¡nto tiempo se tarda de Fraijanes a Ciudad de Guatemala?', a: 'Entre 20 y 35 minutos desde los accesos principales de Fraijanes hasta Zona 10, dependiendo del trÃ¡fico. La Carretera a El Salvador es la ruta principal, con acceso pavimentado en todo el trayecto.' },
+      { q: 'Â¿Es rentable invertir en fincas en Fraijanes?', a: 'SÃ­. Fraijanes tiene la mayor apreciaciÃ³n del Ã¡rea metropolitana en los Ãºltimos 5 aÃ±os, con retornos de 10â16% anual. Las fincas productivas generan ingresos adicionales por cultivos de cafÃ©, aguacate o cacao.' },
+      { q: 'Â¿Se puede vivir permanentemente en Fraijanes?', a: 'SÃ­. Fraijanes cuenta con supermercados, colegios privados, clÃ­nicas, restaurantes y servicios completos. Muchas familias han migrado definitivamente desde la capital atraÃ­das por el clima y la calidad de vida.' },
+      { q: 'Â¿QuÃ© tipo de propiedades hay en Fraijanes?', a: 'EncontrarÃ¡s fincas de uso mixto, residencias en condominios privados, lotes para construir y propiedades rurales productivas. La oferta es amplia desde $80,000 hasta varios millones.' },
     ]
   },
   'mixco': {
-    titulo: 'Mixco', subtitulo: 'Conectividad, diversidad y oportunidad de inversión',
-    desc: 'Mixco es el municipio más poblado del departamento de Guatemala y uno con mayor diversidad de oferta inmobiliaria. Desde proyectos de apartamentos modernos hasta residencias familiares en colonias consolidadas, Mixco ofrece una relación precio-valor muy atractiva para compradores de primera propiedad e inversionistas con visión de largo plazo.',
+    titulo: 'Mixco', subtitulo: 'Conectividad, diversidad y oportunidad de inversiÃ³n',
+    desc: 'Mixco es el municipio mÃ¡s poblado del departamento de Guatemala y uno con mayor diversidad de oferta inmobiliaria. Desde proyectos de apartamentos modernos hasta residencias familiares en colonias consolidadas, Mixco ofrece una relaciÃ³n precio-valor muy atractiva para compradores de primera propiedad e inversionistas con visiÃ³n de largo plazo.',
     img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80',
-    datos: ['Acceso a Calzada Roosevelt','Diversidad de oferta residencial','Precios accesibles vs capital','Proyección de crecimiento'],
-    inversion: { apreciacion: '5–8% anual', demanda: 'Alta', perfil: 'Primera propiedad · Inversión accesible' },
-    lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt — acceso rápido','Colegios y universidades cercanas','Mercados y comercio activo','Expansión de proyectos residenciales','Transporte público conectado'],
+    datos: ['Acceso a Calzada Roosevelt','Diversidad de oferta residencial','Precios accesibles vs capital','ProyecciÃ³n de crecimiento'],
+    inversion: { apreciacion: '5â8% anual', demanda: 'Alta', perfil: 'Primera propiedad Â· InversiÃ³n accesible' },
+    lifestyle: ['Centro Comercial Miraflores','Calzada Roosevelt â acceso rÃ¡pido','Colegios y universidades cercanas','Mercados y comercio activo','ExpansiÃ³n de proyectos residenciales','Transporte pÃºblico conectado'],
     porque: [
-      { icon: '🛣️', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo periférico. A 20 minutos del centro de la capital.' },
-      { icon: '💵', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace años.' },
-      { icon: '📊', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificación de Mixco garantiza apreciación progresiva en todos los segmentos del mercado.' },
-      { icon: '🏘️', titulo: 'Comunidades establecidas', texto: 'Colonias con décadas de historia, vecinos estables y servicios completos.' },
+      { icon: 'ð£ï¸', titulo: 'Conectividad sin igual', texto: 'Acceso directo a Calzada Roosevelt y al anillo perifÃ©rico. A 20 minutos del centro de la capital.' },
+      { icon: 'ðµ', titulo: 'Mejor precio por metro cuadrado', texto: 'Propiedades bien ubicadas a precios que las zonas premium de la capital dejaron de ofrecer hace aÃ±os.' },
+      { icon: 'ð', titulo: 'Mercado en crecimiento sostenido', texto: 'La densificaciÃ³n de Mixco garantiza apreciaciÃ³n progresiva en todos los segmentos del mercado.' },
+      { icon: 'ðï¸', titulo: 'Comunidades establecidas', texto: 'Colonias con dÃ©cadas de historia, vecinos estables y servicios completos.' },
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una casa en Mixco Guatemala?', a: 'Las casas en Mixco oscilan entre $60,000 y $350,000 según la colonia y el tamaño. Los apartamentos parten desde $45,000 y las residencias en colonias privadas pueden superar los $250,000.' },
-      { q: '¿Es buena inversión comprar en Mixco?', a: 'Sí, especialmente para primera propiedad o inversión de renta. Mixco tiene alta demanda de alquiler por su conectividad y precios accesibles, con apreciación anual de 5–8%.' },
-      { q: '¿Cuáles son las mejores colonias de Mixco?', a: 'Las colonias más consolidadas incluyen Lomas de Portugal, Santa Marta, Carolingia, Monserrat y las colonias cercanas al Centro Comercial Miraflores. Cada una tiene perfil y precio diferente.' },
-      { q: '¿Cuánto tiempo se tarda de Mixco al centro de Guatemala?', a: 'Aproximadamente 15–25 minutos por la Calzada Roosevelt o el anillo periférico. En hora pico puede extenderse a 35–40 minutos.' },
+      { q: 'Â¿CuÃ¡nto cuesta una casa en Mixco Guatemala?', a: 'Las casas en Mixco oscilan entre $60,000 y $350,000 segÃºn la colonia y el tamaÃ±o. Los apartamentos parten desde $45,000 y las residencias en colonias privadas pueden superar los $250,000.' },
+      { q: 'Â¿Es buena inversiÃ³n comprar en Mixco?', a: 'SÃ­, especialmente para primera propiedad o inversiÃ³n de renta. Mixco tiene alta demanda de alquiler por su conectividad y precios accesibles, con apreciaciÃ³n anual de 5â8%.' },
+      { q: 'Â¿CuÃ¡les son las mejores colonias de Mixco?', a: 'Las colonias mÃ¡s consolidadas incluyen Lomas de Portugal, Santa Marta, Carolingia, Monserrat y las colonias cercanas al Centro Comercial Miraflores. Cada una tiene perfil y precio diferente.' },
+      { q: 'Â¿CuÃ¡nto tiempo se tarda de Mixco al centro de Guatemala?', a: 'Aproximadamente 15â25 minutos por la Calzada Roosevelt o el anillo perifÃ©rico. En hora pico puede extenderse a 35â40 minutos.' },
     ]
   },
 };
@@ -1352,9 +1352,9 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   const slug = zonaSlug(zonaNombre);
   const info = ZONA_INFO[slug] || {
     titulo: zonaNombre, subtitulo: 'Propiedades disponibles',
-    desc: `Descubre las propiedades disponibles en ${zonaNombre}, Guatemala. Residencias, terrenos e inversiones seleccionadas con asesoría personalizada.`,
+    desc: `Descubre las propiedades disponibles en ${zonaNombre}, Guatemala. Residencias, terrenos e inversiones seleccionadas con asesorÃ­a personalizada.`,
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=70',
-    datos: ['Ubicación estratégica','Propiedades verificadas','Asesoría personalizada','Respuesta rápida'],
+    datos: ['UbicaciÃ³n estratÃ©gica','Propiedades verificadas','AsesorÃ­a personalizada','Respuesta rÃ¡pida'],
     inversion: null, lifestyle: [], porque: []
   };
 
@@ -1378,7 +1378,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
       <a href="/" style="color:inherit;text-decoration:none">Inicio</a> / <a href="/propiedades.html" style="color:inherit;text-decoration:none">Propiedades</a> / ${escapeHtml(info.titulo)}
     </div>
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:18px">
-      <span style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Zona Premium · Guatemala</span>
+      <span style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Zona Premium Â· Guatemala</span>
     </div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:300;line-height:1.08;color:var(--wh);margin-bottom:14px">${escapeHtml(info.titulo)}</h1>
     <p style="font-size:.9rem;color:var(--sv);font-weight:300;max-width:560px;line-height:1.7;margin-bottom:0">${escapeHtml(info.subtitulo)}</p>
@@ -1390,9 +1390,9 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   <div class="zona-stats-row" style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap">
     ${[
       [propsEnZona.length + (propsEnZona.length===1?' propiedad':' propiedades'), 'Disponibles ahora'],
-      [precioPromFmt || '—', 'Precio promedio'],
-      [precioMin && precioMax ? '$'+precioMin.toLocaleString('en-US')+' – $'+precioMax.toLocaleString('en-US') : '—', 'Rango de precios'],
-      [info.inversion ? info.inversion.apreciacion : '—', 'Apreciación anual'],
+      [precioPromFmt || 'â', 'Precio promedio'],
+      [precioMin && precioMax ? '$'+precioMin.toLocaleString('en-US')+' â $'+precioMax.toLocaleString('en-US') : 'â', 'Rango de precios'],
+      [info.inversion ? info.inversion.apreciacion : 'â', 'ApreciaciÃ³n anual'],
     ].map(([val,lab])=>`<div style="flex:1;min-width:160px;padding:22px 24px;border-right:1px solid var(--bd)">
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:5px">${val}</div>
       <div style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mt)">${lab}</div>
@@ -1403,11 +1403,11 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
 <!-- CONTENIDO EDITORIAL -->
 <section style="padding:64px 6%;background:var(--ink)">
   <div class="zona-content-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr;gap:64px;align-items:start">
-    <!-- DESCRIPCIÓN -->
+    <!-- DESCRIPCIÃN -->
     <div>
       <div class="ey" style="margin-bottom:14px">Sobre la zona</div>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:300;color:var(--wh);margin-bottom:24px;line-height:1.2">
-        Por qué <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split(' ')[0])}</em> es diferente
+        Por quÃ© <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split(' ')[0])}</em> es diferente
       </h2>
       <p style="font-size:.88rem;color:var(--sv);line-height:2;margin-bottom:28px;font-weight:300">${escapeHtml(info.desc)}</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px">
@@ -1417,13 +1417,13 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
         </span>`).join('')}
       </div>
     </div>
-    <!-- SIDEBAR INVERSIÓN -->
+    <!-- SIDEBAR INVERSIÃN -->
     <div style="background:var(--ink2);border:1px solid var(--gl);border-radius:16px;padding:28px">
-      <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:18px">Datos de inversión</div>
+      <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:18px">Datos de inversiÃ³n</div>
       ${info.inversion ? `
       <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--bd)">
-          <span style="font-size:.72rem;color:var(--sv)">Apreciación anual</span>
+          <span style="font-size:.72rem;color:var(--sv)">ApreciaciÃ³n anual</span>
           <span style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--or)">${escapeHtml(info.inversion.apreciacion)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--bd)">
@@ -1442,18 +1442,18 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
         <div style="display:flex;flex-wrap:wrap;gap:6px">${tiposEnZona.map(t=>`<span style="background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:100px;padding:4px 10px;font-size:.65rem;color:var(--sv)">${escapeHtml(t)}</span>`).join('')}</div>
       </div>` : ''}
       
-      <p style="text-align:center;font-size:.62rem;color:var(--mt);margin:0">Respuesta en menos de 2 horas · Sin compromiso</p>
+      <p style="text-align:center;font-size:.62rem;color:var(--mt);margin:0">Respuesta en menos de 2 horas Â· Sin compromiso</p>
     </div>
   </div>
 </section>
 
-<!-- POR QUÉ AQUÍ -->
+<!-- POR QUÃ AQUÃ -->
 ${info.porque && info.porque.length ? `
 <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="margin-bottom:14px;justify-content:center;text-align:center">Razones de peso</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--wh);text-align:center;margin-bottom:44px;line-height:1.2">
-      Por qué elegir <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split(' ')[0])}</em>
+      Por quÃ© elegir <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split(' ')[0])}</em>
     </h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
       ${info.porque.map(r=>`
@@ -1474,7 +1474,7 @@ ${info.lifestyle && info.lifestyle.length ? `
       <div>
         <div class="ey" style="margin-bottom:14px">Entorno y lifestyle</div>
         <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:300;color:var(--wh);margin-bottom:28px;line-height:1.2">
-          Lo que encuentras <em style="color:var(--or);font-style:italic">aquí</em>
+          Lo que encuentras <em style="color:var(--or);font-style:italic">aquÃ­</em>
         </h2>
         <div style="display:flex;flex-direction:column;gap:10px">
           ${info.lifestyle.map(item=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink2);border:1px solid var(--bd);border-radius:8px">
@@ -1484,9 +1484,9 @@ ${info.lifestyle && info.lifestyle.length ? `
         </div>
       </div>
       <div style="background:var(--ink2);border:1px solid var(--gl);border-radius:16px;padding:32px">
-        <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:20px">¿Buscas algo específico?</div>
+        <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:20px">Â¿Buscas algo especÃ­fico?</div>
         <p style="font-size:.82rem;color:var(--sv);line-height:1.9;margin-bottom:24px;font-weight:300">
-          Nuestro equipo conoce cada propiedad, cada colonia y cada micro-mercado de ${escapeHtml(info.titulo.split('—')[0].trim())}. Dinos qué buscas.
+          Nuestro equipo conoce cada propiedad, cada colonia y cada micro-mercado de ${escapeHtml(info.titulo.split('â')[0].trim())}. Dinos quÃ© buscas.
         </p>
         
         <a href="/propiedades.html" style="display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--gl);color:var(--sv);padding:11px 18px;border-radius:8px;font-size:.68rem;font-weight:600;text-decoration:none;letter-spacing:.06em;text-transform:uppercase">
@@ -1502,16 +1502,16 @@ ${info.lifestyle && info.lifestyle.length ? `
   <div style="max-width:1200px;margin:0 auto">
     <div class="ey" style="margin-bottom:14px">Disponibles ahora</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--wh);margin-bottom:32px;line-height:1.2">
-      Propiedades en <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split('—')[0].trim())}</em>
+      Propiedades en <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split('â')[0].trim())}</em>
     </h2>
     ${propsEnZona.length ? `<div class="prop-grid">${propsEnZona.map(p=>card(p)).join('')}</div>
     <div style="text-align:center;padding:44px 0 0">
-      <a href="/propiedades.html" class="btn-or">Ver catálogo completo</a>
+      <a href="/propiedades.html" class="btn-or">Ver catÃ¡logo completo</a>
     </div>` : `
     <div style="text-align:center;padding:48px 24px;background:var(--ink);border:1px solid var(--bd);border-radius:14px">
-      <div style="font-size:2rem;margin-bottom:14px">🔔</div>
+      <div style="font-size:2rem;margin-bottom:14px">ð</div>
       <p style="font-size:.85rem;color:var(--sv);margin-bottom:6px">No hay propiedades activas en esta zona por el momento</p>
-      <small style="font-size:.72rem;color:var(--mt)">Contáctanos y te avisamos cuando haya disponibilidad</small>
+      <small style="font-size:.72rem;color:var(--mt)">ContÃ¡ctanos y te avisamos cuando haya disponibilidad</small>
       <div style="margin-top:22px">
         
       </div>
@@ -1524,7 +1524,7 @@ ${info.faqs && info.faqs.length ? `
 <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
   <div style="max-width:800px;margin:0 auto">
     <div class="ey" style="margin-bottom:14px">Preguntas frecuentes</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:300;color:var(--wh);margin-bottom:40px;line-height:1.2">Lo que más nos preguntan sobre <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split('—')[0].trim().split('·')[0].trim())}</em></h2>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:300;color:var(--wh);margin-bottom:40px;line-height:1.2">Lo que mÃ¡s nos preguntan sobre <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split('â')[0].trim().split('Â·')[0].trim())}</em></h2>
     <div style="display:flex;flex-direction:column;gap:0">
       ${info.faqs.map((faq, i) => `
       <details style="border-top:1px solid var(--bd);padding:20px 0" ${i===0?'open':''}>
@@ -1573,11 +1573,11 @@ ${info.faqs && info.faqs.length ? `
     ]
   });
 
-  // Título limpio sin "Guatemala Guatemala"
+  // TÃ­tulo limpio sin "Guatemala Guatemala"
   const zonaEnTitle = /guatemala/i.test(info.titulo) ? info.titulo : `${info.titulo}, Guatemala`;
   return layout({
-    title: `Propiedades en ${zonaEnTitle} — Casas y Fincas en Venta`,
-    desc: `${propsEnZona.length > 0 ? propsEnZona.length + ' propiedades' : 'Propiedades'} en venta en ${info.titulo}, Guatemala. ${info.subtitulo}. Casas, fincas y apartamentos con asesoría personalizada.`,
+    title: `Propiedades en ${zonaEnTitle} â Casas y Fincas en Venta`,
+    desc: `${propsEnZona.length > 0 ? propsEnZona.length + ' propiedades' : 'Propiedades'} en venta en ${info.titulo}, Guatemala. ${info.subtitulo}. Casas, fincas y apartamentos con asesorÃ­a personalizada.`,
     canonical: `/zonas/${slug}.html`,
     ogImage: info.img,
     body,
@@ -1585,20 +1585,50 @@ ${info.faqs && info.faqs.length ? `
   });
 }
 
-module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO };
 
-// ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
+function zonasIndexPage(zonasMap) {
+  const zonas = Object.entries(zonasMap).sort((a,b) => b[1].props.length - a[1].props.length);
+  const cards = zonas.map(([slug, { nombre, props }]) => {
+    const img = (props[0] && props[0].imagen) || '';
+    const count = props.length;
+    return `<a href="/zonas/${slug}.html" style="display:block;position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--ink2)">
+      ${img ? `<img src="${img}" alt="${escapeHtml(nombre)}" style="width:100%;height:100%;object-fit:cover;filter:brightness(.65)" loading="lazy">` : '<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--ink2),var(--ink3))"></div>'}
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,transparent 60%)"></div>
+      <div style="position:absolute;bottom:20px;left:20px;right:20px">
+        <div style="font-size:.56rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:4px">${count} propiedad${count!==1?'es':''}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300">${escapeHtml(nombre)}</div>
+      </div>
+    </a>`;
+  }).join('');
+
+  return layout({
+    title: 'Zonas Premium Guatemala',
+    desc: 'Explora propiedades premium en las mejores zonas de Guatemala: Zona 10, Zona 14, Fraijanes, Cayalá y más.',
+    canonical: '/zonas/',
+    body: `
+<section style="padding:100px 6% 60px;text-align:center">
+  <div class="ey" style="justify-content:center">Explorar por zona</div>
+  <h1 class="st">Las mejores <em>zonas</em> de Guatemala</h1>
+  <p class="ss" style="margin:0 auto 48px;text-align:center">Casas, fincas y apartamentos en las ubicaciones más exclusivas del país.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:3px">${cards}</div>
+</section>`
+  });
+}
+
+module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO, zonasIndexPage };
+
+// ââ TESTIMONIOS SECTION (FASE 1) âââââââââââââââââââââââââââââââââââ
 function testimonialsSection() {
   return `
 
 <!-- CTA INTERMEDIO -->
 <div class="cta-banner fade-in-up">
-  <div class="ey" style="justify-content:center;margin-bottom:12px">Asesoría privada</div>
+  <div class="ey" style="justify-content:center;margin-bottom:12px">AsesorÃ­a privada</div>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:var(--wh);margin-bottom:16px;line-height:1.2">
-    ¿No encontraste lo que buscas?
+    Â¿No encontraste lo que buscas?
   </h2>
   <p style="font-size:.85rem;color:var(--sv);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8">
-    Cuéntanos qué necesitas y nuestro equipo te presenta opciones exclusivas que no están publicadas.
+    CuÃ©ntanos quÃ© necesitas y nuestro equipo te presenta opciones exclusivas que no estÃ¡n publicadas.
   </p>
   
 </div>
@@ -1606,12 +1636,12 @@ function testimonialsSection() {
 <section style="padding:48px 6%;background:var(--ink);border-top:1px solid var(--gl);border-bottom:1px solid var(--gl)" class="fade-in-up">
   <div style="max-width:1200px;margin:0 auto">
     <div style="text-align:center;margin-bottom:32px">
-      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt)">Por qué elegirnos</div>
+      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt)">Por quÃ© elegirnos</div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px">
       <div style="text-align:center;padding:24px 16px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">10+</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Años conectando familias con su propiedad ideal en Guatemala</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">AÃ±os conectando familias con su propiedad ideal en Guatemala</div>
       </div>
       <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl);border-right:1px solid var(--gl)">
         <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">&lt;2h</div>
@@ -1619,11 +1649,11 @@ function testimonialsSection() {
       </div>
       <div style="text-align:center;padding:24px 16px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">100%</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Propiedades verificadas. Papelería en orden, sin sorpresas</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Propiedades verificadas. PapelerÃ­a en orden, sin sorpresas</div>
       </div>
       <div style="text-align:center;padding:24px 16px;border-left:1px solid var(--gl)">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">5★</div>
-        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">Calificación promedio de nuestros clientes en cada cierre</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--or);line-height:1;margin-bottom:8px">5â</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--sv);line-height:1.6">CalificaciÃ³n promedio de nuestros clientes en cada cierre</div>
       </div>
     </div>
   </div>
@@ -1638,29 +1668,29 @@ function testimonialsSection() {
     
     <div class="testimonials-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px">
       <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
-        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Zona INNmueble me ayudó a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo. Altamente recomendado."</p>
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">âââââ</span></div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Zona INNmueble me ayudÃ³ a encontrar la propiedad perfecta en Zona 10. El equipo fue muy profesional y comprensivo. Altamente recomendado."</p>
         <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
           <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">MC</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">María Castillo</div><div style="color:var(--mt);font-size:.8rem">Empresaria</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">MarÃ­a Castillo</div><div style="color:var(--mt);font-size:.8rem">Empresaria</div></div>
         </div>
       </div>
       
       <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
-        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Excelente asesoría para mi inversión inmobiliaria. Entendieron mi visión y ofrecieron opciones que superaron mis expectativas."</p>
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">âââââ</span></div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"Excelente asesorÃ­a para mi inversiÃ³n inmobiliaria. Entendieron mi visiÃ³n y ofrecieron opciones que superaron mis expectativas."</p>
         <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
           <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">CG</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Carlos García</div><div style="color:var(--mt);font-size:.8rem">Inversionista</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Carlos GarcÃ­a</div><div style="color:var(--mt);font-size:.8rem">Inversionista</div></div>
         </div>
       </div>
       
       <div class="testimonial-card" style="background:var(--ink3);padding:32px;border:1px solid var(--gl);border-radius:8px;transition:all .4s;transform:translateY(40px);opacity:0">
-        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">★★★★★</span></div>
-        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"El servicio es impecable. Desde búsqueda hasta finalización, todo fue smooth y profesional. Definitivamente mi opción número uno."</p>
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span style="color:var(--or)">âââââ</span></div>
+        <p style="font-style:italic;color:var(--sv);margin-bottom:24px;line-height:1.8">"El servicio es impecable. Desde bÃºsqueda hasta finalizaciÃ³n, todo fue smooth y profesional. Definitivamente mi opciÃ³n nÃºmero uno."</p>
         <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--gl)">
           <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;color:var(--ink);font-weight:600;font-size:.9rem">SL</div>
-          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Sandra López</div><div style="color:var(--mt);font-size:.8rem">Ejecutiva</div></div>
+          <div><div style="font-weight:600;color:var(--wh);font-size:.9rem">Sandra LÃ³pez</div><div style="color:var(--mt);font-size:.8rem">Ejecutiva</div></div>
         </div>
       </div>
     </div>
@@ -1669,24 +1699,24 @@ function testimonialsSection() {
   `;
 }
 
-// ── TRUST BADGES (FASE 1) ──────────────────────────────────────────
+// ââ TRUST BADGES (FASE 1) ââââââââââââââââââââââââââââââââââââââââââ
 function trustBadges() {
   return `
 <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:24px 0;border-top:1px solid var(--gl)">
   <div style="text-align:center;flex:1;min-width:120px">
-    <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+    <div style="font-size:2.4rem;margin-bottom:4px">â</div>
     <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">${props.filter(p=>!p.estado||p.estado==='Activa').length}+ Propiedades</div>
   </div>
   <div style="text-align:center;flex:1;min-width:120px">
-    <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+    <div style="font-size:2.4rem;margin-bottom:4px">â</div>
     <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">100% Verificadas</div>
   </div>
   <div style="text-align:center;flex:1;min-width:120px">
-    <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
-    <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">10+ Años</div>
+    <div style="font-size:2.4rem;margin-bottom:4px">â</div>
+    <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">10+ AÃ±os</div>
   </div>
   <div style="text-align:center;flex:1;min-width:120px">
-    <div style="font-size:2.4rem;margin-bottom:4px">✓</div>
+    <div style="font-size:2.4rem;margin-bottom:4px">â</div>
     <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--or)">Soporte 24/7</div>
   </div>
 </div>
