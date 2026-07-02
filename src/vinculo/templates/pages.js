@@ -230,7 +230,7 @@ function detailPage(prop) {
 
   // Description - strip emojis, clean paragraphs
   const rawDesc = String(prop.descripcion||'');
-  const cleanDesc = rawDesc.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]/gu,'').trim();
+  const cleanDesc = rawDesc.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|\uFE0F|\u20E3/g,'').trim();
   const descParas = cleanDesc.split(/\n+/).map(p=>p.trim()).filter(p=>p.length>10);
   const descPreview = descParas.slice(0,3).map(p=>`<p>${esc(p)}</p>`).join('');
   const descRest = descParas.slice(3).map(p=>`<p>${esc(p)}</p>`).join('');
