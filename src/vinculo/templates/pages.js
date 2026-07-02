@@ -191,31 +191,6 @@ const specHTML=`${prop.habitaciones&&prop.habitaciones!=='0'?`<div class="spec">
 const descHTML=renderDesc(prop.description);
 const charsHTML=renderCaracteristicas(prop.caracteristicas||prop.amenities||[]);;
 const infoHTML=`<div class="info-item"><span class="label">Ubicacion</span><span class="value">${escapeHtml(prop.locationFull)}</span></div>${prop.codigoInmueble?`<div class="info-item"><span class="label">Codigo</span><span class="value">${escapeHtml(prop.codigoInmueble)}</span></div>`:''}${prop.tipo?`<div class="info-item"><span class="label">Tipo</span><span class="value">${escapeHtml(prop.tipo)}</span></div>`:''}`;
-const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main" style="border-radius:12px;overflow:hidden"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} - INMUHUB.COM" loading="eager" width="1200" height="700" style="width:100%;height:auto;min-height:380px;object-fit:cover;display:block;cursor:zoom-in" onclick="window.open(this.src,'_blank')"></div>${galleryHTML}</div><div class="detail-content"><h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div><div class="specs-grid">${specHTML}</div>${descHTML}${charsHTML}<div class="info-card">${infoHTML}</div>` + `` + `<section style="padding:48px 6%;background:white">
-<div style="max-width:1200px;margin:0 auto">
-<h3 style="font-size:28px;font-weight:700;color:#1a2a4e;margin-bottom:40px;text-align:center">Herramientas para Invertir</h3>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">
-<a href="/herramientas/valuador.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
-<div style="font-size:48px;margin-bottom:20px">🏠</div>
-<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Valuador de Propiedades</h4>
-<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Calcula el valor estimado de tu propiedad en Guatemala</p>
-<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Valuador →</div>
-</a>
-<a href="/herramientas/simulador-inversion.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
-<div style="font-size:48px;margin-bottom:20px">📈</div>
-<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Simulador de Inversión</h4>
-<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Analiza el ROI y rentabilidad proyectada de cualquier propiedad</p>
-<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Simulador →</div>
-</a>
-<a href="/herramientas/guia-compra.html" style="background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:white;display:flex;flex-direction:column;align-items:center">
-<div style="font-size:48px;margin-bottom:20px">📚</div>
-<h4 style="font-weight:700;margin-bottom:12px;font-size:18px">Guía de Compra Gratis</h4>
-<p style="font-size:14px;opacity:0.95;line-height:1.6;flex-grow:1">Descarga la guía premium para invertir en real estate sin errores</p>
-<div style="margin-top:20px;font-weight:600;font-size:14px">Descargar →</div>
-</a>
-</div>
-</div>
-</section>` + contactSection + `</div>`;
 const _pef=escapeHtml(prop.priceFormatted),_lef=escapeHtml(prop.locationFull);
 const contactSection=`<section id="solicitar" style="background:#0a1628;padding:64px 6%;margin-top:0"><div style="max-width:540px;margin:0 auto"><div style="text-align:center;margin-bottom:32px"><p style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#c9a96e;margin:0 0 14px">Solicitar información</p><h2 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:400;color:white;line-height:1.2;margin:0 0 10px">Un asesor se comunica contigo hoy</h2><p style="font-size:.85rem;color:rgba(255,255,255,.45);margin:0">${_pef} &middot; ${_lef}</p></div><div id="propCF" style="background:rgba(255,255,255,.06);border:1px solid rgba(201,169,110,.25);border-radius:20px;padding:36px;margin-top:32px"><style>#propCF input{width:100%;padding:13px 16px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;font-size:14px;color:white;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .2s}#propCF input:focus{border-color:#c9a96e;background:rgba(255,255,255,.12)}#propCF input::placeholder{color:rgba(255,255,255,.35)}</style><div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px"><input id="pcf1" type="text" placeholder="Tu nombre completo" autocomplete="name"><input id="pcf2" type="email" placeholder="Correo electrónico" autocomplete="email"><input id="pcf3" type="tel" placeholder="Teléfono (+502)" autocomplete="tel"></div><p id="pcfErr" style="font-size:12px;color:#f87171;min-height:16px;margin:0 0 12px"></p><button onclick="propCFsubmit()" style="width:100%;padding:15px;background:#c9a96e;color:#0a1628;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.03em;transition:background .2s" onmouseover="this.style.background='#b89a5e'" onmouseout="this.style.background='#c9a96e'">Solicitar información</button><p style="font-size:11px;color:rgba(255,255,255,.35);text-align:center;margin:14px 0 0;line-height:1.6">Sin compromiso &middot; Un asesor te contactará en menos de 24 horas</p></div></div></section>`;
 const contactScript=`<scri`+`pt>
@@ -244,6 +219,31 @@ async function propCFsubmit(){
   }
 }
 `+`<\/scr`+`ipt>`;
+const body=`<div class="detail-container"><div style="margin-bottom:32px"><div class="breadcrumb"><a href="/">Home</a> / <a href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">${escapeHtml(prop.tipo)}s</a> / <span>${escapeHtml(prop.title)}</span></div></div><div class="detail-gallery"><div class="gallery-main" style="border-radius:12px;overflow:hidden"><img id="mainImg" src="${escapeHtml(prop.mainImageThumb||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80')}" alt="${escapeHtml(prop.tipo||'Propiedad')} ${escapeHtml(prop.title)} - INMUHUB.COM" loading="eager" width="1200" height="700" style="width:100%;height:auto;min-height:380px;object-fit:cover;display:block;cursor:zoom-in" onclick="window.open(this.src,'_blank')"></div>${galleryHTML}</div><div class="detail-content"><h1>${escapeHtml(prop.title)}</h1><div class="detail-price">${escapeHtml(prop.priceFormatted)}</div><div class="specs-grid">${specHTML}</div>${descHTML}${charsHTML}<div class="info-card">${infoHTML}</div>` + `` + `<section style="padding:48px 6%;background:white">
+<div style="max-width:1200px;margin:0 auto">
+<h3 style="font-size:28px;font-weight:700;color:#1a2a4e;margin-bottom:40px;text-align:center">Herramientas para Invertir</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">
+<a href="/herramientas/valuador.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
+<div style="font-size:48px;margin-bottom:20px">🏠</div>
+<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Valuador de Propiedades</h4>
+<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Calcula el valor estimado de tu propiedad en Guatemala</p>
+<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Valuador →</div>
+</a>
+<a href="/herramientas/simulador-inversion.html" style="background:white;border:2px solid #e5e7eb;border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center">
+<div style="font-size:48px;margin-bottom:20px">📈</div>
+<h4 style="font-weight:700;margin-bottom:12px;color:#1a2a4e;font-size:18px">Simulador de Inversión</h4>
+<p style="font-size:14px;color:#666;line-height:1.6;flex-grow:1">Analiza el ROI y rentabilidad proyectada de cualquier propiedad</p>
+<div style="margin-top:20px;color:#1a2a4e;font-weight:600;font-size:14px">Ir a Simulador →</div>
+</a>
+<a href="/herramientas/guia-compra.html" style="background:linear-gradient(135deg,#ffa500 0%,#ff8c00 100%);border-radius:16px;padding:40px;text-align:center;transition:all 0.3s;text-decoration:none;color:white;display:flex;flex-direction:column;align-items:center">
+<div style="font-size:48px;margin-bottom:20px">📚</div>
+<h4 style="font-weight:700;margin-bottom:12px;font-size:18px">Guía de Compra Gratis</h4>
+<p style="font-size:14px;opacity:0.95;line-height:1.6;flex-grow:1">Descarga la guía premium para invertir en real estate sin errores</p>
+<div style="margin-top:20px;font-weight:600;font-size:14px">Descargar →</div>
+</a>
+</div>
+</div>
+</section>` + contactSection + `</div>`;
 const schema={"@context":"https://schema.org","@type":"RealEstateListing","name":prop.title,"description":(prop.description||(prop.title+' en '+prop.locationFull)).substring(0,300),"url":'https://inmuhub.com/propiedades/'+prop.slug+'.html',"image":prop.mainImageThumb||'',"offers":{"@type":"Offer","price":prop.priceNumeric||0,"priceCurrency":(prop.priceFormatted||'').includes('$')?'USD':'GTQ',"availability":"https://schema.org/InStock"},"address":{"@type":"PostalAddress","addressLocality":prop.municipio||'Guatemala',"addressRegion":"Guatemala","addressCountry":"GT"},"seller":{"@type":"RealEstateAgent","name":"InmuHub","url":"https://inmuhub.com","telephone":"+"}};
 if(prop.habitaciones&&prop.habitaciones!=='0')schema.numberOfRooms=parseInt(prop.habitaciones);
 if(prop.areaConst)schema.floorSize={"@type":"QuantitativeValue","value":parseFloat(prop.areaConst),"unitCode":"MTK"};
