@@ -231,9 +231,32 @@ function detailPage(prop) {
   // Description - strip emojis, clean paragraphs
   const rawDesc = String(prop.descripcion||'');
   const cleanDesc = rawDesc.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|\uFE0F|\u20E3/g,'').trim();
+  const descIconMap = [
+    [/habitaci|dormitorio|cuarto|recamara|master/i,'ti-bed'],
+    [/ba[ñn]o|lavabo|ducha|jacuzzi/i,'ti-bath'],
+    [/cocina|kitchen|gourmet|comedor|dining/i,'ti-tools-kitchen-2'],
+    [/sala|living|estar|lounge/i,'ti-sofa'],
+    [/piscin|pool|nado/i,'ti-wave-sine'],
+    [/jardín|jardin|garden|verde|naturaleza|bosque/i,'ti-leaf'],
+    [/terraza|balc[oó]n|deck|vista|panoram/i,'ti-building-pavilion'],
+    [/estudio|oficina|trabajo|home office/i,'ti-briefcase'],
+    [/seguridad|vigilancia|c[aá]mara|acceso/i,'ti-shield-check'],
+    [/garaje|parqueo|garage|auto|veh[ií]culo/i,'ti-car-garage'],
+    [/construcc|acabado|diseño|arquitect|moderno/i,'ti-ruler-2'],
+    [/inversion|rentabilidad|plusval|roi|valor/i,'ti-trending-up'],
+    [/ubicaci|zona|sector|colonia|cerca|acceso/i,'ti-map-pin'],
+    [/privada|exclusiv|residencial|gated/i,'ti-lock'],
+    [/lujo|luxury|premium|alta gama|elegante/i,'ti-diamond'],
+    [/finca|campo|naturaleza|hectarea|terreno/i,'ti-trees'],
+    [/bodega|almacen|storage/i,'ti-box'],
+    [/gimnasio|fitness|deporte/i,'ti-barbell'],
+    [/luz|iluminaci|ventilaci|amplio|espaci/i,'ti-sun'],
+  ];
+  function getDescIcon(text){ for(const [re,ic] of descIconMap){ if(re.test(text)) return ic; } return 'ti-home'; }
+  function makeDescPara(p){ return `<div class="zp-desc-para"><div class="zp-desc-icon"><i class="ti ${getDescIcon(p)}"></i></div><p>${esc(p)}</p></div>`; }
   const descParas = cleanDesc.split(/\n+/).map(p=>p.trim()).filter(p=>p.length>10);
-  const descPreview = descParas.slice(0,3).map(p=>`<p>${esc(p)}</p>`).join('');
-  const descRest = descParas.slice(3).map(p=>`<p>${esc(p)}</p>`).join('');
+  const descPreview = descParas.slice(0,3).map(makeDescPara).join('');
+  const descRest = descParas.slice(3).map(makeDescPara).join('');
   const descHTML = descPreview + (descRest ? `<div class="zp-desc-more" id="zpDescMore" style="display:none">${descRest}</div>
     <button class="zp-link-btn" onclick="zpToggleDesc()"><span id="zpDescLbl">Ver descripción completa <i class='ti ti-chevron-down'></i></span></button>` : '');
 
@@ -398,8 +421,13 @@ img{max-width:100%;display:block}
 .zp-section-title{font-size:17px;font-weight:700;color:#111;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #f0f0f0}
 
 /* DESCRIPTION */
-.zp-desc p{color:#444;font-size:15px;line-height:1.7;margin-bottom:12px}
-.zp-link-btn{background:none;border:none;cursor:pointer;color:#1a3a5c;font-size:14px;font-weight:600;padding:4px 0;display:flex;align-items:center;gap:4px;margin-top:4px}
+.zp-desc-para{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f5f5f5}
+.zp-desc-para:last-of-type{border-bottom:none}
+.zp-desc-icon{width:36px;height:36px;border-radius:10px;background:#f0f4fa;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.zp-desc-icon i{font-size:18px;color:#1a3a5c}
+.zp-desc-para p{color:#3a3a3a;font-size:15px;line-height:1.75;margin:0}
+.zp-desc-more .zp-desc-para{display:flex}
+.zp-link-btn{background:none;border:none;cursor:pointer;color:#1a3a5c;font-size:14px;font-weight:600;padding:8px 0 0;display:flex;align-items:center;gap:4px}
 .zp-link-btn:hover{text-decoration:underline}
 
 /* FEATURES */
