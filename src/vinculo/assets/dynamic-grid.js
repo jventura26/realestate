@@ -5,8 +5,8 @@
  */
 (async function () {
   var API = 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades';
-  var WA_ZONA = '50245542088';    // <- cambia por tu numero real de zona-innmueble
-  var WA_INMU = '50245542088';    // <- cambia por tu numero real de inmuhub
+  var WA_ZONA = '';    // <- cambia por tu numero real de zona-innmueble
+  var WA_INMU = '';    // <- cambia por tu numero real de inmuhub
 
   var isZona = location.hostname.includes('zona-innmueble');
   var WA = isZona ? WA_ZONA : WA_INMU;
