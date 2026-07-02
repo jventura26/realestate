@@ -308,7 +308,7 @@ function detailPage(prop) {
   if(prop.techo) tech.push(['Techo',prop.techo]);
   if(prop.piso) tech.push(['Piso',prop.piso]);
   if(prop.acabados) tech.push(['Acabados',prop.acabados]);
-  if(prop.privConfig) tech.push(['Privada',prop.privConfig]);
+  // privConfig es objeto de privacidad, no se muestra
   if(prop.cuotaMant && prop.cuotaMant!=='0') tech.push(['Cuota mant.',prop.cuotaMant]);
   if(prop.datosTecnicos) {
     const dt = typeof prop.datosTecnicos === 'string' ? prop.datosTecnicos.split(/[,\n]+/).map(s=>s.trim()).filter(Boolean) : [];
