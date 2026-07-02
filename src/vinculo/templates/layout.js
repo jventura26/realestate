@@ -52,7 +52,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%;backdrop-filter:blur(10px);}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);border-bottom:1px solid transparent;padding:0 6%;backdrop-filter:blur(8px);transition:background .4s,border-color .4s,box-shadow .4s}
+nav.nav-scrolled{background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 2px 20px rgba(0,0,0,.08)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:80px;min-height:80px;padding:0;}
 .logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-decoration:none;color:inherit}
 .logo-name{font-size:clamp(14px,2vw,22px);font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
@@ -156,8 +157,16 @@ label[style*="display:flex"][style*="gap:8px"] {
 /* GRID */
 .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:16px 6%}
 .property-card{display:flex;flex-direction:column;background:var(--white);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .25s ease,transform .25s ease;text-decoration:none;color:inherit}
-.property-card:hover{border-color:var(--gray-400,#9ca3af);transform:translateY(-3px)}
+.property-card:hover{border-color:var(--gray-400,#9ca3af);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.1)}
 .property-card:hover .card-img-wrap img{transform:scale(1.04)}
+
+.property-card{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),border-color .25s ease,box-shadow .3s ease}
+.property-card.visible{opacity:1;transform:translateY(0)}
+.property-card:nth-child(2){transition-delay:.08s}
+.property-card:nth-child(3){transition-delay:.16s}
+.property-card:nth-child(4){transition-delay:.12s}
+.property-card:nth-child(5){transition-delay:.2s}
+.property-card:nth-child(6){transition-delay:.24s}
 .card-img-wrap{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--gray-100)}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;display:block}
 .card-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
@@ -723,6 +732,21 @@ ${body}
   </style>
 </footer>
 ${scripts}
+<script>
+(function(){
+  var nav = document.querySelector('nav');
+  if(!nav) return;
+  function ck(){ if((window.scrollY||window.pageYOffset)>60) nav.classList.add('nav-scrolled'); else nav.classList.remove('nav-scrolled'); }
+  window.addEventListener('scroll',ck,{passive:true});
+  ck();
+})();
+(function(){
+  var cards = document.querySelectorAll('.property-card');
+  if(!cards.length||!('IntersectionObserver' in window)){cards.forEach(function(c){c.classList.add('visible');});return;}
+  var obs = new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+  cards.forEach(function(c){obs.observe(c);});
+})();
+</script>
 </body>
 </html>`;
 }
