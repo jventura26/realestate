@@ -486,9 +486,9 @@ async function submitAsesor() {
   btn.disabled = true;
 
   try {
-    const res = await fetch('https://formspree.io/f/REEMPLAZA_CON_TU_ID', {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbzzTtXr_zbBkko8Z7i64zcsmA5Ws7iMOLaEocNfYmoDWf6hITpSyyGhzVimx7NihKoFYA/exec', {
       method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ nombre, apellido, telefono, email, plan, zonas,
         _subject: 'Nuevo asesor INMUHUB: ' + nombre + ' ' + apellido })
     });
