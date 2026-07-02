@@ -1074,11 +1074,11 @@ function clearForm() {
   document.getElementById('fOperacion').value='Venta';
   document.getElementById('fTipoListing').value='Residencial';
   document.getElementById('fPrivada').checked=false;
-  document.getElementById('s0ona').checked=true;
+  document.getElementById('sZona').checked=true;
   document.getElementById('sInmu').checked=true;
   document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.char-item').classList.remove('checked');});
   setStatus('Activa'); setCinta(''); galUrls=[]; renderGallery();
-  const imgPrev=document.getElementBd('imgPreview');
+  const imgPrev=document.getElementById('imgPreview');
   if(imgPrev)imgPrev.style.display='none';
 }
 
