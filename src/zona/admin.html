@@ -261,6 +261,18 @@ tr:hover td{background:#FAFBFF}
 .share-box-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E40AF;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .share-box .fg label{color:#1D4ED8}
 .share-box .fg input,.share-box .fg textarea{border-color:#BFDBFE}
+.priv-config{background:#FFF0F0;border:1.5px solid #FECACA;border-radius:10px;padding:16px;margin-bottom:14px}
+.priv-config-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#991B1B;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.priv-config-title i{font-size:16px;color:#DC2626}
+.priv-toggle{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid #FECACA;border-radius:6px;margin-bottom:6px;background:#FFF5F5;transition:all .15s}
+.priv-toggle:hover{border-color:#DC2626}
+.priv-toggle.active{background:#FEE2E2;border-color:#DC2626}
+.priv-toggle label{font-size:12px;font-weight:600;color:#7F1D1D;cursor:pointer;display:flex;align-items:center;gap:8px;flex:1}
+.priv-toggle label i{font-size:14px;color:#DC2626;flex-shrink:0}
+.priv-toggle input{width:32px;height:18px;accent-color:#DC2626;cursor:pointer;appearance:none;-webkit-appearance:none;background:#ccc;border-radius:20px;position:relative;transition:background .2s;flex-shrink:0}
+.priv-toggle input:checked{background:#DC2626}
+.priv-toggle input::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left .2s}
+.priv-toggle input:checked::after{left:16px}
 .priv-box{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:14px}
 .priv-box-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .priv-box .fg label{color:#78350F}
@@ -567,6 +579,37 @@ tr:hover td{background:#FAFBFF}
               <input type="checkbox" id="fPrivada" style="width:15px;height:15px;accent-color:var(--or)">
               Propiedad PRIVADA — ocultar precio en la ficha compartible
             </label>
+          </div>
+
+          <div class="priv-config" style="margin-top:14px">
+            <div class="priv-config-title"><i class="ti ti-eye-off"></i> Privacidad de campos â€” ocultar en sitio p\u00FAblico</div>
+            <div class="priv-toggle" id="pt-precio">
+              <label><i class="ti ti-currency-quetzal"></i> Ocultar precio</label>
+              <input type="checkbox" id="pcHidePrecio">
+            </div>
+            <div class="priv-toggle" id="pt-gallery">
+              <label><i class="ti ti-photo-off"></i> Ocultar galer\u00EDa / fotos</label>
+              <input type="checkbox" id="pcHideGallery">
+            </div>
+            <div class="priv-toggle" id="pt-direccion">
+              <label><i class="ti ti-map-pin-off"></i> Ocultar ubicaci\u00F3n exacta</label>
+              <input type="checkbox" id="pcHideDireccion">
+            </div>
+            <div class="priv-toggle" id="pt-specs">
+              <label><i class="ti ti-ruler-off"></i> Ocultar medidas y specs</label>
+              <input type="checkbox" id="pcHideSpecs">
+            </div>
+            <div class="priv-toggle" id="pt-contacto">
+              <label><i class="ti ti-phone-off"></i> Ocultar contacto directo</label>
+              <input type="checkbox" id="pcHideContacto">
+            </div>
+            <div class="priv-toggle" id="pt-calculadora">
+              <label><i class="ti ti-calculator-off"></i> Ocultar calculadora hipotecaria</label>
+              <input type="checkbox" id="pcHideCalc">
+            </div>
+            <div style="margin-top:10px;padding:8px 10px;background:#FEF2F2;border-radius:6px;font-size:11px;color:#991B1B;line-height:1.5">
+              <strong>Nota:</strong> Los campos ocultos siguen guardados en admin pero no se muestran en zona-innmueble.com ni inmuhub.com
+            </div>
           </div>
 
           <div class="priv-box" style="margin-top:14px">
@@ -1119,7 +1162,7 @@ function clearForm() {
   document.getElementById('fTipo').value='Casa';
   document.getElementById('fOperacion').value='Venta';
   document.getElementById('fTipoListing').value='Residencial';
-  document.getElementById('fPrivada').checked=false;
+  document.getElementById('fPrivada').checked=false;\n  // Reset privacy config\n  ['pcHidePrecio','pcHideGallery','pcHideDireccion','pcHideSpecs','pcHideContacto','pcHideCalc'].forEach(id=>{const el=document.getElementById(id);if(el){el.checked=false;el.closest('.priv-toggle').classList.remove('active');}});
   document.getElementById('sZona').checked=true;
   document.getElementById('sInmu').checked=true;
   document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.char-item').classList.remove('checked');});
@@ -1149,6 +1192,17 @@ function loadForm(p) {
   document.getElementById('sZona').checked=p.sitios?p.sitios.includes('zona'):true;
   document.getElementById('sInmu').checked=p.sitios?p.sitios.includes('inmu'):true;
   setStatus(p.estado||'Activa'); setCinta(p.cinta||'');
+  // Load privacy config
+  if(p.privConfig){
+    const pc = p.privConfig;
+    const setPC = (id, val) => { const el=document.getElementById(id); if(el){el.checked=!!val; el.closest('.priv-toggle').classList.toggle('active',!!val);} };
+    setPC('pcHidePrecio', pc.hidePrecio);
+    setPC('pcHideGallery', pc.hideGallery);
+    setPC('pcHideDireccion', pc.hideDireccion);
+    setPC('pcHideSpecs', pc.hideSpecs);
+    setPC('pcHideContacto', pc.hideContacto);
+    setPC('pcHideCalc', pc.hideCalc);
+  }
   if(p.caracteristicas){
     document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{
       const on=p.caracteristicas.includes(cb.value); cb.checked=on; cb.closest('.char-item').classList.toggle('checked',on);
@@ -1213,6 +1267,14 @@ async function saveProp() {
     departamento:g('fDepartamento'),lat:g('fLat'),lng:g('fLng'),
     imagen:g('fImagen'),gallery:galUrls,
     estado:currentStatus,cinta:currentCinta,caracteristicas:chars,sitios,
+    privConfig: {
+      hidePrecio: document.getElementById('pcHidePrecio')?.checked || false,
+      hideGallery: document.getElementById('pcHideGallery')?.checked || false,
+      hideDireccion: document.getElementById('pcHideDireccion')?.checked || false,
+      hideSpecs: document.getElementById('pcHideSpecs')?.checked || false,
+      hideContacto: document.getElementById('pcHideContacto')?.checked || false,
+      hideCalc: document.getElementById('pcHideCalc')?.checked || false
+    },
     ...(editingId?{id:editingId}:{})
   };
   try {
@@ -1337,6 +1399,13 @@ function showToast(msg,type) {
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none')doLogin();
   if(e.key==='Escape')closeModal();
+});
+
+// Privacy toggle listeners
+document.querySelectorAll('.priv-toggle input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    cb.closest('.priv-toggle').classList.toggle('active', cb.checked);
+  });
 });
 
 document.querySelectorAll('.char-item').forEach(item=>{
