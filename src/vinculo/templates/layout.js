@@ -17,8 +17,7 @@ return `<!DOCTYPE html>
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="/assets/favicon2.png">
 <link rel="apple-touch-icon" href="/assets/favicon2.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${pageTitle}</title>
 <meta name="description" content="${metaDesc}">
@@ -51,7 +50,8 @@ return `<!DOCTYPE html>
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <!-- Cache Break: 1780943256260 -->
 <style>
 /* Generated: 2026-06-08T18:27:36.260Z */
