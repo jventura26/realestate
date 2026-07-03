@@ -96,7 +96,16 @@ console.log('\n Building INMUHUB.COM\n');
   } catch(e) { console.log(' JSON local no disponible, usando API...'); }
   return fetchKV();
 })()).then(kvData => {
-const props = kvData ? normalizeKV(kvData) : parseProperties(CSV);
+let allProps = kvData ? normalizeKV(kvData) : parseProperties(CSV);
+// Filter: only props assigned to InmuHub + Activa
+allProps = allProps.filter(p => {
+  if (p.estado && p.estado !== 'Activa') return false;
+  if (p.sitios && Array.isArray(p.sitios) && !p.sitios.includes('inmu')) return false;
+  return true;
+});
+// Sort: destacadas first
+allProps.sort((a, b) => (b.destacada ? 1 : 0) - (a.destacada ? 1 : 0));
+const props = allProps;
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 

@@ -45,6 +45,7 @@ function card(p) {
   const photoCount = hasGallery ? `<span class="card-photo-count">&#128247; ${imgs.length}</span>` : '';
   const exclusivaBadge = esExclusiva ? `<span class="pc-badge-excl">&#10022; Exclusiva</span>` : '';
   const newBadge = (!esExclusiva && isNewListing) ? `<span class="pc-badge-new">&#10024; Nuevo</span>` : '';
+  const destBadge = p.destacada ? `<span style="position:absolute;top:12px;right:12px;background:#F59E0B;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(245,158,11,.4);z-index:3">★</span>` : '';
 
   return `<div class="prop-card-wrap" id="${cardId}" data-imgs='${imgsJson}' data-idx="0">
   <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
@@ -58,6 +59,7 @@ function card(p) {
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
     ${exclusivaBadge}
     ${newBadge}
+    ${destBadge}
     ${photoCount}
     <button class="pc-fav" data-slug="${escapeHtml(p.slug)}" onclick="toggleFav('${escapeHtml(p.slug)}',this)" aria-label="Guardar en favoritos">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
