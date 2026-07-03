@@ -388,6 +388,26 @@ body.dark .empty-state{color:var(--dm-text3)}
   .lead-tabs{gap:4px}
   .lead-tab{padding:4px 10px;font-size:11px}
 }
+
+.dest-toggle{display:flex;align-items:center;gap:8px;padding:8px 10px;margin-top:10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color .2s}
+.dest-toggle:hover{border-color:#F59E0B}
+.dest-toggle input{width:14px;height:14px;accent-color:#F59E0B}
+.dest-toggle .star{color:#F59E0B;font-size:16px}
+.desc-blocks{margin-top:10px}
+.desc-block{position:relative;border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px;transition:border-color .2s}
+.desc-block:hover{border-color:var(--or)}
+.desc-block-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--or);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.desc-block textarea{width:100%;min-height:60px;border:1px solid var(--border);border-radius:4px;padding:8px;font-size:13px;font-family:Inter,sans-serif;resize:vertical;background:var(--bg);color:var(--text)}
+.desc-block-del{position:absolute;top:6px;right:6px;background:none;border:none;color:#EF4444;cursor:pointer;font-size:14px;opacity:.5;transition:opacity .2s}
+.desc-block-del:hover{opacity:1}
+.desc-block-add{display:flex;gap:6px;margin-top:6px}
+.desc-block-add button{flex:1;padding:7px;border:1.5px dashed var(--border);border-radius:6px;background:none;font-size:11px;color:var(--text3);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px}
+.desc-block-add button:hover{border-color:var(--or);color:var(--or)}
+.star-cell{color:#F59E0B;font-size:14px}
+body.dark .desc-block{border-color:var(--dm-border)}
+body.dark .desc-block textarea{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text)}
+body.dark .dest-toggle{border-color:var(--dm-border);color:var(--dm-text)}
+body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-text3)}
 </style>
 </head>
 <body>
@@ -461,8 +481,9 @@ body.dark .empty-state{color:var(--dm-text3)}
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-info-circle"></i> Información básica</div>
             <div class="fg"><label>Título *</label><input type="text" id="fTitulo" placeholder="Ej: Casa en Kanajuyú · Zona 16"></div>
-            <div class="fg-row c2">
-              <div class="fg"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: Q 2,500,000"></div>
+            <div class="fg-row c3">
+              <div class="fg"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: 2,500,000"></div>
+              <div class="fg"><label>Moneda</label><select id="fMoneda"><option value="Q">Q (Quetzales)</option><option value="USD">USD (Dólares)</option></select></div>
               <div class="fg"><label>Código</label><input type="text" id="fCodigo" placeholder="CV-001"></div>
             </div>
             <div class="fg-row c3">
@@ -527,6 +548,17 @@ body.dark .empty-state{color:var(--dm-text3)}
             <div class="fg"><label>Descripción completa</label><textarea id="fDescripcion" style="min-height:90px" placeholder="Descripción detallada para el sitio web..."></textarea></div>
             <div class="fg"><label>Hook para redes sociales</label><input type="text" id="fHook" placeholder="Ej: Hay casas. Y luego está esta."></div>
             <div class="fg"><label>Descripción corta</label><textarea id="fDescCorta" style="min-height:56px" placeholder="2-3 líneas premium..."></textarea></div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title"><i class="ti ti-layout-list"></i> Descripción por bloques</div>
+            <div class="desc-blocks" id="descBlocksWrap"></div>
+            <div class="desc-block-add">
+              <button type="button" onclick="addDescBlock('parrafo')"><i class="ti ti-align-left"></i> Párrafo</button>
+              <button type="button" onclick="addDescBlock('destacado')"><i class="ti ti-blockquote"></i> Destacado</button>
+              <button type="button" onclick="addDescBlock('lista')"><i class="ti ti-list"></i> Lista</button>
+            </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--text3)">Opcional: agrega bloques para una descripción más estructurada en el sitio.</div>
           </div>
 
           <div class="fsec">
@@ -707,6 +739,11 @@ body.dark .empty-state{color:var(--dm-text3)}
           </div>
 
           <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-video"></i> Video</div>
+            <div class="fg"><label>URL del video (YouTube/Vimeo)</label><input type="url" id="fVideoUrl" placeholder="https://youtube.com/watch?v=..."></div>
+          </div>
+
+          <div class="side-card">
             <div class="side-card-title"><i class="ti ti-toggle-right"></i> Estado</div>
             <div class="status-pills" id="statusPills">
               <div class="pill active" onclick="setStatus('Activa')">Activa</div>
@@ -714,6 +751,7 @@ body.dark .empty-state{color:var(--dm-text3)}
               <div class="pill" onclick="setStatus('Pausada')">Pausada</div>
             </div>
             <input type="hidden" id="fEstado" value="Activa">
+            <label class="dest-toggle"><input type="checkbox" id="fDestacada"><span class="star"><i class="ti ti-star-filled"></i></span><div><div style="font-size:12px;font-weight:600">Propiedad Destacada</div><div style="font-size:10px;color:var(--text3)">Aparece primero en los listados</div></div></label>
           </div>
 
           <div class="side-card">
@@ -741,6 +779,13 @@ body.dark .empty-state{color:var(--dm-text3)}
               <div class="fg"><label>Latitud</label><input type="text" id="fLat" placeholder="14.6349"></div>
               <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
             </div>
+            <div class="fg" style="margin-top:8px"><label>Google Maps URL</label><input type="url" id="fGoogleMaps" placeholder="https://maps.google.com/..."></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-brand-whatsapp"></i> WhatsApp por propiedad</div>
+            <div class="fg"><label>Número WhatsApp</label><input type="tel" id="fWhatsappProp" placeholder="Ej: 50245542088"></div>
+            <div style="margin-top:6px;padding:6px 8px;background:#ECFDF5;border-radius:4px;font-size:10px;color:#065F46;line-height:1.4"><strong>Nota:</strong> Solo aplica en zona-innmueble.com. InmuHub nunca muestra WhatsApp ni contactos.</div>
           </div>
 
         </div>
@@ -1092,7 +1137,7 @@ function buildTable(data, sortable) {
     rows += `<tr>
       <td style="width:64px">${img}</td>
       <td>
-        <div class="prop-name">${esc(p.titulo||'')}</div>
+        ${p.destacada?'<span class="star-cell"><i class="ti ti-star-filled"></i></span> ':''}<div class="prop-name">${esc(p.titulo||'')}</div>
         <div class="prop-loc">${esc(p.municipio||p.zona||'')}</div>
       </td>
       <td>${esc(p.tipo||'—')}</td>
@@ -1290,11 +1335,13 @@ function clearForm() {
   ['fTitulo','fPrecio','fCodigo','fZona','fMunicipio','fUbicacionGeneral',
    'fArea','fAreaV2','fHabitaciones','fBanos','fMediosBanos','fParqueos','fNiveles','fDatosTecnicos',
    'fAnioConstruccion','fDescripcion','fHook','fDescCorta','fPdfUrl',
-   'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen'
+   'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen','fVideoUrl','fGoogleMaps','fWhatsappProp'
   ].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados','fDepartamento'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('fTipo').value='Casa';
   document.getElementById('fOperacion').value='Venta';
+  document.getElementById('fMoneda').value='Q';
+  document.getElementById('fDestacada').checked=false;
   document.getElementById('fTipoListing').value='Residencial';
   document.getElementById('fPrivada').checked=false;
   // Reset privacy config
@@ -1302,7 +1349,7 @@ function clearForm() {
   document.getElementById('sZona').checked=true;
   document.getElementById('sInmu').checked=true;
   document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.char-item').classList.remove('checked');});
-  setStatus('Activa'); setCinta(''); galUrls=[]; renderGallery();
+  setStatus('Activa'); setCinta(''); galUrls=[]; renderGallery(); descBloques=[]; renderDescBlocks();
   const imgPrev=document.getElementById('imgPreview');
   if(imgPrev)imgPrev.style.display='none';
 }
@@ -1324,6 +1371,10 @@ function loadForm(p) {
   set('fLat',p.lat); set('fLng',p.lng); set('fImagen',p.imagen);
   const sel=(id,val)=>{const el=document.getElementById(id);if(el&&val)el.value=val;};
   sel('fTipo',p.tipo); sel('fOperacion',p.operacion); sel('fTipoListing',p.tipoListing); sel('fDepartamento',p.departamento);
+  sel('fMoneda',p.moneda);
+  set('fVideoUrl',p.videoUrl); set('fGoogleMaps',p.googleMapsUrl); set('fWhatsappProp',p.whatsappProp);
+  document.getElementById('fDestacada').checked=!!p.destacada;
+  descBloques=p.descBloques||[]; renderDescBlocks();
   document.getElementById('fPrivada').checked=!!p.privada;
   document.getElementById('sZona').checked=p.sitios?p.sitios.includes('zona'):true;
   document.getElementById('sInmu').checked=p.sitios?p.sitios.includes('inmu'):true;
@@ -1403,6 +1454,9 @@ async function saveProp() {
     departamento:g('fDepartamento'),lat:g('fLat'),lng:g('fLng'),
     imagen:g('fImagen'),gallery:galUrls,
     estado:currentStatus,cinta:currentCinta,caracteristicas:chars,sitios,
+    moneda:g('fMoneda'),destacada:document.getElementById('fDestacada').checked,
+    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),
+    descBloques:getDescBloques(),
     privConfig: {
       hidePrecio: document.getElementById('pcHidePrecio')?.checked || false,
       hideGallery: document.getElementById('pcHideGallery')?.checked || false,
@@ -1582,6 +1636,39 @@ document.querySelectorAll('.char-item').forEach(item=>{
 
 // ── INIT ─────────────────────────────────────────────────────
 checkSession();
+
+// DESC BLOQUES
+let descBloques = [];
+
+function addDescBlock(type) {
+  descBloques.push({type, content:''});
+  renderDescBlocks();
+}
+
+function removeDescBlock(i) {
+  descBloques.splice(i,1);
+  renderDescBlocks();
+}
+
+function renderDescBlocks() {
+  const wrap = document.getElementById('descBlocksWrap');
+  if(!wrap) return;
+  const labels = {parrafo:'P\u00e1rrafo',destacado:'Destacado',lista:'Lista'};
+  const icons = {parrafo:'ti-align-left',destacado:'ti-blockquote',lista:'ti-list'};
+  wrap.innerHTML = descBloques.map((b,i) => {
+    const ph = b.type==='lista' ? 'Un elemento por l\u00ednea...' : 'Escribe aqu\u00ed...';
+    return '<div class="desc-block">'
+      + '<div class="desc-block-type"><i class="ti ' + icons[b.type] + '"></i> ' + labels[b.type] + '</div>'
+      + '<textarea oninput="descBloques[' + i + '].content=this.value" placeholder="' + ph + '">' + (b.content||'') + '</textarea>'
+      + '<button class="desc-block-del" onclick="removeDescBlock(' + i + ')" title="Eliminar bloque"><i class="ti ti-trash"></i></button>'
+      + '</div>';
+  }).join('');
+}
+
+function getDescBloques() {
+  return descBloques.filter(b => b.content && b.content.trim());
+}
+
 </script>
 </body>
 </html>
