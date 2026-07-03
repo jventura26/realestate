@@ -218,10 +218,10 @@ function detailPage(prop) {
   if(prop.banos && prop.banos!=='0') specs.push({icon:'bath',val:prop.banos,lbl:'Baños'});
   if(prop.mediosBanos && prop.mediosBanos!=='0') specs.push({icon:'droplets',val:prop.mediosBanos,lbl:'½ Baño'});
   if(prop.parqueos && prop.parqueos!=='0') specs.push({icon:'car',val:prop.parqueos,lbl:'Parqueos'});
-  if(prop.areaConst && prop.areaConst!=='0') specs.push({icon:'ruler-square',val:prop.areaConst+' m²',lbl:'Const.'});
-  if(prop.area && prop.area!=='0') specs.push({icon:'polygon',val:prop.area+' m²',lbl:'Terreno'});
-  if(prop.areaV2 && prop.areaV2!=='0') specs.push({icon:'dimensions',val:prop.areaV2+' v²',lbl:'Varas'});
-  if(prop.niveles && prop.niveles!=='0') specs.push({icon:'layers',val:prop.niveles,lbl:'Niveles'});
+    if(prop.areaConst && prop.areaConst!=='0') specs.push({icon:'ruler-2',val:prop.areaConst+' m\u00B2',lbl:'Const.'});
+  if(prop.areaV2 && prop.areaV2!=='0') specs.push({icon:'dimensions',val:prop.areaV2+' v\u00B2',lbl:'Terreno'});
+  else if(prop.area && prop.area!=='0') specs.push({icon:'dimensions',val:prop.area+' m\u00B2',lbl:'Terreno'});
+  if(prop.niveles && prop.niveles!=='0') specs.push({icon:'stairs-up',val:prop.niveles,lbl:'Niveles'});
 
   const specsHTML = specs.map(s=>`<div class="zp-spec">
     <i class="ti ti-${s.icon}"></i>
