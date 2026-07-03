@@ -304,6 +304,10 @@ function indexPage(props) {
   <p style="font-size:.85rem;color:var(--sv);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8">
     Cu&eacute;ntanos qu&eacute; necesitas y nuestro equipo te presenta opciones exclusivas que no est&aacute;n publicadas.
   </p>
+  <a href="https://wa.me/50245542088?text=Hola%2C%20busco%20una%20propiedad%20que%20no%20est%C3%A1%20publicada.%20%C2%BFPueden%20ayudarme%3F" target="_blank" rel="noopener" style="display:inline-flex;gap:10px;align-items:center;margin-top:24px;padding:14px 32px;background:var(--or);color:#fff;border-radius:8px;font-size:.82rem;font-weight:600;text-decoration:none;letter-spacing:.03em;transition:background .3s,transform .15s">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+    Escribir por WhatsApp
+  </a>
   
 </div>
 
