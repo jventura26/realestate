@@ -12,7 +12,7 @@ function card(p) {
   const cinta = (p.cinta || '').trim();
   const cintaSlug = cinta.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-');
   const cintaBadge = cinta ? `<span class="card-cinta card-cinta--${cintaSlug}">${escapeHtml(cinta)}</span>` : '';
-  const destBadge = p.destacada ? '<span style="position:absolute;bottom:12px;left:12px;background:#F59E0B;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px rgba(245,158,11,.4);z-index:3">★</span>' : '';
+  const destBadge = p.destacada ? '<span style="position:absolute;top:12px;right:12px;background:#F59E0B;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(245,158,11,.4);z-index:3">★</span>' : '';
 
   const specs = [];
   if (p.habitaciones && p.habitaciones !== '0') specs.push(`<span class="cs-item">${ICON_BED}<span>${p.habitaciones} hab.</span></span>`);
