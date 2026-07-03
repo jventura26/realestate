@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css">
 <style>
-:root{
+:root{--dm-bg:#0f172a;--dm-card:#1e293b;--dm-border:#334155;--dm-text:#e2e8f0;--dm-text2:#94a3b8;--dm-text3:#64748b;
   --navy:#0D1B3E;--navy2:#142240;--navy3:#1A3060;
   --or:#F5820D;--or2:#FF9B2E;
   --wh:#fff;--bg:#F0F2F5;
@@ -145,6 +145,10 @@ tr:hover td{background:#FAFBFF}
 .badge-gray{background:#f1f5f9;color:#475569}
 .badge-orange{background:#ffedd5;color:#9a3412}
 .badge-blue{background:#dbeafe;color:#1d4ed8}
+.bulk-bar{display:none;align-items:center;gap:10px;padding:10px 18px;background:#EFF6FF;border-bottom:1px solid #BFDBFE;font-size:13px;color:#1E40AF;font-weight:600}
+.bulk-bar.show{display:flex}
+.bulk-bar select{padding:5px 10px;border:1px solid #BFDBFE;border-radius:6px;font-size:12px;background:#fff}
+.bulk-check{width:16px;height:16px;accent-color:var(--or);cursor:pointer}
 .actions-cell{display:flex;gap:6px;align-items:center}
 .icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .15s}
 .icon-btn:hover{background:var(--navy);color:var(--wh);border-color:var(--navy)}
@@ -308,15 +312,81 @@ tr:hover td{background:#FAFBFF}
 .toast.error{border-left:4px solid var(--red)}
 
 /* MOBILE */
+/* DARK MODE */
+body.dark{background:var(--dm-bg);color:var(--dm-text)}
+body.dark .topbar{background:var(--dm-card);border-color:var(--dm-border)}
+body.dark .stat-card,body.dark .table-wrap,body.dark .chart-card,body.dark .recent-card,body.dark .lead-card,body.dark .side-card{background:var(--dm-card);border-color:var(--dm-border)}
+body.dark .stat-card:hover,body.dark .lead-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.3)}
+body.dark td{border-color:var(--dm-border);color:var(--dm-text)}
+body.dark th{background:var(--dm-bg);color:var(--dm-text3);border-color:var(--dm-border)}
+body.dark tr:hover td{background:rgba(255,255,255,.03)}
+body.dark .content{background:var(--dm-bg)}
+body.dark .fg input,body.dark .fg select,body.dark .fg textarea{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text)}
+body.dark .btn-ghost{color:var(--dm-text2);border-color:var(--dm-border)}
+body.dark .search-box{background:var(--dm-card);border-color:var(--dm-border)}
+body.dark .search-box input{color:var(--dm-text)}
+body.dark .filter-select{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text2)}
+body.dark .modal-body{background:var(--dm-bg)}
+body.dark .form-left{border-color:var(--dm-border)}
+body.dark .modal-footer{background:var(--dm-card);border-color:var(--dm-border)}
+body.dark .fsec{border-color:var(--dm-border)}
+body.dark .pipe-col{background:var(--dm-card);border-color:var(--dm-border)}
+body.dark .pipe-card{background:var(--dm-bg);border-color:var(--dm-border)}
+body.dark .lead-stage-select{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text2)}
+body.dark .lead-tab{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text2)}
+body.dark .table-footer{border-color:var(--dm-border);color:var(--dm-text3)}
+body.dark .prop-name{color:var(--dm-text)}
+body.dark .zp-title,.dark .lead-name{color:var(--dm-text)}
+body.dark .page-header-title{color:var(--dm-text)}
+body.dark .page-header-sub{color:var(--dm-text3)}
+body.dark .icon-btn{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text2)}
+body.dark .char-item{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text2)}
+body.dark .char-item.checked{background:#3b2a10;border-color:var(--or)}
+body.dark .pill{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text2)}
+body.dark .sitio-row{border-color:var(--dm-border);color:var(--dm-text)}
+body.dark .priv-box{background:#2d2305;border-color:#78350F}
+body.dark .share-box{background:#0c1a3d;border-color:#1E40AF}
+body.dark .empty-state{color:var(--dm-text3)}
+
+/* MOBILE HAMBURGER */
+.mob-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--navy)}
+.mob-toggle i{font-size:22px}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199}
+.sidebar-overlay.open{display:block}
+
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+}
 @media(max-width:768px){
-  .sidebar{display:none}
+  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:200;transition:left .3s;width:232px}
+  .sidebar.open{left:0}
+  .mob-toggle{display:block}
+  .topbar{padding:0 12px}
+  .content{padding:14px}
   .form-grid{grid-template-columns:1fr}
-  .form-right{border-top:1px solid var(--border)}
+  .form-right{border-top:1px solid var(--border);border-right:none}
+  .form-left,.form-right{max-height:none;padding:16px}
   .fg-row.c3,.fg-row.c4{grid-template-columns:1fr 1fr}
   .lead-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
   .pipeline-wrap{gap:10px}
   .pipe-col{width:180px;min-width:180px}
+  .table-header{flex-direction:column;align-items:stretch}
+  .table-controls{flex-wrap:wrap}
+  .search-box{min-width:100%!important}
+  .modal-panel{margin:10px;border-radius:10px}
+  .modal-topbar{padding:0 14px;height:48px}
+  .page-header{flex-direction:column;align-items:flex-start}
+  .lead-tabs{flex-wrap:wrap}
+  td:nth-child(6),th:nth-child(6){display:none}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .fg-row.c2,.fg-row.c3,.fg-row.c4{grid-template-columns:1fr}
+  .topbar-title{font-size:14px}
+  .lead-tabs{gap:4px}
+  .lead-tab{padding:4px 10px;font-size:11px}
 }
 </style>
 </head>
@@ -366,8 +436,8 @@ tr:hover td{background:#FAFBFF}
     </div>
     <div class="main">
       <div class="topbar">
-        <div class="topbar-title" id="pageTitle">Dashboard</div>
-        <button class="btn btn-ghost btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Actualizar</button>
+        <button class="mob-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>\n        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <button class="btn btn-ghost btn-sm" id="darkToggle" onclick="toggleDark()" title="Modo oscuro"><i class="ti ti-moon"></i></button>\n        <button class="btn btn-ghost btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Actualizar</button>
         <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
         <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
       </div>
@@ -905,7 +975,7 @@ function renderPropiedades(mc) {
           <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva</button>
         </div>
       </div>
-      <div id="tableBody">${buildTable(props, true)}</div>
+      <div class="bulk-bar" id="bulkBar">\n        <span id="bulkCount">0</span> seleccionadas\n        <select id="bulkAction"><option value="">Cambiar estado...</option><option value="Activa">Activa</option><option value="Vendida">Vendida</option><option value="Pausada">Pausada</option></select>\n        <button class="btn btn-primary btn-sm" onclick="applyBulk()"><i class="ti ti-check"></i> Aplicar</button>\n        <button class="btn btn-ghost btn-sm" onclick="clearBulk()">Cancelar</button>\n      </div>\n      <div id="tableBody">${buildTable(props, true)}</div>
       <div class="table-footer">
         <span id="tableCount">${props.length} propiedad${props.length!==1?'es':''}</span>
       </div>
@@ -952,6 +1022,55 @@ function filterTable() {
   if (tc) tc.textContent = filtered.length + ' propiedad' + (filtered.length!==1?'es':'');
 }
 
+function toggleAllBulk(master) {
+  document.querySelectorAll('#tableBody .bulk-check').forEach(cb => {
+    cb.checked = master.checked;
+  });
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  const checked = document.querySelectorAll('#tableBody .bulk-check:checked');
+  const bar = document.getElementById('bulkBar');
+  const count = document.getElementById('bulkCount');
+  if (bar) bar.classList.toggle('show', checked.length > 0);
+  if (count) count.textContent = checked.length;
+}
+
+function clearBulk() {
+  document.querySelectorAll('.bulk-check').forEach(cb => cb.checked = false);
+  updateBulkBar();
+}
+
+async function applyBulk() {
+  const action = document.getElementById('bulkAction')?.value;
+  if (!action) { showToast('Selecciona una acci\u00F3n', 'error'); return; }
+  const checked = Array.from(document.querySelectorAll('#tableBody .bulk-check:checked'));
+  if (!checked.length) return;
+  if (!confirm('\u00BFCambiar ' + checked.length + ' propiedades a "' + action + '"?')) return;
+
+  let ok = 0;
+  for (const cb of checked) {
+    const id = cb.dataset.id;
+    const decoded = decodeURIComponent(id);
+    const p = props.find(x => (x.id||x.slug) === decoded || encodeURIComponent(x.id||x.slug) === id);
+    if (p) {
+      p.estado = action;
+      try {
+        await fetch(API + '/api/propiedades', {
+          method: 'PUT', credentials: 'include',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({...p, id: p.id||p.slug})
+        });
+        ok++;
+      } catch(e) {}
+    }
+  }
+  showToast(ok + ' propiedades actualizadas', 'success');
+  clearBulk();
+  filterTable();
+}
+
 function getCompletenessPct(p) {
   const fields = ['titulo','precio','tipo','municipio','habitaciones','banos','area','descripcion','imagen'];
   const filled = fields.filter(f => p[f] && String(p[f]).trim().length > 0).length;
@@ -996,7 +1115,7 @@ function buildTable(data, sortable) {
   });
   return `<table>
     <thead><tr>
-      <th style="width:64px"></th>
+      <th style="width:36px"><input type="checkbox" class="bulk-check" onchange="toggleAllBulk(this)"></th>\n      <th style="width:64px"></th>
       <th onclick="sortTable(\x27titulo\x27)" style="cursor:pointer">Propiedad <span class="sort-icon">\u2195</span></th>
       <th>Tipo</th>
       <th>Precio</th>
@@ -1147,10 +1266,24 @@ function openModal(id) {
   } else {
     document.getElementById('modalTitle').textContent = 'Nueva propiedad';
   }
-  document.getElementById('modalOverlay').classList.add('open');
+  formDirty = false;\n  document.getElementById('modalOverlay').classList.add('open');
 }
 
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+let formDirty = false;
+function closeModal() {
+  if (formDirty) {
+    if (!confirm('\u00BFSalir sin guardar? Los cambios se perder\u00E1n.')) return;
+  }
+  formDirty = false;
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+// Track form changes
+document.addEventListener('input', function(e) {
+  if (e.target.closest('.form-grid')) formDirty = true;
+});
+document.addEventListener('change', function(e) {
+  if (e.target.closest('.form-grid')) formDirty = true;
+});
 
 function clearForm() {
   ['fTitulo','fPrecio','fCodigo','fZona','fMunicipio','fUbicacionGeneral',
@@ -1283,7 +1416,7 @@ async function saveProp() {
       headers:{'Content-Type':'application/json'},body:JSON.stringify(data)
     });
     if(r.ok){
-      showToast(editingId?'Propiedad actualizada ✓':'Propiedad creada ✓','success');
+      formDirty = false;\n      showToast(editingId?'Propiedad actualizada ✓':'Propiedad creada ✓','success');
       closeModal(); await loadProps(); showPage('propiedades');
     }else{showToast('Error al guardar','error');}
   }catch(e){showToast('Error de conexión','error');}
@@ -1396,6 +1529,37 @@ function showToast(msg,type) {
 }
 
 // ── KEYBOARD ─────────────────────────────────────────────────
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('adminDark', isDark ? '1' : '0');
+  const icon = document.querySelector('#darkToggle i');
+  if (icon) icon.className = isDark ? 'ti ti-sun' : 'ti ti-moon';
+}
+// Restore dark mode preference
+if (localStorage.getItem('adminDark') === '1') {
+  document.body.classList.add('dark');
+  const icon = document.querySelector('#darkToggle i');
+  if (icon) icon.className = 'ti ti-sun';
+}
+
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+}
+
+// Close sidebar when clicking a nav item on mobile
+document.querySelectorAll('.sb-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      document.querySelector('.sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+  });
+});
+
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none')doLogin();
   if(e.key==='Escape')closeModal();
