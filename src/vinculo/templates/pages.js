@@ -447,7 +447,7 @@ img{max-width:100%;display:block}
 .zp-video-wrap{border-radius:12px;overflow:hidden;margin-bottom:8px}
 
 /* SIDEBAR */
-.zp-side{position:sticky;top:70px}
+.zp-side{position:sticky;top:24px}
 .zp-card{background:#fff;border:1.5px solid #e0e0e0;border-radius:16px;padding:24px;box-shadow:0 4px 24px rgba(0,0,0,.07)}
 .zp-card-price{font-size:24px;font-weight:800;color:#1a3a5c;margin-bottom:2px}
 .zp-card-op{font-size:13px;color:#888;margin-bottom:20px}
