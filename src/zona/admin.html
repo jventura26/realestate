@@ -869,6 +869,27 @@ function renderPropiedades(mc) {
     </div>`;
 }
 
+function sortTable(col) {
+  if (sortCol === col) { sortDir *= -1; } else { sortCol = col; sortDir = 1; }
+  const getVal = (p) => {
+    switch(col) {
+      case 'titulo': return (p.titulo||'').toLowerCase();
+      case 'tipo': return (p.tipo||'').toLowerCase();
+      case 'precio': return parseFloat((p.priceFormatted||p.precio||'0').toString().replace(/[^0-9.]/g,''))||0;
+      case 'estado': return (p.estado||'Activa').toLowerCase();
+      case 'completitud': return getCompletenessPct(p);
+      default: return '';
+    }
+  };
+  props.sort((a,b) => {
+    const va = getVal(a), vb = getVal(b);
+    if (va < vb) return -1 * sortDir;
+    if (va > vb) return 1 * sortDir;
+    return 0;
+  });
+  filterTable();
+}
+
 function filterTable() {
   const q    = (document.getElementById('searchInput')?.value || '').toLowerCase();
   const est  = document.getElementById('filterEstado')?.value || '';
@@ -925,7 +946,7 @@ function buildTable(data, sortable) {
         <div class="actions-cell">
           <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
           <div class="icon-btn" title="Ver en sitio" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
-          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
+          <div class="icon-btn" title="Duplicar" onclick="duplicateProp('${id}')"><i class="ti ti-copy"></i></div>\n          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
         </div>
       </td>
     </tr>`;
@@ -933,7 +954,7 @@ function buildTable(data, sortable) {
   return `<table>
     <thead><tr>
       <th style="width:64px"></th>
-      <th>Propiedad</th>
+      <th onclick="sortTable(\x27titulo\x27)" style="cursor:pointer">Propiedad <span class="sort-icon">\u2195</span></th>
       <th>Tipo</th>
       <th>Precio</th>
       <th>Estado</th>
@@ -952,7 +973,7 @@ function renderLeads(mc) {
   const filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
 
   mc.innerHTML = `
-    <div class="leads-toolbar">
+    <div class="leads-toolbar" style="flex-wrap:wrap;gap:10px">
       <div class="lead-tabs">
         <div class="lead-tab ${leadFilter==='todos'?'active':''}" onclick="setLeadFilter('todos')">Todos (${leads.length})</div>
         ${stages.map(s=>`<div class="lead-tab ${leadFilter===s?'active':''}" onclick="setLeadFilter('${s}')">${s} (${counters[s]})</div>`).join('')}
@@ -962,6 +983,31 @@ function renderLeads(mc) {
     ${filtered.length === 0
       ? `<div class="empty-state"><i class="ti ti-users"></i><p>${leadFilter==='todos'?'Sin leads aún':'Sin leads en esta etapa'}</p></div>`
       : `<div class="lead-grid">${filtered.map(l=>buildLeadCard(l)).join('')}</div>`}`;
+}
+
+function filterLeads() {
+  const q = (document.getElementById('leadSearch')?.value || '').toLowerCase();
+  const mc = document.getElementById('mainContent');
+  if (!mc) return;
+  const stages = ['Nuevo','Contactado','Calificado','Negociaci\u00f3n','Cerrado','Perdido'];
+  const counters = {};
+  stages.forEach(s => counters[s] = leads.filter(l=>(l.stage||'Nuevo')===s).length);
+  let filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  if (q) {
+    filtered = filtered.filter(l =>
+      (l.nombre||'').toLowerCase().includes(q) ||
+      (l.telefono||'').toLowerCase().includes(q) ||
+      (l.propiedad||'').toLowerCase().includes(q) ||
+      (l.tipo||'').toLowerCase().includes(q)
+    );
+  }
+  const grid = mc.querySelector('.lead-grid');
+  const empty = mc.querySelector('.empty-state');
+  if (grid) {
+    grid.innerHTML = filtered.length === 0
+      ? '<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-search"></i><p>Sin resultados</p></div>'
+      : filtered.map(l=>buildLeadCard(l)).join('');
+  }
 }
 
 function setLeadFilter(f) {
@@ -1179,6 +1225,25 @@ async function saveProp() {
       closeModal(); await loadProps(); showPage('propiedades');
     }else{showToast('Error al guardar','error');}
   }catch(e){showToast('Error de conexión','error');}
+}
+
+function duplicateProp(id) {
+  const decoded = decodeURIComponent(id);
+  const p = props.find(x=>(x.id||x.slug)===decoded || encodeURIComponent(x.id||x.slug)===id);
+  if (!p) return;
+  openModal(null);
+  setTimeout(() => {
+    const copy = {...p};
+    delete copy.id; delete copy._id; delete copy.slug;
+    copy.titulo = (p.titulo||'') + ' (copia)';
+    copy.estado = 'Pausada';
+    loadForm(copy);
+    document.getElementById('fSlug').value = '';
+    document.getElementById('fSlug').dataset.auto = '1';
+    document.getElementById('fTitulo').dispatchEvent(new Event('input'));
+    document.getElementById('modalTitle').textContent = 'Duplicar propiedad';
+    showToast('Propiedad duplicada - edita y guarda','success');
+  }, 100);
 }
 
 async function deleteProp(id, titulo) {
