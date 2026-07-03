@@ -45,6 +45,7 @@ function normalizeKV(kvProps) {
     estado: p.estado || 'Activa',
     area: cleanArea(p.area || p.areaConst || ''),
     areaConst: cleanArea(p.areaConst || p.area || ''),
+    areaV2: cleanArea(p.areaV2 || ''),
   }));
 }
 
