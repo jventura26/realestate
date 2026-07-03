@@ -220,7 +220,7 @@ function detailPage(prop) {
   if(prop.parqueos && prop.parqueos!=='0') specs.push({icon:'car',val:prop.parqueos,lbl:'Parqueos'});
   if(prop.areaConst && prop.areaConst!=='0') specs.push({icon:'ruler-square',val:prop.areaConst+' m²',lbl:'Const.'});
   if(prop.area && prop.area!=='0') specs.push({icon:'polygon',val:prop.area+' m²',lbl:'Terreno'});
-  if(prop.areaV2 && prop.areaV2!=='0') specs.push({icon:'dimensions',val:prop.areaV2+' vÂ²',lbl:'Varas'});
+  if(prop.areaV2 && prop.areaV2!=='0') specs.push({icon:'dimensions',val:prop.areaV2+' v²',lbl:'Varas'});
   if(prop.niveles && prop.niveles!=='0') specs.push({icon:'layers',val:prop.niveles,lbl:'Niveles'});
 
   const specsHTML = specs.map(s=>`<div class="zp-spec">
