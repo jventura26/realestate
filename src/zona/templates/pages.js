@@ -601,8 +601,8 @@ function detailPage(prop, all) {
   const jsonLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
-    "name": prop.title,
-    "description": cleanDesc || prop.title,
+    "name": prop.titulo || prop.title,
+    "description": cleanDesc || prop.titulo || prop.title,
     "url": propUrl,
     "image": prop.mainImage || '',
     "numberOfRooms": prop.habitaciones || undefined,

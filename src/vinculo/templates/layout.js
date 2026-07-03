@@ -26,6 +26,22 @@ return `<!DOCTYPE html>
 <link rel="canonical" href="${canon}">
 <link rel="icon" type="image/png" href="/assets/favicon2.png">
 <meta name="theme-color" content="#1a2a4e">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "INMUHUB",
+  "url": "https://inmuhub.com",
+  "logo": "https://inmuhub.com/assets/logo-horizontal.png",
+  "description": "Portal inmobiliario premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Ciudad de Guatemala",
+    "addressCountry": "GT"
+  },
+  "areaServed": ["Guatemala", "Zona 10", "Zona 14", "Zona 15", "Cayala", "Fraijanes", "Carretera a El Salvador"]
+}
+</script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="${pageTitle}">
 <meta property="og:description" content="${metaDesc}">

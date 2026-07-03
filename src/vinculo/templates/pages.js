@@ -206,6 +206,45 @@ function detailPage(prop) {
     </div>
   </div>`;
 
+  // SEO description
+  const rawDesc = (prop.descripcion||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+  const cleanDesc = rawDesc.substring(0,300);
+  const propUrl = 'https://inmuhub.com/propiedades/' + esc(prop.slug||prop.id||'') + '.html';
+
+  // Schema RealEstateListing
+  const schemaListing = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    'name': prop.titulo || 'Propiedad',
+    'description': cleanDesc || prop.titulo,
+    'url': propUrl,
+    'image': prop.mainImage || '',
+    'numberOfRooms': prop.habitaciones || undefined,
+    'floorSize': prop.areaConst ? { '@type':'QuantitativeValue', 'value': prop.areaConst, 'unitCode': 'MTK' } : undefined,
+    'offers': {
+      '@type': 'Offer',
+      'price': prop.priceNumeric || 0,
+      'priceCurrency': (prop.moneda||'USD').includes('Q') ? 'GTQ' : 'USD',
+      'availability': 'https://schema.org/InStock'
+    },
+    'address': {
+      '@type': 'PostalAddress',
+      'addressLocality': prop.municipio || prop.zona || 'Guatemala',
+      'addressRegion': prop.departamento || 'Guatemala',
+      'addressCountry': 'GT'
+    }
+  });
+
+  const schemaBreadcrumb = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
+      { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
+      { '@type':'ListItem', 'position':3, 'name': prop.titulo || 'Propiedad' }
+    ]
+  });
+
   // Price
   const precio = prop.priceFormatted || (prop.precio ? Number(prop.precio).toLocaleString('en-US') : '');
   const moneda = prop.moneda||'USD';
@@ -351,6 +390,15 @@ function detailPage(prop) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(prop.titulo||'Propiedad')} | INMUHUB.COM</title>
+<meta name="description" content="${esc((cleanDesc||prop.titulo||'Propiedad en Guatemala').substring(0,160))}">
+<link rel="canonical" href="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${esc(prop.titulo||'Propiedad')} | INMUHUB.COM">
+<meta property="og:description" content="${esc((cleanDesc||prop.titulo||'').substring(0,160))}">
+<meta property="og:url" content="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
+<meta property="og:image" content="${esc(prop.mainImage||'')}">
+<meta property="og:locale" content="es_GT">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -586,6 +634,8 @@ document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(
   track.querySelectorAll('img').forEach(function(img,i){img.addEventListener('click',function(){zpOpenGallery();zpLbShow(i);});});
 })();
 </script>
+<script type="application/ld+json">${schemaListing}</script>
+<script type="application/ld+json">${schemaBreadcrumb}</script>
 </body></html>`;
 }
 function mortgageCalcPage(props) {
