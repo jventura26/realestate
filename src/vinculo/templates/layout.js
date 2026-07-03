@@ -23,7 +23,6 @@ return `<!DOCTYPE html>
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
-<link rel="icon" type="image/png" href="/assets/favicon2.png">
 <meta name="theme-color" content="#1a2a4e">
 <script type="application/ld+json">
 {
@@ -64,7 +63,9 @@ return `<!DOCTYPE html>
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--white);color:var(--gray-900);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--white);color:var(--gray-900);-webkit-font-smoothing:antialiased;overflow-x:hidden;text-rendering:optimizeLegibility}
+::selection{background:#1a3a5c;color:#fff}
+:focus-visible{outline:2px solid #c9a96e;outline-offset:2px}
 img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */

@@ -56,6 +56,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <meta name="twitter:card"       content="summary_large_image">
 <meta name="theme-color"        content="#0D1B3E">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
 
 <!-- Google Analytics 4 — configurado: G-5KVQZYZ7B3 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=${ga4Id}"></script>
@@ -81,7 +82,9 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:var(--or);color:var(--ink)}
+:focus-visible{outline:2px solid var(--or);outline-offset:2px}
 img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,27,62,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--gl);padding:0;width:100%;height:68px;display:flex;align-items:stretch}

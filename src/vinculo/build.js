@@ -131,6 +131,10 @@ const urls = [
   ...props.map(p=>({ loc:`/propiedades/${p.slug}.html`, priority:'0.8', changefreq:'weekly' })),
 ];
 write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(' sitemap.xml');
+// 404
+const src404 = require('path').join(__dirname, '404.html');
+if(fs.existsSync(src404)){fs.copyFileSync(src404, require('path').join(OUT,'404.html'));console.log(' 404.html');}
+
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
 write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
 
