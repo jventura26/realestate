@@ -359,11 +359,11 @@ a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 
 /* GALLERY */
-.zp-gal{display:grid;grid-template-columns:1fr 1fr;gap:4px;height:480px;margin-bottom:0;background:#000;position:relative;z-index:2}
+.zp-gal{display:grid;grid-template-columns:1fr 1fr;gap:4px;height:480px;margin-bottom:0;background:#000;position:relative;z-index:2;overflow:hidden}
 .zp-gal-main{overflow:hidden}
 .zp-gal-main img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform .4s}
 .zp-gal-main img:hover{transform:scale(1.02)}
-.zp-gal-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px}
+.zp-gal-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;overflow:hidden}
 .zp-gal-cell{overflow:hidden;position:relative}
 .zp-gal-cell img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform .4s}
 .zp-gal-cell img:hover{transform:scale(1.02)}
