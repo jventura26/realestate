@@ -206,45 +206,6 @@ function detailPage(prop) {
     </div>
   </div>`;
 
-  // SEO description
-  const rawDesc = (prop.descripcion||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
-  const cleanDesc = rawDesc.substring(0,300);
-  const propUrl = 'https://inmuhub.com/propiedades/' + esc(prop.slug||prop.id||'') + '.html';
-
-  // Schema RealEstateListing
-  const schemaListing = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'RealEstateListing',
-    'name': prop.titulo || 'Propiedad',
-    'description': cleanDesc || prop.titulo,
-    'url': propUrl,
-    'image': prop.mainImage || '',
-    'numberOfRooms': prop.habitaciones || undefined,
-    'floorSize': prop.areaConst ? { '@type':'QuantitativeValue', 'value': prop.areaConst, 'unitCode': 'MTK' } : undefined,
-    'offers': {
-      '@type': 'Offer',
-      'price': prop.priceNumeric || 0,
-      'priceCurrency': (prop.moneda||'USD').includes('Q') ? 'GTQ' : 'USD',
-      'availability': 'https://schema.org/InStock'
-    },
-    'address': {
-      '@type': 'PostalAddress',
-      'addressLocality': prop.municipio || prop.zona || 'Guatemala',
-      'addressRegion': prop.departamento || 'Guatemala',
-      'addressCountry': 'GT'
-    }
-  });
-
-  const schemaBreadcrumb = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    'itemListElement': [
-      { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
-      { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
-      { '@type':'ListItem', 'position':3, 'name': prop.titulo || 'Propiedad' }
-    ]
-  });
-
   // Price
   const precio = prop.priceFormatted || (prop.precio ? Number(prop.precio).toLocaleString('en-US') : '');
   const moneda = prop.moneda||'USD';
@@ -373,6 +334,40 @@ function detailPage(prop) {
   const propUrl = `https://inmuhub.com/propiedades/${esc(prop.slug||prop.id||'')}.html`;
   const waMsg = encodeURIComponent(`Hola, me interesa esta propiedad en INMUHUB:\n${prop.titulo}\n${propUrl}`);
   const waHref = `https://wa.me/?text=${waMsg}`;
+  // Schema RealEstateListing
+  const schemaListing = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    'name': prop.titulo || 'Propiedad',
+    'description': cleanDesc || prop.titulo,
+    'url': propUrl,
+    'image': prop.mainImage || '',
+    'numberOfRooms': prop.habitaciones || undefined,
+    'floorSize': prop.areaConst ? { '@type':'QuantitativeValue', 'value': prop.areaConst, 'unitCode': 'MTK' } : undefined,
+    'offers': {
+      '@type': 'Offer',
+      'price': prop.priceNumeric || 0,
+      'priceCurrency': (prop.moneda||'USD').includes('Q') ? 'GTQ' : 'USD',
+      'availability': 'https://schema.org/InStock'
+    },
+    'address': {
+      '@type': 'PostalAddress',
+      'addressLocality': prop.municipio || prop.zona || 'Guatemala',
+      'addressRegion': prop.departamento || 'Guatemala',
+      'addressCountry': 'GT'
+    }
+  });
+
+  const schemaBreadcrumb = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
+      { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
+      { '@type':'ListItem', 'position':3, 'name': prop.titulo || 'Propiedad' }
+    ]
+  });
+
 
   // Plano
   const planoHTML = prop.plano ? `<a href="${esc(prop.plano)}" target="_blank" class="zp-plano-btn"><i class="ti ti-file-description"></i> Ver plano / PDF</a>` : '';
