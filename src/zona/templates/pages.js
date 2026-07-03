@@ -9,6 +9,30 @@ function waLink(msg) {
   return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
 }
 
+
+function renderDescBloquesZona(bloques, esc) {
+  if (!bloques || !Array.isArray(bloques) || bloques.length === 0) return '';
+  return bloques.map(b => {
+    const c = (b.content || '').trim();
+    if (!c) return '';
+    if (b.type === 'destacado') {
+      return '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)">'
+        + '<div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div>'
+        + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic">' + esc(c) + '</div></div>';
+    }
+    if (b.type === 'lista') {
+      const items = c.split('\n').map(l => l.trim()).filter(l => l);
+      if (items.length === 0) return '';
+      return '<ul style="margin:0 0 20px;padding:0 0 0 8px;list-style:none;display:flex;flex-direction:column;gap:8px">'
+        + items.map(item => '<li style="display:flex;align-items:flex-start;gap:10px;line-height:1.6;color:var(--sv)">'
+          + '<span style="color:var(--or);font-size:1rem;flex-shrink:0;margin-top:2px">\u2713</span>'
+          + '<span>' + esc(item) + '</span></li>').join('')
+        + '</ul>';
+    }
+    return '<p style="margin:0 0 16px;line-height:1.8;color:var(--sv)">' + esc(c) + '</p>';
+  }).join('');
+}
+
 // ── Card ─────────────────────────────────────────────────────────────
 function card(p) {
   const cfg = p.privConfig || {};
@@ -895,6 +919,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       ${(!esExclusiva&&!cfg.descripcion&&prop.hook) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(245,130,13,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
       <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
       <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
+      ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0 && !esExclusiva && !cfg.descripcion) ? '<div style="margin-top:20px">' + renderDescBloquesZona(prop.descBloques, escapeHtml) + '</div>' : ''}
       ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
 

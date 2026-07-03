@@ -38,6 +38,29 @@ function renderDesc(desc) {
   const html = lines.map(l => '<p style="font-size:.84rem;line-height:1.7;margin-bottom:8px;color:#374151">' + escapeHtml(l) + '</p>').join('');
   return '<div class="description">' + label + html + '</div>';
 }
+function renderDescBloques(bloques) {
+  if (!bloques || !Array.isArray(bloques) || bloques.length === 0) return '';
+  return bloques.map(b => {
+    const c = (b.content || '').trim();
+    if (!c) return '';
+    if (b.type === 'destacado') {
+      return '<div style="margin-bottom:20px;padding:16px 20px;border-left:3px solid var(--gold,#C9A96E);background:rgba(201,169,110,.06);border-radius:0 8px 8px 0">'
+        + '<div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold,#C9A96E);margin-bottom:6px">Destacado</div>'
+        + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;line-height:1.8;font-style:italic;color:#334155">' + escapeHtml(c) + '</div></div>';
+    }
+    if (b.type === 'lista') {
+      const items = c.split('\n').map(l => l.trim()).filter(l => l);
+      if (items.length === 0) return '';
+      return '<ul style="margin:0 0 20px;padding:0 0 0 8px;list-style:none;display:flex;flex-direction:column;gap:8px">'
+        + items.map(item => '<li style="display:flex;align-items:flex-start;gap:10px;line-height:1.6;color:#334155">'
+          + '<span style="color:var(--gold,#C9A96E);font-size:1rem;flex-shrink:0;margin-top:2px">\u2713</span>'
+          + '<span>' + escapeHtml(item) + '</span></li>').join('')
+        + '</ul>';
+    }
+    return '<p style="margin:0 0 16px;line-height:1.8;color:#334155">' + escapeHtml(c) + '</p>';
+  }).join('');
+}
+
 
 
 function indexPage(props) {
@@ -560,6 +583,11 @@ ${mobGalHTML}${galHTML}
     ${descHTML ? `<div class="zp-section">
       <h2 class="zp-section-title">Descripción</h2>
       <div class="zp-desc">${descHTML}</div>
+    </div>` : ''}
+
+    ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0) ? `<div class="zp-section">
+      ${!descHTML ? '<h2 class="zp-section-title">Descripci\u00f3n</h2>' : ''}
+      <div class="zp-desc">${renderDescBloques(prop.descBloques)}</div>
     </div>` : ''}
 
     ${caractHTML ? `<div class="zp-section">
