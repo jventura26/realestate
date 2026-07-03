@@ -901,8 +901,8 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       <button class="dv3-tab on" onclick="dv3Tab('det',this)">Detalles</button>
       <button class="dv3-tab" onclick="dv3Tab('desc',this)">Descripci&oacute;n</button>
       ${(prop.caracteristicas&&prop.caracteristicas.length) ? '<button class="dv3-tab" onclick="dv3Tab(\'chars\',this)">Caracter&iacute;sticas</button>' : ''}
-      ${(prop.videoTour||prop.plano) ? '<button class="dv3-tab" onclick="dv3Tab(\'media\',this)">Video / Plano</button>' : ''}
-      ${(!esExclusiva&&!cfg.ubicacion&&prop.lat&&prop.lng) ? '<button class="dv3-tab" onclick="dv3Tab(\'mapa\',this)">Ubicaci&oacute;n</button>' : ''}
+      ${(prop.videoTour||prop.videoUrl||prop.plano) ? '<button class="dv3-tab" onclick="dv3Tab(\'media\',this)">Video / Plano</button>' : ''}
+      ${(!esExclusiva&&!cfg.ubicacion&&(prop.lat&&prop.lng||prop.googleMapsUrl)) ? '<button class="dv3-tab" onclick="dv3Tab(\'mapa\',this)">Ubicaci&oacute;n</button>' : ''}
       ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? '<button class="dv3-tab" onclick="dv3Tab(\'hipoteca\',this)">Calculadora</button>' : ''}
     </div>
 
@@ -910,6 +910,10 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       ${exclusivaBanner}
       ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
       ${!esExclusiva && !cfg.specs ? '<div class="dv3-specs-grid">'+specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')+'</div>' : (!esExclusiva ? '' : '')}
+      ${(prop.iusi || prop.cuotaMantenimiento) ? '<div class="dv3-datos" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">'
+        + (prop.iusi ? '<div><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:4px">IUSI</span><span style="font-size:.85rem;color:var(--sv)">'+escapeHtml(prop.iusi)+'</span></div>' : '')
+        + (prop.cuotaMantenimiento ? '<div><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:4px">Mantenimiento</span><span style="font-size:.85rem;color:var(--sv)">'+escapeHtml(prop.cuotaMantenimiento)+'</span></div>' : '')
+        + '</div>' : ''}
       ${prop.produccion ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Producci&oacute;n</span>'+escapeHtml(prop.produccion)+'</div>' : ''}
       ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
     </div>
@@ -929,7 +933,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     </div>
 
     <div class="dv3-tab-panel" id="dv3-media">
-      ${prop.videoTour ? '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div><div class="dv3-video-wrap"><iframe src="'+prop.videoTour.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div></div>' : ''}
+      ${(prop.videoTour||prop.videoUrl) ? '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div><div class="dv3-video-wrap"><iframe src="'+(prop.videoTour||prop.videoUrl).replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div></div>' : ''}
       ${prop.plano ? '<div><div class="dv3-ref-l" style="margin-bottom:12px">Plano de planta</div><img class="dv3-plano" src="'+escapeHtml(prop.plano)+'" alt="Plano '+escapeHtml(prop.title)+'" loading="lazy"></div>' : ''}
     </div>
 
@@ -1006,6 +1010,8 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       </form>
       <p style="display:none;font-size:.72rem;color:#4ade80;text-align:center;margin:10px 0 0">&check; Enviado. Te contactamos pronto.</p>
     </div>
+
+    ${prop.pdfUrl ? '<a href="'+escapeHtml(prop.pdfUrl)+'" target="_blank" rel="noopener" class="dv3-wa-btn outline" style="margin-bottom:16px;text-decoration:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Descargar brochure</a>' : ''}
 
     <div class="dv3-side-ref">
       <div class="dv3-ref-l">C&oacute;digo de referencia</div>

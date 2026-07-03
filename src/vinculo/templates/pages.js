@@ -343,7 +343,7 @@ function detailPage(prop) {
   // Map & video
   const hasMap = prop.lat && prop.lng;
   const mapHTML = hasMap ? `<div class="zp-map"><iframe src="https://maps.google.com/maps?q=${prop.lat},${prop.lng}&z=16&output=embed" width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
-  const videoHTML = prop.videoTour ? `<div class="zp-video-wrap"><iframe src="${esc(prop.videoTour)}" allow="autoplay; fullscreen" allowfullscreen width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
+  const videoHTML = (prop.videoTour || prop.videoUrl) ? `<div class="zp-video-wrap"><iframe src="${esc(prop.videoTour || prop.videoUrl)}" allow="autoplay; fullscreen" allowfullscreen width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
 
   // Location breadcrumb
   const locParts = [prop.zona, prop.municipio, prop.ubicacionGeneral||prop.departamento].filter(Boolean);
@@ -580,6 +580,8 @@ ${mobGalHTML}${galHTML}
 
     ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
 
+    ${(prop.hook && prop.hook.trim()) ? `<div class="zp-section"><div style="padding:16px 20px;border-left:3px solid var(--gold,#C9A96E);background:rgba(201,169,110,.06);border-radius:0 8px 8px 0"><div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;line-height:1.8;font-style:italic;color:#334155">&ldquo;${esc(prop.hook)}&rdquo;</div></div></div>` : ''}
+
     ${descHTML ? `<div class="zp-section">
       <h2 class="zp-section-title">Descripción</h2>
       <div class="zp-desc">${descHTML}</div>
@@ -627,6 +629,11 @@ ${mobGalHTML}${galHTML}
       <hr class="zp-divider">
 
       ${prop.codigo ? `<div class="zp-code">Código <span>${esc(prop.codigo)}</span></div>` : ''}
+
+      ${(prop.iusi || prop.cuotaMantenimiento) ? `<div style="border-top:1px solid #eef0f3;padding-top:14px;margin-top:14px">
+        ${prop.iusi ? `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:.78rem;color:#64748b">IUSI</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.iusi)}</span></div>` : ''}
+        ${prop.cuotaMantenimiento ? `<div style="display:flex;justify-content:space-between"><span style="font-size:.78rem;color:#64748b">Mantenimiento</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.cuotaMantenimiento)}</span></div>` : ''}
+      </div>` : ''}
 
       ${planoHTML}
 

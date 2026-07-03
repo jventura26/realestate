@@ -780,6 +780,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
               <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
             </div>
             <div class="fg" style="margin-top:8px"><label>Google Maps URL</label><input type="url" id="fGoogleMaps" placeholder="https://maps.google.com/..."></div>
+<div class="fg"><label>IUSI (mensual)</label><input id="fIusi" placeholder="Ej: Q150"></div>
+<div class="fg"><label>Cuota mantenimiento</label><input id="fCuotaMant" placeholder="Ej: Q500/mes"></div>
           </div>
 
           <div class="side-card">
@@ -1455,7 +1457,7 @@ async function saveProp() {
     imagen:g('fImagen'),gallery:galUrls,
     estado:currentStatus,cinta:currentCinta,caracteristicas:chars,sitios,
     moneda:g('fMoneda'),destacada:document.getElementById('fDestacada').checked,
-    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),
+    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),
     descBloques:getDescBloques(),
     privConfig: {
       hidePrecio: document.getElementById('pcHidePrecio')?.checked || false,
