@@ -43,6 +43,7 @@ function normalizeKV(kvProps) {
     slug: p.slug || (p.titulo||'').toLowerCase().replace(/[^a-z0-9]+/g,'-'),
     amenities: p.amenities || [],
     estado: p.estado || 'Activa',
+    createdAt: p.createdAt || null,
     area: cleanArea(p.area || p.areaConst || ''),
     areaConst: cleanArea(p.areaConst || p.area || ''),
     areaV2: cleanArea(p.areaV2 || ''),

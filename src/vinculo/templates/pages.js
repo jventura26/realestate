@@ -199,6 +199,22 @@ return layout({
 });
 }
 
+
+function dualPriceDetail(prop, esc) {
+  var raw = prop.priceFormatted || prop.precio || '';
+  if (!raw) return { main:'', sub:'', sidebar:'', sidebarSub:'' };
+  var num = parseFloat(String(prop.priceNumeric || 0));
+  var m = (prop.moneda || '').toUpperCase();
+  var isQ = m.includes('Q') || m.includes('GTQ') || raw.includes('Q');
+  var alt = '';
+  var approx = String.fromCharCode(8776);
+  if (num > 0) {
+    if (isQ) { alt = approx + ' ' + '$' + Math.round(num/7.66).toLocaleString('en-US') + ' USD'; }
+    else { alt = approx + ' Q' + Math.round(num*7.66).toLocaleString('en-US'); }
+  }
+  return { main:esc(raw), sub:alt, sidebar:esc(raw), sidebarSub:alt };
+}
+
 function detailPage(prop) {
   const esc = s => escapeHtml ? escapeHtml(String(s||'')) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const gallery = (prop.gallery||[]).slice(0,10);
@@ -233,6 +249,7 @@ function detailPage(prop) {
   const precio = prop.priceFormatted || (prop.precio ? Number(prop.precio).toLocaleString('en-US') : '');
   const moneda = prop.moneda||'USD';
   const precioStr = precio ? moneda + ' ' + precio : '';
+  const dp = dualPriceDetail(prop, esc);
   const operStr = prop.operacion||'';
 
   // Quick specs
@@ -570,15 +587,18 @@ ${mobGalHTML}${galHTML}
   <!-- MAIN -->
   <div class="zp-main">
 
+    <nav class="zp-breadcrumb" style="font-size:12px;color:#94a3b8;margin-bottom:12px;display:flex;align-items:center;gap:4px;flex-wrap:wrap"><a href="/" style="color:#94a3b8;text-decoration:none">Inicio</a><span style="color:#cbd5e1"> / </span><a href="/propiedades.html" style="color:#94a3b8;text-decoration:none">Propiedades</a><span style="color:#cbd5e1"> / </span><span style="color:#64748b">${esc((prop.titulo||'Propiedad').substring(0,50))}</span></nav>
     <div class="zp-loc"><i class="ti ti-map-pin"></i>${locStr||esc(prop.zona||'Guatemala')}</div>
 
     <div class="zp-badges">${cintaHTML}${exclHTML}</div>
 
     <h1 class="zp-title">${esc(prop.titulo||'Propiedad')}</h1>
 
-    ${precioStr ? `<div class="zp-price">${esc(precioStr)}</div><div class="zp-price-sub">${esc(operStr)}</div>` : ''}
+    ${precioStr ? `<div class="zp-price">${dp.main}</div>${dp.sub ? '<div style="font-size:.85rem;color:#64748b;margin-bottom:2px">'+dp.sub+'</div>' : ''}<div class="zp-price-sub">${esc(operStr)}</div>` : ''}
 
     ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
+
+    ${prop.priceNumeric > 0 ? '<a href="/herramientas/calculadora-hipotecaria.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f0f4fa;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none;margin-bottom:24px"><i class="ti ti-calculator" style="font-size:18px"></i> Calcular cuota hipotecaria</a>' : ''}
 
     ${(prop.hook && prop.hook.trim()) ? `<div class="zp-section"><div style="padding:16px 20px;border-left:3px solid var(--gold,#C9A96E);background:rgba(201,169,110,.06);border-radius:0 8px 8px 0"><div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;line-height:1.8;font-style:italic;color:#334155">&ldquo;${esc(prop.hook)}&rdquo;</div></div></div>` : ''}
 
@@ -611,6 +631,7 @@ ${mobGalHTML}${galHTML}
       <h2 class="zp-section-title">Ubicación</h2>
       ${prop.ubicacionGeneral ? `<p style="color:#555;margin-bottom:14px;font-size:14px">${esc(prop.ubicacionGeneral)}</p>` : ''}
       ${mapHTML}
+      ${(prop.lat && prop.lng) || prop.googleMapsUrl ? '<a href="' + (prop.googleMapsUrl || 'https://www.google.com/maps?q='+prop.lat+','+prop.lng) + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 18px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none"><i class="ti ti-external-link" style="font-size:16px"></i> Abrir en Google Maps</a>' : ''}
     </div>` : ''}
 
   </div>
@@ -618,13 +639,15 @@ ${mobGalHTML}${galHTML}
   <!-- SIDEBAR -->
   <div class="zp-side">
     <div class="zp-card">
-      ${precioStr ? `<div class="zp-card-price">${esc(precioStr)}</div><div class="zp-card-op">${esc(operStr)}</div>` : ''}
+      ${precioStr ? `<div class="zp-card-price">${dp.sidebar}</div>${dp.sidebarSub ? '<div style="font-size:.8rem;color:#94a3b8;margin-bottom:2px">'+dp.sidebarSub+'</div>' : ''}<div class="zp-card-op">${esc(operStr)}</div>` : ''}
 
       <div class="zp-avail"><span class="dot"></span>Disponible</div>
 
       <button class="zp-share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Enlace copiado'))">
         <i class="ti ti-share"></i> Copiar enlace
       </button>
+
+      ${prop.pdfUrl ? '<a href="' + esc(prop.pdfUrl) + '" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-weight:600;color:#444;text-decoration:none;margin-top:8px"><i class="ti ti-file-download"></i> Descargar brochure</a>' : ''}
 
       <hr class="zp-divider">
 
