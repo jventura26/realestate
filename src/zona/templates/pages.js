@@ -925,6 +925,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
       ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0 && !esExclusiva && !cfg.descripcion) ? '<div style="margin-top:20px">' + renderDescBloquesZona(prop.descBloques, escapeHtml) + '</div>' : ''}
       ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0 && !esExclusiva && !cfg.descripcion) ? '<div style="margin-top:20px">' + renderDescBloquesZona(prop.descBloques, escapeHtml) + '</div>' : ''}
+      ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0 && !esExclusiva && !cfg.descripcion) ? '<div style="margin-top:20px">' + renderDescBloquesZona(prop.descBloques, escapeHtml) + '</div>' : ''}
       ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
 
