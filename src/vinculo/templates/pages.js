@@ -209,8 +209,8 @@ function dualPriceDetail(prop, esc) {
   var alt = '';
   var approx = String.fromCharCode(8776);
   if (num > 0) {
-    if (isQ) { alt = approx + ' ' + '$' + Math.round(num/7.66).toLocaleString('en-US') + ' USD'; }
-    else { alt = approx + ' Q' + Math.round(num*7.66).toLocaleString('en-US'); }
+    if (isQ) { alt = approx + ' ' + '$' + Math.round(num/7.60).toLocaleString('en-US') + ' USD'; }
+    else { alt = approx + ' Q' + Math.round(num*7.80).toLocaleString('en-US'); }
   }
   return { main:esc(raw), sub:alt, sidebar:esc(raw), sidebarSub:alt };
 }

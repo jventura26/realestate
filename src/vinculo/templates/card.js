@@ -17,10 +17,10 @@ function dualPrice(p) {
   var approx = String.fromCharCode(8776);
   var sub = '<span style="display:block;font-size:.72rem;font-weight:500;color:#64748b;margin-top:2px">';
   if (isQ) {
-    var usd = Math.round(num / 7.66);
+    var usd = Math.round(num / 7.60);
     return escapeHtml(raw) + sub + approx + ' ' + '$' + usd.toLocaleString('en-US') + ' USD</span>';
   } else {
-    var gtq = Math.round(num * 7.66);
+    var gtq = Math.round(num * 7.80);
     return escapeHtml(raw) + sub + approx + ' Q' + gtq.toLocaleString('en-US') + '</span>';
   }
 }
