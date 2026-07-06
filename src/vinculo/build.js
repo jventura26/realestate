@@ -35,7 +35,7 @@ function normalizeKV(kvProps) {
     title: p.titulo || p.title || '',
     description: p.descripcion || p.description || '',
     priceFormatted: p.priceFormatted || p.precio || '',
-    priceNumeric: p.priceNumeric || parseFloat(String(p.precio || '0').replace(/[^0-9.]/g, '')) || 0,
+    priceNumeric: p.priceNumeric || parseFloat(String(p.precio || '0').replace(/^[^0-9]+/, '').replace(/,/g, '')) || 0,
     locationFull: p.locationFull || p.zona || '',
     mainImage: p.mainImage || p.imagen || '',
     mainImageThumb: p.mainImageThumb || p.imagen || '',
