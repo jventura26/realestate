@@ -635,6 +635,11 @@ ${mobGalHTML}${galHTML}
         ${prop.cuotaMantenimiento ? `<div style="display:flex;justify-content:space-between"><span style="font-size:.78rem;color:#64748b">Mantenimiento</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.cuotaMantenimiento)}</span></div>` : ''}
       </div>` : ''}
 
+      ${(prop.iusi || prop.cuotaMantenimiento) ? `<div style="border-top:1px solid #eef0f3;padding-top:14px;margin-top:14px">
+        ${prop.iusi ? `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:.78rem;color:#64748b">IUSI</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.iusi)}</span></div>` : ''}
+        ${prop.cuotaMantenimiento ? `<div style="display:flex;justify-content:space-between"><span style="font-size:.78rem;color:#64748b">Mantenimiento</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.cuotaMantenimiento)}</span></div>` : ''}
+      </div>` : ''}
+
       ${planoHTML}
 
       <p class="zp-meta">inmuhub.com — Real Estate Guatemala</p>
