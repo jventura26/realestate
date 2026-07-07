@@ -215,7 +215,7 @@ function dualPriceDetail(prop, esc) {
   return { main:esc(raw), sub:alt, sidebar:esc(raw), sidebarSub:alt };
 }
 
-function detailPage(prop) {
+function detailPage(prop, allProps) {
   const esc = s => escapeHtml ? escapeHtml(String(s||'')) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const gallery = (prop.gallery||[]).slice(0,10);
   const mainImg = prop.mainImageThumb||prop.mainImage||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80';
@@ -417,6 +417,8 @@ function detailPage(prop) {
   const lightboxHTML = `<div class="zp-lb" id="zpLb" onclick="this.style.display='none'">
     <button class="zp-lb-close" onclick="document.getElementById('zpLb').style.display='none'">×</button>
     <div class="zp-lb-strip">${imgs.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
+    <button class="zp-lb-nav zp-lb-prev" onclick="event.stopPropagation();zpLbPrev()" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&lsaquo;</button>
+    <button class="zp-lb-nav zp-lb-next" onclick="event.stopPropagation();zpLbNext()" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&rsaquo;</button>
     <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgs[0])}" alt=""></div>
   </div>`;
 
@@ -589,6 +591,9 @@ ${mobGalHTML}${galHTML}
 
     <nav class="zp-breadcrumb" style="font-size:12px;color:#94a3b8;margin-bottom:12px;display:flex;align-items:center;gap:4px;flex-wrap:wrap"><a href="/" style="color:#94a3b8;text-decoration:none">Inicio</a><span style="color:#cbd5e1"> / </span><a href="/propiedades.html" style="color:#94a3b8;text-decoration:none">Propiedades</a><span style="color:#cbd5e1"> / </span><span style="color:#64748b">${esc((prop.titulo||'Propiedad').substring(0,50))}</span></nav>
     <div class="zp-loc"><i class="ti ti-map-pin"></i>${locStr||esc(prop.zona||'Guatemala')}</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#94a3b8;margin-top:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="zpViewCount">0</span> vistas</div>
+    <script>(function(){var k="zpViews_${prop.slug}";var c=parseInt(localStorage.getItem(k)||"0")+1;localStorage.setItem(k,String(c));document.getElementById("zpViewCount").textContent=c;})()</script>
+
 
     <div class="zp-badges">${cintaHTML}${exclHTML}</div>
 
@@ -636,15 +641,40 @@ ${mobGalHTML}${galHTML}
 
   </div>
 
-  <!-- SIDEBAR -->
+
+    ${(function(){
+      if(!allProps||!allProps.length) return '';
+      var similar = allProps.filter(function(s){
+        return s.slug !== prop.slug && (s.tipo === prop.tipo || s.municipio === prop.municipio);
+      }).sort(function(a,b){
+        var scoreA = (a.tipo===prop.tipo?2:0) + (a.municipio===prop.municipio?1:0);
+        var scoreB = (b.tipo===prop.tipo?2:0) + (b.municipio===prop.municipio?1:0);
+        return scoreB - scoreA;
+      }).slice(0,3);
+      if(!similar.length) return '';
+      return '<div class="zp-section"><h2 class="zp-section-title">Propiedades similares</h2><div class="zp-similar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'+similar.map(function(s){
+        var img = s.mainImageThumb||'';
+        var price = s.priceFormatted||'Consultar';
+        return '<a href="/propiedades/'+esc(s.slug)+'.html" style="background:#fff;border:1.5px solid #eef0f3;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:all .3s" onmouseover="this.style.transform=\'translateY(-4px)\';this.style.boxShadow=\'0 12px 30px rgba(0,0,0,.1)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'"><div style="aspect-ratio:4/3;overflow:hidden"><img src="'+esc(img)+'" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div><div style="padding:14px 16px"><div style="font-size:.95rem;font-weight:700;color:#C9A96E;margin-bottom:4px">'+esc(price)+'</div><div style="font-size:.82rem;font-weight:600;color:#111;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">'+esc(s.title||s.titulo||'')+'</div><div style="font-size:.72rem;color:#64748b">'+esc(s.locationFull||s.zona||'')+'</div></div></a>';
+      }).join('')+'</div></div>';
+    })()}
+
+  </div>
+
+
+    <!-- SIDEBAR -->
   <div class="zp-side">
     <div class="zp-card">
       ${precioStr ? `<div class="zp-card-price">${dp.sidebar}</div>${dp.sidebarSub ? '<div style="font-size:.8rem;color:#94a3b8;margin-bottom:2px">'+dp.sidebarSub+'</div>' : ''}<div class="zp-card-op">${esc(operStr)}</div>` : ''}
 
       <div class="zp-avail"><span class="dot"></span>Disponible</div>
 
-      <button class="zp-share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Enlace copiado'))">
-        <i class="ti ti-share"></i> Copiar enlace
+      <div class="zp-share-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <a href="https://wa.me/?text=${encodeURIComponent(prop.titulo+'\n'+propUrl)}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid #25D366;border-radius:10px;font-size:13px;font-weight:600;color:#25D366;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#25D366';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#25D366'"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(propUrl)}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid #1877F2;border-radius:10px;font-size:13px;font-weight:600;color:#1877F2;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#1877F2';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#1877F2'"><i class="ti ti-brand-facebook"></i> Facebook</a>
+      </div>
+      <button class="zp-share-btn" onclick="navigator.clipboard.writeText(location.href).then(function(){var b=event.target.closest('.zp-share-btn');b.innerHTML='<i class=\'ti ti-check\'></i> Copiado';setTimeout(function(){b.innerHTML='<i class=\'ti ti-link\'></i> Copiar enlace'},2000)})">
+        <i class="ti ti-link"></i> Copiar enlace
       </button>
 
       ${prop.pdfUrl ? '<a href="' + esc(prop.pdfUrl) + '" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-weight:600;color:#444;text-decoration:none;margin-top:8px"><i class="ti ti-file-download"></i> Descargar brochure</a>' : ''}
@@ -674,8 +704,12 @@ ${mobGalHTML}${galHTML}
 ${lightboxHTML}
 
 <script>
-function zpOpenGallery(){ var lb=document.getElementById('zpLb'); lb.classList.add('open'); lb.style.display='flex'; }
-function zpLbShow(i){ var imgs=${JSON.stringify(imgs)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
+var zpLbIdx=0;var zpLbImgs=[];
+function zpLbPrev(){zpLbIdx=(zpLbIdx-1+zpLbImgs.length)%zpLbImgs.length;zpLbShow(zpLbIdx);}
+function zpLbNext(){zpLbIdx=(zpLbIdx+1)%zpLbImgs.length;zpLbShow(zpLbIdx);}
+document.addEventListener("keydown",function(e){var lb=document.getElementById("zpLb");if(!lb||lb.style.display==="none")return;if(e.key==="ArrowLeft")zpLbPrev();if(e.key==="ArrowRight")zpLbNext();if(e.key==="Escape"){lb.classList.remove("open");lb.style.display="none";}});
+function zpOpenGallery(){zpLbImgs=${JSON.stringify(imgs)}; var lb=document.getElementById('zpLb'); lb.classList.add('open'); lb.style.display='flex'; }
+function zpLbShow(i){zpLbIdx=i; var imgs=${JSON.stringify(imgs)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
 function zpToggleDesc(){ var m=document.getElementById('zpDescMore'); var open=m.style.display!=='none'; m.style.display=open?'none':'block'; document.getElementById('zpDescLbl').innerHTML=open?'Ver descripción completa <i class=\"ti ti-chevron-down\"></i>':'Ver menos <i class=\"ti ti-chevron-up\"></i>'; }
 document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(img,i){ img.addEventListener('click',function(){ zpOpenGallery(); zpLbShow(i); }); });
 (function(){
@@ -725,6 +759,8 @@ function guiaCompraPage(props) {
     body
   });
 }
+
+function slugZona(z){return z.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
 
 module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
 

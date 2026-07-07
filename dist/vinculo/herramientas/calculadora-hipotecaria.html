@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1003403445392993');
-fbq('track','PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1003403445392993&ev=PageView&noscript=1"/></noscript>
-<!-- End Meta Pixel Code -->
 
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="/assets/favicon2.png">
+<link rel="apple-touch-icon" href="/assets/favicon2.png">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Calcula tu hipoteca real en Guatemala | Tasas 2026 | INMUHUB.COM</title>
 <meta name="description" content="Descubre cuánto pagas mensualmente según tu enganche. Simulador con tasas actuales de G&amp;T, BAC e Industrial.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://inmuhub.com/herramientas/calculadora-hipotecaria.html">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
 <meta name="theme-color" content="#1a2a4e">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "INMUHUB",
+  "url": "https://inmuhub.com",
+  "logo": "https://inmuhub.com/assets/logo-horizontal.png",
+  "description": "Portal inmobiliario premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Ciudad de Guatemala",
+    "addressCountry": "GT"
+  },
+  "areaServed": ["Guatemala", "Zona 10", "Zona 14", "Zona 15", "Cayala", "Fraijanes", "Carretera a El Salvador"]
+}
+</script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Calcula tu hipoteca real en Guatemala | Tasas 2026 | INMUHUB.COM">
 <meta property="og:description" content="Descubre cuánto pagas mensualmente según tu enganche. Simulador con tasas actuales de G&amp;T, BAC e Industrial.">
@@ -27,7 +37,8 @@ fbq('track','PageView');
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <!-- Cache Break: 1780943256260 -->
 <style>
 /* Generated: 2026-06-08T18:27:36.260Z */
@@ -40,12 +51,15 @@ fbq('track','PageView');
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--white);color:var(--gray-900);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--white);color:var(--gray-900);-webkit-font-smoothing:antialiased;overflow-x:hidden;text-rendering:optimizeLegibility}
+::selection{background:#1a3a5c;color:#fff}
+:focus-visible{outline:2px solid #c9a96e;outline-offset:2px}
 img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:0 6%}
-.nav-inner{display:flex;align-items:flex-start;justify-content:space-between;height:auto;min-height:auto !important;padding:0px 0;padding-bottom:25px}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);border-bottom:1px solid transparent;padding:0 6%;backdrop-filter:blur(8px);transition:background .4s,border-color .4s,box-shadow .4s}
+nav.nav-scrolled{background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 2px 20px rgba(0,0,0,.08)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:80px;min-height:80px;padding:0;}
 .logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-decoration:none;color:inherit}
 .logo-name{font-size:clamp(14px,2vw,22px);font-weight:800;letter-spacing:-0.5px;color:var(--gray-900);line-height:1}
 .logo-tag{font-size:clamp(8px,1.5vw,13px);font-weight:500;color:var(--gray-700);letter-spacing:0.05em;text-transform:none;line-height:1.2;margin-top:2px}
@@ -60,17 +74,17 @@ nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px 
 .search-compact{max-width:100%;gap:4px}
 .search-compact input{font-size:16px;padding:10px 8px}
 .search-compact button{padding:10px 8px;font-size:14px}
-.nav-inner{flex-wrap:wrap}
+.nav-inner{flex-wrap:wrap;height:auto;min-height:60px;padding:12px 0}
 }
 /* HEADER RESPONSIVE */
 @media(max-width:768px){
-.logo img { height: 95px !important; }
+.logo img { height: 44px !important; }
 .logo-tag { font-size: 11px !important; margin-top: 2px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
 }
 
 @media(max-width:480px){
-.logo img { height: 130px !important; }
+.logo img { height: 40px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
@@ -81,7 +95,7 @@ div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 
 @media(max-width:480px){
 .logo { gap: 1px; }
 .logo-tag { margin-top: 0px; font-size: 8px !important; }
-a.logo img { height: 115px !important; margin-right: 2px !important; }
+a.logo img { height: 38px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 4px !important; }
 .nav-inner { align-items:flex-start !important;  min-height:auto !important; }
 }
@@ -148,8 +162,16 @@ label[style*="display:flex"][style*="gap:8px"] {
 /* GRID */
 .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:16px 6%}
 .property-card{display:flex;flex-direction:column;background:var(--white);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .25s ease,transform .25s ease;text-decoration:none;color:inherit}
-.property-card:hover{border-color:var(--gray-400,#9ca3af);transform:translateY(-3px)}
+.property-card:hover{border-color:var(--gray-400,#9ca3af);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.1)}
 .property-card:hover .card-img-wrap img{transform:scale(1.04)}
+
+.property-card{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),border-color .25s ease,box-shadow .3s ease}
+.property-card.visible{opacity:1;transform:translateY(0)}
+.property-card:nth-child(2){transition-delay:.08s}
+.property-card:nth-child(3){transition-delay:.16s}
+.property-card:nth-child(4){transition-delay:.12s}
+.property-card:nth-child(5){transition-delay:.2s}
+.property-card:nth-child(6){transition-delay:.24s}
 .card-img-wrap{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--gray-100)}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;display:block}
 .card-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
@@ -160,7 +182,7 @@ label[style*="display:flex"][style*="gap:8px"] {
 .card-cinta--renta{background:var(--gray-700,#374151);color:#fff}
 .card-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
 .card-price{font-size:19px;font-weight:700;color:var(--gold,#C9A96E);line-height:1;margin-bottom:7px;letter-spacing:-0.02em}
-.card-title{font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-title{font-size:.95rem;line-height:1.4;font-size:14px;font-weight:600;color:var(--gray-900);line-height:1.4;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-loc{font-size:12px;color:var(--gray-500,#6b7280);margin:0 0 10px;display:flex;align-items:flex-start;gap:4px;overflow:hidden}
 .card-loc svg{flex-shrink:0;opacity:.5}
 .card-loc span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -270,10 +292,11 @@ body { font-size: 15px; }
 
 /* NAVBAR */
 nav { padding: 0 3%; }
-.nav-inner { align-items:flex-start !important;  gap: 8px; }
-.logo img { height: 85px; }
+.nav-inner { align-items:center !important; gap: 8px; height:80px !important; }
+.logo img { height: 38px !important; max-width:160px !important; object-fit:contain !important; }
 .logo-tag { display: block; font-size: 11px; }
-.logo { gap: 2px; }
+.logo { gap: 2px; flex-shrink:0; }
+.nav-inner > div:nth-child(2) { display:none !important; }
 .nav-inner > div:last-child { gap: 4px; font-size: 11px; }
 
 /* HERO */
@@ -315,7 +338,7 @@ label { font-size: 12px; }
 }
 
 @media(max-width:380px){
-.logo img { height: 110px; }
+.logo img { height: 40px !important; }
 .hero-new h1 { font-size: 20px; }
 .detail-content h1 { font-size: 18px; }
 
@@ -352,7 +375,87 @@ div[style*="display:grid"][style*="grid-template-columns:1fr 1fr"] { grid-templa
 .nav-inner { align-items:flex-start !important;  padding: 0 12px !important; }
 a[style*="padding:16px 48px"] { padding: 12px 24px !important; }
 input, textarea, select, button { font-size: 16px !important; width: 100% !important; max-width: 100% !important; }
-}/* FOOTER SIMPLE Y RESPONSIVE */
+}/* --- PROPERTY CARDS (pc-*) --- */
+.prop-card{display:block;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:box-shadow .25s,transform .25s;text-decoration:none;color:inherit;cursor:pointer}
+.prop-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.10);transform:translateY(-2px)}
+.pc-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--gray-100)}
+.pc-img img,.prop-card>img{width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block}
+.prop-card:hover .pc-img img{transform:scale(1.04)}
+.pc-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;pointer-events:none}
+.pc-badge,.pc-badge-tipo{background:rgba(0,0,0,.52);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.pc-badge.renta,.pc-badge-cinta.renta{background:#374151!important;color:#fff!important}
+.pc-badge.venta,.pc-badge-cinta.venta{background:var(--blue)!important;color:#fff!important}
+.pc-badge.nueva,.pc-badge-cinta.nueva,.pc-badge.precio-reducido{background:var(--gold)!important;color:#2d2416!important}
+.pc-ov{display:none}
+.pc-info,.pc-body{padding:14px 16px 16px}
+.pc-price{font-size:19px;font-weight:800;color:var(--gray-900);line-height:1;margin-bottom:6px;letter-spacing:-.03em}
+.pc-tipo{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pc-title{font-size:14px;font-weight:500;color:var(--gray-600);line-height:1.4;margin-bottom:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.pc-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-600);font-weight:500;padding-top:10px;border-top:1px solid var(--gray-100)}
+.pc-meta span{white-space:nowrap}
+.pc-arr{display:none}
+@media(max-width:640px){.pc-info,.pc-body{padding:12px 14px 14px}.pc-price{font-size:16px}}
+/* ------------------------------------------ */
+
+/* --- DETAIL PAGE v2 (dv2-*) --- */
+.dv2-wrap{max-width:1200px;margin:0 auto;padding:32px 6% 64px}
+.dv2-crumb{font-size:13px;color:var(--gray-400);margin-bottom:24px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dv2-crumb a{color:var(--gray-400);transition:color .2s}.dv2-crumb a:hover{color:var(--gray-900)}
+.dv2-crumb span{color:var(--gray-300)}
+.dv2-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start;margin-bottom:40px}
+.dv2-gallery{}
+.dv2-hero{aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--gray-100);margin-bottom:10px}
+.dv2-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dv2-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dv2-thumb{aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:none;padding:0;transition:border-color .2s}
+.dv2-thumb:hover,.dv2-thumb.active{border-color:var(--gold)}
+.dv2-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.dv2-sidebar{position:sticky;top:96px}
+.dv2-price{font-size:30px;font-weight:800;color:var(--gray-900);letter-spacing:-.04em;line-height:1;margin-bottom:8px}
+.dv2-title{font-size:15px;font-weight:500;color:var(--gray-600);line-height:1.5;margin-bottom:16px}
+.dv2-specs{display:flex;align-items:center;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:20px;gap:0}
+.dv2-spec{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 8px}
+.dv2-spec:first-child{align-items:flex-start;padding-left:0}
+.dv2-spec:last-child{align-items:flex-end;padding-right:0}
+.dv2-spec-val{font-size:22px;font-weight:700;color:var(--gray-900)}
+.dv2-spec-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.dv2-sep{width:1px;height:36px;background:var(--border);flex-shrink:0}
+.dv2-wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#25d366;color:#fff;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;text-decoration:none;transition:opacity .2s;margin-bottom:16px;box-sizing:border-box}
+.dv2-wa:hover{opacity:.9;color:#fff}
+.dv2-info{background:var(--gray-50);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.dv2-info-item{display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.dv2-info-item:last-child{border-bottom:none}
+.dv2-info-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.dv2-info-val{font-size:14px;font-weight:600;color:var(--gray-900)}
+.dv2-desc{margin-bottom:48px}
+.dv2-desc h2{font-size:20px;font-weight:700;margin-bottom:14px;color:var(--gray-900)}
+.dv2-desc p{color:var(--gray-600);line-height:1.85;font-size:15px}
+/* Responsive — tablet */
+@media(max-width:900px){
+  .dv2-grid{grid-template-columns:1fr;gap:0}
+  .dv2-sidebar{position:static;padding-top:24px}
+  .dv2-thumbs{grid-template-columns:repeat(4,1fr)}
+}
+/* Responsive — mobile */
+@media(max-width:640px){
+  .dv2-wrap{padding:0 0 48px}
+  .dv2-crumb{padding:16px 4% 12px;margin-bottom:0;font-size:12px}
+  .dv2-hero{border-radius:0;margin-bottom:6px}
+  .dv2-thumbs{grid-template-columns:repeat(4,1fr);gap:6px;padding:0 4%;margin-bottom:4px}
+  .dv2-thumb{border-radius:6px}
+  .dv2-sidebar{padding:16px 4% 0}
+  .dv2-price{font-size:26px}
+  .dv2-spec-val{font-size:18px}
+  .dv2-desc{padding:0 4%}
+  .dv2-wa{font-size:14px;padding:13px 16px}
+}
+@media(max-width:380px){
+  .dv2-thumbs{display:none}
+  .dv2-price{font-size:22px}
+}
+/* ------------------------------------------ */
+
+/* FOOTER SIMPLE Y RESPONSIVE */
 footer{background:var(--gray-900);color:var(--white);margin-top:80px;padding:0;width:100%;box-sizing:border-box}
 .footer-content{max-width:1200px;margin:0 auto;padding:48px 6%;width:100%;box-sizing:border-box;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;align-items:flex-start}
 .footer-col{display:flex;flex-direction:column;gap:0}
@@ -546,19 +649,23 @@ footer > div:last-child > div { text-align: center !important; }
 <body>
 <nav>
 <div class="nav-inner">
-<a href="/" class="logo">
-<img src="/assets/logo.png" alt="INMUHUB - La Red Profesional Inmobiliaria" style="height:clamp(80px,14vw,220px);width:auto;margin-right:clamp(4px,1.5vw,16px);" loading="lazy">
-</a>
-<div style="display:flex;gap:12px;align-items:flex-end;margin-left:auto;padding-bottom:20px">
-  <a href="/herramientas/valuador.html" style="font-size:14px;font-weight:500;color:#1a2a4e;padding:8px 12px;border-radius:6px;transition:all 0.2s">Valuador</a>
-<a href="/herramientas/calculadora-hipotecaria.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Calculadora</a>
-  <a href="/herramientas/simulador-inversion.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Simulador</a>
-  <a href="/herramientas/guia-compra.html" style="color:var(--gray-600);font-size:13px;font-weight:500;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-600)'">Guía</a>
-</div>
-<div class="search-compact">
-<input type="text" id="navSearch" placeholder="Buscar propiedades...">
-<button aria-label="Búsqueda" style="display:flex;align-items:flex-start;justify-content:center;font-size:16px;opacity:0.7">🔍</button>
-</div>
+  <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
+    <img src="/assets/logo-horizontal.png" alt="INMUHUB - Conecta tu inversion inmobiliaria" style="height:50px;width:auto;" loading="lazy">
+  </a>
+    <div style="display:flex;align-items:center;gap:2px;margin:0 auto;padding:0 24px">
+    <a href="/propiedades.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Propiedades</a>
+    <a href="/herramientas/valuador.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Valuador</a>
+    <a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Calculadora</a>
+    <span style="width:1px;height:18px;background:#e2e8f0;margin:0 8px;flex-shrink:0;display:inline-block"></span>
+    <a href="/planes.html" style="font-size:13px;font-weight:500;color:#C9A96E;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.background='#fdf8f0'" onmouseout="this.style.background='transparent'">Publicar</a>
+    <a href="/como-funciona.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Cómo funciona</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <a href="/planes.html" style="font-size:13px;font-weight:700;color:#2d2416;background:#C9A96E;padding:9px 18px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Para Asesores</a>
+    <a href="/registro.html" style="font-size:13px;font-weight:600;color:#1a2a4e;border:1.5px solid #d1d5db;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='#1a2a4e';this.style.background='#f9fafb'" onmouseout="this.style.borderColor='#d1d5db';this.style.background='transparent'">Iniciar sesión</a>
+  </div>
+  </div>
 </div>
 </nav>
 
@@ -678,65 +785,88 @@ document.getElementById('banco').addEventListener('change', calcularHipoteca);
 }
 </script>
 
-<footer style="background:#0f1b2e;color:white;margin-top:120px;padding:0">
+<footer style="background:#060e1c;color:white;margin-top:0;padding:0;border-top:1px solid rgba(255,255,255,.06)">
+
   <!-- MAIN FOOTER -->
-  <div style="max-width:1400px;margin:0 auto;padding:clamp(40px,8vw,80px) 6%">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(40px,5vw,60px);margin-bottom:clamp(40px,5vw,60px)">
-      
+  <div style="max-width:1200px;margin:0 auto;padding:64px 6% 0">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px">
       <!-- BRAND -->
       <div>
-        <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:20px">
-          <img src="/assets/logo.png" alt="INMUHUB" style="height:56px;width:auto;" loading="lazy">
-          <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px">INMUHUB</div>
-        </div>
-        <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin:0">
-          Plataforma premium de inversión inmobiliaria en Guatemala. Propiedades verificadas y herramientas profesionales.
-        </p>
+        <div style="margin-bottom:20px"><span style="font-size:22px;font-weight:900;color:white;letter-spacing:-.5px">INMU</span><span style="font-size:22px;font-weight:900;color:var(--gold);letter-spacing:-.5px">HUB</span></div>
+        <p style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;margin:0 0 24px;max-width:280px">Conectamos compradores e inversionistas con las mejores propiedades en Guatemala. Verificadas, asesoradas y sin sorpresas.</p>
+        
       </div>
-
-      <!-- HERRAMIENTAS -->
-      <div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#ffa500;margin:0 0 20px">Herramientas</h4>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-          <li><a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Calculadora</a></li>
-          <li><a href="/herramientas/valuador.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Valuador</a></li>
-          <li><a href="/herramientas/guia-compra.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Guía de Compra</a></li>
-          <li><a href="/herramientas/dashboard-inversionistas.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Dashboard</a></li>
-        </ul>
-      </div>
-
       <!-- PROPIEDADES -->
       <div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#ffa500;margin:0 0 20px">Propiedades</h4>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-          <li><a href="/propiedades.html?tipo=Casa" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Casas</a></li>
-          <li><a href="/propiedades.html?tipo=Apartamento" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Apartamentos</a></li>
-          <li><a href="/propiedades.html?tipo=Fincas" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Fincas</a></li>
-          <li><a href="/propiedades.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Ver todas</a></li>
+        <h4 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 20px">Propiedades</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="/propiedades.html?tipo=Casa" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Casas</a></li>
+          <li><a href="/propiedades.html?tipo=Apartamento" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Apartamentos</a></li>
+          <li><a href="/propiedades.html?tipo=Finca" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Fincas</a></li>
+          <li><a href="/propiedades.html?tipo=Terreno" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Terrenos</a></li>
+          <li><a href="/propiedades.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Ver todas</a></li>
         </ul>
       </div>
-
+      <!-- HERRAMIENTAS -->
+      <div>
+        <h4 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 20px">Herramientas</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="/herramientas/valuador.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Valuador</a></li>
+          <li><a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Calculadora</a></li>
+          <li><a href="/herramientas/simulador-inversion.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Simulador</a></li>
+          <li><a href="/herramientas/guia-compra.html" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Guia de Compra</a></li>
+        </ul>
+      </div>
       <!-- ZONAS -->
       <div>
-        <h4 style="font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#ffa500;margin:0 0 20px">Zonas Premium</h4>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-          <li><a href="/zonas/zona-10.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Zona 10</a></li>
-          <li><a href="/zonas/zona-14.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Zona 14</a></li>
-          <li><a href="/zonas/cayala.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Cayalá</a></li>
-          <li><a href="/propiedades.html" style="font-size:13px;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Todas</a></li>
+        <h4 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 20px">Zonas Premium</h4>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="/propiedades.html?ciudad=Guatemala" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Guatemala</a></li>
+          <li><a href="/propiedades.html?ciudad=Mixco" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Mixco</a></li>
+          <li><a href="/propiedades.html?ciudad=Fraijanes" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Fraijanes</a></li>
+          <li><a href="/propiedades.html?ciudad=Santa+Catarina+Pinula" style="font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Santa Catarina</a></li>
         </ul>
       </div>
     </div>
-
-    <!-- DIVIDER -->
-    <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:clamp(30px,5vw,40px)"></div>
-
-    <!-- BOTTOM -->
-    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5)">
-      <p style="margin:0">&copy; 2026 INMUHUB.COM · Plataforma Premium de Real Estate Guatemala</p>
+    <!-- BOTTOM BAR -->
+    <div style="border-top:1px solid rgba(255,255,255,.06);padding:24px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <p style="margin:0;font-size:12px;color:rgba(255,255,255,.3)">&copy; 2026 INMUHUB.COM — Todos los derechos reservados</p>
+      
     </div>
   </div>
+  <!-- MOBILE RESPONSIVE -->
+  <style>
+    @media(max-width:768px){
+      .footer-grid{grid-template-columns:1fr 1fr !important;}
+      .footer-brand{grid-column:1/-1;}
+      footer > div:first-child { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+      footer > div:first-child > div:first-child { grid-column: 1/-1; }
+    }
+    @media(max-width:480px){
+      .footer-grid{grid-template-columns:1fr !important;}
+      footer > div:first-child { grid-template-columns: 1fr !important; gap: 24px !important; }
+      footer > div:first-child { padding: 40px 5% 0 !important; }
+      .nav-inner{height:auto !important;min-height:80px !important;padding:12px 0 !important;}
+      .nav-inner > div:nth-child(2){display:none !important;}
+    }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  </style>
 </footer>
 
+<script>
+(function(){
+  var nav = document.querySelector('nav');
+  if(!nav) return;
+  function ck(){ if((window.scrollY||window.pageYOffset)>60) nav.classList.add('nav-scrolled'); else nav.classList.remove('nav-scrolled'); }
+  window.addEventListener('scroll',ck,{passive:true});
+  ck();
+})();
+(function(){
+  var cards = document.querySelectorAll('.property-card');
+  if(!cards.length||!('IntersectionObserver' in window)){cards.forEach(function(c){c.classList.add('visible');});return;}
+  var obs = new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+  cards.forEach(function(c){obs.observe(c);});
+})();
+</script>
 </body>
 </html>

@@ -54,6 +54,7 @@ const path = require('path');
 const { parseProperties } = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
 const { catalogPage, detailPage, zonaPage } = require('./templates/pages');
+const { layout } = require('./templates/layout');
 const { indexPageNew: indexPage } = require('./templates/index-page-new');
 
 const DOMAIN = 'https://inmuhub.com';
@@ -118,11 +119,82 @@ zonas.forEach(zona => {
 });
 console.log(` ${zonas.length} zona pages`);
 
+
+// B1: Favoritos page
+const favoritosHTML = layout({
+  title: 'Mis Favoritos',
+  desc: 'Tus propiedades guardadas en INMUHUB',
+  canonical: '/favoritos.html',
+  body: `<div style="max-width:1200px;margin:0 auto;padding:48px 6%">
+    <div style="margin-bottom:32px">
+      <h1 style="font-size:28px;font-weight:800;color:#111;margin-bottom:8px">Mis Favoritos</h1>
+      <p style="color:#666;font-size:15px">Las propiedades que has guardado para revisar después.</p>
+    </div>
+    <div id="zpFavGrid" class="prop-grid" style="min-height:200px"></div>
+    <div id="zpFavEmpty" style="display:none;text-align:center;padding:80px 20px">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin:0 auto 20px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <h3 style="font-size:20px;font-weight:700;color:#374151;margin-bottom:8px">No tienes favoritos aún</h3>
+      <p style="color:#9ca3af;margin-bottom:24px">Explora propiedades y presiona el corazón para guardarlas aquí.</p>
+      <a href="/propiedades.html" style="display:inline-block;background:#1a3a5c;color:white;padding:12px 32px;border-radius:8px;font-weight:600;text-decoration:none">Ver propiedades</a>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var allProps = ` + JSON.stringify(props.map(function(p){return{slug:p.slug,title:p.title||p.titulo||'',priceFormatted:p.priceFormatted||'',priceNumeric:p.priceNumeric||0,moneda:p.moneda||'',mainImageThumb:p.mainImageThumb||'',tipo:p.tipo||'',municipio:p.municipio||'',locationFull:p.locationFull||'',habitaciones:p.habitaciones||'',banos:p.banos||'',areaConst:p.areaConst||'',areaV2:p.areaV2||'',destacada:p.destacada||false,gallery:p.gallery||[],cinta:p.cinta||''}})) + `;
+    var favs = zpGetFavs();
+    var grid = document.getElementById('zpFavGrid');
+    var empty = document.getElementById('zpFavEmpty');
+    if(!favs.length){ empty.style.display='block'; return; }
+    var found = allProps.filter(function(p){return favs.indexOf(p.slug)!==-1});
+    if(!found.length){ empty.style.display='block'; return; }
+    found.forEach(function(p){
+      var a = document.createElement('a');
+      a.className='property-card visible';
+      a.href='/propiedades/'+p.slug+'.html';
+      a.innerHTML='<div style="overflow:hidden;position:relative;aspect-ratio:4/3"><img src="'+p.mainImageThumb+'" loading="lazy" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.4) 0%,transparent 50%)"></div></div><div style="padding:20px 22px 24px"><div style="font-size:1.25rem;font-weight:800;color:var(--gold)">'+(p.priceFormatted||'Consultar')+'</div><h3 style="font-size:.95rem;font-weight:600;color:#0a1628;margin:6px 0 8px">'+p.title+'</h3><p style="font-size:.78rem;color:#64748b">'+p.locationFull+'</p></div>';
+      grid.appendChild(a);
+    });
+  })();
+  </script>`
+});
+write(path.join(OUT,'favoritos.html'), favoritosHTML);
+console.log(' favoritos.html');
+
+
+// B8: Mapa page
+var propsWithCoords = props.filter(function(p){return p.lat && p.lng});
+var mapaBody = '<div style="max-width:1400px;margin:0 auto;padding:24px 6%">' +
+  '<div style="margin-bottom:20px"><h1 style="font-size:28px;font-weight:800;color:#111;margin-bottom:6px">Mapa de Propiedades</h1><p style="color:#666;font-size:14px">' + propsWithCoords.length + ' propiedades con ubicación en Guatemala</p></div>' +
+  '<div id="zpMap" style="width:100%;height:calc(100vh - 220px);min-height:500px;border-radius:16px;overflow:hidden;border:1.5px solid #e5e7eb;box-shadow:0 4px 20px rgba(0,0,0,.08)"></div>' +
+  '</div>' +
+  '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">' +
+  '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>' +
+  '<script>' +
+  'document.addEventListener("DOMContentLoaded",function(){' +
+  'var map=L.map("zpMap").setView([14.6,-90.5],10);' +
+  'L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"OSM",maxZoom:18}).addTo(map);' +
+  'var props=' + JSON.stringify(propsWithCoords.map(function(p){return{lat:p.lat,lng:p.lng,t:p.title||p.titulo||'',p:p.priceFormatted||'',s:p.slug,img:p.mainImageThumb||''}})) + ';' +
+  'props.forEach(function(p){' +
+  'var popup=\'<div style="min-width:200px"><a href="/propiedades/\'+p.s+\'.html" style="text-decoration:none;color:inherit"><img src="\'+p.img+\'" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px"><div style="font-weight:700;color:#C9A96E;margin-bottom:4px">\'+p.p+\'</div><div style="font-size:13px;font-weight:600;color:#111">\'+p.t+\'</div></a></div>\';' +
+  'L.marker([p.lat,p.lng]).addTo(map).bindPopup(popup);' +
+  '});' +
+  '});' +
+  '<\/script>';
+write(path.join(OUT,'mapa.html'), layout({
+  title: 'Mapa de Propiedades',
+  desc: 'Explora propiedades premium en Guatemala en un mapa interactivo',
+  canonical: '/mapa.html',
+  body: mapaBody
+}));
+console.log(' mapa.html');
+
 const zonaUrls = zonas.map(z => ({ loc: `/zonas/${slugZona(z)}.html`, priority:'0.85', changefreq:'weekly' }));
 
 const urls = [
   { loc:'/', priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily' },
+  { loc:'/favoritos.html', priority:'0.7', changefreq:'weekly' },
+  { loc:'/mapa.html', priority:'0.8', changefreq:'weekly' },
   { loc:'/herramientas/calculadora-hipotecaria.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/guia-compra.html', priority:'0.85', changefreq:'monthly' },
