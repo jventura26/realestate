@@ -639,8 +639,6 @@ ${mobGalHTML}${galHTML}
       ${(prop.lat && prop.lng) || prop.googleMapsUrl ? '<a href="' + (prop.googleMapsUrl || 'https://www.google.com/maps?q='+prop.lat+','+prop.lng) + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 18px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none"><i class="ti ti-external-link" style="font-size:16px"></i> Abrir en Google Maps</a>' : ''}
     </div>` : ''}
 
-  </div>
-
 
     ${(function(){
       if(!allProps||!allProps.length) return '';
@@ -661,8 +659,7 @@ ${mobGalHTML}${galHTML}
 
   </div>
 
-
-    <!-- SIDEBAR -->
+  <!-- SIDEBAR -->
   <div class="zp-side">
     <div class="zp-card">
       ${precioStr ? `<div class="zp-card-price">${dp.sidebar}</div>${dp.sidebarSub ? '<div style="font-size:.8rem;color:#94a3b8;margin-bottom:2px">'+dp.sidebarSub+'</div>' : ''}<div class="zp-card-op">${esc(operStr)}</div>` : ''}
