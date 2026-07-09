@@ -600,6 +600,99 @@ body, .sidebar, .topbar, .content, .stat-card, .chart-card, .recent-card, .table
   .stats-breakdown { flex-wrap: wrap; gap: 8px; }
 }
 
+
+
+/* ══════ FEATURES v6 — WORLD-CLASS ══════ */
+
+/* WhatsApp Templates */
+.wa-templates { margin-top: 12px; }
+.wa-tmpl { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; cursor: pointer; transition: all .15s; font-size: 11px; }
+.wa-tmpl:hover { border-color: #25D366; background: #F0FFF4; }
+body.dark .wa-tmpl:hover { background: rgba(37,211,102,.1); }
+.wa-tmpl-icon { color: #25D366; font-size: 16px; flex-shrink: 0; }
+.wa-tmpl-text { flex: 1; color: var(--text2); line-height: 1.4; }
+body.dark .wa-tmpl-text { color: var(--dm-text2); }
+.wa-tmpl-copy { font-size: 10px; color: var(--text3); font-weight: 600; padding: 2px 8px; border: 1px solid var(--border2); border-radius: 4px; }
+.wa-tmpl-copy:hover { background: var(--or); color: #fff; border-color: var(--or); }
+
+/* Lead Score */
+.lead-score { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+.ls-bar { width: 48px; height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.ls-fill { height: 100%; border-radius: 3px; }
+.ls-fill.hot { background: #ef4444; }
+.ls-fill.warm { background: #f59e0b; }
+.ls-fill.cold { background: #94a3b8; }
+.ls-val { font-size: 10px; font-weight: 700; }
+.ls-val.hot { color: #ef4444; }
+.ls-val.warm { color: #f59e0b; }
+.ls-val.cold { color: #94a3b8; }
+.ls-label { font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; }
+.ls-label.hot { background: #FEE2E2; color: #991B1B; }
+.ls-label.warm { background: #FEF3C7; color: #92400E; }
+.ls-label.cold { background: #F1F5F9; color: #64748B; }
+
+/* Speed to Lead */
+.stl-metric { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+.stl-fast { background: #DCFCE7; color: #166534; }
+.stl-medium { background: #FEF3C7; color: #92400E; }
+.stl-slow { background: #FEE2E2; color: #991B1B; }
+
+/* Follow-up calendar */
+.followup-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.followup-date { font-size: 10px; padding: 3px 8px; border: 1px solid var(--border2); border-radius: 6px; background: none; color: var(--text); font-family: inherit; }
+body.dark .followup-date { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+.followup-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+.followup-overdue { background: #FEE2E2; color: #991B1B; }
+.followup-today { background: #DBEAFE; color: #1E40AF; }
+.followup-upcoming { background: #F1F5F9; color: #64748B; }
+
+/* ROI Calculator */
+.roi-section { margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+body.dark .roi-section { background: var(--dm-bg); border-color: var(--dm-border); }
+.roi-title { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+body.dark .roi-title { color: var(--dm-text); }
+.roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.roi-result { margin-top: 10px; padding: 10px; background: var(--wh); border-radius: 8px; text-align: center; }
+body.dark .roi-result { background: var(--dm-card); }
+.roi-big { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; color: var(--green); }
+.roi-label { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+/* Comparables */
+.comp-section { margin-top: 12px; }
+.comp-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+body.dark .comp-row { border-color: var(--dm-border); }
+.comp-row:last-child { border-bottom: none; }
+.comp-name { flex: 1; color: var(--text); }
+body.dark .comp-name { color: var(--dm-text); }
+.comp-price { font-weight: 700; color: var(--navy); }
+body.dark .comp-price { color: var(--dm-text); }
+.comp-diff { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+.comp-diff.lower { background: #DCFCE7; color: #166534; }
+.comp-diff.higher { background: #FEE2E2; color: #991B1B; }
+
+/* Activity log */
+.activity-log { max-height: 200px; overflow-y: auto; }
+.al-item { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+body.dark .al-item { border-color: var(--dm-border); }
+.al-time { color: var(--text3); white-space: nowrap; width: 60px; flex-shrink: 0; }
+.al-text { color: var(--text); flex: 1; }
+body.dark .al-text { color: var(--dm-text); }
+
+/* Multi-language toggle */
+.lang-toggle { display: flex; gap: 0; border: 1px solid var(--border2); border-radius: 6px; overflow: hidden; }
+.lang-btn { padding: 4px 12px; font-size: 10px; font-weight: 600; cursor: pointer; background: none; border: none; color: var(--text3); transition: all .15s; }
+.lang-btn.active { background: var(--navy); color: #fff; }
+
+/* Ficha interactiva share */
+.share-link-box { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 8px; background: var(--bg); border-radius: 8px; }
+body.dark .share-link-box { background: var(--dm-bg); }
+.share-link-url { flex: 1; font-size: 11px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-link-copy { font-size: 10px; padding: 4px 10px; border: 1px solid var(--or); border-radius: 6px; color: var(--or); background: none; cursor: pointer; font-weight: 600; }
+.share-link-copy:hover { background: var(--or); color: #fff; }
+
+/* Property views counter */
+.prop-views { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text3); margin-top: 2px; }
+
 </style>
 </head>
 <body>
@@ -1028,6 +1121,17 @@ body, .sidebar, .topbar, .content, .stat-card, .chart-card, .recent-card, .table
             <div class="side-card-title"><i class="ti ti-brand-whatsapp"></i> WhatsApp por propiedad</div>
             <div class="fg"><label>Número WhatsApp</label><input type="tel" id="fWhatsappProp" placeholder="Ej: 50245542088"></div>
             <div style="margin-top:6px;padding:6px 8px;background:#ECFDF5;border-radius:4px;font-size:10px;color:#065F46;line-height:1.4"><strong>Nota:</strong> Solo aplica en zona-innmueble.com. InmuHub nunca muestra WhatsApp ni contactos.</div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-trending-up"></i> Inversion & Comparables</div>
+            <div id="roiCalcWrap"></div>
+            <div id="compWrap"></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-language"></i> Idioma</div>
+            <div id="langToggleWrap"></div>
           </div>
 
         </div>
@@ -1466,6 +1570,7 @@ function buildTable(data, sortable) {
           <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
           <div class="icon-btn" title="Ver en Zona INNmueble" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
           <div class="icon-btn" title="Ver en InmuHub" onclick="window.open('https://inmuhub.com/propiedades/${p.slug||p.id}.html','_blank')" style="border-color:#C9A96E"><i class="ti ti-building-skyscraper" style="color:#C9A96E"></i></div>
+          <div class="icon-btn" title="Ficha interactiva" onclick="generateFichaInteractiva('${id}')" style="color:#3B82F6"><i class="ti ti-device-mobile"></i></div>
           <div class="icon-btn" title="Exportar PDF" onclick="exportPropPDF('${id}')" style="color:#DC2626"><i class="ti ti-file-type-pdf"></i></div>
           <div class="icon-btn" title="Duplicar" onclick="duplicateProp('${id}')"><i class="ti ti-copy"></i></div>\n          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
         </div>
@@ -2350,6 +2455,408 @@ openModal = function(id) {
     updateLivePreview();
     updateCompleteness();
   }, 150);
+};
+
+
+// ══════ FEATURES v6 — WORLD-CLASS ══════
+
+// ── LEAD SCORING ─────────────────────────────────────────────
+function calcLeadScore(l) {
+  var s = 0;
+  if (l.nombre) s += 10;
+  if (l.email) s += 15;
+  if (l.telefono) s += 20;
+  if (l.propiedad) s += 15;
+  if (l.mensaje && l.mensaje.length > 20) s += 10;
+  if (l.tipo) s += 5;
+  // Recency bonus
+  if (l.fecha) {
+    var days = (Date.now() - new Date(l.fecha).getTime()) / 86400000;
+    if (days < 1) s += 25;
+    else if (days < 3) s += 15;
+    else if (days < 7) s += 5;
+  }
+  return Math.min(s, 100);
+}
+
+function leadScoreBadge(l) {
+  var s = calcLeadScore(l);
+  var cls = s >= 70 ? 'hot' : s >= 40 ? 'warm' : 'cold';
+  var label = s >= 70 ? 'Caliente' : s >= 40 ? 'Tibio' : 'Frío';
+  return '<div class="lead-score">'
+    + '<div class="ls-bar"><div class="ls-fill '+cls+'" style="width:'+s+'%"></div></div>'
+    + '<span class="ls-val '+cls+'">'+s+'</span>'
+    + '<span class="ls-label '+cls+'">'+label+'</span></div>';
+}
+
+// ── SPEED TO LEAD ────────────────────────────────────────────
+function calcSpeedToLead() {
+  var contacted = leads.filter(function(l) { return l.stage && l.stage !== 'Nuevo' && l.fecha; });
+  if (!contacted.length) return { avg: 0, label: 'Sin datos', cls: 'stl-medium' };
+  var totalMins = 0;
+  contacted.forEach(function(l) {
+    var created = new Date(l.fecha).getTime();
+    var responded = l.contactedAt ? new Date(l.contactedAt).getTime() : created + 3600000;
+    totalMins += (responded - created) / 60000;
+  });
+  var avg = Math.round(totalMins / contacted.length);
+  var cls = avg < 30 ? 'stl-fast' : avg < 120 ? 'stl-medium' : 'stl-slow';
+  var label = avg < 60 ? avg + ' min' : Math.round(avg/60) + 'h';
+  return { avg: avg, label: label, cls: cls };
+}
+
+// ── WHATSAPP TEMPLATES ───────────────────────────────────────
+var waTemplates = [
+  { stage: 'Nuevo', title: 'Primer contacto', text: 'Hola {nombre}, gracias por tu interés en {propiedad}. Soy de Zona INNmueble. ¿Te gustaría agendar una visita o recibir más información?' },
+  { stage: 'Contactado', title: 'Follow-up', text: 'Hola {nombre}, ¿pudiste revisar la información de {propiedad}? Con gusto te resuelvo cualquier duda o agendamos una visita.' },
+  { stage: 'Calificado', title: 'Envío de ficha', text: 'Hola {nombre}, te comparto la ficha de {propiedad} con todos los detalles. Si te interesa, podemos coordinar una visita esta semana.' },
+  { stage: 'Negociación', title: 'Seguimiento negociación', text: 'Hola {nombre}, ¿cómo van las consideraciones sobre {propiedad}? Estoy disponible para resolver cualquier duda sobre los términos.' },
+  { stage: 'Cerrado', title: 'Bienvenida', text: '¡Felicitaciones {nombre}! Bienvenido a tu nuevo hogar. Fue un placer acompañarte en este proceso. Zona INNmueble queda a tus órdenes.' }
+];
+
+function getWALink(phone, text) {
+  var num = (phone || '').replace(/[^0-9]/g, '');
+  if (num.length === 8) num = '502' + num;
+  return 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+}
+
+function fillTemplate(tmpl, lead) {
+  return tmpl.replace('{nombre}', lead.nombre || '').replace('{propiedad}', lead.propiedad || 'la propiedad');
+}
+
+function buildWATemplates(lead) {
+  var html = '<div class="wa-templates">';
+  waTemplates.forEach(function(t) {
+    var filled = fillTemplate(t.text, lead);
+    var link = getWALink(lead.telefono, filled);
+    html += '<div class="wa-tmpl" onclick="window.open(\'' + link + '\',\'_blank\')">'
+      + '<i class="ti ti-brand-whatsapp wa-tmpl-icon"></i>'
+      + '<div class="wa-tmpl-text"><strong>' + t.title + '</strong><br>' + filled.substring(0,80) + '...</div>'
+      + '<span class="wa-tmpl-copy">Enviar</span></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// ── FOLLOW-UP CALENDAR ───────────────────────────────────────
+function buildFollowupRow(lead) {
+  var lid = lead.id || '';
+  var followup = lead.followupDate || '';
+  var badge = '';
+  if (followup) {
+    var diff = (new Date(followup).getTime() - Date.now()) / 86400000;
+    if (diff < 0) badge = '<span class="followup-badge followup-overdue">Vencido</span>';
+    else if (diff < 1) badge = '<span class="followup-badge followup-today">Hoy</span>';
+    else badge = '<span class="followup-badge followup-upcoming">En ' + Math.ceil(diff) + 'd</span>';
+  }
+  return '<div class="followup-row">'
+    + '<i class="ti ti-calendar" style="font-size:14px;color:var(--text3)"></i>'
+    + '<input type="date" class="followup-date" value="' + followup + '" onchange="setFollowup(\'' + lid + '\',this.value)">'
+    + badge + '</div>';
+}
+
+function setFollowup(leadId, date) {
+  var l = leads.find(function(x) { return x.id === leadId; });
+  if (!l) return;
+  l.followupDate = date;
+  fetch(API + '/api/leads/' + leadId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(l)
+  }).then(function() { showToast('Follow-up actualizado'); })
+  .catch(function() { showToast('Error al guardar'); });
+}
+
+// ── ROI CALCULATOR ───────────────────────────────────────────
+function buildROICalc(p) {
+  var precio = parseFloat((p.precio || '0').replace(/[^0-9.]/g, ''));
+  if (!precio) return '';
+  var rentaEstimada = Math.round(precio * 0.005);
+  var roiAnual = precio > 0 ? ((rentaEstimada * 12) / precio * 100).toFixed(1) : 0;
+  var plusvalia5 = Math.round(precio * 1.25);
+  var retorno5 = Math.round((rentaEstimada * 60) + (plusvalia5 - precio));
+
+  return '<div class="roi-section">'
+    + '<div class="roi-title"><i class="ti ti-trending-up"></i> Análisis de inversión</div>'
+    + '<div class="roi-grid">'
+    + '<div class="fg"><label style="font-size:10px">Renta estimada/mes</label><input type="text" id="roiRenta" value="Q ' + rentaEstimada.toLocaleString() + '" style="font-size:12px" oninput="updateROI()"></div>'
+    + '<div class="fg"><label style="font-size:10px">Plusvalía anual est.</label><input type="text" id="roiPlusvalia" value="5%" style="font-size:12px" oninput="updateROI()"></div>'
+    + '</div>'
+    + '<div class="roi-result">'
+    + '<div class="roi-big" id="roiReturn">' + roiAnual + '%</div>'
+    + '<div class="roi-label">ROI anual estimado</div>'
+    + '<div style="font-size:10px;color:var(--text3);margin-top:4px" id="roiDetail">Retorno a 5 años: Q ' + retorno5.toLocaleString() + '</div>'
+    + '</div></div>';
+}
+
+// ── COMPARABLES ──────────────────────────────────────────────
+function buildComparables(p) {
+  var precio = parseFloat((p.precio || '0').replace(/[^0-9.]/g, ''));
+  var area = parseFloat(p.area || 0);
+  if (!precio || !area) return '';
+  var ppm2 = Math.round(precio / area);
+
+  return '<div class="comp-section">'
+    + '<div class="fsec-title" style="font-size:12px"><i class="ti ti-chart-bar"></i> Posicionamiento de mercado</div>'
+    + '<div style="font-size:11px;color:var(--text2);margin:8px 0">Precio por m²: <strong style="color:var(--navy)">Q ' + ppm2.toLocaleString() + '/m²</strong></div>'
+    + '<div class="fg"><label style="font-size:10px">Agregar comparable</label>'
+    + '<div style="display:flex;gap:4px">'
+    + '<input type="text" id="compName" placeholder="Nombre" style="flex:2;font-size:11px">'
+    + '<input type="text" id="compPrice" placeholder="Precio/m²" style="flex:1;font-size:11px">'
+    + '<button type="button" onclick="addComparable()" style="padding:4px 8px;border:1px solid var(--or);border-radius:4px;background:none;color:var(--or);font-size:10px;cursor:pointer;font-weight:600">+</button>'
+    + '</div></div>'
+    + '<div id="compList"></div></div>';
+}
+
+var comparables = [];
+function addComparable() {
+  var name = document.getElementById('compName');
+  var price = document.getElementById('compPrice');
+  if (!name || !price || !name.value) return;
+  comparables.push({ name: name.value, ppm2: parseInt(price.value.replace(/[^0-9]/g,'')) || 0 });
+  name.value = ''; price.value = '';
+  renderComparables();
+}
+
+function renderComparables() {
+  var list = document.getElementById('compList');
+  if (!list) return;
+  var currentPrecio = parseFloat((document.getElementById('fPrecio') || {value:'0'}).value.replace(/[^0-9.]/g,''));
+  var currentArea = parseFloat((document.getElementById('fArea') || {value:'0'}).value) || 1;
+  var myPPM2 = Math.round(currentPrecio / currentArea);
+  var html = '';
+  comparables.forEach(function(c) {
+    var diff = c.ppm2 - myPPM2;
+    var pct = myPPM2 > 0 ? Math.round((diff / myPPM2) * 100) : 0;
+    var cls = diff > 0 ? 'lower' : 'higher';
+    html += '<div class="comp-row"><span class="comp-name">' + c.name + '</span>'
+      + '<span class="comp-price">Q ' + c.ppm2.toLocaleString() + '/m²</span>'
+      + '<span class="comp-diff ' + cls + '">' + (pct > 0 ? '+' : '') + pct + '%</span></div>';
+  });
+  list.innerHTML = html;
+}
+
+// ── ACTIVITY LOG ─────────────────────────────────────────────
+var activityLog = JSON.parse(localStorage.getItem('zi_activity_log') || '[]');
+
+function logActivity(action) {
+  var entry = { time: new Date().toISOString(), text: action };
+  activityLog.unshift(entry);
+  if (activityLog.length > 50) activityLog = activityLog.slice(0, 50);
+  try { localStorage.setItem('zi_activity_log', JSON.stringify(activityLog)); } catch(e) {}
+}
+
+function buildActivityLog() {
+  if (!activityLog.length) return '<div style="padding:12px;text-align:center;color:var(--text3);font-size:11px">Sin actividad registrada</div>';
+  var html = '<div class="activity-log">';
+  activityLog.slice(0, 15).forEach(function(a) {
+    var t = a.time ? formatDate(a.time) : '';
+    html += '<div class="al-item"><span class="al-time">' + t + '</span><span class="al-text">' + a.text + '</span></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// Hook into saveProp to log
+var _origSaveProp = typeof saveProp === 'function' ? saveProp : null;
+
+// ── MULTI-LANGUAGE TOGGLE ────────────────────────────────────
+function buildLangToggle() {
+  return '<div style="margin-top:8px"><div style="font-size:10px;color:var(--text3);margin-bottom:4px">Idioma del listing</div>'
+    + '<div class="lang-toggle">'
+    + '<button type="button" class="lang-btn active" onclick="setListingLang(\'es\',this)">Español</button>'
+    + '<button type="button" class="lang-btn" onclick="setListingLang(\'en\',this)">English</button>'
+    + '</div></div>';
+}
+
+function setListingLang(lang, btn) {
+  btn.parentElement.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var input = document.getElementById('fLang');
+  if (!input) {
+    input = document.createElement('input');
+    input.type = 'hidden';
+    input.id = 'fLang';
+    btn.closest('.side-card').appendChild(input);
+  }
+  input.value = lang;
+}
+
+// ── FICHA INTERACTIVA ────────────────────────────────────────
+function generateFichaInteractiva(propId) {
+  var p = props.find(function(x) { return (x.id||x.slug) === decodeURIComponent(propId); });
+  if (!p) return;
+  var w = window.open('', '_blank');
+  var galHtml = '';
+  if (p.galeria && p.galeria.length) {
+    galHtml = '<div style="display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:24px">';
+    p.galeria.forEach(function(img) {
+      galHtml += '<img src="' + img + '" style="height:200px;border-radius:12px;object-fit:cover;flex-shrink:0" />';
+    });
+    galHtml += '</div>';
+  }
+  var chars = '';
+  if (p.caracteristicas && p.caracteristicas.length) {
+    chars = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin:20px 0">';
+    p.caracteristicas.forEach(function(c) {
+      chars += '<span style="padding:6px 12px;background:#EEF0F6;border-radius:6px;font-size:12px;color:#0D1B3E">' + c + '</span>';
+    });
+    chars += '</div>';
+  }
+  var calcHtml = '<div style="margin:24px 0;padding:20px;background:#F8FAFF;border-radius:12px">'
+    + '<h3 style="font-family:Cormorant Garamond,serif;font-size:20px;margin-bottom:12px;color:#0D1B3E">Calculadora hipotecaria</h3>'
+    + '<div style="display:flex;gap:12px;flex-wrap:wrap">'
+    + '<div><label style="font-size:11px;color:#8A9BB0">Enganche (%)</label><input id="hcDown" type="number" value="20" style="width:80px;padding:6px;border:1px solid #E2E8F0;border-radius:6px" oninput="calcMortgage()"></div>'
+    + '<div><label style="font-size:11px;color:#8A9BB0">Plazo (años)</label><input id="hcYears" type="number" value="20" style="width:80px;padding:6px;border:1px solid #E2E8F0;border-radius:6px" oninput="calcMortgage()"></div>'
+    + '<div><label style="font-size:11px;color:#8A9BB0">Tasa (%)</label><input id="hcRate" type="number" value="8" step="0.5" style="width:80px;padding:6px;border:1px solid #E2E8F0;border-radius:6px" oninput="calcMortgage()"></div>'
+    + '</div>'
+    + '<div id="hcResult" style="margin-top:12px;font-family:Cormorant Garamond,serif;font-size:28px;color:#0D1B3E"></div>'
+    + '<script>function calcMortgage(){var p=' + parseFloat((p.precio||'0').replace(/[^0-9.]/g,'')) + ';var d=document.getElementById("hcDown").value/100;var y=document.getElementById("hcYears").value;var r=document.getElementById("hcRate").value/100/12;var loan=p*(1-d);var n=y*12;var payment=loan*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);document.getElementById("hcResult").textContent="Q "+Math.round(payment).toLocaleString()+"/mes";}calcMortgage();<\/script>'
+    + '</div>';
+
+  var h = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<title>' + (p.titulo||'Propiedad') + ' | Zona INNmueble</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">'
+    + '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;color:#1A1A2E;background:#fff}'
+    + '.hero{width:100%;height:50vh;object-fit:cover}'
+    + '.container{max-width:800px;margin:0 auto;padding:32px 24px}'
+    + 'h1{font-family:Cormorant Garamond,serif;font-size:32px;font-weight:500;color:#0D1B3E;margin-bottom:8px}'
+    + '.loc{font-size:14px;color:#8A9BB0;margin-bottom:16px}'
+    + '.price{font-family:Cormorant Garamond,serif;font-size:36px;font-weight:600;color:#0D1B3E;margin-bottom:24px}'
+    + '.specs{display:flex;gap:24px;margin-bottom:24px;padding:16px;background:#F8FAFF;border-radius:12px}'
+    + '.spec{text-align:center;flex:1}.spec-val{font-size:24px;font-weight:700;color:#0D1B3E}.spec-label{font-size:10px;color:#8A9BB0;letter-spacing:.06em}'
+    + '.desc{font-size:14px;line-height:1.8;color:#4A5568;margin-bottom:24px}'
+    + '.cta-bar{position:fixed;bottom:0;left:0;right:0;background:#0D1B3E;padding:14px 24px;display:flex;justify-content:center;gap:12px;z-index:10}'
+    + '.cta-btn{padding:10px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer}'
+    + '.cta-wa{background:#25D366;color:#fff}.cta-call{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3)}'
+    + '.brand{text-align:center;padding:24px;font-family:Cormorant Garamond,serif;font-size:18px;color:#0D1B3E;letter-spacing:.15em;border-top:1px solid #E2E8F0;margin-top:32px;margin-bottom:80px}'
+    + '</style></head><body>';
+  if (p.imagen) h += '<img class="hero" src="' + p.imagen + '" />';
+  h += '<div class="container">';
+  h += '<h1>' + (p.titulo||'') + '</h1>';
+  h += '<div class="loc">' + [p.zona, p.municipio].filter(Boolean).join(' · ') + '</div>';
+  if (!p.privada) h += '<div class="price">' + (p.moneda||'Q') + ' ' + (p.precio||'') + '</div>';
+  h += '<div class="specs">';
+  if (p.habitaciones) h += '<div class="spec"><div class="spec-val">' + p.habitaciones + '</div><div class="spec-label">HABITACIONES</div></div>';
+  if (p.banos) h += '<div class="spec"><div class="spec-val">' + p.banos + '</div><div class="spec-label">BAÑOS</div></div>';
+  if (p.area) h += '<div class="spec"><div class="spec-val">' + p.area + '</div><div class="spec-label">M²</div></div>';
+  if (p.parqueos) h += '<div class="spec"><div class="spec-val">' + p.parqueos + '</div><div class="spec-label">PARQUEOS</div></div>';
+  h += '</div>';
+  h += galHtml;
+  h += '<div class="desc">' + (p.descripcion||p.descCorta||'') + '</div>';
+  h += chars;
+  if (!p.privada) h += calcHtml;
+  if (p.googleMapsUrl) h += '<div style="margin:24px 0"><iframe src="' + p.googleMapsUrl.replace('/maps/','/maps/embed/') + '" width="100%" height="300" style="border:0;border-radius:12px" allowfullscreen loading="lazy"></iframe></div>';
+  h += '</div>';
+  h += '<div class="brand">ZONA-INNMUEBLE</div>';
+  h += '<div class="cta-bar">';
+  h += '<a class="cta-btn cta-wa" href="https://wa.me/50245542088?text=' + encodeURIComponent('Hola, me interesa: ' + (p.titulo||'')) + '"><i>💬</i> WhatsApp</a>';
+  h += '<a class="cta-btn cta-call" href="tel:+50245542088"><i>📞</i> Llamar</a>';
+  h += '</div></body></html>';
+  w.document.write(h);
+  w.document.close();
+}
+
+// ── HOOK: LOG ACTIVITIES ─────────────────────────────────────
+// Wrap saveProp to log activity
+(function() {
+  var origSave = typeof saveProp === 'function' ? saveProp : null;
+  if (origSave) {
+    saveProp = function() {
+      var title = (document.getElementById('fTitulo') || {}).value || 'propiedad';
+      var isEdit = !!editingId;
+      origSave.apply(this, arguments);
+      logActivity((isEdit ? 'Editada: ' : 'Creada: ') + title);
+    };
+  }
+})();
+
+
+// v6 Dashboard enhancements
+var _origShowPage = showPage;
+showPage = function(page) {
+  _origShowPage(page);
+  if (page === 'dashboard') {
+    setTimeout(function() {
+      var mc = document.getElementById('mainContent');
+      if (!mc) return;
+      var existing = document.getElementById('v6DashExtras');
+      if (existing) existing.remove();
+      var div = document.createElement('div');
+      div.id = 'v6DashExtras';
+      div.className = 'dash-grid';
+      div.style.marginTop = '22px';
+      var stl = calcSpeedToLead();
+      div.innerHTML = '<div class="chart-card">'
+        + '<div class="chart-title">Speed-to-Lead</div>'
+        + '<div style="padding:18px;display:flex;align-items:center;gap:16px">'
+        + '<div class="stl-metric ' + stl.cls + '"><i class="ti ti-clock" style="font-size:18px"></i> ' + stl.label + '</div>'
+        + '<div style="font-size:11px;color:var(--text2)">Meta: <strong style="color:var(--green)">&lt; 5 min</strong></div>'
+        + '</div></div>'
+        + '<div class="chart-card">'
+        + '<div class="chart-title">Historial de cambios</div>'
+        + '<div style="padding:12px">' + buildActivityLog() + '</div>'
+        + '</div>';
+      mc.appendChild(div);
+    }, 200);
+  }
+};
+
+// v6 Lead card enhancements via DOM
+function enhanceLeadCards() {
+  var cards = document.querySelectorAll('.lead-card');
+  cards.forEach(function(card) {
+    if (card.dataset.v6enhanced) return;
+    card.dataset.v6enhanced = '1';
+    var nameEl = card.querySelector('.lead-name');
+    if (!nameEl) return;
+    var nombre = nameEl.textContent;
+    var lead = null;
+    for (var i = 0; i < leads.length; i++) {
+      if ((leads[i].nombre || 'Sin nombre') === nombre) { lead = leads[i]; break; }
+    }
+    if (!lead) return;
+    var actions = card.querySelector('.lead-card-actions');
+    if (!actions) return;
+    var wrap = document.createElement('div');
+    wrap.style.marginTop = '6px';
+    wrap.innerHTML = leadScoreBadge(lead)
+      + buildFollowupRow(lead)
+      + '<details style="margin-top:6px"><summary style="font-size:10px;color:#25D366;cursor:pointer;font-weight:600">'
+      + '<i class="ti ti-brand-whatsapp" style="font-size:12px"></i> Templates WhatsApp</summary>'
+      + buildWATemplates(lead) + '</details>';
+    card.insertBefore(wrap, actions);
+  });
+}
+var _leadObserver = new MutationObserver(function() { setTimeout(enhanceLeadCards, 150); });
+setTimeout(function() {
+  var mc = document.getElementById('mainContent');
+  if (mc) _leadObserver.observe(mc, {childList: true, subtree: true});
+}, 500);
+
+// v6 openModal enhancement
+var _origOpenModal = openModal;
+openModal = function(id) {
+  _origOpenModal(id);
+  setTimeout(function() {
+    comparables = [];
+    var roiW = document.getElementById('roiCalcWrap');
+    var compW = document.getElementById('compWrap');
+    var langW = document.getElementById('langToggleWrap');
+    if (id) {
+      var prop = null;
+      for (var i = 0; i < props.length; i++) {
+        if ((props[i].id || props[i].slug) === decodeURIComponent(id)) { prop = props[i]; break; }
+      }
+      if (prop && roiW) roiW.innerHTML = buildROICalc(prop);
+      if (prop && compW) compW.innerHTML = buildComparables(prop);
+    } else {
+      if (roiW) roiW.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:8px">Guarda primero para ver analisis</div>';
+      if (compW) compW.innerHTML = '';
+    }
+    if (langW) langW.innerHTML = buildLangToggle();
+  }, 300);
 };
 
 // ── INIT ─────────────────────────────────────────────────────
