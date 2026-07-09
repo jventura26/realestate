@@ -409,6 +409,77 @@ body.dark .desc-block textarea{background:var(--dm-card);border-color:var(--dm-b
 body.dark .dest-toggle{border-color:var(--dm-border);color:var(--dm-text)}
 body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-text3)}
 
+
+/* ══════ WIZARD MODAL v2 ══════ */
+
+/* Wizard step tabs */
+.wizard-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; background: var(--bg); position: sticky; top: 0; z-index: 5; }
+body.dark .wizard-tabs { background: var(--dm-bg); border-color: var(--dm-border); }
+.wizard-tab { padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.wizard-tab:hover { color: var(--text2); }
+.wizard-tab.active { color: var(--or); border-bottom-color: var(--or); }
+.wizard-tab .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--border); color: var(--text3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+.wizard-tab.active .tab-num { background: var(--or); color: #fff; }
+.wizard-tab.done .tab-num { background: var(--green); color: #fff; }
+.wizard-tab.done .tab-num::after { content: '✓'; }
+.wizard-tab.done .tab-num span { display: none; }
+
+/* Wizard step content */
+.wizard-step { display: none; }
+.wizard-step.active { display: block; }
+
+/* Completeness bar */
+.completeness-strip { padding: 8px 24px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; position: sticky; top: 44px; z-index: 4; }
+body.dark .completeness-strip { background: var(--dm-bg); border-color: var(--dm-border); }
+.completeness-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.completeness-fill { height: 100%; background: linear-gradient(90deg, var(--or), var(--green)); border-radius: 3px; transition: width .4s ease; }
+.completeness-pct { font-size: 11px; font-weight: 700; color: var(--or); min-width: 36px; text-align: right; }
+.completeness-hint { font-size: 10px; color: var(--text3); }
+
+/* Live preview card */
+.live-preview { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--wh); }
+body.dark .live-preview { background: var(--dm-card); border-color: var(--dm-border); }
+.lp-img { width: 100%; height: 120px; background: var(--bg) url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="%238A9BB0" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>') center no-repeat; background-size: 32px; object-fit: cover; }
+.lp-body { padding: 12px; }
+.lp-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--or); margin-bottom: 4px; }
+.lp-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 16px; font-weight: 500; color: var(--navy); margin-bottom: 2px; min-height: 20px; }
+body.dark .lp-title { color: var(--dm-text); }
+.lp-loc { font-size: 11px; color: var(--text3); margin-bottom: 8px; min-height: 14px; }
+.lp-price { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: var(--navy); }
+body.dark .lp-price { color: var(--dm-text); }
+.lp-specs { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.lp-spec { font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 3px; }
+
+/* Quick paste gallery */
+.gal-quickpaste { width: 100%; min-height: 60px; padding: 8px; border: 1.5px dashed var(--border2); border-radius: 8px; font-size: 11px; font-family: inherit; resize: vertical; background: none; color: var(--text); }
+body.dark .gal-quickpaste { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+.gal-quickpaste:focus { border-color: var(--or); outline: none; }
+.gal-quickpaste-hint { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+/* Contextual fields */
+.ctx-hidden { display: none !important; }
+
+/* Draft badge */
+.draft-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--yellow); background: #FEF3C7; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+body.dark .draft-badge { background: rgba(245,158,11,.15); }
+
+/* Wizard nav buttons */
+.wizard-nav { display: flex; justify-content: space-between; padding: 16px 0 0; margin-top: 16px; border-top: 1px solid var(--border); }
+body.dark .wizard-nav { border-color: var(--dm-border); }
+.wizard-nav .btn { min-width: 120px; }
+
+/* Auto-generated field indicator */
+.fg-auto { position: relative; }
+.fg-auto input { padding-right: 24px; }
+.fg-auto::after { content: '⚡'; position: absolute; right: 10px; top: 50%; font-size: 12px; opacity: .4; }
+
+/* Responsive wizard tabs */
+@media(max-width:900px) {
+  .wizard-tabs { overflow-x: auto; padding: 0 12px; }
+  .wizard-tab { padding: 10px 10px; font-size: 10px; }
+  .wizard-tab span.tab-label { display: none; }
+}
+
 /* ══════ MODERNIZATION v4 ══════ */
 
 /* Premium font import */
@@ -619,10 +690,24 @@ body.dark .breakdown-val { color: var(--dm-text); }
       <div class="modal-topbar-title" id="modalTitle">Nueva propiedad</div>
       <button class="btn btn-navy btn-sm" onclick="saveProp()" style="background:var(--or);border-color:var(--or)"><i class="ti ti-device-floppy"></i> Guardar</button>
     </div>
+    <div class="wizard-tabs" id="wizardTabs">
+      <div class="wizard-tab active" data-step="1" onclick="wizardGo(1)"><div class="tab-num"><span>1</span></div> <span class="tab-label">Básica</span></div>
+      <div class="wizard-tab" data-step="2" onclick="wizardGo(2)"><div class="tab-num"><span>2</span></div> <span class="tab-label">Medidas</span></div>
+      <div class="wizard-tab" data-step="3" onclick="wizardGo(3)"><div class="tab-num"><span>3</span></div> <span class="tab-label">Descripción</span></div>
+      <div class="wizard-tab" data-step="4" onclick="wizardGo(4)"><div class="tab-num"><span>4</span></div> <span class="tab-label">Características</span></div>
+      <div class="wizard-tab" data-step="5" onclick="wizardGo(5)"><div class="tab-num"><span>5</span></div> <span class="tab-label">Media</span></div>
+      <div class="wizard-tab" data-step="6" onclick="wizardGo(6)"><div class="tab-num"><span>6</span></div> <span class="tab-label">Publicación</span></div>
+    </div>
+    <div class="completeness-strip">
+      <div class="completeness-track"><div class="completeness-fill" id="wizardFill" style="width:0%"></div></div>
+      <div class="completeness-pct" id="wizardPct">0%</div>
+      <div class="completeness-hint" id="wizardHint">Completa los campos básicos</div>
+    </div>
     <div class="modal-body">
       <div class="form-grid">
         <div class="form-left">
 
+          <div class="wizard-step active" data-step="1">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-info-circle"></i> Información básica</div>
             <div class="fg"><label>Título *</label><input type="text" id="fTitulo" placeholder="Ej: Casa en Kanajuyú · Zona 16"></div>
@@ -656,6 +741,10 @@ body.dark .breakdown-val { color: var(--dm-text); }
             <input type="hidden" id="fCinta" value="">
           </div>
 
+          <div class="wizard-nav"><span></span><button class="btn btn-primary btn-sm" onclick="wizardGo(2)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
+          </div>
+
+          <div class="wizard-step" data-step="2">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-ruler"></i> Medidas y espacios</div>
             <div class="fg-row c4">
@@ -688,6 +777,10 @@ body.dark .breakdown-val { color: var(--dm-text); }
             </div>
           </div>
 
+          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(1)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(3)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
+          </div>
+
+          <div class="wizard-step" data-step="3">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-file-text"></i> Descripción</div>
             <div class="fg"><label>Descripción completa</label><textarea id="fDescripcion" style="min-height:90px" placeholder="Descripción detallada para el sitio web..."></textarea></div>
@@ -706,6 +799,10 @@ body.dark .breakdown-val { color: var(--dm-text); }
             <div style="margin-top:6px;font-size:10px;color:var(--text3)">Opcional: agrega bloques para una descripción más estructurada en el sitio.</div>
           </div>
 
+          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(2)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(4)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
+          </div>
+
+          <div class="wizard-step" data-step="4">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-checklist"></i> Características</div>
 
@@ -819,6 +916,10 @@ body.dark .breakdown-val { color: var(--dm-text); }
             </div>
           </div>
 
+          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(3)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(5)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
+          </div>
+
+          <div class="wizard-step" data-step="5">
           <div class="share-box">
             <div class="share-box-title"><i class="ti ti-share"></i> Ficha compartible — WhatsApp / Redes</div>
             <div class="fg"><label>URL del PDF</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>
@@ -865,6 +966,7 @@ body.dark .breakdown-val { color: var(--dm-text); }
             <div class="fg"><label>Contacto del vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Pérez · +502 5555-1234"></div>
             <div class="fg"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:60px" placeholder="Motivación de venta, situación especial..."></textarea></div>
             <div class="fg"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravámenes, IUSI al día"></div>
+          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(4)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(6)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
           </div>
 
         </div>
@@ -881,6 +983,12 @@ body.dark .breakdown-val { color: var(--dm-text); }
             <div class="side-card-title"><i class="ti ti-photos"></i> Galería</div>
             <div class="gal-wrap" id="galWrap"></div>
             <button type="button" onclick="addGalImg()" style="margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer">+ Agregar imagen</button>
+            <details style="margin-top:8px">
+              <summary style="font-size:11px;color:var(--or);cursor:pointer;font-weight:600">⚡ Pegar múltiples URLs</summary>
+              <textarea class="gal-quickpaste" id="galQuickPaste" placeholder="Pega una URL por línea...&#10;https://ik.imagekit.io/Zona/foto1.jpg&#10;https://ik.imagekit.io/Zona/foto2.jpg"></textarea>
+              <div class="gal-quickpaste-hint">Una URL por línea. Click "Aplicar" para agregarlas todas.</div>
+              <button type="button" onclick="applyQuickPaste()" style="margin-top:6px;padding:5px 14px;border:1px solid var(--or);border-radius:6px;background:none;font-size:11px;color:var(--or);cursor:pointer;font-weight:600">Aplicar URLs</button>
+            </details>
           </div>
 
           <div class="side-card">
@@ -897,6 +1005,26 @@ body.dark .breakdown-val { color: var(--dm-text); }
             </div>
             <input type="hidden" id="fEstado" value="Activa">
             <label class="dest-toggle"><input type="checkbox" id="fDestacada"><span class="star"><i class="ti ti-star-filled"></i></span><div><div style="font-size:12px;font-weight:600">Propiedad Destacada</div><div style="font-size:10px;color:var(--text3)">Aparece primero en los listados</div></div></label>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-eye"></i> Preview en vivo</div>
+            <div class="live-preview" id="livePreview">
+              <img class="lp-img" id="lpImg" src="" style="display:none">
+              <div class="lp-img" id="lpImgPlaceholder"></div>
+              <div class="lp-body">
+                <div class="lp-badge" id="lpBadge"></div>
+                <div class="lp-title" id="lpTitle">Título de la propiedad</div>
+                <div class="lp-loc" id="lpLoc"></div>
+                <div class="lp-price" id="lpPrice"></div>
+                <div class="lp-specs">
+                  <div class="lp-spec" id="lpHab"><i class="ti ti-bed" style="font-size:13px"></i> <span>—</span></div>
+                  <div class="lp-spec" id="lpBan"><i class="ti ti-bath" style="font-size:13px"></i> <span>—</span></div>
+                  <div class="lp-spec" id="lpArea"><i class="ti ti-ruler" style="font-size:13px"></i> <span>—</span></div>
+                  <div class="lp-spec" id="lpParq"><i class="ti ti-car" style="font-size:13px"></i> <span>—</span></div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="side-card">
@@ -927,8 +1055,6 @@ body.dark .breakdown-val { color: var(--dm-text); }
             <div class="fg" style="margin-top:8px"><label>Google Maps URL</label><input type="url" id="fGoogleMaps" placeholder="https://maps.google.com/..."></div>
 <div class="fg"><label>IUSI (mensual)</label><input id="fIusi" placeholder="Ej: Q150"></div>
 <div class="fg"><label>Cuota mantenimiento</label><input id="fCuotaMant" placeholder="Ej: Q500/mes"></div>
-<div class="fg"><label>IUSI (mensual)</label><input id="fIusi" placeholder="Ej: Q150"></div>
-<div class="fg"><label>Cuota mantenimiento</label><input id="fCuotaMant" placeholder="Ej: Q500/mes"></div>
           </div>
 
           <div class="side-card">
@@ -942,6 +1068,7 @@ body.dark .breakdown-val { color: var(--dm-text); }
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-ghost" onclick="saveDraft()" style="color:var(--yellow);border-color:var(--yellow)"><i class="ti ti-file-text"></i> Borrador</button>
       <button class="btn btn-navy" onclick="saveProp()"><i class="ti ti-device-floppy"></i> Guardar propiedad</button>
     </div>
   </div>
@@ -1814,6 +1941,279 @@ document.querySelectorAll('.char-item').forEach(item=>{
   item.addEventListener('change',()=>item.classList.toggle('checked',item.querySelector('input').checked));
 });
 
+
+
+// ── WIZARD MODAL ─────────────────────────────────────────────
+let currentWizardStep = 1;
+
+function wizardGo(step) {
+  currentWizardStep = step;
+  // Update tabs
+  document.querySelectorAll('.wizard-tab').forEach(t => {
+    const s = parseInt(t.dataset.step);
+    t.classList.toggle('active', s === step);
+  });
+  // Update steps (form-left)
+  document.querySelectorAll('.wizard-step').forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.step) === step);
+  });
+  // Scroll modal body to top
+  const mb = document.querySelector('.modal-body');
+  if (mb) mb.scrollTop = 0;
+  // Mark completed tabs
+  updateWizardDone();
+}
+
+function updateWizardDone() {
+  const checks = {
+    1: () => !!document.getElementById('fTitulo')?.value,
+    2: () => !!(document.getElementById('fArea')?.value || document.getElementById('fHabitaciones')?.value),
+    3: () => !!document.getElementById('fDescripcion')?.value,
+    4: () => document.querySelectorAll('.chars-grid input:checked').length > 0,
+    5: () => !!(document.getElementById('fPdfUrl')?.value || document.querySelectorAll('.priv-toggle input:checked').length > 0),
+    6: () => false
+  };
+  document.querySelectorAll('.wizard-tab').forEach(t => {
+    const s = parseInt(t.dataset.step);
+    if (s < currentWizardStep && checks[s] && checks[s]()) {
+      t.classList.add('done');
+    }
+  });
+}
+
+// ── COMPLETENESS BAR ─────────────────────────────────────────
+const completenessFields = [
+  {id:'fTitulo', w:15, label:'título'},
+  {id:'fPrecio', w:12, label:'precio'},
+  {id:'fTipo', w:5, label:'tipo'},
+  {id:'fZona', w:8, label:'zona'},
+  {id:'fMunicipio', w:5, label:'municipio'},
+  {id:'fArea', w:8, label:'área'},
+  {id:'fHabitaciones', w:5, label:'habitaciones'},
+  {id:'fBanos', w:5, label:'baños'},
+  {id:'fDescripcion', w:12, label:'descripción'},
+  {id:'fImagen', w:15, label:'imagen principal'},
+  {sel:'.chars-grid input:checked', w:5, label:'características', min:1},
+  {id:'fSlug', w:5, label:'slug'},
+];
+
+function updateCompleteness() {
+  let score = 0, total = 0, missing = [];
+  completenessFields.forEach(f => {
+    total += f.w;
+    if (f.id) {
+      const el = document.getElementById(f.id);
+      if (el && el.value && el.value.trim()) score += f.w;
+      else missing.push(f.label);
+    } else if (f.sel) {
+      if (document.querySelectorAll(f.sel).length >= (f.min||1)) score += f.w;
+      else missing.push(f.label);
+    }
+  });
+  const pct = Math.round((score/total)*100);
+  const fill = document.getElementById('wizardFill');
+  const pctEl = document.getElementById('wizardPct');
+  const hint = document.getElementById('wizardHint');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (hint) {
+    if (pct === 100) hint.textContent = '¡Propiedad completa!';
+    else if (missing.length) hint.textContent = 'Falta: ' + missing.slice(0,3).join(', ');
+  }
+}
+
+// ── AUTO-FILL ────────────────────────────────────────────────
+function setupAutoFill() {
+  // Auto slug from título
+  const tit = document.getElementById('fTitulo');
+  const slug = document.getElementById('fSlug');
+  if (tit && slug) {
+    tit.addEventListener('input', () => {
+      if (!slug.dataset.manual) {
+        slug.value = tit.value.toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+          .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        updateLivePreview();
+        updateCompleteness();
+      }
+    });
+    slug.addEventListener('input', () => { slug.dataset.manual = '1'; });
+  }
+
+  // Auto datos técnicos
+  ['fHabitaciones','fBanos','fArea','fAreaV2','fParqueos'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => { autoFillDatosTecnicos(); updateLivePreview(); updateCompleteness(); });
+  });
+
+  // Auto-format precio
+  const precio = document.getElementById('fPrecio');
+  if (precio) {
+    precio.addEventListener('blur', () => {
+      const raw = precio.value.replace(/[^0-9.]/g,'');
+      if (raw) {
+        const num = parseFloat(raw);
+        if (!isNaN(num)) precio.value = num.toLocaleString('en-US');
+      }
+      updateLivePreview();
+      updateCompleteness();
+    });
+  }
+
+  // Live preview listeners
+  ['fTitulo','fPrecio','fZona','fMunicipio','fImagen','fHabitaciones','fBanos','fArea','fParqueos','fMoneda','fCinta','fTipo','fDescripcion','fHook','fDescCorta'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => { updateLivePreview(); updateCompleteness(); });
+      el.addEventListener('change', () => { updateLivePreview(); updateCompleteness(); });
+    }
+  });
+
+  // Contextual fields based on tipo
+  const tipo = document.getElementById('fTipo');
+  if (tipo) tipo.addEventListener('change', applyContextualFields);
+}
+
+function autoFillDatosTecnicos() {
+  const hab = document.getElementById('fHabitaciones')?.value;
+  const ban = document.getElementById('fBanos')?.value;
+  const area = document.getElementById('fArea')?.value;
+  const areaV = document.getElementById('fAreaV2')?.value;
+  const parq = document.getElementById('fParqueos')?.value;
+  const dt = document.getElementById('fDatosTecnicos');
+  if (!dt || dt.dataset.manual) return;
+  const parts = [];
+  if (hab && hab !== '0') parts.push(hab + ' hab');
+  if (ban && ban !== '0') parts.push(ban + ' baños');
+  if (area) parts.push(area + ' m²');
+  if (areaV) parts.push('Terreno ' + areaV + ' v²');
+  if (parq && parq !== '0') parts.push(parq + ' parqueos');
+  dt.value = parts.join(' · ');
+}
+
+// ── LIVE PREVIEW ─────────────────────────────────────────────
+function updateLivePreview() {
+  const t = document.getElementById('fTitulo')?.value || '';
+  const p = document.getElementById('fPrecio')?.value || '';
+  const m = document.getElementById('fMoneda')?.value || 'Q';
+  const z = document.getElementById('fZona')?.value || '';
+  const mun = document.getElementById('fMunicipio')?.value || '';
+  const img = document.getElementById('fImagen')?.value || '';
+  const hab = document.getElementById('fHabitaciones')?.value || '—';
+  const ban = document.getElementById('fBanos')?.value || '—';
+  const area = document.getElementById('fArea')?.value || '—';
+  const parq = document.getElementById('fParqueos')?.value || '—';
+  const cinta = document.getElementById('fCinta')?.value || '';
+  const tipo = document.getElementById('fTipo')?.value || '';
+
+  const lpTitle = document.getElementById('lpTitle');
+  const lpLoc = document.getElementById('lpLoc');
+  const lpPrice = document.getElementById('lpPrice');
+  const lpBadge = document.getElementById('lpBadge');
+  const lpImg = document.getElementById('lpImg');
+  const lpImgPh = document.getElementById('lpImgPlaceholder');
+
+  if (lpTitle) lpTitle.textContent = t || 'Título de la propiedad';
+  if (lpLoc) lpLoc.textContent = [z, mun].filter(Boolean).join(' · ') || '';
+  if (lpPrice) lpPrice.textContent = p ? (m + ' ' + p) : '';
+  if (lpBadge) lpBadge.textContent = cinta || tipo || '';
+
+  if (lpImg && lpImgPh) {
+    if (img) {
+      lpImg.src = img;
+      lpImg.style.display = 'block';
+      lpImgPh.style.display = 'none';
+    } else {
+      lpImg.style.display = 'none';
+      lpImgPh.style.display = 'block';
+    }
+  }
+
+  const lpHab = document.getElementById('lpHab');
+  const lpBan = document.getElementById('lpBan');
+  const lpArea = document.getElementById('lpArea');
+  const lpParq = document.getElementById('lpParq');
+  if (lpHab) lpHab.querySelector('span').textContent = hab;
+  if (lpBan) lpBan.querySelector('span').textContent = ban;
+  if (lpArea) lpArea.querySelector('span').textContent = area ? area + ' m²' : '—';
+  if (lpParq) lpParq.querySelector('span').textContent = parq;
+}
+
+// ── CONTEXTUAL FIELDS ────────────────────────────────────────
+function applyContextualFields() {
+  const tipo = document.getElementById('fTipo')?.value || '';
+  // Show/hide finca-specific characteristics
+  const fincaGroup = document.querySelector('.chars-group-title i.ti-plant')?.closest('.chars-group');
+  const intGroup = document.querySelector('.chars-group-title i.ti-sofa')?.closest('.chars-group');
+  const vehGroup = document.querySelector('.chars-group-title i.ti-car')?.closest('.chars-group');
+  const extGroup = document.querySelector('.chars-group-title i.ti-tree')?.closest('.chars-group');
+
+  // Show all first
+  [fincaGroup, intGroup, vehGroup, extGroup].forEach(g => { if (g) g.classList.remove('ctx-hidden'); });
+
+  if (tipo === 'Terreno') {
+    // Terreno: hide interiores, exteriores (pool etc not relevant), vehicles
+    if (intGroup) intGroup.classList.add('ctx-hidden');
+    if (extGroup) extGroup.classList.add('ctx-hidden');
+    if (vehGroup) vehGroup.classList.add('ctx-hidden');
+  } else if (tipo === 'Finca') {
+    // Show all, finca is prominent
+  } else if (tipo === 'Apartamento') {
+    // Apto: hide finca
+    if (fincaGroup) fincaGroup.classList.add('ctx-hidden');
+  } else if (tipo === 'Local') {
+    if (fincaGroup) fincaGroup.classList.add('ctx-hidden');
+    if (intGroup) intGroup.classList.add('ctx-hidden');
+  }
+}
+
+// ── QUICK PASTE GALLERY ──────────────────────────────────────
+function applyQuickPaste() {
+  const ta = document.getElementById('galQuickPaste');
+  if (!ta) return;
+  const urls = ta.value.split('\n').map(u => u.trim()).filter(u => u.startsWith('http'));
+  urls.forEach(url => {
+    galUrls.push(url);
+  });
+  renderGallery();
+  ta.value = '';
+  showToast(urls.length + ' imágenes agregadas');
+}
+
+// ── SAVE DRAFT ───────────────────────────────────────────────
+function saveDraft() {
+  const titulo = document.getElementById('fTitulo')?.value;
+  if (!titulo) { showToast('Agrega al menos un título'); return; }
+  // Set status to Pausada for drafts
+  document.getElementById('fEstado').value = 'Pausada';
+  setStatus('Pausada');
+  saveProp();
+}
+
+// ── HOOK INTO MODAL OPEN ─────────────────────────────────────
+const _origOpenModal = typeof openModal !== 'undefined' ? openModal : null;
+
+function initWizardOnModalOpen() {
+  // Reset wizard to step 1
+  currentWizardStep = 1;
+  wizardGo(1);
+  // Setup auto-fill listeners (idempotent)
+  setTimeout(() => {
+    setupAutoFill();
+    applyContextualFields();
+    updateLivePreview();
+    updateCompleteness();
+  }, 100);
+}
+
+// Patch openModal to initialize wizard
+if (typeof openModal === 'function') {
+  const _origOM = openModal;
+  openModal = function(id) {
+    _origOM(id);
+    setTimeout(initWizardOnModalOpen, 150);
+  };
+}
 
 // ── COUNT-UP ANIMATION ───────────────────────────────────────
 function animateCountUp() {
