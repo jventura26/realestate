@@ -624,6 +624,106 @@ body.dark .breakdown-val { color: var(--dm-text); }
 .lead-source.src-inmu { background: #FFF8ED; color: #92400E; }
 .lead-source.src-unknown { background: #F1F5F9; color: #64748B; }
 
+
+/* ══════ PREMIUM FEATURES v5 ══════ */
+
+/* ─ Activity Timeline ─ */
+.timeline-card { padding: 0; }
+.timeline-header { padding: 14px 18px; font-size: 13px; font-weight: 700; color: var(--navy); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+body.dark .timeline-header { color: var(--dm-text); border-color: var(--dm-border); }
+.timeline-feed { max-height: 260px; overflow-y: auto; padding: 8px 0; }
+.tl-item { display: flex; gap: 10px; padding: 8px 18px; font-size: 12px; transition: background .15s; }
+.tl-item:hover { background: rgba(0,0,0,.02); }
+body.dark .tl-item:hover { background: rgba(255,255,255,.03); }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.tl-dot.lead { background: var(--or); }
+.tl-dot.sale { background: var(--green); }
+.tl-dot.new { background: var(--blue); }
+.tl-dot.edit { background: var(--text3); }
+.tl-content { flex: 1; min-width: 0; }
+.tl-text { color: var(--text); line-height: 1.4; }
+body.dark .tl-text { color: var(--dm-text); }
+.tl-text strong { font-weight: 600; }
+.tl-time { color: var(--text3); font-size: 10px; margin-top: 2px; }
+
+/* ─ Global Search (Ctrl+K) ─ */
+.search-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; display: none; align-items: flex-start; justify-content: center; padding-top: 15vh; backdrop-filter: blur(4px); }
+.search-overlay.open { display: flex; animation: fadeIn .15s ease; }
+.search-box { width: 560px; max-width: 90vw; background: var(--wh); border-radius: 16px; box-shadow: 0 32px 80px rgba(0,0,0,.3); overflow: hidden; }
+body.dark .search-box { background: var(--dm-card); }
+.search-input-wrap { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+body.dark .search-input-wrap { border-color: var(--dm-border); }
+.search-input-wrap i { font-size: 20px; color: var(--text3); }
+.search-input { flex: 1; border: none; outline: none; font-size: 15px; background: none; color: var(--text); font-family: inherit; }
+body.dark .search-input { color: var(--dm-text); }
+.search-input::placeholder { color: var(--text3); }
+.search-kbd { font-size: 10px; padding: 2px 6px; border: 1px solid var(--border2); border-radius: 4px; color: var(--text3); font-family: monospace; }
+.search-results { max-height: 340px; overflow-y: auto; padding: 8px; }
+.search-result { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background .1s; }
+.search-result:hover, .search-result.active { background: var(--bg); }
+body.dark .search-result:hover, body.dark .search-result.active { background: var(--dm-bg); }
+.sr-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.sr-icon.prop { background: #EEF0F6; color: var(--navy); }
+.sr-icon.lead { background: #FFF7ED; color: var(--or); }
+body.dark .sr-icon.prop { background: rgba(13,27,62,.3); }
+body.dark .sr-icon.lead { background: rgba(245,130,13,.15); }
+.sr-text { flex: 1; min-width: 0; }
+.sr-title { font-size: 13px; font-weight: 600; color: var(--text); }
+body.dark .sr-title { color: var(--dm-text); }
+.sr-sub { font-size: 11px; color: var(--text3); }
+.search-empty { text-align: center; padding: 24px; color: var(--text3); font-size: 13px; }
+.search-footer { padding: 8px 16px; border-top: 1px solid var(--border); display: flex; gap: 16px; font-size: 10px; color: var(--text3); }
+body.dark .search-footer { border-color: var(--dm-border); }
+
+/* ─ Lead notification pulse ─ */
+.sb-badge.pulse { animation: badgePulse 2s infinite; }
+@keyframes badgePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); box-shadow: 0 0 8px rgba(245,130,13,.5); } }
+
+/* ─ Leads weekly chart ─ */
+.leads-chart-wrap { padding: 18px; }
+.leads-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+.leads-bar { flex: 1; background: var(--or); border-radius: 4px 4px 0 0; min-height: 2px; transition: height .4s ease; position: relative; }
+.leads-bar:hover { opacity: .8; }
+.leads-bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text3); white-space: nowrap; }
+.leads-bar-val { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--navy); }
+body.dark .leads-bar-val { color: var(--dm-text); }
+
+/* ─ Conversion funnel ─ */
+.funnel-wrap { padding: 14px 18px; }
+.funnel-step { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.funnel-bar-track { flex: 1; height: 22px; background: var(--bg); border-radius: 6px; overflow: hidden; position: relative; }
+body.dark .funnel-bar-track { background: var(--dm-bg); }
+.funnel-bar-fill { height: 100%; border-radius: 6px; transition: width .6s ease; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 700; color: #fff; min-width: 24px; }
+.funnel-label { font-size: 11px; color: var(--text2); width: 80px; flex-shrink: 0; }
+.funnel-count { font-size: 11px; font-weight: 700; color: var(--navy); width: 28px; text-align: right; flex-shrink: 0; }
+body.dark .funnel-count { color: var(--dm-text); }
+
+/* ─ Quality score ─ */
+.quality-score { display: inline-flex; align-items: center; gap: 4px; }
+.qs-ring { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; }
+.qs-ring.high { background: var(--green); }
+.qs-ring.mid { background: var(--yellow); }
+.qs-ring.low { background: var(--red); }
+
+/* ─ Quick status change in table ─ */
+.quick-status { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; border: 1px solid var(--border2); cursor: pointer; background: none; color: var(--text); appearance: none; -webkit-appearance: none; }
+body.dark .quick-status { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+
+/* ─ PDF export button ─ */
+.btn-pdf { background: #DC2626; color: #fff; border: none; }
+.btn-pdf:hover { background: #B91C1C; }
+
+/* ─ Topbar search trigger ─ */
+.topbar-search { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border2); border-radius: 8px; color: var(--text3); font-size: 12px; cursor: pointer; transition: all .15s; background: none; margin-right: auto; }
+.topbar-search:hover { border-color: var(--or); color: var(--or); }
+body.dark .topbar-search { border-color: var(--dm-border); color: var(--dm-text3); }
+
+/* ─ Dark mode transition ─ */
+body { transition: background .3s, color .3s; }
+.sidebar, .topbar, .content, .stat-card, .chart-card, .recent-card, .table-wrap, .lead-card, .modal-panel {
+  transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+}
+
 </style>
 </head>
 <body>
@@ -673,6 +773,7 @@ body.dark .breakdown-val { color: var(--dm-text); }
     <div class="main">
       <div class="topbar">
         <button class="mob-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>\n        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <button class="topbar-search" onclick="openSearch()" title="Buscar (Ctrl+K)"><i class="ti ti-search"></i> Buscar... <span class="search-kbd">Ctrl+K</span></button>
         <button class="btn btn-ghost btn-sm" id="darkToggle" onclick="toggleDark()" title="Modo oscuro"><i class="ti ti-moon"></i></button>\n        <button class="btn btn-ghost btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Actualizar</button>
         <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
         <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
@@ -1074,6 +1175,26 @@ body.dark .breakdown-val { color: var(--dm-text); }
   </div>
 </div>
 
+
+<!-- GLOBAL SEARCH -->
+<div class="search-overlay" id="searchOverlay" onclick="if(event.target===this)closeSearch()">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <i class="ti ti-search"></i>
+      <input class="search-input" id="searchInput" placeholder="Buscar propiedades, leads..." autocomplete="off" oninput="doGlobalSearch(this.value)">
+      <span class="search-kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-empty">Escribe para buscar...</div>
+    </div>
+    <div class="search-footer">
+      <span><kbd style="font-family:monospace;padding:1px 4px;border:1px solid var(--border2);border-radius:3px">↑↓</kbd> Navegar</span>
+      <span><kbd style="font-family:monospace;padding:1px 4px;border:1px solid var(--border2);border-radius:3px">Enter</kbd> Abrir</span>
+      <span><kbd style="font-family:monospace;padding:1px 4px;border:1px solid var(--border2);border-radius:3px">Esc</kbd> Cerrar</span>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1290,7 +1411,30 @@ function renderDashboard(mc) {
               <div class="rl-time">${formatDate(l.fecha)}</div>
             </div>`).join('')}
       </div>
+    </div>
+
+    <div class="dash-grid" style="margin-top:22px">
+      <div>
+        <div class="chart-card" style="margin-bottom:18px">
+          <div class="chart-title">Leads por semana <span style="font-size:11px;font-weight:500;color:var(--text3)">Últimas 8 semanas</span></div>
+          <div class="leads-chart-wrap">
+            <div class="leads-bar-chart">${buildLeadsChart()}</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Funnel de conversión</div>
+          <div class="funnel-wrap">${buildFunnel()}</div>
+        </div>
+      </div>
+      <div class="chart-card timeline-card">
+        <div class="timeline-header">
+          <span>Actividad reciente</span>
+          <i class="ti ti-activity" style="color:var(--text3)"></i>
+        </div>
+        <div class="timeline-feed">${buildTimeline()}</div>
+      </div>
     </div>`;
+  checkNewLeads();
 }
 
 // ── PROPIEDADES PAGE ─────────────────────────────────────────
@@ -1447,18 +1591,24 @@ function buildTable(data, sortable) {
       </td>
       <td>${esc(p.tipo||'—')}</td>
       <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>
-      <td><span class="badge ${bc}">${esc(est)}</span></td>
+      <td><select class="quick-status" onchange="quickChangeStatus('${id}',this.value)" title="Cambiar estado">
+          <option value="Activa"${est==='Activa'?' selected':''}>Activa</option>
+          <option value="Vendida"${est==='Vendida'?' selected':''}>Vendida</option>
+          <option value="Pausada"${est==='Pausada'?' selected':''}>Pausada</option>
+        </select></td>
       <td>
         <div class="completeness-wrap" title="${pct}% completa">
           <div class="completeness-bar"><div class="completeness-fill" style="width:${pct}%;background:${pctColor}"></div></div>
           <span class="completeness-label" style="color:${pctColor}">${pct}%</span>
         </div>
+        ${qualityBadge(p)}
       </td>
       <td>
         <div class="actions-cell">
           <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
           <div class="icon-btn" title="Ver en Zona INNmueble" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
           <div class="icon-btn" title="Ver en InmuHub" onclick="window.open('https://inmuhub.com/propiedades/${p.slug||p.id}.html','_blank')" style="border-color:#C9A96E"><i class="ti ti-building-skyscraper" style="color:#C9A96E"></i></div>
+          <div class="icon-btn" title="Exportar PDF" onclick="exportPropPDF('${id}')" style="color:#DC2626"><i class="ti ti-file-type-pdf"></i></div>
           <div class="icon-btn" title="Duplicar" onclick="duplicateProp('${id}')"><i class="ti ti-copy"></i></div>\n          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
         </div>
       </td>
@@ -1472,6 +1622,7 @@ function buildTable(data, sortable) {
       <th>Precio</th>
       <th>Estado</th>
       <th>Completitud</th>
+      <th>Calidad</th>
       <th>Acciones</th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -2214,6 +2365,294 @@ if (typeof openModal === 'function') {
     setTimeout(initWizardOnModalOpen, 150);
   };
 }
+
+
+// ══════ PREMIUM FEATURES v5 ══════
+
+// ── 1. GLOBAL SEARCH (Ctrl+K) ───────────────────────────────
+let searchResultIndex = -1;
+
+function openSearch() {
+  const ov = document.getElementById('searchOverlay');
+  ov.classList.add('open');
+  const inp = document.getElementById('searchInput');
+  inp.value = '';
+  inp.focus();
+  document.getElementById('searchResults').innerHTML = '<div class="search-empty">Escribe para buscar...</div>';
+  searchResultIndex = -1;
+}
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+
+function doGlobalSearch(q) {
+  const res = document.getElementById('searchResults');
+  if (!q || q.length < 2) { res.innerHTML = '<div class="search-empty">Escribe al menos 2 caracteres...</div>'; return; }
+  const ql = q.toLowerCase();
+  const matches = [];
+
+  // Search properties
+  props.forEach(p => {
+    const haystack = [p.titulo, p.zona, p.municipio, p.tipo, p.precio, p.codigo, p.slug].filter(Boolean).join(' ').toLowerCase();
+    if (haystack.includes(ql)) {
+      matches.push({ type: 'prop', title: p.titulo || 'Sin título', sub: [p.tipo, p.zona, p.municipio, p.precio ? (p.moneda||'Q')+' '+p.precio : ''].filter(Boolean).join(' · '), id: p.id || p.slug });
+    }
+  });
+
+  // Search leads
+  leads.forEach(l => {
+    const haystack = [l.nombre, l.email, l.telefono, l.propiedad, l.tipo].filter(Boolean).join(' ').toLowerCase();
+    if (haystack.includes(ql)) {
+      matches.push({ type: 'lead', title: l.nombre || 'Sin nombre', sub: [l.email, l.propiedad].filter(Boolean).join(' · '), id: l.id });
+    }
+  });
+
+  if (!matches.length) { res.innerHTML = '<div class="search-empty">Sin resultados para "' + esc(q) + '"</div>'; return; }
+
+  res.innerHTML = matches.slice(0, 8).map((m, i) => `
+    <div class="search-result${i===0?' active':''}" data-idx="${i}" onclick="searchSelect('${m.type}','${esc(m.id||'')}')">
+      <div class="sr-icon ${m.type}"><i class="ti ti-${m.type==='prop'?'building':'user'}"></i></div>
+      <div class="sr-text"><div class="sr-title">${esc(m.title)}</div><div class="sr-sub">${esc(m.sub)}</div></div>
+      <span style="font-size:10px;color:var(--text3)">${m.type==='prop'?'Propiedad':'Lead'}</span>
+    </div>`).join('');
+  searchResultIndex = 0;
+}
+
+function searchSelect(type, id) {
+  closeSearch();
+  if (type === 'prop' && id) openModal(id);
+  else if (type === 'lead') showPage('leads');
+}
+
+// ── 2. KEYBOARD SHORTCUTS ────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  // Ctrl+K or Cmd+K = search
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); return; }
+  // Ctrl+N = new property
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n' && !document.getElementById('searchOverlay').classList.contains('open')) {
+    e.preventDefault(); openModal(null); return;
+  }
+  // Esc = close search or modal
+  if (e.key === 'Escape') {
+    if (document.getElementById('searchOverlay').classList.contains('open')) { closeSearch(); return; }
+  }
+  // Arrow keys in search
+  if (document.getElementById('searchOverlay').classList.contains('open')) {
+    const items = document.querySelectorAll('.search-result');
+    if (e.key === 'ArrowDown') { e.preventDefault(); searchResultIndex = Math.min(searchResultIndex+1, items.length-1); highlightSearchResult(items); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); searchResultIndex = Math.max(searchResultIndex-1, 0); highlightSearchResult(items); }
+    if (e.key === 'Enter' && items[searchResultIndex]) { items[searchResultIndex].click(); }
+  }
+});
+
+function highlightSearchResult(items) {
+  items.forEach((it, i) => it.classList.toggle('active', i === searchResultIndex));
+  if (items[searchResultIndex]) items[searchResultIndex].scrollIntoView({ block: 'nearest' });
+}
+
+// ── 3. ACTIVITY TIMELINE ─────────────────────────────────────
+function buildTimeline() {
+  const events = [];
+
+  // Leads as events
+  leads.forEach(l => {
+    events.push({ type: 'lead', text: `<strong>${esc(l.nombre||'Nuevo lead')}</strong> interesado en ${esc(l.propiedad||l.tipo||'propiedad')}`, date: l.fecha || '', icon: 'lead' });
+  });
+
+  // Properties with estado changes
+  props.forEach(p => {
+    if (p.estado === 'Vendida') {
+      events.push({ type: 'sale', text: `<strong>${esc(p.titulo||'')}</strong> marcada como vendida`, date: p.fechaVenta || p.updatedAt || '', icon: 'sale' });
+    }
+    if (p.createdAt) {
+      events.push({ type: 'new', text: `<strong>${esc(p.titulo||'')}</strong> agregada al catálogo`, date: p.createdAt || '', icon: 'new' });
+    }
+  });
+
+  // Sort by date desc
+  events.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  return events.slice(0, 8).map(ev => `
+    <div class="tl-item">
+      <div class="tl-dot ${ev.icon}"></div>
+      <div class="tl-content">
+        <div class="tl-text">${ev.text}</div>
+        <div class="tl-time">${ev.date ? formatDate(ev.date) : ''}</div>
+      </div>
+    </div>`).join('') || '<div style="padding:18px;text-align:center;color:var(--text3);font-size:12px">Sin actividad reciente</div>';
+}
+
+// ── 4. LEADS WEEKLY CHART ────────────────────────────────────
+function buildLeadsChart() {
+  const now = new Date();
+  const weeks = [];
+  for (let i = 7; i >= 0; i--) {
+    const start = new Date(now); start.setDate(now.getDate() - (i * 7));
+    const end = new Date(start); end.setDate(start.getDate() + 7);
+    const count = leads.filter(l => {
+      if (!l.fecha) return false;
+      const d = new Date(l.fecha);
+      return d >= start && d < end;
+    }).length;
+    const label = i === 0 ? 'Esta' : i === 1 ? 'Ant.' : '-' + i;
+    weeks.push({ label, count });
+  }
+  const max = Math.max(...weeks.map(w => w.count), 1);
+  return weeks.map(w => {
+    const h = Math.max((w.count / max) * 70, 2);
+    return `<div class="leads-bar" style="height:${h}px">
+      ${w.count > 0 ? `<div class="leads-bar-val">${w.count}</div>` : ''}
+      <div class="leads-bar-label">${w.label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── 5. CONVERSION FUNNEL ─────────────────────────────────────
+function buildFunnel() {
+  const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado'];
+  const colors = ['#3B82F6','#F5820D','#f59e0b','#8b5cf6','#22c55e'];
+  const counts = stages.map(s => leads.filter(l => (l.stage||'Nuevo') === s).length);
+  const max = Math.max(...counts, 1);
+  return stages.map((s, i) => `
+    <div class="funnel-step">
+      <div class="funnel-label">${s}</div>
+      <div class="funnel-bar-track">
+        <div class="funnel-bar-fill" style="width:${(counts[i]/max)*100}%;background:${colors[i]}">${counts[i]}</div>
+      </div>
+      <div class="funnel-count">${counts[i]}</div>
+    </div>`).join('');
+}
+
+// ── 6. QUALITY SCORE ─────────────────────────────────────────
+function getQualityScore(p) {
+  let score = 0;
+  if (p.titulo) score += 10;
+  if (p.precio) score += 10;
+  if (p.imagen) score += 15;
+  if (p.galeria && p.galeria.length >= 3) score += 10;
+  if (p.galeria && p.galeria.length >= 6) score += 5;
+  if (p.descripcion && p.descripcion.length > 50) score += 10;
+  if (p.hook) score += 10;
+  if (p.descCorta) score += 5;
+  if (p.area) score += 5;
+  if (p.habitaciones) score += 5;
+  if (p.zona) score += 5;
+  if (p.caracteristicas && p.caracteristicas.length >= 3) score += 5;
+  if (p.videoUrl) score += 5;
+  return Math.min(score, 100);
+}
+
+function qualityBadge(p) {
+  const s = getQualityScore(p);
+  const cls = s >= 75 ? 'high' : s >= 45 ? 'mid' : 'low';
+  return '<div class="quality-score"><div class="qs-ring ' + cls + '">' + s + '</div></div>';
+}
+
+// ── 7. NOTIFICATION POLLING ──────────────────────────────────
+let lastLeadCount = 0;
+
+function checkNewLeads() {
+  const badge = document.getElementById('leadsCount');
+  if (!badge) return;
+  const current = leads.length;
+  if (lastLeadCount > 0 && current > lastLeadCount) {
+    badge.classList.add('pulse');
+    showToast('¡' + (current - lastLeadCount) + ' nuevo(s) lead(s)!');
+    setTimeout(() => badge.classList.remove('pulse'), 10000);
+  }
+  lastLeadCount = current;
+}
+
+// Poll every 60s
+setInterval(async () => {
+  try {
+    const r = await fetch(API + '/api/leads', { credentials: 'include' });
+    if (r.ok) {
+      const newLeads = await r.json();
+      if (Array.isArray(newLeads) && newLeads.length > leads.length) {
+        leads = newLeads;
+        checkNewLeads();
+        const badge = document.getElementById('leadsCount');
+        if (badge) badge.textContent = leads.length;
+      }
+    }
+  } catch(e) {}
+}, 60000);
+
+// ── 8. QUICK STATUS CHANGE IN TABLE ──────────────────────────
+async function quickChangeStatus(propId, newStatus) {
+  const p = props.find(x => (x.id||x.slug) === decodeURIComponent(propId));
+  if (!p) return;
+  p.estado = newStatus;
+  try {
+    await fetch(API + '/api/propiedades/' + propId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(p)
+    });
+    showToast('"' + (p.titulo||'Propiedad') + '" → ' + newStatus);
+    showPage(document.querySelector('.sb-item.active')?.id?.replace('nav-','') || 'dashboard');
+  } catch(e) { showToast('Error al cambiar estado'); }
+}
+
+// ── 9. EXPORT PROPERTY AS PDF ────────────────────────────────
+function exportPropPDF(propId) {
+  const p = props.find(x => (x.id||x.slug) === decodeURIComponent(propId));
+  if (!p) return;
+  const w = window.open('', '_blank');
+  w.document.write(\`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>\${p.titulo||'Propiedad'} — Zona INNmueble</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; color:#1A1A2E; max-width:800px; margin:0 auto; padding:40px; }
+    .header { text-align:center; margin-bottom:32px; border-bottom:2px solid #0D1B3E; padding-bottom:20px; }
+    .brand { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:500; color:#0D1B3E; letter-spacing:.15em; }
+    .sub { font-size:10px; color:#8A9BB0; letter-spacing:.1em; margin-top:4px; }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:500; color:#0D1B3E; margin:24px 0 8px; }
+    .loc { font-size:13px; color:#8A9BB0; margin-bottom:16px; }
+    .price { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:600; color:#0D1B3E; margin-bottom:24px; }
+    .specs { display:flex; gap:24px; margin-bottom:24px; padding:16px; background:#F8FAFF; border-radius:8px; }
+    .spec { text-align:center; }
+    .spec-val { font-size:20px; font-weight:700; color:#0D1B3E; }
+    .spec-label { font-size:10px; color:#8A9BB0; letter-spacing:.06em; }
+    .desc { font-size:13px; line-height:1.7; color:#4A5568; margin-bottom:24px; }
+    .img { width:100%; border-radius:8px; margin-bottom:24px; }
+    .footer { text-align:center; margin-top:32px; padding-top:16px; border-top:1px solid #E2E8F0; font-size:10px; color:#8A9BB0; }
+    .cta { background:#0D1B3E; color:#fff; padding:12px 32px; border-radius:8px; font-size:13px; font-weight:600; display:inline-block; margin-top:16px; text-decoration:none; }
+    .chars { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px; }
+    .char { padding:4px 10px; background:#EEF0F6; border-radius:4px; font-size:11px; color:#0D1B3E; }
+    @media print { body { padding:20px; } .cta { display:none; } }
+  </style></head><body>
+    <div class="header">
+      <div class="brand">ZONA-INNMUEBLE</div>
+      <div class="sub">LUXURY REAL ESTATE · GUATEMALA</div>
+    </div>
+    \${p.imagen ? '<img class="img" src="'+p.imagen+'" />' : ''}
+    <h1>\${p.titulo||''}</h1>
+    <div class="loc">\${[p.zona,p.municipio].filter(Boolean).join(' · ')}</div>
+    \${p.privada ? '' : '<div class="price">'+(p.moneda||'Q')+' '+(p.precio||'')+'</div>'}
+    <div class="specs">
+      \${p.habitaciones ? '<div class="spec"><div class="spec-val">'+p.habitaciones+'</div><div class="spec-label">HABITACIONES</div></div>' : ''}
+      \${p.banos ? '<div class="spec"><div class="spec-val">'+p.banos+'</div><div class="spec-label">BAÑOS</div></div>' : ''}
+      \${p.area ? '<div class="spec"><div class="spec-val">'+p.area+'</div><div class="spec-label">M²</div></div>' : ''}
+      \${p.parqueos ? '<div class="spec"><div class="spec-val">'+p.parqueos+'</div><div class="spec-label">PARQUEOS</div></div>' : ''}
+      \${p.niveles ? '<div class="spec"><div class="spec-val">'+p.niveles+'</div><div class="spec-label">NIVELES</div></div>' : ''}
+    </div>
+    <div class="desc">\${p.descripcion||p.descCorta||''}</div>
+    \${p.caracteristicas && p.caracteristicas.length ? '<div class="chars">'+p.caracteristicas.map(c=>'<span class="char">'+c+'</span>').join('')+'</div>' : ''}
+    <div style="text-align:center">
+      <a class="cta" href="https://wa.me/50245542088?text=Hola, me interesa: \${encodeURIComponent(p.titulo||'')}">Contactar por WhatsApp</a>
+    </div>
+    <div class="footer">zona-innmueble.com · +502 4554-2088 · Guatemala</div>
+  </body></html>\`);
+  w.document.close();
+  setTimeout(() => w.print(), 500);
+}
+
+// ── 10. ENHANCED DASHBOARD (timeline, charts, funnel) ────────
+// Override renderDashboard to add new sections
 
 // ── COUNT-UP ANIMATION ───────────────────────────────────────
 function animateCountUp() {
