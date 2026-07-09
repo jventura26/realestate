@@ -408,6 +408,151 @@ body.dark .desc-block{border-color:var(--dm-border)}
 body.dark .desc-block textarea{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text)}
 body.dark .dest-toggle{border-color:var(--dm-border);color:var(--dm-text)}
 body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-text3)}
+
+/* ══════ MODERNIZATION v4 ══════ */
+
+/* Premium font import */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+
+/* Smooth page transitions */
+.content { scroll-behavior: smooth; }
+
+/* Breathing room */
+.content { padding: 28px 32px !important; }
+.stats-grid { gap: 18px !important; margin-bottom: 26px !important; }
+.dash-grid { gap: 22px !important; }
+
+/* Premium stat cards with gradient */
+.stat-card {
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 22px 24px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important;
+  transition: transform .2s, box-shadow .2s !important;
+}
+.stat-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.1) !important;
+}
+.stat-card::before { height: 4px !important; border-radius: 14px 14px 0 0 !important; }
+.stat-val {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 500 !important;
+  font-size: 32px !important;
+  letter-spacing: -0.02em;
+}
+.stat-label { font-size: 10px !important; letter-spacing: .1em !important; color: var(--text3) !important; }
+
+/* Premium headings */
+.page-header-title, .topbar-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 500 !important;
+  font-size: 22px !important;
+  letter-spacing: -0.01em;
+}
+
+/* Better table */
+td { padding: 14px 16px !important; }
+.prop-img { width: 72px !important; height: 54px !important; border-radius: 8px !important; }
+.prop-img-placeholder { width: 72px !important; height: 54px !important; border-radius: 8px !important; }
+tr:hover td { background: #F8FAFF !important; }
+body.dark tr:hover td { background: rgba(255,255,255,.04) !important; }
+
+/* Better cards */
+.chart-card, .recent-card, .table-wrap {
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important;
+}
+.lead-card {
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+}
+.lead-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.1) !important;
+}
+
+/* Better sidebar */
+.sb-item { border-radius: 0 8px 8px 0; margin-right: 8px; transition: all .2s !important; }
+.sb-item.active { border-right: none !important; border-left: 3px solid var(--or) !important; }
+
+/* Better icon buttons */
+.icon-btn { border-radius: 8px !important; transition: all .2s !important; }
+
+/* Better badges */
+.badge { border-radius: 6px !important; font-size: 10px !important; letter-spacing: .04em; }
+
+/* Better completeness bar */
+.completeness-bar { height: 6px !important; border-radius: 4px !important; }
+
+/* Login page premium */
+#loginPage { background: linear-gradient(135deg, #0D1B3E 0%, #1A3060 50%, #0D1B3E 100%) !important; }
+.login-card { border-radius: 18px !important; box-shadow: 0 32px 80px rgba(0,0,0,.5) !important; padding: 48px 44px !important; }
+.login-logo { font-family: 'Cormorant Garamond', Georgia, serif !important; font-size: 26px !important; font-weight: 500 !important; letter-spacing: .15em !important; }
+
+/* Animations */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes countUp { from { opacity: 0; } to { opacity: 1; } }
+.stat-card { animation: fadeInUp .4s ease both; }
+.stat-card:nth-child(1) { animation-delay: .05s; }
+.stat-card:nth-child(2) { animation-delay: .1s; }
+.stat-card:nth-child(3) { animation-delay: .15s; }
+.stat-card:nth-child(4) { animation-delay: .2s; }
+.chart-card, .recent-card, .table-wrap { animation: fadeInUp .4s ease .25s both; }
+
+/* Modal improvements */
+.modal-overlay.open { animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-panel { animation: slideUp .3s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Site filter pills for table */
+.site-filter-pills { display: flex; gap: 6px; }
+.site-pill { padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); color: var(--text2); background: var(--bg); transition: all .15s; }
+.site-pill.active { background: var(--navy); color: var(--wh); border-color: var(--navy); }
+.site-pill .pill-count { font-size: 10px; opacity: .7; margin-left: 3px; }
+
+/* Site badges in table */
+.site-badges { display: flex; gap: 4px; margin-top: 3px; }
+.site-dot { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; letter-spacing: .04em; }
+.site-dot.zi { background: #0D1B3E; color: #fff; }
+.site-dot.ih { background: #C9A96E; color: #1a1a1a; }
+
+/* Quick publish toggles */
+.quick-toggle { width: 28px; height: 16px; border-radius: 10px; border: none; cursor: pointer; position: relative; transition: background .2s; appearance: none; -webkit-appearance: none; }
+.quick-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: #fff; border-radius: 50%; transition: left .2s; }
+.quick-toggle:checked { background: var(--green); }
+.quick-toggle:checked::after { left: 14px; }
+.quick-toggle:not(:checked) { background: var(--border2); }
+
+/* Stats breakdown row */
+.stats-breakdown { display: flex; gap: 12px; margin-bottom: 22px; padding: 14px 18px; background: var(--wh); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); animation: fadeInUp .4s ease .1s both; }
+body.dark .stats-breakdown { background: var(--dm-card); }
+.breakdown-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+.breakdown-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.breakdown-val { font-weight: 700; color: var(--navy); }
+body.dark .breakdown-val { color: var(--dm-text); }
+
+/* Topbar improvements */
+.topbar { height: 62px !important; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+
+/* Better donut */
+.donut-wrap { gap: 28px !important; }
+
+/* Scrollbar styling */
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.content::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* Lead source badge */
+.lead-source { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 4px; }
+.lead-source.src-zona { background: #EEF0F6; color: #0D1B3E; }
+.lead-source.src-inmu { background: #FFF8ED; color: #92400E; }
+.lead-source.src-unknown { background: #F1F5F9; color: #64748B; }
+
 </style>
 </head>
 <body>
@@ -416,7 +561,7 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
 <div id="loginPage">
   <div class="login-card">
     <div class="login-logo"><span>Zona</span>-INNmueble</div>
-    <div class="login-sub">Panel de administración v3</div>
+    <div class="login-sub">Premium Real Estate · Panel de administración</div>
     <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
     <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password"></div>
     <button id="loginBtn" onclick="doLogin()">Ingresar al panel</button>
@@ -916,6 +1061,16 @@ function renderDashboard(mc) {
   const sinContactar = leads.filter(l => !l.stage || l.stage === 'Nuevo').length;
   const portfolioVal = computePortfolioValue();
 
+  // Site metrics
+  const enZona = props.filter(p => !p.sitios || p.sitios.includes('zona')).length;
+  const enInmu = props.filter(p => !p.sitios || p.sitios.includes('inmu')).length;
+  const enAmbos = props.filter(p => (!p.sitios || p.sitios.includes('zona')) && (!p.sitios || p.sitios.includes('inmu'))).length;
+  const soloZona = enZona - enAmbos;
+  const soloInmu = enInmu - enAmbos;
+  const leadsZona = leads.filter(l => (l.source||'').includes('zona')).length;
+  const leadsInmu = leads.filter(l => (l.source||'').includes('inmu')).length;
+  const leadsOther = totalLeads - leadsZona - leadsInmu;
+
   const typeCount = {};
   props.forEach(p => { const t = p.tipo || 'Otro'; typeCount[t] = (typeCount[t]||0)+1; });
   const typeData = Object.keys(typeCount).sort((a,b)=>typeCount[b]-typeCount[a]).map(k=>({label:k,count:typeCount[k]}));
@@ -949,6 +1104,14 @@ function renderDashboard(mc) {
         <div class="stat-val" style="font-size:${portfolioVal.length>6?'18px':'26px'}">${portfolioVal}</div>
         <div class="stat-sub">Valor estimado activas</div>
       </div>
+    </div>
+
+    <div class="stats-breakdown">
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#0D1B3E"></div> Zona INNmueble: <span class="breakdown-val">${enZona} props</span></div>
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#C9A96E"></div> InmuHub: <span class="breakdown-val">${enInmu} props</span></div>
+      <div class="breakdown-item" style="margin-left:auto"><div class="breakdown-dot" style="background:var(--green)"></div> En ambos: <span class="breakdown-val">${enAmbos}</span></div>
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#3B82F6"></div> Solo ZI: <span class="breakdown-val">${soloZona}</span></div>
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#f59e0b"></div> Solo IH: <span class="breakdown-val">${soloInmu}</span></div>
     </div>
 
     <div class="dash-grid">
@@ -1018,6 +1181,12 @@ function renderPropiedades(mc) {
             <option value="">Todos los tipos</option>
             <option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option>
           </select>
+          <select class="filter-select" id="filterSitio" onchange="filterTable()">
+            <option value="">Todos los sitios</option>
+            <option value="zona">Zona INNmueble</option>
+            <option value="inmu">InmuHub</option>
+            <option value="ambos">En ambos</option>
+          </select>
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-ghost btn-sm" onclick="exportPropsCSV()"><i class="ti ti-download"></i> CSV</button>
@@ -1065,6 +1234,10 @@ function filterTable() {
   );
   if (est)  filtered = filtered.filter(p => (p.estado||'Activa') === est);
   if (tipo) filtered = filtered.filter(p => p.tipo === tipo);
+  const sitio = document.getElementById('filterSitio')?.value || '';
+  if (sitio === 'zona') filtered = filtered.filter(p => !p.sitios || p.sitios.includes('zona'));
+  if (sitio === 'inmu') filtered = filtered.filter(p => !p.sitios || p.sitios.includes('inmu'));
+  if (sitio === 'ambos') filtered = filtered.filter(p => (!p.sitios || p.sitios.includes('zona')) && (!p.sitios || p.sitios.includes('inmu')));
   const tb = document.getElementById('tableBody');
   if (tb) tb.innerHTML = buildTable(filtered, true);
   const tc = document.getElementById('tableCount');
@@ -1143,6 +1316,7 @@ function buildTable(data, sortable) {
       <td>
         ${p.destacada?'<span class="star-cell"><i class="ti ti-star-filled"></i></span> ':''}<div class="prop-name">${esc(p.titulo||'')}</div>
         <div class="prop-loc">${esc(p.municipio||p.zona||'')}</div>
+        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}</div>
       </td>
       <td>${esc(p.tipo||'—')}</td>
       <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>
@@ -1156,7 +1330,8 @@ function buildTable(data, sortable) {
       <td>
         <div class="actions-cell">
           <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
-          <div class="icon-btn" title="Ver en sitio" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
+          <div class="icon-btn" title="Ver en Zona INNmueble" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
+          <div class="icon-btn" title="Ver en InmuHub" onclick="window.open('https://inmuhub.com/propiedades/${p.slug||p.id}.html','_blank')" style="border-color:#C9A96E"><i class="ti ti-building-skyscraper" style="color:#C9A96E"></i></div>
           <div class="icon-btn" title="Duplicar" onclick="duplicateProp('${id}')"><i class="ti ti-copy"></i></div>\n          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
         </div>
       </td>
@@ -1242,6 +1417,7 @@ function buildLeadCard(l) {
     ${l.telefono?`<div class="lead-detail"><i class="ti ti-phone"></i>${esc(l.telefono)}</div>`:''}
     ${l.propiedad?`<div class="lead-detail"><i class="ti ti-building"></i>${esc(l.propiedad)}</div>`:''}
     ${l.tipo?`<div class="lead-detail"><i class="ti ti-tag"></i>${esc(l.tipo)}</div>`:''}
+    <div class="lead-source ${(l.source||'').includes('zona')?'src-zona':(l.source||'').includes('inmu')?'src-inmu':'src-unknown'}"><i class="ti ti-world" style="font-size:11px"></i> ${(l.source||'').includes('zona')?'Zona INNmueble':(l.source||'').includes('inmu')?'InmuHub':'Sin origen'}</div>
     <div class="lead-card-actions">
       <select class="lead-stage-select" onchange="updateLeadStage('${lid}',this.value)">
         ${['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'].map(s=>`<option value="${s}"${stage===s?' selected':''}>${s}</option>`).join('')}
@@ -1638,6 +1814,37 @@ document.querySelectorAll('.char-item').forEach(item=>{
   item.addEventListener('change',()=>item.classList.toggle('checked',item.querySelector('input').checked));
 });
 
+
+// ── COUNT-UP ANIMATION ───────────────────────────────────────
+function animateCountUp() {
+  document.querySelectorAll('.stat-val').forEach(el => {
+    const text = el.textContent.trim();
+    const match = text.match(/^([QQ$]\s?)?(\d+\.?\d*)([MK%]?)$/);
+    if (!match) return;
+    const prefix = match[1] || '';
+    const target = parseFloat(match[2]);
+    const suffix = match[3] || '';
+    const duration = 800;
+    const start = performance.now();
+    const step = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = (target * eased).toFixed(suffix === 'M' ? 1 : 0);
+      el.textContent = prefix + current + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+// Hook into showPage to trigger animations
+const _origShowPage = showPage;
+showPage = function(page) {
+  _origShowPage(page);
+  if (page === 'dashboard') setTimeout(animateCountUp, 350);
+};
+
 // ── INIT ─────────────────────────────────────────────────────
 checkSession();
 
@@ -1676,4 +1883,3 @@ function getDescBloques() {
 </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
