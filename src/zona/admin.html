@@ -2442,7 +2442,31 @@ function animateCountUp() {
 var _origShowPage = showPage;
 showPage = function(page) {
   _origShowPage(page);
-  if (page === 'dashboard') setTimeout(animateCountUp, 350);
+  if (page === 'dashboard') {
+    setTimeout(animateCountUp, 350);
+    setTimeout(function() {
+      var mc = document.getElementById('mainContent');
+      if (!mc) return;
+      var existing = document.getElementById('v6DashExtras');
+      if (existing) existing.remove();
+      var div = document.createElement('div');
+      div.id = 'v6DashExtras';
+      div.className = 'dash-grid';
+      div.style.marginTop = '22px';
+      var stl = calcSpeedToLead();
+      div.innerHTML = '<div class="chart-card">'
+        + '<div class="chart-title">Speed-to-Lead</div>'
+        + '<div style="padding:18px;display:flex;align-items:center;gap:16px">'
+        + '<div class="stl-metric ' + stl.cls + '"><i class="ti ti-clock" style="font-size:18px"></i> ' + stl.label + '</div>'
+        + '<div style="font-size:11px;color:var(--text2)">Meta: <strong style="color:var(--green)">&lt; 5 min</strong></div>'
+        + '</div></div>'
+        + '<div class="chart-card">'
+        + '<div class="chart-title">Historial de cambios</div>'
+        + '<div style="padding:12px">' + buildActivityLog() + '</div>'
+        + '</div>';
+      mc.appendChild(div);
+    }, 400);
+  }
 };
 
 var _origOpenModal = openModal;
@@ -2454,6 +2478,23 @@ openModal = function(id) {
     setupAutoFill();
     updateLivePreview();
     updateCompleteness();
+    // v6: ROI, comparables, language
+    comparables = [];
+    var roiW = document.getElementById('roiCalcWrap');
+    var compW = document.getElementById('compWrap');
+    var langW = document.getElementById('langToggleWrap');
+    if (id) {
+      var prop = null;
+      for (var j = 0; j < props.length; j++) {
+        if ((props[j].id || props[j].slug) === decodeURIComponent(id)) { prop = props[j]; break; }
+      }
+      if (prop && roiW) roiW.innerHTML = buildROICalc(prop);
+      if (prop && compW) compW.innerHTML = buildComparables(prop);
+    } else {
+      if (roiW) roiW.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:8px">Guarda primero para ver analisis</div>';
+      if (compW) compW.innerHTML = '';
+    }
+    if (langW) langW.innerHTML = buildLangToggle();
   }, 150);
 };
 
@@ -2749,11 +2790,15 @@ function generateFichaInteractiva(propId) {
   if (!p.privada) h += calcHtml;
   if (p.googleMapsUrl) h += '<div style="margin:24px 0"><iframe src="' + p.googleMapsUrl.replace('/maps/','/maps/embed/') + '" width="100%" height="300" style="border:0;border-radius:12px" allowfullscreen loading="lazy"></iframe></div>';
   h += '</div>';
-  h += '<div class="brand">ZONA-INNMUEBLE</div>';
-  h += '<div class="cta-bar">';
-  h += '<a class="cta-btn cta-wa" href="https://wa.me/50245542088?text=' + encodeURIComponent('Hola, me interesa: ' + (p.titulo||'')) + '"><i>💬</i> WhatsApp</a>';
-  h += '<a class="cta-btn cta-call" href="tel:+50245542088"><i>📞</i> Llamar</a>';
-  h += '</div></body></html>';
+  var isZona = !p.sitios || !p.sitios.length || p.sitios.indexOf('zona-innmueble') !== -1;
+  h += '<div class="brand">' + (isZona ? 'ZONA-INNMUEBLE' : 'INMUHUB') + '</div>';
+  if (isZona) {
+    h += '<div class="cta-bar">';
+    h += '<a class="cta-btn cta-wa" href="https://wa.me/50245542088?text=' + encodeURIComponent('Hola, me interesa: ' + (p.titulo||'')) + '"><i>💬</i> WhatsApp</a>';
+    h += '<a class="cta-btn cta-call" href="tel:+50245542088"><i>📞</i> Llamar</a>';
+    h += '</div>';
+  }
+  h += '</body></html>';
   w.document.write(h);
   w.document.close();
 }
@@ -2773,35 +2818,6 @@ function generateFichaInteractiva(propId) {
 })();
 
 
-// v6 Dashboard enhancements
-var _origShowPage = showPage;
-showPage = function(page) {
-  _origShowPage(page);
-  if (page === 'dashboard') {
-    setTimeout(function() {
-      var mc = document.getElementById('mainContent');
-      if (!mc) return;
-      var existing = document.getElementById('v6DashExtras');
-      if (existing) existing.remove();
-      var div = document.createElement('div');
-      div.id = 'v6DashExtras';
-      div.className = 'dash-grid';
-      div.style.marginTop = '22px';
-      var stl = calcSpeedToLead();
-      div.innerHTML = '<div class="chart-card">'
-        + '<div class="chart-title">Speed-to-Lead</div>'
-        + '<div style="padding:18px;display:flex;align-items:center;gap:16px">'
-        + '<div class="stl-metric ' + stl.cls + '"><i class="ti ti-clock" style="font-size:18px"></i> ' + stl.label + '</div>'
-        + '<div style="font-size:11px;color:var(--text2)">Meta: <strong style="color:var(--green)">&lt; 5 min</strong></div>'
-        + '</div></div>'
-        + '<div class="chart-card">'
-        + '<div class="chart-title">Historial de cambios</div>'
-        + '<div style="padding:12px">' + buildActivityLog() + '</div>'
-        + '</div>';
-      mc.appendChild(div);
-    }, 200);
-  }
-};
 
 // v6 Lead card enhancements via DOM
 function enhanceLeadCards() {
@@ -2835,29 +2851,6 @@ setTimeout(function() {
   if (mc) _leadObserver.observe(mc, {childList: true, subtree: true});
 }, 500);
 
-// v6 openModal enhancement
-var _origOpenModal = openModal;
-openModal = function(id) {
-  _origOpenModal(id);
-  setTimeout(function() {
-    comparables = [];
-    var roiW = document.getElementById('roiCalcWrap');
-    var compW = document.getElementById('compWrap');
-    var langW = document.getElementById('langToggleWrap');
-    if (id) {
-      var prop = null;
-      for (var i = 0; i < props.length; i++) {
-        if ((props[i].id || props[i].slug) === decodeURIComponent(id)) { prop = props[i]; break; }
-      }
-      if (prop && roiW) roiW.innerHTML = buildROICalc(prop);
-      if (prop && compW) compW.innerHTML = buildComparables(prop);
-    } else {
-      if (roiW) roiW.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:8px">Guarda primero para ver analisis</div>';
-      if (compW) compW.innerHTML = '';
-    }
-    if (langW) langW.innerHTML = buildLangToggle();
-  }, 300);
-};
 
 // ── INIT ─────────────────────────────────────────────────────
 checkSession();
