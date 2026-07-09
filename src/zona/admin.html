@@ -409,163 +409,42 @@ body.dark .desc-block textarea{background:var(--dm-card);border-color:var(--dm-b
 body.dark .dest-toggle{border-color:var(--dm-border);color:var(--dm-text)}
 body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-text3)}
 
-
-/* ══════ WIZARD MODAL v2 ══════ */
-
-/* Wizard step tabs */
-.wizard-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; background: var(--bg); position: sticky; top: 0; z-index: 5; }
-body.dark .wizard-tabs { background: var(--dm-bg); border-color: var(--dm-border); }
-.wizard-tab { padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-.wizard-tab:hover { color: var(--text2); }
-.wizard-tab.active { color: var(--or); border-bottom-color: var(--or); }
-.wizard-tab .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--border); color: var(--text3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-.wizard-tab.active .tab-num { background: var(--or); color: #fff; }
-.wizard-tab.done .tab-num { background: var(--green); color: #fff; }
-.wizard-tab.done .tab-num::after { content: '✓'; }
-.wizard-tab.done .tab-num span { display: none; }
-
-/* Wizard step content */
-.wizard-step { display: none; }
-.wizard-step.active { display: block; }
-
-/* Completeness bar */
-.completeness-strip { padding: 8px 24px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; position: sticky; top: 44px; z-index: 4; }
-body.dark .completeness-strip { background: var(--dm-bg); border-color: var(--dm-border); }
-.completeness-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.completeness-fill { height: 100%; background: linear-gradient(90deg, var(--or), var(--green)); border-radius: 3px; transition: width .4s ease; }
-.completeness-pct { font-size: 11px; font-weight: 700; color: var(--or); min-width: 36px; text-align: right; }
-.completeness-hint { font-size: 10px; color: var(--text3); }
-
-/* Live preview card */
-.live-preview { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--wh); }
-body.dark .live-preview { background: var(--dm-card); border-color: var(--dm-border); }
-.lp-img { width: 100%; height: 120px; background: var(--bg) url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="%238A9BB0" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>') center no-repeat; background-size: 32px; object-fit: cover; }
-.lp-body { padding: 12px; }
-.lp-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--or); margin-bottom: 4px; }
-.lp-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 16px; font-weight: 500; color: var(--navy); margin-bottom: 2px; min-height: 20px; }
-body.dark .lp-title { color: var(--dm-text); }
-.lp-loc { font-size: 11px; color: var(--text3); margin-bottom: 8px; min-height: 14px; }
-.lp-price { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: var(--navy); }
-body.dark .lp-price { color: var(--dm-text); }
-.lp-specs { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-.lp-spec { font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 3px; }
-
-/* Quick paste gallery */
-.gal-quickpaste { width: 100%; min-height: 60px; padding: 8px; border: 1.5px dashed var(--border2); border-radius: 8px; font-size: 11px; font-family: inherit; resize: vertical; background: none; color: var(--text); }
-body.dark .gal-quickpaste { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
-.gal-quickpaste:focus { border-color: var(--or); outline: none; }
-.gal-quickpaste-hint { font-size: 10px; color: var(--text3); margin-top: 4px; }
-
-/* Contextual fields */
-.ctx-hidden { display: none !important; }
-
-/* Draft badge */
-.draft-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--yellow); background: #FEF3C7; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
-body.dark .draft-badge { background: rgba(245,158,11,.15); }
-
-/* Wizard nav buttons */
-.wizard-nav { display: flex; justify-content: space-between; padding: 16px 0 0; margin-top: 16px; border-top: 1px solid var(--border); }
-body.dark .wizard-nav { border-color: var(--dm-border); }
-.wizard-nav .btn { min-width: 120px; }
-
-/* Auto-generated field indicator */
-.fg-auto { position: relative; }
-.fg-auto input { padding-right: 24px; }
-.fg-auto::after { content: '⚡'; position: absolute; right: 10px; top: 50%; font-size: 12px; opacity: .4; }
-
-/* Responsive wizard tabs */
-@media(max-width:900px) {
-  .wizard-tabs { overflow-x: auto; padding: 0 12px; }
-  .wizard-tab { padding: 10px 10px; font-size: 10px; }
-  .wizard-tab span.tab-label { display: none; }
-}
-
-/* ══════ MODERNIZATION v4 ══════ */
-
-/* Premium font import */
+/* ══════ MODERNIZATION + PREMIUM v5 ══════ */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
 
-/* Smooth page transitions */
-.content { scroll-behavior: smooth; }
-
-/* Breathing room */
-.content { padding: 28px 32px !important; }
+.content { scroll-behavior: smooth; padding: 28px 32px !important; }
 .stats-grid { gap: 18px !important; margin-bottom: 26px !important; }
 .dash-grid { gap: 22px !important; }
 
-/* Premium stat cards with gradient */
-.stat-card {
-  border: none !important;
-  border-radius: 14px !important;
-  padding: 22px 24px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important;
-  transition: transform .2s, box-shadow .2s !important;
-}
-.stat-card:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,.1) !important;
-}
+.stat-card { border: none !important; border-radius: 14px !important; padding: 22px 24px !important; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important; transition: transform .2s, box-shadow .2s !important; }
+.stat-card:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(0,0,0,.1) !important; }
 .stat-card::before { height: 4px !important; border-radius: 14px 14px 0 0 !important; }
-.stat-val {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-weight: 500 !important;
-  font-size: 32px !important;
-  letter-spacing: -0.02em;
-}
+.stat-val { font-family: 'Cormorant Garamond', Georgia, serif !important; font-weight: 500 !important; font-size: 32px !important; letter-spacing: -0.02em; }
 .stat-label { font-size: 10px !important; letter-spacing: .1em !important; color: var(--text3) !important; }
 
-/* Premium headings */
-.page-header-title, .topbar-title {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-weight: 500 !important;
-  font-size: 22px !important;
-  letter-spacing: -0.01em;
-}
+.page-header-title, .topbar-title { font-family: 'Cormorant Garamond', Georgia, serif !important; font-weight: 500 !important; font-size: 22px !important; }
 
-/* Better table */
 td { padding: 14px 16px !important; }
 .prop-img { width: 72px !important; height: 54px !important; border-radius: 8px !important; }
 .prop-img-placeholder { width: 72px !important; height: 54px !important; border-radius: 8px !important; }
 tr:hover td { background: #F8FAFF !important; }
 body.dark tr:hover td { background: rgba(255,255,255,.04) !important; }
 
-/* Better cards */
-.chart-card, .recent-card, .table-wrap {
-  border: none !important;
-  border-radius: 14px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important;
-}
-.lead-card {
-  border: none !important;
-  border-radius: 14px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
-}
-.lead-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,.1) !important;
-}
+.chart-card, .recent-card, .table-wrap { border: none !important; border-radius: 14px !important; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important; }
+.lead-card { border: none !important; border-radius: 14px !important; box-shadow: 0 1px 3px rgba(0,0,0,.06) !important; }
+.lead-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.1) !important; }
 
-/* Better sidebar */
 .sb-item { border-radius: 0 8px 8px 0; margin-right: 8px; transition: all .2s !important; }
 .sb-item.active { border-right: none !important; border-left: 3px solid var(--or) !important; }
-
-/* Better icon buttons */
 .icon-btn { border-radius: 8px !important; transition: all .2s !important; }
-
-/* Better badges */
 .badge { border-radius: 6px !important; font-size: 10px !important; letter-spacing: .04em; }
-
-/* Better completeness bar */
 .completeness-bar { height: 6px !important; border-radius: 4px !important; }
 
-/* Login page premium */
 #loginPage { background: linear-gradient(135deg, #0D1B3E 0%, #1A3060 50%, #0D1B3E 100%) !important; }
 .login-card { border-radius: 18px !important; box-shadow: 0 32px 80px rgba(0,0,0,.5) !important; padding: 48px 44px !important; }
 .login-logo { font-family: 'Cormorant Garamond', Georgia, serif !important; font-size: 26px !important; font-weight: 500 !important; letter-spacing: .15em !important; }
 
-/* Animations */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes countUp { from { opacity: 0; } to { opacity: 1; } }
 .stat-card { animation: fadeInUp .4s ease both; }
 .stat-card:nth-child(1) { animation-delay: .05s; }
 .stat-card:nth-child(2) { animation-delay: .1s; }
@@ -573,32 +452,16 @@ body.dark tr:hover td { background: rgba(255,255,255,.04) !important; }
 .stat-card:nth-child(4) { animation-delay: .2s; }
 .chart-card, .recent-card, .table-wrap { animation: fadeInUp .4s ease .25s both; }
 
-/* Modal improvements */
 .modal-overlay.open { animation: fadeIn .2s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal-panel { animation: slideUp .3s ease; }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Site filter pills for table */
-.site-filter-pills { display: flex; gap: 6px; }
-.site-pill { padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); color: var(--text2); background: var(--bg); transition: all .15s; }
-.site-pill.active { background: var(--navy); color: var(--wh); border-color: var(--navy); }
-.site-pill .pill-count { font-size: 10px; opacity: .7; margin-left: 3px; }
-
-/* Site badges in table */
 .site-badges { display: flex; gap: 4px; margin-top: 3px; }
 .site-dot { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; letter-spacing: .04em; }
 .site-dot.zi { background: #0D1B3E; color: #fff; }
 .site-dot.ih { background: #C9A96E; color: #1a1a1a; }
 
-/* Quick publish toggles */
-.quick-toggle { width: 28px; height: 16px; border-radius: 10px; border: none; cursor: pointer; position: relative; transition: background .2s; appearance: none; -webkit-appearance: none; }
-.quick-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: #fff; border-radius: 50%; transition: left .2s; }
-.quick-toggle:checked { background: var(--green); }
-.quick-toggle:checked::after { left: 14px; }
-.quick-toggle:not(:checked) { background: var(--border2); }
-
-/* Stats breakdown row */
 .stats-breakdown { display: flex; gap: 12px; margin-bottom: 22px; padding: 14px 18px; background: var(--wh); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); animation: fadeInUp .4s ease .1s both; }
 body.dark .stats-breakdown { background: var(--dm-card); }
 .breakdown-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
@@ -606,47 +469,52 @@ body.dark .stats-breakdown { background: var(--dm-card); }
 .breakdown-val { font-weight: 700; color: var(--navy); }
 body.dark .breakdown-val { color: var(--dm-text); }
 
-/* Topbar improvements */
-.topbar { height: 62px !important; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
-
-/* Better donut */
-.donut-wrap { gap: 28px !important; }
-
-/* Scrollbar styling */
-.content::-webkit-scrollbar { width: 6px; }
-.content::-webkit-scrollbar-track { background: transparent; }
-.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-.content::-webkit-scrollbar-thumb:hover { background: var(--text3); }
-
-/* Lead source badge */
 .lead-source { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 4px; }
 .lead-source.src-zona { background: #EEF0F6; color: #0D1B3E; }
 .lead-source.src-inmu { background: #FFF8ED; color: #92400E; }
 .lead-source.src-unknown { background: #F1F5F9; color: #64748B; }
 
+.topbar { height: 62px !important; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
-/* ══════ PREMIUM FEATURES v5 ══════ */
+/* Wizard */
+.wizard-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; background: var(--bg); position: sticky; top: 0; z-index: 5; }
+body.dark .wizard-tabs { background: var(--dm-bg); border-color: var(--dm-border); }
+.wizard-tab { padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.wizard-tab:hover { color: var(--text2); }
+.wizard-tab.active { color: var(--or); border-bottom-color: var(--or); }
+.wizard-tab .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--border); color: var(--text3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+.wizard-tab.active .tab-num { background: var(--or); color: #fff; }
+.wizard-step { display: none; }
+.wizard-step.active { display: block; }
+.completeness-strip { padding: 8px 24px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; position: sticky; top: 44px; z-index: 4; }
+body.dark .completeness-strip { background: var(--dm-bg); border-color: var(--dm-border); }
+.completeness-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.completeness-fill { height: 100%; background: linear-gradient(90deg, var(--or), var(--green)); border-radius: 3px; transition: width .4s ease; }
+.completeness-pct { font-size: 11px; font-weight: 700; color: var(--or); min-width: 36px; text-align: right; }
+.completeness-hint { font-size: 10px; color: var(--text3); }
 
-/* ─ Activity Timeline ─ */
-.timeline-card { padding: 0; }
-.timeline-header { padding: 14px 18px; font-size: 13px; font-weight: 700; color: var(--navy); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-body.dark .timeline-header { color: var(--dm-text); border-color: var(--dm-border); }
-.timeline-feed { max-height: 260px; overflow-y: auto; padding: 8px 0; }
-.tl-item { display: flex; gap: 10px; padding: 8px 18px; font-size: 12px; transition: background .15s; }
-.tl-item:hover { background: rgba(0,0,0,.02); }
-body.dark .tl-item:hover { background: rgba(255,255,255,.03); }
-.tl-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-.tl-dot.lead { background: var(--or); }
-.tl-dot.sale { background: var(--green); }
-.tl-dot.new { background: var(--blue); }
-.tl-dot.edit { background: var(--text3); }
-.tl-content { flex: 1; min-width: 0; }
-.tl-text { color: var(--text); line-height: 1.4; }
-body.dark .tl-text { color: var(--dm-text); }
-.tl-text strong { font-weight: 600; }
-.tl-time { color: var(--text3); font-size: 10px; margin-top: 2px; }
+/* Live preview */
+.live-preview { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--wh); }
+body.dark .live-preview { background: var(--dm-card); border-color: var(--dm-border); }
+.lp-img { width: 100%; height: 120px; background: var(--bg); object-fit: cover; }
+.lp-body { padding: 12px; }
+.lp-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--or); margin-bottom: 4px; }
+.lp-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 16px; font-weight: 500; color: var(--navy); margin-bottom: 2px; min-height: 20px; }
+body.dark .lp-title { color: var(--dm-text); }
+.lp-loc { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+.lp-price { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: var(--navy); }
+body.dark .lp-price { color: var(--dm-text); }
+.lp-specs { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.lp-spec { font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 3px; }
 
-/* ─ Global Search (Ctrl+K) ─ */
+/* Quick paste gallery */
+.gal-quickpaste { width: 100%; min-height: 60px; padding: 8px; border: 1.5px dashed var(--border2); border-radius: 8px; font-size: 11px; font-family: inherit; resize: vertical; background: none; color: var(--text); margin-top: 6px; }
+body.dark .gal-quickpaste { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+
+/* Search overlay */
 .search-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; display: none; align-items: flex-start; justify-content: center; padding-top: 15vh; backdrop-filter: blur(4px); }
 .search-overlay.open { display: flex; animation: fadeIn .15s ease; }
 .search-box { width: 560px; max-width: 90vw; background: var(--wh); border-radius: 16px; box-shadow: 0 32px 80px rgba(0,0,0,.3); overflow: hidden; }
@@ -656,8 +524,6 @@ body.dark .search-input-wrap { border-color: var(--dm-border); }
 .search-input-wrap i { font-size: 20px; color: var(--text3); }
 .search-input { flex: 1; border: none; outline: none; font-size: 15px; background: none; color: var(--text); font-family: inherit; }
 body.dark .search-input { color: var(--dm-text); }
-.search-input::placeholder { color: var(--text3); }
-.search-kbd { font-size: 10px; padding: 2px 6px; border: 1px solid var(--border2); border-radius: 4px; color: var(--text3); font-family: monospace; }
 .search-results { max-height: 340px; overflow-y: auto; padding: 8px; }
 .search-result { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background .1s; }
 .search-result:hover, .search-result.active { background: var(--bg); }
@@ -665,8 +531,6 @@ body.dark .search-result:hover, body.dark .search-result.active { background: va
 .sr-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .sr-icon.prop { background: #EEF0F6; color: var(--navy); }
 .sr-icon.lead { background: #FFF7ED; color: var(--or); }
-body.dark .sr-icon.prop { background: rgba(13,27,62,.3); }
-body.dark .sr-icon.lead { background: rgba(245,130,13,.15); }
 .sr-text { flex: 1; min-width: 0; }
 .sr-title { font-size: 13px; font-weight: 600; color: var(--text); }
 body.dark .sr-title { color: var(--dm-text); }
@@ -674,54 +538,66 @@ body.dark .sr-title { color: var(--dm-text); }
 .search-empty { text-align: center; padding: 24px; color: var(--text3); font-size: 13px; }
 .search-footer { padding: 8px 16px; border-top: 1px solid var(--border); display: flex; gap: 16px; font-size: 10px; color: var(--text3); }
 body.dark .search-footer { border-color: var(--dm-border); }
+.search-kbd { font-size: 10px; padding: 2px 6px; border: 1px solid var(--border2); border-radius: 4px; color: var(--text3); font-family: monospace; }
+.topbar-search { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border2); border-radius: 8px; color: var(--text3); font-size: 12px; cursor: pointer; transition: all .15s; background: none; margin-right: auto; }
+.topbar-search:hover { border-color: var(--or); color: var(--or); }
 
-/* ─ Lead notification pulse ─ */
+/* Notification pulse */
 .sb-badge.pulse { animation: badgePulse 2s infinite; }
 @keyframes badgePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); box-shadow: 0 0 8px rgba(245,130,13,.5); } }
 
-/* ─ Leads weekly chart ─ */
+/* Leads chart */
 .leads-chart-wrap { padding: 18px; }
 .leads-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
 .leads-bar { flex: 1; background: var(--or); border-radius: 4px 4px 0 0; min-height: 2px; transition: height .4s ease; position: relative; }
-.leads-bar:hover { opacity: .8; }
 .leads-bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text3); white-space: nowrap; }
 .leads-bar-val { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--navy); }
 body.dark .leads-bar-val { color: var(--dm-text); }
 
-/* ─ Conversion funnel ─ */
+/* Funnel */
 .funnel-wrap { padding: 14px 18px; }
 .funnel-step { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.funnel-bar-track { flex: 1; height: 22px; background: var(--bg); border-radius: 6px; overflow: hidden; position: relative; }
+.funnel-bar-track { flex: 1; height: 22px; background: var(--bg); border-radius: 6px; overflow: hidden; }
 body.dark .funnel-bar-track { background: var(--dm-bg); }
 .funnel-bar-fill { height: 100%; border-radius: 6px; transition: width .6s ease; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 700; color: #fff; min-width: 24px; }
 .funnel-label { font-size: 11px; color: var(--text2); width: 80px; flex-shrink: 0; }
 .funnel-count { font-size: 11px; font-weight: 700; color: var(--navy); width: 28px; text-align: right; flex-shrink: 0; }
 body.dark .funnel-count { color: var(--dm-text); }
 
-/* ─ Quality score ─ */
+/* Timeline */
+.timeline-card { padding: 0; }
+.timeline-header { padding: 14px 18px; font-size: 13px; font-weight: 700; color: var(--navy); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+body.dark .timeline-header { color: var(--dm-text); border-color: var(--dm-border); }
+.timeline-feed { max-height: 260px; overflow-y: auto; padding: 8px 0; }
+.tl-item { display: flex; gap: 10px; padding: 8px 18px; font-size: 12px; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.tl-dot.lead { background: var(--or); }
+.tl-dot.sale { background: var(--green); }
+.tl-dot.new { background: var(--blue); }
+.tl-text { color: var(--text); line-height: 1.4; }
+body.dark .tl-text { color: var(--dm-text); }
+.tl-text strong { font-weight: 600; }
+.tl-time { color: var(--text3); font-size: 10px; margin-top: 2px; }
+
+/* Quality score */
 .quality-score { display: inline-flex; align-items: center; gap: 4px; }
 .qs-ring { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; }
 .qs-ring.high { background: var(--green); }
 .qs-ring.mid { background: var(--yellow); }
 .qs-ring.low { background: var(--red); }
 
-/* ─ Quick status change in table ─ */
+/* Quick status */
 .quick-status { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; border: 1px solid var(--border2); cursor: pointer; background: none; color: var(--text); appearance: none; -webkit-appearance: none; }
 body.dark .quick-status { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
 
-/* ─ PDF export button ─ */
-.btn-pdf { background: #DC2626; color: #fff; border: none; }
-.btn-pdf:hover { background: #B91C1C; }
+/* Dark mode transitions */
+body, .sidebar, .topbar, .content, .stat-card, .chart-card, .recent-card, .table-wrap, .lead-card, .modal-panel { transition: background .3s, color .3s, border-color .3s; }
 
-/* ─ Topbar search trigger ─ */
-.topbar-search { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border2); border-radius: 8px; color: var(--text3); font-size: 12px; cursor: pointer; transition: all .15s; background: none; margin-right: auto; }
-.topbar-search:hover { border-color: var(--or); color: var(--or); }
-body.dark .topbar-search { border-color: var(--dm-border); color: var(--dm-text3); }
-
-/* ─ Dark mode transition ─ */
-body { transition: background .3s, color .3s; }
-.sidebar, .topbar, .content, .stat-card, .chart-card, .recent-card, .table-wrap, .lead-card, .modal-panel {
-  transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+@media(max-width:900px) {
+  .wizard-tabs { overflow-x: auto; padding: 0 12px; }
+  .wizard-tab { padding: 10px 10px; font-size: 10px; }
+  .wizard-tab span.tab-label { display: none; }
+  .stats-breakdown { flex-wrap: wrap; gap: 8px; }
 }
 
 </style>
@@ -796,8 +672,7 @@ body { transition: background .3s, color .3s; }
       <div class="wizard-tab" data-step="2" onclick="wizardGo(2)"><div class="tab-num"><span>2</span></div> <span class="tab-label">Medidas</span></div>
       <div class="wizard-tab" data-step="3" onclick="wizardGo(3)"><div class="tab-num"><span>3</span></div> <span class="tab-label">Descripción</span></div>
       <div class="wizard-tab" data-step="4" onclick="wizardGo(4)"><div class="tab-num"><span>4</span></div> <span class="tab-label">Características</span></div>
-      <div class="wizard-tab" data-step="5" onclick="wizardGo(5)"><div class="tab-num"><span>5</span></div> <span class="tab-label">Media</span></div>
-      <div class="wizard-tab" data-step="6" onclick="wizardGo(6)"><div class="tab-num"><span>6</span></div> <span class="tab-label">Publicación</span></div>
+      <div class="wizard-tab" data-step="5" onclick="wizardGo(5)"><div class="tab-num"><span>5</span></div> <span class="tab-label">Privacidad</span></div>
     </div>
     <div class="completeness-strip">
       <div class="completeness-track"><div class="completeness-fill" id="wizardFill" style="width:0%"></div></div>
@@ -842,9 +717,7 @@ body { transition: background .3s, color .3s; }
             <input type="hidden" id="fCinta" value="">
           </div>
 
-          <div class="wizard-nav"><span></span><button class="btn btn-primary btn-sm" onclick="wizardGo(2)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
           </div>
-
           <div class="wizard-step" data-step="2">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-ruler"></i> Medidas y espacios</div>
@@ -878,9 +751,7 @@ body { transition: background .3s, color .3s; }
             </div>
           </div>
 
-          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(1)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(3)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
           </div>
-
           <div class="wizard-step" data-step="3">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-file-text"></i> Descripción</div>
@@ -900,9 +771,7 @@ body { transition: background .3s, color .3s; }
             <div style="margin-top:6px;font-size:10px;color:var(--text3)">Opcional: agrega bloques para una descripción más estructurada en el sitio.</div>
           </div>
 
-          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(2)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(4)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
           </div>
-
           <div class="wizard-step" data-step="4">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-checklist"></i> Características</div>
@@ -1017,9 +886,7 @@ body { transition: background .3s, color .3s; }
             </div>
           </div>
 
-          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(3)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(5)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
           </div>
-
           <div class="wizard-step" data-step="5">
           <div class="share-box">
             <div class="share-box-title"><i class="ti ti-share"></i> Ficha compartible — WhatsApp / Redes</div>
@@ -1067,10 +934,10 @@ body { transition: background .3s, color .3s; }
             <div class="fg"><label>Contacto del vendedor</label><input type="text" id="fContactoVendedor" placeholder="Ej: Juan Pérez · +502 5555-1234"></div>
             <div class="fg"><label>Notas internas</label><textarea id="fNotasInternas" style="min-height:60px" placeholder="Motivación de venta, situación especial..."></textarea></div>
             <div class="fg"><label>Estado legal</label><input type="text" id="fEstadoLegal" placeholder="Ej: Sin gravámenes, IUSI al día"></div>
-          <div class="wizard-nav"><button class="btn btn-ghost btn-sm" onclick="wizardGo(4)"><i class="ti ti-arrow-left"></i> Anterior</button><button class="btn btn-primary btn-sm" onclick="wizardGo(6)">Siguiente <i class="ti ti-arrow-right"></i></button></div>
           </div>
 
         </div>
+          </div>
 
         <div class="form-right">
 
@@ -1085,9 +952,8 @@ body { transition: background .3s, color .3s; }
             <div class="gal-wrap" id="galWrap"></div>
             <button type="button" onclick="addGalImg()" style="margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer">+ Agregar imagen</button>
             <details style="margin-top:8px">
-              <summary style="font-size:11px;color:var(--or);cursor:pointer;font-weight:600">⚡ Pegar múltiples URLs</summary>
-              <textarea class="gal-quickpaste" id="galQuickPaste" placeholder="Pega una URL por línea...&#10;https://ik.imagekit.io/Zona/foto1.jpg&#10;https://ik.imagekit.io/Zona/foto2.jpg"></textarea>
-              <div class="gal-quickpaste-hint">Una URL por línea. Click "Aplicar" para agregarlas todas.</div>
+              <summary style="font-size:11px;color:var(--or);cursor:pointer;font-weight:600">Pegar múltiples URLs</summary>
+              <textarea class="gal-quickpaste" id="galQuickPaste" placeholder="Una URL por línea..."></textarea>
               <button type="button" onclick="applyQuickPaste()" style="margin-top:6px;padding:5px 14px;border:1px solid var(--or);border-radius:6px;background:none;font-size:11px;color:var(--or);cursor:pointer;font-weight:600">Aplicar URLs</button>
             </details>
           </div>
@@ -1119,10 +985,10 @@ body { transition: background .3s, color .3s; }
                 <div class="lp-loc" id="lpLoc"></div>
                 <div class="lp-price" id="lpPrice"></div>
                 <div class="lp-specs">
-                  <div class="lp-spec" id="lpHab"><i class="ti ti-bed" style="font-size:13px"></i> <span>—</span></div>
-                  <div class="lp-spec" id="lpBan"><i class="ti ti-bath" style="font-size:13px"></i> <span>—</span></div>
-                  <div class="lp-spec" id="lpArea"><i class="ti ti-ruler" style="font-size:13px"></i> <span>—</span></div>
-                  <div class="lp-spec" id="lpParq"><i class="ti ti-car" style="font-size:13px"></i> <span>—</span></div>
+                  <div class="lp-spec" id="lpHab"><i class="ti ti-bed" style="font-size:13px"></i> <span>-</span></div>
+                  <div class="lp-spec" id="lpBan"><i class="ti ti-bath" style="font-size:13px"></i> <span>-</span></div>
+                  <div class="lp-spec" id="lpArea"><i class="ti ti-ruler" style="font-size:13px"></i> <span>-</span></div>
+                  <div class="lp-spec" id="lpParq"><i class="ti ti-car" style="font-size:13px"></i> <span>-</span></div>
                 </div>
               </div>
             </div>
@@ -1188,9 +1054,9 @@ body { transition: background .3s, color .3s; }
       <div class="search-empty">Escribe para buscar...</div>
     </div>
     <div class="search-footer">
-      <span><kbd style="font-family:monospace;padding:1px 4px;border:1px solid var(--border2);border-radius:3px">↑↓</kbd> Navegar</span>
-      <span><kbd style="font-family:monospace;padding:1px 4px;border:1px solid var(--border2);border-radius:3px">Enter</kbd> Abrir</span>
-      <span><kbd style="font-family:monospace;padding:1px 4px;border:1px solid var(--border2);border-radius:3px">Esc</kbd> Cerrar</span>
+      <span><kbd>↑↓</kbd> Navegar</span>
+      <span><kbd>Enter</kbd> Abrir</span>
+      <span><kbd>Esc</kbd> Cerrar</span>
     </div>
   </div>
 </div>
@@ -1308,16 +1174,11 @@ function renderDashboard(mc) {
   const totalLeads = leads.length;
   const sinContactar = leads.filter(l => !l.stage || l.stage === 'Nuevo').length;
   const portfolioVal = computePortfolioValue();
-
-  // Site metrics
   const enZona = props.filter(p => !p.sitios || p.sitios.includes('zona')).length;
   const enInmu = props.filter(p => !p.sitios || p.sitios.includes('inmu')).length;
   const enAmbos = props.filter(p => (!p.sitios || p.sitios.includes('zona')) && (!p.sitios || p.sitios.includes('inmu'))).length;
   const soloZona = enZona - enAmbos;
   const soloInmu = enInmu - enAmbos;
-  const leadsZona = leads.filter(l => (l.source||'').includes('zona')).length;
-  const leadsInmu = leads.filter(l => (l.source||'').includes('inmu')).length;
-  const leadsOther = totalLeads - leadsZona - leadsInmu;
 
   const typeCount = {};
   props.forEach(p => { const t = p.tipo || 'Otro'; typeCount[t] = (typeCount[t]||0)+1; });
@@ -1417,9 +1278,7 @@ function renderDashboard(mc) {
       <div>
         <div class="chart-card" style="margin-bottom:18px">
           <div class="chart-title">Leads por semana <span style="font-size:11px;font-weight:500;color:var(--text3)">Últimas 8 semanas</span></div>
-          <div class="leads-chart-wrap">
-            <div class="leads-bar-chart">${buildLeadsChart()}</div>
-          </div>
+          <div class="leads-chart-wrap"><div class="leads-bar-chart">${buildLeadsChart()}</div></div>
         </div>
         <div class="chart-card">
           <div class="chart-title">Funnel de conversión</div>
@@ -1427,10 +1286,7 @@ function renderDashboard(mc) {
         </div>
       </div>
       <div class="chart-card timeline-card">
-        <div class="timeline-header">
-          <span>Actividad reciente</span>
-          <i class="ti ti-activity" style="color:var(--text3)"></i>
-        </div>
+        <div class="timeline-header"><span>Actividad reciente</span><i class="ti ti-activity" style="color:var(--text3)"></i></div>
         <div class="timeline-feed">${buildTimeline()}</div>
       </div>
     </div>`;
@@ -1601,6 +1457,8 @@ function buildTable(data, sortable) {
           <div class="completeness-bar"><div class="completeness-fill" style="width:${pct}%;background:${pctColor}"></div></div>
           <span class="completeness-label" style="color:${pctColor}">${pct}%</span>
         </div>
+      </td>
+      <td>
         ${qualityBadge(p)}
       </td>
       <td>
@@ -2093,239 +1951,351 @@ document.querySelectorAll('.char-item').forEach(item=>{
 });
 
 
+// ══════ PREMIUM FEATURES v5 ══════
 
-// ── WIZARD MODAL ─────────────────────────────────────────────
-let currentWizardStep = 1;
-
-function wizardGo(step) {
-  currentWizardStep = step;
-  // Update tabs
-  document.querySelectorAll('.wizard-tab').forEach(t => {
-    const s = parseInt(t.dataset.step);
-    t.classList.toggle('active', s === step);
+// ── GLOBAL SEARCH ────────────────────────────────────────────
+var searchResultIndex = -1;
+function openSearch() {
+  var ov = document.getElementById('searchOverlay');
+  ov.classList.add('open');
+  var inp = document.getElementById('searchInput');
+  inp.value = '';
+  inp.focus();
+  document.getElementById('searchResults').innerHTML = '<div class="search-empty">Escribe para buscar...</div>';
+  searchResultIndex = -1;
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+function doGlobalSearch(q) {
+  var res = document.getElementById('searchResults');
+  if (!q || q.length < 2) { res.innerHTML = '<div class="search-empty">Escribe al menos 2 caracteres...</div>'; return; }
+  var ql = q.toLowerCase();
+  var matches = [];
+  props.forEach(function(p) {
+    var h = [p.titulo, p.zona, p.municipio, p.tipo, p.precio, p.codigo].filter(Boolean).join(' ').toLowerCase();
+    if (h.includes(ql)) matches.push({ type:'prop', title:p.titulo||'Sin título', sub:[p.tipo,p.zona,p.precio?(p.moneda||'Q')+' '+p.precio:''].filter(Boolean).join(' · '), id:p.id||p.slug });
   });
-  // Update steps (form-left)
-  document.querySelectorAll('.wizard-step').forEach(s => {
-    s.classList.toggle('active', parseInt(s.dataset.step) === step);
+  leads.forEach(function(l) {
+    var h = [l.nombre, l.email, l.telefono, l.propiedad].filter(Boolean).join(' ').toLowerCase();
+    if (h.includes(ql)) matches.push({ type:'lead', title:l.nombre||'Sin nombre', sub:[l.email,l.propiedad].filter(Boolean).join(' · '), id:l.id });
   });
-  // Scroll modal body to top
-  const mb = document.querySelector('.modal-body');
-  if (mb) mb.scrollTop = 0;
-  // Mark completed tabs
-  updateWizardDone();
+  if (!matches.length) { res.innerHTML = '<div class="search-empty">Sin resultados</div>'; return; }
+  var html = '';
+  matches.slice(0,8).forEach(function(m,i) {
+    html += '<div class="search-result'+(i===0?' active':'')+'" onclick="searchSelect(\''+m.type+'\',\''+esc(m.id||'')+'\')">'
+      + '<div class="sr-icon '+m.type+'"><i class="ti ti-'+(m.type==='prop'?'building':'user')+'"></i></div>'
+      + '<div class="sr-text"><div class="sr-title">'+esc(m.title)+'</div><div class="sr-sub">'+esc(m.sub)+'</div></div>'
+      + '<span style="font-size:10px;color:var(--text3)">'+(m.type==='prop'?'Propiedad':'Lead')+'</span></div>';
+  });
+  res.innerHTML = html;
+  searchResultIndex = 0;
+}
+function searchSelect(type, id) {
+  closeSearch();
+  if (type === 'prop' && id) openModal(id);
+  else if (type === 'lead') showPage('leads');
 }
 
-function updateWizardDone() {
-  const checks = {
-    1: () => !!document.getElementById('fTitulo')?.value,
-    2: () => !!(document.getElementById('fArea')?.value || document.getElementById('fHabitaciones')?.value),
-    3: () => !!document.getElementById('fDescripcion')?.value,
-    4: () => document.querySelectorAll('.chars-grid input:checked').length > 0,
-    5: () => !!(document.getElementById('fPdfUrl')?.value || document.querySelectorAll('.priv-toggle input:checked').length > 0),
-    6: () => false
-  };
-  document.querySelectorAll('.wizard-tab').forEach(t => {
-    const s = parseInt(t.dataset.step);
-    if (s < currentWizardStep && checks[s] && checks[s]()) {
-      t.classList.add('done');
-    }
+// ── KEYBOARD SHORTCUTS ───────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n' && !document.getElementById('searchOverlay').classList.contains('open')) { e.preventDefault(); openModal(null); return; }
+  if (e.key === 'Escape') {
+    if (document.getElementById('searchOverlay').classList.contains('open')) { closeSearch(); return; }
+  }
+  if (document.getElementById('searchOverlay').classList.contains('open')) {
+    var items = document.querySelectorAll('.search-result');
+    if (e.key === 'ArrowDown') { e.preventDefault(); searchResultIndex = Math.min(searchResultIndex+1, items.length-1); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); searchResultIndex = Math.max(searchResultIndex-1, 0); }
+    items.forEach(function(it,i) { it.classList.toggle('active', i === searchResultIndex); });
+    if (e.key === 'Enter' && items[searchResultIndex]) { items[searchResultIndex].click(); }
+  }
+});
+
+// ── ACTIVITY TIMELINE ────────────────────────────────────────
+function buildTimeline() {
+  var events = [];
+  leads.forEach(function(l) {
+    events.push({ text:'<strong>'+esc(l.nombre||'Nuevo lead')+'</strong> interesado en '+esc(l.propiedad||l.tipo||'propiedad'), date:l.fecha||'', icon:'lead' });
   });
+  props.forEach(function(p) {
+    if (p.estado === 'Vendida') events.push({ text:'<strong>'+esc(p.titulo||'')+'</strong> marcada como vendida', date:p.updatedAt||'', icon:'sale' });
+  });
+  events.sort(function(a,b) { return (b.date||'').localeCompare(a.date||''); });
+  var html = '';
+  events.slice(0,8).forEach(function(ev) {
+    html += '<div class="tl-item"><div class="tl-dot '+ev.icon+'"></div><div class="tl-content"><div class="tl-text">'+ev.text+'</div><div class="tl-time">'+(ev.date?formatDate(ev.date):'')+'</div></div></div>';
+  });
+  return html || '<div style="padding:18px;text-align:center;color:var(--text3);font-size:12px">Sin actividad reciente</div>';
+}
+
+// ── LEADS WEEKLY CHART ───────────────────────────────────────
+function buildLeadsChart() {
+  var now = new Date();
+  var weeks = [];
+  for (var i = 7; i >= 0; i--) {
+    var start = new Date(now); start.setDate(now.getDate() - (i * 7));
+    var end = new Date(start); end.setDate(start.getDate() + 7);
+    var count = leads.filter(function(l) {
+      if (!l.fecha) return false;
+      var d = new Date(l.fecha);
+      return d >= start && d < end;
+    }).length;
+    var label = i === 0 ? 'Esta' : i === 1 ? 'Ant.' : '-' + i;
+    weeks.push({ label:label, count:count });
+  }
+  var max = Math.max.apply(null, weeks.map(function(w){return w.count;}));
+  if (max < 1) max = 1;
+  var html = '';
+  weeks.forEach(function(w) {
+    var h = Math.max((w.count / max) * 70, 2);
+    html += '<div class="leads-bar" style="height:'+h+'px">'
+      + (w.count > 0 ? '<div class="leads-bar-val">'+w.count+'</div>' : '')
+      + '<div class="leads-bar-label">'+w.label+'</div></div>';
+  });
+  return html;
+}
+
+// ── CONVERSION FUNNEL ────────────────────────────────────────
+function buildFunnel() {
+  var stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado'];
+  var colors = ['#3B82F6','#F5820D','#f59e0b','#8b5cf6','#22c55e'];
+  var counts = stages.map(function(s) { return leads.filter(function(l){ return (l.stage||'Nuevo')===s; }).length; });
+  var max = Math.max.apply(null, counts);
+  if (max < 1) max = 1;
+  var html = '';
+  stages.forEach(function(s, i) {
+    html += '<div class="funnel-step"><div class="funnel-label">'+s+'</div>'
+      + '<div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:'+(counts[i]/max*100)+'%;background:'+colors[i]+'">'+counts[i]+'</div></div>'
+      + '<div class="funnel-count">'+counts[i]+'</div></div>';
+  });
+  return html;
+}
+
+// ── QUALITY SCORE ────────────────────────────────────────────
+function getQualityScore(p) {
+  var s = 0;
+  if (p.titulo) s += 10;
+  if (p.precio) s += 10;
+  if (p.imagen) s += 15;
+  if (p.galeria && p.galeria.length >= 3) s += 10;
+  if (p.galeria && p.galeria.length >= 6) s += 5;
+  if (p.descripcion && p.descripcion.length > 50) s += 10;
+  if (p.hook) s += 10;
+  if (p.descCorta) s += 5;
+  if (p.area) s += 5;
+  if (p.habitaciones) s += 5;
+  if (p.zona) s += 5;
+  if (p.caracteristicas && p.caracteristicas.length >= 3) s += 5;
+  if (p.videoUrl) s += 5;
+  return Math.min(s, 100);
+}
+function qualityBadge(p) {
+  var s = getQualityScore(p);
+  var cls = s >= 75 ? 'high' : s >= 45 ? 'mid' : 'low';
+  return '<div class="quality-score"><div class="qs-ring ' + cls + '">' + s + '</div></div>';
+}
+
+// ── NOTIFICATION POLLING ─────────────────────────────────────
+var lastLeadCount = 0;
+function checkNewLeads() {
+  var badge = document.getElementById('leadsCount');
+  if (!badge) return;
+  var current = leads.length;
+  if (lastLeadCount > 0 && current > lastLeadCount) {
+    badge.classList.add('pulse');
+    showToast((current - lastLeadCount) + ' nuevo(s) lead(s)!');
+    setTimeout(function() { badge.classList.remove('pulse'); }, 10000);
+  }
+  lastLeadCount = current;
+}
+setInterval(function() {
+  fetch(API + '/api/leads', { credentials: 'include' }).then(function(r) {
+    if (r.ok) return r.json(); throw '';
+  }).then(function(d) {
+    if (Array.isArray(d) && d.length > leads.length) { leads = d; checkNewLeads(); var b=document.getElementById('leadsCount'); if(b)b.textContent=leads.length; }
+  }).catch(function(){});
+}, 60000);
+
+// ── QUICK STATUS CHANGE ──────────────────────────────────────
+function quickChangeStatus(propId, newStatus) {
+  var p = props.find(function(x) { return (x.id||x.slug) === decodeURIComponent(propId); });
+  if (!p) return;
+  p.estado = newStatus;
+  fetch(API + '/api/propiedades/' + propId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(p)
+  }).then(function() {
+    showToast('"' + (p.titulo||'Propiedad') + '" → ' + newStatus);
+    var page = document.querySelector('.sb-item.active');
+    showPage(page ? page.id.replace('nav-','') : 'dashboard');
+  }).catch(function() { showToast('Error al cambiar estado'); });
+}
+
+// ── EXPORT PROPERTY AS PDF ───────────────────────────────────
+function exportPropPDF(propId) {
+  var p = props.find(function(x) { return (x.id||x.slug) === decodeURIComponent(propId); });
+  if (!p) return;
+  var w = window.open('', '_blank');
+  var h = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    + '<title>' + (p.titulo||'Propiedad') + '</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">'
+    + '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;color:#1A1A2E;max-width:800px;margin:0 auto;padding:40px}'
+    + '.header{text-align:center;margin-bottom:32px;border-bottom:2px solid #0D1B3E;padding-bottom:20px}'
+    + '.brand{font-family:Cormorant Garamond,serif;font-size:24px;font-weight:500;color:#0D1B3E;letter-spacing:.15em}'
+    + '.sub{font-size:10px;color:#8A9BB0;letter-spacing:.1em;margin-top:4px}'
+    + 'h1{font-family:Cormorant Garamond,serif;font-size:28px;font-weight:500;color:#0D1B3E;margin:24px 0 8px}'
+    + '.loc{font-size:13px;color:#8A9BB0;margin-bottom:16px}'
+    + '.price{font-family:Cormorant Garamond,serif;font-size:32px;font-weight:600;color:#0D1B3E;margin-bottom:24px}'
+    + '.specs{display:flex;gap:24px;margin-bottom:24px;padding:16px;background:#F8FAFF;border-radius:8px}'
+    + '.spec{text-align:center}.spec-val{font-size:20px;font-weight:700;color:#0D1B3E}.spec-label{font-size:10px;color:#8A9BB0;letter-spacing:.06em}'
+    + '.desc{font-size:13px;line-height:1.7;color:#4A5568;margin-bottom:24px}'
+    + '.img{width:100%;border-radius:8px;margin-bottom:24px}'
+    + '.footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid #E2E8F0;font-size:10px;color:#8A9BB0}'
+    + '.cta{background:#0D1B3E;color:#fff;padding:12px 32px;border-radius:8px;font-size:13px;font-weight:600;display:inline-block;margin-top:16px;text-decoration:none}'
+    + '.chars{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px}'
+    + '.char{padding:4px 10px;background:#EEF0F6;border-radius:4px;font-size:11px;color:#0D1B3E}'
+    + '@media print{body{padding:20px}.cta{display:none}}</style></head><body>';
+  h += '<div class="header"><div class="brand">ZONA-INNMUEBLE</div><div class="sub">LUXURY REAL ESTATE · GUATEMALA</div></div>';
+  if (p.imagen) h += '<img class="img" src="' + p.imagen + '" />';
+  h += '<h1>' + (p.titulo||'') + '</h1>';
+  h += '<div class="loc">' + [p.zona,p.municipio].filter(Boolean).join(' · ') + '</div>';
+  if (!p.privada) h += '<div class="price">' + (p.moneda||'Q') + ' ' + (p.precio||'') + '</div>';
+  h += '<div class="specs">';
+  if (p.habitaciones) h += '<div class="spec"><div class="spec-val">'+p.habitaciones+'</div><div class="spec-label">HABITACIONES</div></div>';
+  if (p.banos) h += '<div class="spec"><div class="spec-val">'+p.banos+'</div><div class="spec-label">BAÑOS</div></div>';
+  if (p.area) h += '<div class="spec"><div class="spec-val">'+p.area+'</div><div class="spec-label">M²</div></div>';
+  if (p.parqueos) h += '<div class="spec"><div class="spec-val">'+p.parqueos+'</div><div class="spec-label">PARQUEOS</div></div>';
+  h += '</div>';
+  h += '<div class="desc">' + (p.descripcion||p.descCorta||'') + '</div>';
+  if (p.caracteristicas && p.caracteristicas.length) {
+    h += '<div class="chars">';
+    p.caracteristicas.forEach(function(c) { h += '<span class="char">'+c+'</span>'; });
+    h += '</div>';
+  }
+  h += '<div style="text-align:center"><a class="cta" href="https://wa.me/50245542088?text=Hola, me interesa: '+encodeURIComponent(p.titulo||'')+'">Contactar por WhatsApp</a></div>';
+  h += '<div class="footer">zona-innmueble.com · +502 4554-2088 · Guatemala</div>';
+  h += '</body></html>';
+  w.document.write(h);
+  w.document.close();
+  setTimeout(function() { w.print(); }, 500);
+}
+
+// ── WIZARD MODAL ─────────────────────────────────────────────
+var currentWizardStep = 1;
+function wizardGo(step) {
+  currentWizardStep = step;
+  document.querySelectorAll('.wizard-tab').forEach(function(t) {
+    t.classList.toggle('active', parseInt(t.dataset.step) === step);
+  });
+  document.querySelectorAll('.wizard-step').forEach(function(s) {
+    s.classList.toggle('active', parseInt(s.dataset.step) === step);
+  });
+  var mb = document.querySelector('.modal-body');
+  if (mb) mb.scrollTop = 0;
 }
 
 // ── COMPLETENESS BAR ─────────────────────────────────────────
-const completenessFields = [
-  {id:'fTitulo', w:15, label:'título'},
-  {id:'fPrecio', w:12, label:'precio'},
-  {id:'fTipo', w:5, label:'tipo'},
-  {id:'fZona', w:8, label:'zona'},
-  {id:'fMunicipio', w:5, label:'municipio'},
-  {id:'fArea', w:8, label:'área'},
-  {id:'fHabitaciones', w:5, label:'habitaciones'},
-  {id:'fBanos', w:5, label:'baños'},
-  {id:'fDescripcion', w:12, label:'descripción'},
-  {id:'fImagen', w:15, label:'imagen principal'},
-  {sel:'.chars-grid input:checked', w:5, label:'características', min:1},
-  {id:'fSlug', w:5, label:'slug'},
-];
-
 function updateCompleteness() {
-  let score = 0, total = 0, missing = [];
-  completenessFields.forEach(f => {
+  var fields = [
+    {id:'fTitulo',w:15},{id:'fPrecio',w:12},{id:'fTipo',w:5},{id:'fZona',w:8},
+    {id:'fMunicipio',w:5},{id:'fArea',w:8},{id:'fHabitaciones',w:5},{id:'fBanos',w:5},
+    {id:'fDescripcion',w:12},{id:'fImagen',w:15},{id:'fSlug',w:5}
+  ];
+  var score=0, total=0, missing=[];
+  fields.forEach(function(f) {
     total += f.w;
-    if (f.id) {
-      const el = document.getElementById(f.id);
-      if (el && el.value && el.value.trim()) score += f.w;
-      else missing.push(f.label);
-    } else if (f.sel) {
-      if (document.querySelectorAll(f.sel).length >= (f.min||1)) score += f.w;
-      else missing.push(f.label);
-    }
+    var el = document.getElementById(f.id);
+    if (el && el.value && el.value.trim()) score += f.w;
+    else missing.push(f.id.replace('f',''));
   });
-  const pct = Math.round((score/total)*100);
-  const fill = document.getElementById('wizardFill');
-  const pctEl = document.getElementById('wizardPct');
-  const hint = document.getElementById('wizardHint');
+  if (document.querySelectorAll('.chars-grid input:checked').length > 0) score += 5;
+  total += 5;
+  var pct = Math.round((score/total)*100);
+  var fill = document.getElementById('wizardFill');
+  var pctEl = document.getElementById('wizardPct');
+  var hint = document.getElementById('wizardHint');
   if (fill) fill.style.width = pct + '%';
   if (pctEl) pctEl.textContent = pct + '%';
-  if (hint) {
-    if (pct === 100) hint.textContent = '¡Propiedad completa!';
-    else if (missing.length) hint.textContent = 'Falta: ' + missing.slice(0,3).join(', ');
-  }
+  if (hint) hint.textContent = pct === 100 ? 'Propiedad completa!' : 'Falta: ' + missing.slice(0,3).join(', ');
 }
 
 // ── AUTO-FILL ────────────────────────────────────────────────
 function setupAutoFill() {
-  // Auto slug from título
-  const tit = document.getElementById('fTitulo');
-  const slug = document.getElementById('fSlug');
+  var tit = document.getElementById('fTitulo');
+  var slug = document.getElementById('fSlug');
   if (tit && slug) {
-    tit.addEventListener('input', () => {
+    tit.addEventListener('input', function() {
       if (!slug.dataset.manual) {
-        slug.value = tit.value.toLowerCase()
-          .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-          .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-        updateLivePreview();
-        updateCompleteness();
+        slug.value = tit.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
       }
+      updateLivePreview(); updateCompleteness();
     });
-    slug.addEventListener('input', () => { slug.dataset.manual = '1'; });
+    slug.addEventListener('input', function() { slug.dataset.manual = '1'; });
   }
-
-  // Auto datos técnicos
-  ['fHabitaciones','fBanos','fArea','fAreaV2','fParqueos'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', () => { autoFillDatosTecnicos(); updateLivePreview(); updateCompleteness(); });
+  ['fHabitaciones','fBanos','fArea','fAreaV2','fParqueos'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() { autoFillDatosTecnicos(); updateLivePreview(); updateCompleteness(); });
   });
-
-  // Auto-format precio
-  const precio = document.getElementById('fPrecio');
-  if (precio) {
-    precio.addEventListener('blur', () => {
-      const raw = precio.value.replace(/[^0-9.]/g,'');
-      if (raw) {
-        const num = parseFloat(raw);
-        if (!isNaN(num)) precio.value = num.toLocaleString('en-US');
-      }
-      updateLivePreview();
-      updateCompleteness();
-    });
-  }
-
-  // Live preview listeners
-  ['fTitulo','fPrecio','fZona','fMunicipio','fImagen','fHabitaciones','fBanos','fArea','fParqueos','fMoneda','fCinta','fTipo','fDescripcion','fHook','fDescCorta'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('input', () => { updateLivePreview(); updateCompleteness(); });
-      el.addEventListener('change', () => { updateLivePreview(); updateCompleteness(); });
-    }
+  var precio = document.getElementById('fPrecio');
+  if (precio) precio.addEventListener('blur', function() {
+    var raw = precio.value.replace(/[^0-9.]/g,'');
+    if (raw) { var num = parseFloat(raw); if (!isNaN(num)) precio.value = num.toLocaleString('en-US'); }
+    updateLivePreview(); updateCompleteness();
   });
-
-  // Contextual fields based on tipo
-  const tipo = document.getElementById('fTipo');
-  if (tipo) tipo.addEventListener('change', applyContextualFields);
+  ['fTitulo','fPrecio','fZona','fMunicipio','fImagen','fHabitaciones','fBanos','fArea','fParqueos','fDescripcion'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.addEventListener('input', function(){ updateLivePreview(); updateCompleteness(); }); }
+  });
 }
-
 function autoFillDatosTecnicos() {
-  const hab = document.getElementById('fHabitaciones')?.value;
-  const ban = document.getElementById('fBanos')?.value;
-  const area = document.getElementById('fArea')?.value;
-  const areaV = document.getElementById('fAreaV2')?.value;
-  const parq = document.getElementById('fParqueos')?.value;
-  const dt = document.getElementById('fDatosTecnicos');
+  var hab = document.getElementById('fHabitaciones');
+  var ban = document.getElementById('fBanos');
+  var area = document.getElementById('fArea');
+  var areaV = document.getElementById('fAreaV2');
+  var dt = document.getElementById('fDatosTecnicos');
   if (!dt || dt.dataset.manual) return;
-  const parts = [];
-  if (hab && hab !== '0') parts.push(hab + ' hab');
-  if (ban && ban !== '0') parts.push(ban + ' baños');
-  if (area) parts.push(area + ' m²');
-  if (areaV) parts.push('Terreno ' + areaV + ' v²');
-  if (parq && parq !== '0') parts.push(parq + ' parqueos');
+  var parts = [];
+  if (hab && hab.value && hab.value !== '0') parts.push(hab.value + ' hab');
+  if (ban && ban.value && ban.value !== '0') parts.push(ban.value + ' baños');
+  if (area && area.value) parts.push(area.value + ' m²');
+  if (areaV && areaV.value) parts.push('Terreno ' + areaV.value + ' v²');
   dt.value = parts.join(' · ');
 }
 
 // ── LIVE PREVIEW ─────────────────────────────────────────────
 function updateLivePreview() {
-  const t = document.getElementById('fTitulo')?.value || '';
-  const p = document.getElementById('fPrecio')?.value || '';
-  const m = document.getElementById('fMoneda')?.value || 'Q';
-  const z = document.getElementById('fZona')?.value || '';
-  const mun = document.getElementById('fMunicipio')?.value || '';
-  const img = document.getElementById('fImagen')?.value || '';
-  const hab = document.getElementById('fHabitaciones')?.value || '—';
-  const ban = document.getElementById('fBanos')?.value || '—';
-  const area = document.getElementById('fArea')?.value || '—';
-  const parq = document.getElementById('fParqueos')?.value || '—';
-  const cinta = document.getElementById('fCinta')?.value || '';
-  const tipo = document.getElementById('fTipo')?.value || '';
-
-  const lpTitle = document.getElementById('lpTitle');
-  const lpLoc = document.getElementById('lpLoc');
-  const lpPrice = document.getElementById('lpPrice');
-  const lpBadge = document.getElementById('lpBadge');
-  const lpImg = document.getElementById('lpImg');
-  const lpImgPh = document.getElementById('lpImgPlaceholder');
-
-  if (lpTitle) lpTitle.textContent = t || 'Título de la propiedad';
-  if (lpLoc) lpLoc.textContent = [z, mun].filter(Boolean).join(' · ') || '';
-  if (lpPrice) lpPrice.textContent = p ? (m + ' ' + p) : '';
-  if (lpBadge) lpBadge.textContent = cinta || tipo || '';
-
+  var v = function(id) { var e = document.getElementById(id); return e ? e.value : ''; };
+  var lpTitle = document.getElementById('lpTitle');
+  var lpLoc = document.getElementById('lpLoc');
+  var lpPrice = document.getElementById('lpPrice');
+  var lpBadge = document.getElementById('lpBadge');
+  var lpImg = document.getElementById('lpImg');
+  var lpImgPh = document.getElementById('lpImgPlaceholder');
+  if (lpTitle) lpTitle.textContent = v('fTitulo') || 'Título de la propiedad';
+  if (lpLoc) lpLoc.textContent = [v('fZona'), v('fMunicipio')].filter(Boolean).join(' · ');
+  if (lpPrice) lpPrice.textContent = v('fPrecio') ? (v('fMoneda')||'Q') + ' ' + v('fPrecio') : '';
+  if (lpBadge) lpBadge.textContent = v('fCinta') || v('fTipo') || '';
   if (lpImg && lpImgPh) {
-    if (img) {
-      lpImg.src = img;
-      lpImg.style.display = 'block';
-      lpImgPh.style.display = 'none';
-    } else {
-      lpImg.style.display = 'none';
-      lpImgPh.style.display = 'block';
-    }
+    if (v('fImagen')) { lpImg.src = v('fImagen'); lpImg.style.display = 'block'; lpImgPh.style.display = 'none'; }
+    else { lpImg.style.display = 'none'; lpImgPh.style.display = 'block'; }
   }
-
-  const lpHab = document.getElementById('lpHab');
-  const lpBan = document.getElementById('lpBan');
-  const lpArea = document.getElementById('lpArea');
-  const lpParq = document.getElementById('lpParq');
-  if (lpHab) lpHab.querySelector('span').textContent = hab;
-  if (lpBan) lpBan.querySelector('span').textContent = ban;
-  if (lpArea) lpArea.querySelector('span').textContent = area ? area + ' m²' : '—';
-  if (lpParq) lpParq.querySelector('span').textContent = parq;
-}
-
-// ── CONTEXTUAL FIELDS ────────────────────────────────────────
-function applyContextualFields() {
-  const tipo = document.getElementById('fTipo')?.value || '';
-  // Show/hide finca-specific characteristics
-  const fincaGroup = document.querySelector('.chars-group-title i.ti-plant')?.closest('.chars-group');
-  const intGroup = document.querySelector('.chars-group-title i.ti-sofa')?.closest('.chars-group');
-  const vehGroup = document.querySelector('.chars-group-title i.ti-car')?.closest('.chars-group');
-  const extGroup = document.querySelector('.chars-group-title i.ti-tree')?.closest('.chars-group');
-
-  // Show all first
-  [fincaGroup, intGroup, vehGroup, extGroup].forEach(g => { if (g) g.classList.remove('ctx-hidden'); });
-
-  if (tipo === 'Terreno') {
-    // Terreno: hide interiores, exteriores (pool etc not relevant), vehicles
-    if (intGroup) intGroup.classList.add('ctx-hidden');
-    if (extGroup) extGroup.classList.add('ctx-hidden');
-    if (vehGroup) vehGroup.classList.add('ctx-hidden');
-  } else if (tipo === 'Finca') {
-    // Show all, finca is prominent
-  } else if (tipo === 'Apartamento') {
-    // Apto: hide finca
-    if (fincaGroup) fincaGroup.classList.add('ctx-hidden');
-  } else if (tipo === 'Local') {
-    if (fincaGroup) fincaGroup.classList.add('ctx-hidden');
-    if (intGroup) intGroup.classList.add('ctx-hidden');
-  }
+  var setSpec = function(id, val) { var el = document.getElementById(id); if (el) el.querySelector('span').textContent = val || '-'; };
+  setSpec('lpHab', v('fHabitaciones'));
+  setSpec('lpBan', v('fBanos'));
+  setSpec('lpArea', v('fArea') ? v('fArea') + ' m²' : '');
+  setSpec('lpParq', v('fParqueos'));
 }
 
 // ── QUICK PASTE GALLERY ──────────────────────────────────────
 function applyQuickPaste() {
-  const ta = document.getElementById('galQuickPaste');
+  var ta = document.getElementById('galQuickPaste');
   if (!ta) return;
-  const urls = ta.value.split('\n').map(u => u.trim()).filter(u => u.startsWith('http'));
-  urls.forEach(url => {
-    galUrls.push(url);
-  });
+  var urls = ta.value.split('\n').map(function(u){return u.trim();}).filter(function(u){return u.startsWith('http');});
+  urls.forEach(function(url) { galUrls.push(url); });
   renderGallery();
   ta.value = '';
   showToast(urls.length + ' imágenes agregadas');
@@ -2333,343 +2303,29 @@ function applyQuickPaste() {
 
 // ── SAVE DRAFT ───────────────────────────────────────────────
 function saveDraft() {
-  const titulo = document.getElementById('fTitulo')?.value;
-  if (!titulo) { showToast('Agrega al menos un título'); return; }
-  // Set status to Pausada for drafts
+  var titulo = document.getElementById('fTitulo');
+  if (!titulo || !titulo.value) { showToast('Agrega al menos un título'); return; }
   document.getElementById('fEstado').value = 'Pausada';
   setStatus('Pausada');
   saveProp();
 }
 
-// ── HOOK INTO MODAL OPEN ─────────────────────────────────────
-const _origOpenModal = typeof openModal !== 'undefined' ? openModal : null;
-
-function initWizardOnModalOpen() {
-  // Reset wizard to step 1
-  currentWizardStep = 1;
-  wizardGo(1);
-  // Setup auto-fill listeners (idempotent)
-  setTimeout(() => {
-    setupAutoFill();
-    applyContextualFields();
-    updateLivePreview();
-    updateCompleteness();
-  }, 100);
-}
-
-// Patch openModal to initialize wizard
-if (typeof openModal === 'function') {
-  const _origOM = openModal;
-  openModal = function(id) {
-    _origOM(id);
-    setTimeout(initWizardOnModalOpen, 150);
-  };
-}
-
-
-// ══════ PREMIUM FEATURES v5 ══════
-
-// ── 1. GLOBAL SEARCH (Ctrl+K) ───────────────────────────────
-let searchResultIndex = -1;
-
-function openSearch() {
-  const ov = document.getElementById('searchOverlay');
-  ov.classList.add('open');
-  const inp = document.getElementById('searchInput');
-  inp.value = '';
-  inp.focus();
-  document.getElementById('searchResults').innerHTML = '<div class="search-empty">Escribe para buscar...</div>';
-  searchResultIndex = -1;
-}
-
-function closeSearch() {
-  document.getElementById('searchOverlay').classList.remove('open');
-}
-
-function doGlobalSearch(q) {
-  const res = document.getElementById('searchResults');
-  if (!q || q.length < 2) { res.innerHTML = '<div class="search-empty">Escribe al menos 2 caracteres...</div>'; return; }
-  const ql = q.toLowerCase();
-  const matches = [];
-
-  // Search properties
-  props.forEach(p => {
-    const haystack = [p.titulo, p.zona, p.municipio, p.tipo, p.precio, p.codigo, p.slug].filter(Boolean).join(' ').toLowerCase();
-    if (haystack.includes(ql)) {
-      matches.push({ type: 'prop', title: p.titulo || 'Sin título', sub: [p.tipo, p.zona, p.municipio, p.precio ? (p.moneda||'Q')+' '+p.precio : ''].filter(Boolean).join(' · '), id: p.id || p.slug });
-    }
-  });
-
-  // Search leads
-  leads.forEach(l => {
-    const haystack = [l.nombre, l.email, l.telefono, l.propiedad, l.tipo].filter(Boolean).join(' ').toLowerCase();
-    if (haystack.includes(ql)) {
-      matches.push({ type: 'lead', title: l.nombre || 'Sin nombre', sub: [l.email, l.propiedad].filter(Boolean).join(' · '), id: l.id });
-    }
-  });
-
-  if (!matches.length) { res.innerHTML = '<div class="search-empty">Sin resultados para "' + esc(q) + '"</div>'; return; }
-
-  res.innerHTML = matches.slice(0, 8).map((m, i) => `
-    <div class="search-result${i===0?' active':''}" data-idx="${i}" onclick="searchSelect('${m.type}','${esc(m.id||'')}')">
-      <div class="sr-icon ${m.type}"><i class="ti ti-${m.type==='prop'?'building':'user'}"></i></div>
-      <div class="sr-text"><div class="sr-title">${esc(m.title)}</div><div class="sr-sub">${esc(m.sub)}</div></div>
-      <span style="font-size:10px;color:var(--text3)">${m.type==='prop'?'Propiedad':'Lead'}</span>
-    </div>`).join('');
-  searchResultIndex = 0;
-}
-
-function searchSelect(type, id) {
-  closeSearch();
-  if (type === 'prop' && id) openModal(id);
-  else if (type === 'lead') showPage('leads');
-}
-
-// ── 2. KEYBOARD SHORTCUTS ────────────────────────────────────
-document.addEventListener('keydown', function(e) {
-  // Ctrl+K or Cmd+K = search
-  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); return; }
-  // Ctrl+N = new property
-  if ((e.ctrlKey || e.metaKey) && e.key === 'n' && !document.getElementById('searchOverlay').classList.contains('open')) {
-    e.preventDefault(); openModal(null); return;
-  }
-  // Esc = close search or modal
-  if (e.key === 'Escape') {
-    if (document.getElementById('searchOverlay').classList.contains('open')) { closeSearch(); return; }
-  }
-  // Arrow keys in search
-  if (document.getElementById('searchOverlay').classList.contains('open')) {
-    const items = document.querySelectorAll('.search-result');
-    if (e.key === 'ArrowDown') { e.preventDefault(); searchResultIndex = Math.min(searchResultIndex+1, items.length-1); highlightSearchResult(items); }
-    if (e.key === 'ArrowUp') { e.preventDefault(); searchResultIndex = Math.max(searchResultIndex-1, 0); highlightSearchResult(items); }
-    if (e.key === 'Enter' && items[searchResultIndex]) { items[searchResultIndex].click(); }
-  }
-});
-
-function highlightSearchResult(items) {
-  items.forEach((it, i) => it.classList.toggle('active', i === searchResultIndex));
-  if (items[searchResultIndex]) items[searchResultIndex].scrollIntoView({ block: 'nearest' });
-}
-
-// ── 3. ACTIVITY TIMELINE ─────────────────────────────────────
-function buildTimeline() {
-  const events = [];
-
-  // Leads as events
-  leads.forEach(l => {
-    events.push({ type: 'lead', text: `<strong>${esc(l.nombre||'Nuevo lead')}</strong> interesado en ${esc(l.propiedad||l.tipo||'propiedad')}`, date: l.fecha || '', icon: 'lead' });
-  });
-
-  // Properties with estado changes
-  props.forEach(p => {
-    if (p.estado === 'Vendida') {
-      events.push({ type: 'sale', text: `<strong>${esc(p.titulo||'')}</strong> marcada como vendida`, date: p.fechaVenta || p.updatedAt || '', icon: 'sale' });
-    }
-    if (p.createdAt) {
-      events.push({ type: 'new', text: `<strong>${esc(p.titulo||'')}</strong> agregada al catálogo`, date: p.createdAt || '', icon: 'new' });
-    }
-  });
-
-  // Sort by date desc
-  events.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-
-  return events.slice(0, 8).map(ev => `
-    <div class="tl-item">
-      <div class="tl-dot ${ev.icon}"></div>
-      <div class="tl-content">
-        <div class="tl-text">${ev.text}</div>
-        <div class="tl-time">${ev.date ? formatDate(ev.date) : ''}</div>
-      </div>
-    </div>`).join('') || '<div style="padding:18px;text-align:center;color:var(--text3);font-size:12px">Sin actividad reciente</div>';
-}
-
-// ── 4. LEADS WEEKLY CHART ────────────────────────────────────
-function buildLeadsChart() {
-  const now = new Date();
-  const weeks = [];
-  for (let i = 7; i >= 0; i--) {
-    const start = new Date(now); start.setDate(now.getDate() - (i * 7));
-    const end = new Date(start); end.setDate(start.getDate() + 7);
-    const count = leads.filter(l => {
-      if (!l.fecha) return false;
-      const d = new Date(l.fecha);
-      return d >= start && d < end;
-    }).length;
-    const label = i === 0 ? 'Esta' : i === 1 ? 'Ant.' : '-' + i;
-    weeks.push({ label, count });
-  }
-  const max = Math.max(...weeks.map(w => w.count), 1);
-  return weeks.map(w => {
-    const h = Math.max((w.count / max) * 70, 2);
-    return `<div class="leads-bar" style="height:${h}px">
-      ${w.count > 0 ? `<div class="leads-bar-val">${w.count}</div>` : ''}
-      <div class="leads-bar-label">${w.label}</div>
-    </div>`;
-  }).join('');
-}
-
-// ── 5. CONVERSION FUNNEL ─────────────────────────────────────
-function buildFunnel() {
-  const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado'];
-  const colors = ['#3B82F6','#F5820D','#f59e0b','#8b5cf6','#22c55e'];
-  const counts = stages.map(s => leads.filter(l => (l.stage||'Nuevo') === s).length);
-  const max = Math.max(...counts, 1);
-  return stages.map((s, i) => `
-    <div class="funnel-step">
-      <div class="funnel-label">${s}</div>
-      <div class="funnel-bar-track">
-        <div class="funnel-bar-fill" style="width:${(counts[i]/max)*100}%;background:${colors[i]}">${counts[i]}</div>
-      </div>
-      <div class="funnel-count">${counts[i]}</div>
-    </div>`).join('');
-}
-
-// ── 6. QUALITY SCORE ─────────────────────────────────────────
-function getQualityScore(p) {
-  let score = 0;
-  if (p.titulo) score += 10;
-  if (p.precio) score += 10;
-  if (p.imagen) score += 15;
-  if (p.galeria && p.galeria.length >= 3) score += 10;
-  if (p.galeria && p.galeria.length >= 6) score += 5;
-  if (p.descripcion && p.descripcion.length > 50) score += 10;
-  if (p.hook) score += 10;
-  if (p.descCorta) score += 5;
-  if (p.area) score += 5;
-  if (p.habitaciones) score += 5;
-  if (p.zona) score += 5;
-  if (p.caracteristicas && p.caracteristicas.length >= 3) score += 5;
-  if (p.videoUrl) score += 5;
-  return Math.min(score, 100);
-}
-
-function qualityBadge(p) {
-  const s = getQualityScore(p);
-  const cls = s >= 75 ? 'high' : s >= 45 ? 'mid' : 'low';
-  return '<div class="quality-score"><div class="qs-ring ' + cls + '">' + s + '</div></div>';
-}
-
-// ── 7. NOTIFICATION POLLING ──────────────────────────────────
-let lastLeadCount = 0;
-
-function checkNewLeads() {
-  const badge = document.getElementById('leadsCount');
-  if (!badge) return;
-  const current = leads.length;
-  if (lastLeadCount > 0 && current > lastLeadCount) {
-    badge.classList.add('pulse');
-    showToast('¡' + (current - lastLeadCount) + ' nuevo(s) lead(s)!');
-    setTimeout(() => badge.classList.remove('pulse'), 10000);
-  }
-  lastLeadCount = current;
-}
-
-// Poll every 60s
-setInterval(async () => {
-  try {
-    const r = await fetch(API + '/api/leads', { credentials: 'include' });
-    if (r.ok) {
-      const newLeads = await r.json();
-      if (Array.isArray(newLeads) && newLeads.length > leads.length) {
-        leads = newLeads;
-        checkNewLeads();
-        const badge = document.getElementById('leadsCount');
-        if (badge) badge.textContent = leads.length;
-      }
-    }
-  } catch(e) {}
-}, 60000);
-
-// ── 8. QUICK STATUS CHANGE IN TABLE ──────────────────────────
-async function quickChangeStatus(propId, newStatus) {
-  const p = props.find(x => (x.id||x.slug) === decodeURIComponent(propId));
-  if (!p) return;
-  p.estado = newStatus;
-  try {
-    await fetch(API + '/api/propiedades/' + propId, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(p)
-    });
-    showToast('"' + (p.titulo||'Propiedad') + '" → ' + newStatus);
-    showPage(document.querySelector('.sb-item.active')?.id?.replace('nav-','') || 'dashboard');
-  } catch(e) { showToast('Error al cambiar estado'); }
-}
-
-// ── 9. EXPORT PROPERTY AS PDF ────────────────────────────────
-function exportPropPDF(propId) {
-  const p = props.find(x => (x.id||x.slug) === decodeURIComponent(propId));
-  if (!p) return;
-  const w = window.open('', '_blank');
-  w.document.write(\`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>\${p.titulo||'Propiedad'} — Zona INNmueble</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Inter',sans-serif; color:#1A1A2E; max-width:800px; margin:0 auto; padding:40px; }
-    .header { text-align:center; margin-bottom:32px; border-bottom:2px solid #0D1B3E; padding-bottom:20px; }
-    .brand { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:500; color:#0D1B3E; letter-spacing:.15em; }
-    .sub { font-size:10px; color:#8A9BB0; letter-spacing:.1em; margin-top:4px; }
-    h1 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:500; color:#0D1B3E; margin:24px 0 8px; }
-    .loc { font-size:13px; color:#8A9BB0; margin-bottom:16px; }
-    .price { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:600; color:#0D1B3E; margin-bottom:24px; }
-    .specs { display:flex; gap:24px; margin-bottom:24px; padding:16px; background:#F8FAFF; border-radius:8px; }
-    .spec { text-align:center; }
-    .spec-val { font-size:20px; font-weight:700; color:#0D1B3E; }
-    .spec-label { font-size:10px; color:#8A9BB0; letter-spacing:.06em; }
-    .desc { font-size:13px; line-height:1.7; color:#4A5568; margin-bottom:24px; }
-    .img { width:100%; border-radius:8px; margin-bottom:24px; }
-    .footer { text-align:center; margin-top:32px; padding-top:16px; border-top:1px solid #E2E8F0; font-size:10px; color:#8A9BB0; }
-    .cta { background:#0D1B3E; color:#fff; padding:12px 32px; border-radius:8px; font-size:13px; font-weight:600; display:inline-block; margin-top:16px; text-decoration:none; }
-    .chars { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px; }
-    .char { padding:4px 10px; background:#EEF0F6; border-radius:4px; font-size:11px; color:#0D1B3E; }
-    @media print { body { padding:20px; } .cta { display:none; } }
-  </style></head><body>
-    <div class="header">
-      <div class="brand">ZONA-INNMUEBLE</div>
-      <div class="sub">LUXURY REAL ESTATE · GUATEMALA</div>
-    </div>
-    \${p.imagen ? '<img class="img" src="'+p.imagen+'" />' : ''}
-    <h1>\${p.titulo||''}</h1>
-    <div class="loc">\${[p.zona,p.municipio].filter(Boolean).join(' · ')}</div>
-    \${p.privada ? '' : '<div class="price">'+(p.moneda||'Q')+' '+(p.precio||'')+'</div>'}
-    <div class="specs">
-      \${p.habitaciones ? '<div class="spec"><div class="spec-val">'+p.habitaciones+'</div><div class="spec-label">HABITACIONES</div></div>' : ''}
-      \${p.banos ? '<div class="spec"><div class="spec-val">'+p.banos+'</div><div class="spec-label">BAÑOS</div></div>' : ''}
-      \${p.area ? '<div class="spec"><div class="spec-val">'+p.area+'</div><div class="spec-label">M²</div></div>' : ''}
-      \${p.parqueos ? '<div class="spec"><div class="spec-val">'+p.parqueos+'</div><div class="spec-label">PARQUEOS</div></div>' : ''}
-      \${p.niveles ? '<div class="spec"><div class="spec-val">'+p.niveles+'</div><div class="spec-label">NIVELES</div></div>' : ''}
-    </div>
-    <div class="desc">\${p.descripcion||p.descCorta||''}</div>
-    \${p.caracteristicas && p.caracteristicas.length ? '<div class="chars">'+p.caracteristicas.map(c=>'<span class="char">'+c+'</span>').join('')+'</div>' : ''}
-    <div style="text-align:center">
-      <a class="cta" href="https://wa.me/50245542088?text=Hola, me interesa: \${encodeURIComponent(p.titulo||'')}">Contactar por WhatsApp</a>
-    </div>
-    <div class="footer">zona-innmueble.com · +502 4554-2088 · Guatemala</div>
-  </body></html>\`);
-  w.document.close();
-  setTimeout(() => w.print(), 500);
-}
-
-// ── 10. ENHANCED DASHBOARD (timeline, charts, funnel) ────────
-// Override renderDashboard to add new sections
-
 // ── COUNT-UP ANIMATION ───────────────────────────────────────
 function animateCountUp() {
-  document.querySelectorAll('.stat-val').forEach(el => {
-    const text = el.textContent.trim();
-    const match = text.match(/^([QQ$]\s?)?(\d+\.?\d*)([MK%]?)$/);
+  document.querySelectorAll('.stat-val').forEach(function(el) {
+    var text = el.textContent.trim();
+    var match = text.match(/^([Q$]\s?)?(\d+\.?\d*)([MK%]?)$/);
     if (!match) return;
-    const prefix = match[1] || '';
-    const target = parseFloat(match[2]);
-    const suffix = match[3] || '';
-    const duration = 800;
-    const start = performance.now();
-    const step = (now) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = (target * eased).toFixed(suffix === 'M' ? 1 : 0);
+    var prefix = match[1] || '';
+    var target = parseFloat(match[2]);
+    var suffix = match[3] || '';
+    var duration = 800;
+    var start = performance.now();
+    var step = function(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = (target * eased).toFixed(suffix === 'M' ? 1 : 0);
       el.textContent = prefix + current + suffix;
       if (progress < 1) requestAnimationFrame(step);
     };
@@ -2677,11 +2333,23 @@ function animateCountUp() {
   });
 }
 
-// Hook into showPage to trigger animations
-const _origShowPage = showPage;
+// ── HOOK INTO EXISTING FUNCTIONS ─────────────────────────────
+var _origShowPage = showPage;
 showPage = function(page) {
   _origShowPage(page);
   if (page === 'dashboard') setTimeout(animateCountUp, 350);
+};
+
+var _origOpenModal = openModal;
+openModal = function(id) {
+  _origOpenModal(id);
+  setTimeout(function() {
+    currentWizardStep = 1;
+    wizardGo(1);
+    setupAutoFill();
+    updateLivePreview();
+    updateCompleteness();
+  }, 150);
 };
 
 // ── INIT ─────────────────────────────────────────────────────
