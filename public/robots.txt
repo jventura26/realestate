@@ -1,0 +1,25 @@
+# INMUHUB.COM - Robots.txt
+User-agent: *
+Allow: /
+Allow: /propiedades/
+Allow: /herramientas/
+Allow: /zonas/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.pdf$
+Disallow: /*.zip$
+
+# Sitemaps
+Sitemap: https://inmuhub.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Specific rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

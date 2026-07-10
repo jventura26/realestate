@@ -1,0 +1,3 @@
+# Este archivo force un cache bust en Cloudflare Pages
+# Cada cambio aquí triggea un nuevo build
+CACHE_BUSTER=$(date +%s)

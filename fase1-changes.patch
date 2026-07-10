@@ -1,0 +1,176 @@
+diff --git a/src/zona/guia-inversion-real-estate-2026.html b/src/zona/guia-inversion-real-estate-2026.html
+index 83c7068..f97c7d3 100644
+--- a/src/zona/guia-inversion-real-estate-2026.html
++++ b/src/zona/guia-inversion-real-estate-2026.html
+@@ -81,7 +81,7 @@ footer{background:var(--ink2);padding:44px 6%;border-top:1px solid var(--gl);mar
+ <body>
+ <nav>
+   <div class="nav-inner">
+-    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
++    <a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
+     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+     <ul class="nav-links" id="nav-links">
+       <li><a href="/propiedades.html">Propiedades</a></li>
+diff --git a/src/zona/maximizar-roi-propiedades-alquiler.html b/src/zona/maximizar-roi-propiedades-alquiler.html
+index 59f1693..6f7eb7a 100644
+--- a/src/zona/maximizar-roi-propiedades-alquiler.html
++++ b/src/zona/maximizar-roi-propiedades-alquiler.html
+@@ -67,7 +67,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-fil
+ <body>
+ <nav>
+   <div class="nav-inner">
+-    <a href="/"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
++    <a href="/"><img src="https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png" alt="Zona INNmueble" style="height:48px;width:auto"></a>
+     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+     <ul class="nav-links" id="nav-links">
+       <li><a href="/propiedades.html">Propiedades</a></li>
+diff --git a/src/zona/senales-alerta-comprar-propiedad.html b/src/zona/senales-alerta-comprar-propiedad.html
+index 991f13c..7d4f7b9 100644
+--- a/src/zona/senales-alerta-comprar-propiedad.html
++++ b/src/zona/senales-alerta-comprar-propiedad.html
+@@ -10,7 +10,7 @@
+ <script async src="https://www.googletagmanager.com/gtag/js?id=G-5KVQZYZ7B3"></script>
+ <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5KVQZYZ7B3');</script>
+ </head><body>
+-<nav><div class="nav-inner"><a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><ul class="nav-links" id="nav-links"><li><a href="/propiedades.html">Propiedades</a></li><li><a href="/propiedades.html?tipo=Casa">Casas</a></li><li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li><li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li><li><a href="/blog.html">Blog</a></li><li><a href="/about.html">Nosotros</a></li></ul></div></nav>
++<nav><div class="nav-inner"><a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png" alt="Zona INNmueble" style="height:45px;width:auto"></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><ul class="nav-links" id="nav-links"><li><a href="/propiedades.html">Propiedades</a></li><li><a href="/propiedades.html?tipo=Casa">Casas</a></li><li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li><li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li><li><a href="/blog.html">Blog</a></li><li><a href="/about.html">Nosotros</a></li></ul></div></nav>
+ 
+ <div class="article-header"><div class="article-cat">Due Diligence</div><h1 class="article-title">5 Señales de Alerta al Comprar Propiedad Premium</h1><div class="article-meta"><span>6 min lectura</span> • <span>Junio 2026</span> • <span>Zona INNmueble</span></div><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&h=400&fit=cropw=900https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&h=400&fit=cropq=80" alt="Señales de Alerta" class="hero-img"></div>
+ 
+diff --git a/src/zona/templates/layout.js b/src/zona/templates/layout.js
+index 4b08410..7b90f86 100644
+--- a/src/zona/templates/layout.js
++++ b/src/zona/templates/layout.js
+@@ -31,7 +31,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
+   "@type": "RealEstateAgent",
+   "name": "Zona INNmueble",
+   "url": "https://zona-innmueble.com",
+-  "logo": "https://zona-innmueble.comhttps://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png",
++  "logo": "https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png",
+   "image": "https://zona-innmueble.com/assets/og.jpg",
+   "description": "Inmobiliaria premium en Guatemala. Casas, fincas y apartamentos en venta en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador.",
+   "telephone": "+50245542088",
+@@ -65,6 +65,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
+ <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${pixelId}');fbq('track','PageView');</script>
+ <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1" alt=""></noscript>
+ 
++<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
+ <link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
+@@ -100,10 +101,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,27,62,.97
+ .hamburger.active span:nth-child(2){opacity:0}
+ .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
+ /* SHARED */
+-section{padding:20px 6%}
++section{padding:48px 6%}
+ .ey{display:flex;align-items:center;gap:12px;margin-bottom:4px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
+ .ey::before{content:'';width:26px;height:1px;background:var(--or)}
+-.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:8px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
++.st{font-family:"Cormorant Garamond",serif;font-size:clamp(2.8rem,5.5vw,4.5rem);font-weight:300;line-height:1.15;margin-bottom:8px}.st-large{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
+ .st em{font-style:italic;color:var(--or)}
+ .ss{font-size:1.1rem;font-weight:300;line-height:2;letter-spacing:.02em;color:var(--sv);line-height:1.9;max-width:500px;font-weight:300}
+ .description-premium{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;line-height:1.8;color:var(--wh);margin-bottom:24px;letter-spacing:.01em}
+@@ -406,7 +407,7 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
+ <body>
+ <nav>
+   <div class="nav-inner">
+-    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
++    <a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+     <ul class="nav-links" id="nav-links">
+       <li><a href="/propiedades.html">Propiedades</a></li>
+@@ -604,7 +605,7 @@ document.querySelectorAll('.counter').forEach(el => {
+ });
+ 
+ // NEWSLETTER BREVO INTEGRATION
+-const BREVO_API_KEY = window.BREVO_API_KEY || 'CONFIGURE_IN_CLOUDFLARE_ENV';
++const BREVO_API_KEY = window.__BREVO_KEY || '';
+ const BREVO_LIST_ID = 3;
+ 
+ async function subscribeNewsletter(email) {
+diff --git a/src/zona/templates/pages.js b/src/zona/templates/pages.js
+index 540a896..c8b01b5 100644
+--- a/src/zona/templates/pages.js
++++ b/src/zona/templates/pages.js
+@@ -169,12 +169,12 @@ function indexPage(props) {
+ 
+   const body = `
+ <!-- HERO -->
+-<section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
++<section style="min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
+   <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none">
+     <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
+   </video>
+-  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.85) 0%,rgba(13,27,62,.55) 55%,rgba(20,34,64,.78) 100%);z-index:1"></div>
+-  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.8) 0%,transparent 50%);z-index:1"></div>
++  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.6) 45%,rgba(20,34,64,.82) 100%);z-index:1"></div>
++  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,rgba(13,27,62,.4) 35%,transparent 60%);z-index:1"></div>
+   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
+     <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+       <div class="ey" style="margin-bottom:0">Guatemala &middot; Patrimonio Inmobiliario</div>
+@@ -233,7 +233,7 @@ function indexPage(props) {
+ </section>
+ 
+ <!-- FEATURED -->
+-<section style="padding:80px 0 0;background:var(--ink2)" class="fade-in-up">
++<section style="padding:100px 0 0;background:var(--ink2)" class="fade-in-up">
+   <div style="padding:0 6% 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px">
+     <div>
+       <div class="ey">Propiedades Verificadas</div>
+@@ -249,7 +249,7 @@ function indexPage(props) {
+ </section>
+ 
+ <!-- OFF-MARKET PREMIUM -->
+-<section style="background:var(--ink);padding:100px 6%;border-top:1px solid var(--gl)" class="fade-in-up">
++<section style="background:var(--ink);padding:120px 6%;border-top:1px solid var(--gl)" class="fade-in-up">
+   <div style="max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+     <div>
+       <div class="ey" style="margin-bottom:20px">Acceso Exclusivo</div>
+@@ -321,7 +321,7 @@ function indexPage(props) {
+ </section>
+ 
+ <!-- TESTIMONIOS -->
+-<section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
++<section style="padding:100px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
+   <div style="max-width:1200px;margin:0 auto">
+     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
+     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">Lo que dicen nuestros clientes</h2>
+@@ -384,13 +384,13 @@ function indexPage(props) {
+ </section>
+ 
+ <!-- ASESOR -->
+-<section style="padding:80px 6%;background:var(--ink)" class="fade-in-up">
++<section style="padding:100px 6%;background:var(--ink)" class="fade-in-up">
+   <div style="max-width:860px;margin:0 auto">
+     <div class="ey" style="margin-bottom:12px">Tu asesor personal</div>
+     <h2 class="st" style="margin-bottom:44px">Un equipo que conoce <em>cada propiedad</em></h2>
+     <div class="asesor-card">
+       <div class="asesor-avatar" style="background:var(--ink3);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px">
+-        <img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
++        <img src="https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png" alt="Zona INNmueble" style="width:100%;height:100%;object-fit:contain">
+       </div>
+       <div style="flex:1">
+         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--wh);margin-bottom:6px">Equipo Zona INNmueble</div>
+@@ -1657,7 +1657,7 @@ function testimonialsSection() {
+   </div>
+ </section>
+ 
+-<section style="padding:80px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
++<section style="padding:100px 6%;background:var(--ink2);border-top:1px solid var(--gl)">
+   <div style="max-width:1200px;margin:0 auto">
+     <div class="ey" style="justify-content:center;margin-bottom:12px">TESTIMONIOS VERIFICADOS</div>
+     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;text-align:center;margin-bottom:60px;color:var(--wh)">
+diff --git a/src/zona/zona-10-vs-zona-14.html b/src/zona/zona-10-vs-zona-14.html
+index d2bfc12..16c7ad8 100644
+--- a/src/zona/zona-10-vs-zona-14.html
++++ b/src/zona/zona-10-vs-zona-14.html
+@@ -85,7 +85,7 @@ footer{background:var(--ink2);padding:44px 6%;border-top:1px solid var(--gl);mar
+ <body>
+ <nav>
+   <div class="nav-inner">
+-    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/jventura26/realestate/main/src/zona/assets/images/logo.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
++    <a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/Logo%20con%20fondo%20Zona-INNmueble.png" alt="Zona INNmueble" style="height:45px;width:auto"></a>
+     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+     <ul class="nav-links" id="nav-links">
+       <li><a href="/propiedades.html">Propiedades</a></li>

@@ -2,367 +2,331 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zona INNmueble | Propiedades Premium Guatemala</title>
-<meta name="description" content="Propiedades premium en Guatemala. 31 propiedades disponibles. Asesoría personalizada.">
-<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" href="/assets/favicon.png" sizes="32x32">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0D1B3E">
+<title>Propiedades Premium Guatemala | Zona INNmueble Real Estate</title>
+<meta name="description" content="Descubre propiedades premium en Guatemala: casas, apartamentos, fincas e inversiones inmobiliarias en zonas exclusivas.">
+<meta name="keywords" content="propiedades guatemala, casas premium, apartamentos, fincas, inversión inmobiliaria, zona 10, zona 14, zona 15, zona 16">
+<meta name="author" content="Zona INNmueble">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://zona-innmueble.com/">
-<meta property="og:type"        content="website">
-<meta property="og:title"       content="Zona INNmueble | Propiedades Premium Guatemala">
-<meta property="og:description" content="Propiedades premium en Guatemala. 31 propiedades disponibles. Asesoría personalizada.">
-<meta property="og:url"         content="https://zona-innmueble.com/">
-<meta property="og:image"       content="https://zona-innmueble.com/assets/og.jpg">
-<meta property="og:locale"      content="es_GT">
-<meta name="twitter:card"       content="summary_large_image">
-<meta name="theme-color"        content="#0D1B3E">
-
-<!-- Google Analytics 4 — replace G-XXXXXXXXXX in Netlify env -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
-
-<!-- Meta Pixel — replace TU_META_PIXEL_ID in Netlify env -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','TU_META_PIXEL_ID');fbq('track','PageView');</script>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
 <style>
-:root{
-  --ink:#0D1B3E;--ink2:#142240;--ink3:#1A3060;
-  --or:#F5820D;--or2:#FF9B2E;
-  --bl:#4A90D9;--bl2:#6BAEE8;
-  --wh:#fff;--cream:#F0EBE1;--sv:#8A9BB0;--mt:#56647A;
-  --bd:rgba(255,255,255,.08);--gl:rgba(245,130,13,.25);
-  --wa:#25D366;--wa2:#1ebe5d;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+* {margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#0D1B3E;--ink2:#142240;--ink3:#1A3060;--or:#F5820D;--or2:#FF9B2E;--bl:#4A90D9;--wh:#fff;--sv:#8A9BB0;--mt:#56647A;--bd:rgba(255,255,255,.08);--gl:rgba(245,130,13,.25);--wa:#25D366;--wa2:#1ebe5d}
+html{scroll-behavior:smooth;width:100%;overflow-x:hidden}
+body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);width:100%;overflow-x:hidden;margin:0;padding:0}
+img{display:block;max-width:100%;height:auto}
+a{text-decoration:none;color:inherit}
+
 /* NAV */
-nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gl);padding:0 6%}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:baseline;gap:0}
-.logo em{font-style:normal;color:var(--or)}
-.logo sub{font-size:.48rem;font-weight:400;letter-spacing:.24em;color:var(--sv);margin-left:8px;font-family:'Montserrat',sans-serif}
+nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gl);width:100%;padding:0;margin:0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 6%;width:100%;margin:0}
+.logo{display:flex;align-items:center;text-decoration:none;transition:opacity .2s}
+.logo img{height:50px;width:auto;object-fit:contain}
+.logo:hover{opacity:.85}
 .nav-links{display:flex;gap:26px;list-style:none}
 .nav-links a{font-size:.66rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--sv);transition:color .3s}
 .nav-links a:hover{color:var(--or)}
-.nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s}
+.nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s;cursor:pointer;background:transparent;text-decoration:none;display:inline-block}
 .nav-cta:hover{background:var(--or);color:var(--ink);border-color:var(--or)}
-/* SHARED */
-section{padding:88px 6%}
+
+/* HERO */
+.hero{min-height:80vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;width:100%;background:var(--ink)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.97) 0%,rgba(13,27,62,.68) 55%,rgba(20,34,64,.9) 100%),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70') center/cover no-repeat;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.65) 0%,transparent 40%);z-index:1}
+.hero-content{position:relative;z-index:2;max-width:760px;width:100%}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;line-height:1.1;margin-bottom:20px}
+h1 em{color:var(--or);font-style:italic}
+.subtitle{font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:40px}
+.cta-group{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;transition:all .3s;cursor:pointer;border:1px solid transparent;text-decoration:none;border-radius:0}
+.btn-primary{background:var(--or);color:var(--ink);border-color:var(--or)}
+.btn-primary:hover{background:var(--or2);border-color:var(--or2);transform:translateY(-2px)}
+.btn-secondary{background:transparent;color:var(--wh);border:1px solid rgba(255,255,255,.22)}
+.btn-secondary:hover{border-color:var(--gl);color:var(--or)}
+
+/* SEARCH */
+.search-hero{background:linear-gradient(135deg,rgba(13,27,62,.98) 0%,rgba(20,34,64,.92) 100%);padding:60px 6%;border-top:1px solid var(--gl);position:relative;z-index:10;width:100%;overflow-x:hidden}
+.search-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 100% 0%, rgba(245,130,13,.05) 0%, transparent 70%);pointer-events:none}
+.search-container{max-width:900px;margin:0 auto;position:relative;z-index:1;width:100%;padding:0}
+.search-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;margin-bottom:30px;color:var(--wh)}
+.search-title em{color:var(--or);font-style:italic}
+.search-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.search-field{display:flex;flex-direction:column}
+.search-label{font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.search-input,.search-select{background:rgba(255,255,255,.08);border:1px solid var(--bd);color:var(--wh);padding:11px 12px;font-family:'Montserrat',sans-serif;font-size:.75rem;border-radius:3px;outline:none;transition:border-color .2s;cursor:pointer}
+.search-input:focus,.search-select:focus{border-color:var(--gl)}
+.search-input::placeholder{color:var(--mt)}
+.search-actions{display:flex;gap:10px}
+.btn-search{background:var(--or);color:var(--ink);padding:11px 28px;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--or);border-radius:3px;cursor:pointer;transition:all .3s}
+.btn-search:hover{background:var(--or2);border-color:var(--or2)}
+.btn-clear{background:transparent;color:var(--sv);border:1px solid var(--bd);padding:11px 20px;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all .3s}
+.btn-clear:hover{border-color:var(--or);color:var(--or)}
+
+/* SECTION */
+section{padding:88px 6%;width:100%;overflow-x:hidden;margin:0;max-width:100%}
 .ey{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
 .ey::before{content:'';width:26px;height:1px;background:var(--or)}
 .st{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
 .st em{font-style:italic;color:var(--or)}
-.ss{font-size:.8rem;color:var(--sv);line-height:1.9;max-width:500px;font-weight:300}
-/* BUTTONS */
-.btn-or{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--or);color:var(--ink);border:1px solid var(--or);padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;transition:all .3s;cursor:pointer}
-.btn-or:hover{background:var(--or2);border-color:var(--or2);transform:translateY(-1px);box-shadow:0 8px 28px rgba(245,130,13,.35)}
-.btn-ol{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--wh);border:1px solid rgba(255,255,255,.22);padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;transition:all .3s}
-.btn-ol:hover{border-color:var(--gl);color:var(--or)}
-/* WA BUTTONS */
-.wa-btn{display:flex;align-items:center;gap:10px;background:var(--wa);color:var(--wh);padding:12px 18px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;width:100%;margin-bottom:8px}
-.wa-btn:hover{background:var(--wa2);transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,211,102,.3)}
-/* CARDS */
 .prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
 .prop-card{position:relative;overflow:hidden;aspect-ratio:4/5;display:block;cursor:pointer}
 .prop-card img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1);filter:brightness(.72) saturate(.85)}
 .prop-card:hover img{transform:scale(1.07);filter:brightness(.82) saturate(1)}
 .pc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.97) 0%,rgba(13,27,62,.25) 50%,transparent 100%)}
-.pc-badge{position:absolute;top:14px;left:14px;background:var(--or);color:var(--ink);font-size:.54rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:4px 9px}
-.pc-badge.renta{background:var(--bl)}
-.pc-info{position:absolute;bottom:22px;left:20px;right:20px}
+.pc-badge{position:absolute;top:14px;left:14px;background:var(--or);color:var(--ink);font-size:.54rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:4px 9px;z-index:10}
+.pc-info{position:absolute;bottom:22px;left:20px;right:20px;z-index:5}
 .pc-tipo{font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
 .pc-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;line-height:1.2;margin-bottom:7px}
 .pc-meta{display:flex;gap:10px;font-size:.62rem;color:var(--sv);margin-bottom:8px}
 .pc-price{font-size:.7rem;font-weight:600;color:var(--or);letter-spacing:.1em}
-.pc-arr{float:right;opacity:0;transform:translateX(-6px);transition:all .3s}
-.prop-card:hover .pc-arr{opacity:1;transform:translateX(0)}
-/* FILTERS */
-.filter-bar{background:var(--ink2);padding:18px 6%;border-bottom:1px solid var(--bd);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.filter-bar select,.filter-bar input{background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--wh);padding:9px 12px;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:300;outline:none;transition:border-color .3s;appearance:none;min-width:120px}
-.filter-bar select:focus,.filter-bar input:focus{border-color:var(--gl)}
-.filter-bar input::placeholder{color:var(--mt)}
-.filter-bar select option{background:var(--ink2)}
-#cl2{background:none;border:1px solid var(--bd);color:var(--sv);padding:9px 13px;font-size:.68rem;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s}
-#cl2:hover{border-color:var(--or);color:var(--or)}
-.f-count{font-size:.68rem;color:var(--mt);margin-left:auto}
-/* DETAIL */
-.det-header{background:var(--ink2);padding:34px 6% 0;border-bottom:1px solid var(--bd)}
-.breadcrumb{font-size:.67rem;color:var(--mt);display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:18px}
-.breadcrumb a:hover{color:var(--or)}
-.det-body{display:grid;grid-template-columns:1fr 370px;gap:56px;padding:56px 6%;align-items:start}
-.main-img img{width:100%;aspect-ratio:4/3;object-fit:cover}
-.gal-mini{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:3px}
-.gal-mini img{width:100%;aspect-ratio:1;object-fit:cover;cursor:pointer;filter:brightness(.8);transition:filter .2s}
-.gal-mini img:hover{filter:brightness(1)}
-.det-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;line-height:1.15;margin-bottom:10px}
-.det-price{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--or);margin-bottom:22px}
-.specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);margin-bottom:26px}
-.sp{background:var(--ink2);padding:13px 15px}
-.sp-l{font-size:.56rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:3px}
-.sp-v{font-size:.87rem;font-weight:500}
-.det-desc{font-size:.81rem;line-height:1.92;color:var(--sv);margin-bottom:24px;font-weight:300}
-.tag{display:inline-block;background:rgba(255,255,255,.04);border:1px solid var(--bd);padding:4px 11px;font-size:.67rem;color:var(--sv);margin:0 5px 5px 0}
-/* SIDEBAR */
-.sidebar{background:var(--ink2);border:1px solid var(--bd);border-top:2px solid var(--or);padding:26px 22px}
-.sb-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;color:var(--cream);margin-bottom:6px}
-.sb-sub{font-size:.7rem;color:var(--mt);margin-bottom:20px;line-height:1.65}
-.live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--wa);animation:lp 2s ease-in-out infinite;margin-right:7px}
-@keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
-.div-line{height:1px;background:var(--bd);margin:16px 0}
-/* FLOAT WA */
-.wa-float{position:fixed;bottom:26px;right:26px;z-index:300;width:52px;height:52px;background:var(--wa);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:all .3s;animation:wfp 3s ease-in-out infinite}
-.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.6)}
-@keyframes wfp{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.07)}}
-.wa-float svg{width:24px;height:24px;fill:white}
-/* NO RESULTS */
-.no-res{text-align:center;padding:72px;color:var(--sv);grid-column:1/-1}
-.no-res p{font-family:'Cormorant Garamond',serif;font-size:1.7rem;margin-bottom:8px}
-.no-res small{font-size:.74rem}
-/* RELATED */
-.related{background:var(--ink2);padding:60px 6%}
-.related .prop-grid{margin-top:36px}
+
+/* WA */
+.wa-float{position:fixed;bottom:26px;right:26px;z-index:300;width:54px;height:54px;background:var(--wa);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:all .3s;cursor:pointer;text-decoration:none;font-size:24px;animation:wa-pulse 3s ease-in-out infinite}
+.wa-float:hover{background:var(--wa2);transform:scale(1.15);box-shadow:0 8px 32px rgba(37,211,102,.6)}
+@keyframes wa-pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.07)}}
+
 /* FOOTER */
-footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
-.ft{display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;padding-bottom:40px;border-bottom:1px solid var(--bd);margin-bottom:22px}
-.ft-brand{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.17em;text-transform:uppercase;color:var(--cream);margin-bottom:12px}
-.ft-brand em{font-style:normal;color:var(--or)}
-.ft-tag{font-size:.7rem;color:var(--mt);line-height:1.9;font-weight:300;max-width:265px}
-.ft-col h4{font-size:.56rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--or);margin-bottom:16px}
-.ft-col ul{list-style:none}
-.ft-col ul li{font-size:.7rem;color:var(--mt);margin-bottom:9px}
-.ft-bot{font-size:.6rem;color:var(--mt);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl);width:100%}
+
 /* RESPONSIVE */
-@media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}.det-body{grid-template-columns:1fr}}
+@media(max-width:1024px){
+  .prop-grid{grid-template-columns:repeat(2,1fr)}
+}
+
 @media(max-width:768px){
-  .nav-links{display:none}section{padding:62px 5%}
-  .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
-  .ft{grid-template-columns:1fr;gap:32px}
-  .det-body{padding:30px 5%;gap:32px}.gal-mini{grid-template-columns:repeat(4,1fr)}
-  .specs{grid-template-columns:1fr}.wa-float{right:14px;bottom:14px;width:48px;height:48px}
-  .related{padding:52px 5%}
+  nav{padding:0}
+  .nav-inner{padding:0 3%;height:56px}
+  .nav-links{display:none}
+  .nav-cta{padding:7px 16px;font-size:.58rem}
+  .logo img{height:40px}
+  
+  .hero{padding:0 5%;min-height:70vh}
+  h1{font-size:clamp(1.8rem,4vw,2.2rem);margin-bottom:14px;line-height:1.15}
+  .subtitle{font-size:.77rem;margin-bottom:24px;line-height:1.6}
+  .cta-group{gap:8px}
+  .btn{padding:10px 18px;font-size:.6rem}
+  
+  .search-hero{padding:40px 5%;width:100%}
+  .search-grid{grid-template-columns:1fr;gap:10px}
+  .search-label{font-size:.6rem;margin-bottom:6px}
+  .search-input,.search-select{padding:9px 10px;font-size:.7rem;width:100%}
+  .search-actions{gap:6px;flex-wrap:wrap}
+  .btn-search{width:100%;padding:9px 14px;font-size:.6rem}
+  .btn-clear{width:100%;padding:9px 14px;font-size:.6rem}
+  
+  section{padding:48px 5%}
+  .st{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:10px}
+  .ey{font-size:.54rem;margin-bottom:10px}
+  .ey::before{width:20px}
+  
+  .prop-grid{grid-template-columns:1fr;gap:2px}
+  .prop-card{aspect-ratio:3/4}
+  .pc-badge{top:10px;left:10px;font-size:.48rem;padding:3px 6px}
+  .pc-info{bottom:16px;left:14px;right:14px}
+  .pc-tipo{font-size:.52rem;margin-bottom:4px}
+  .pc-title{font-size:1rem;margin-bottom:5px}
+  .pc-meta{font-size:.56rem;margin-bottom:6px}
+  .pc-price{font-size:.64rem}
+  
+  .wa-float{width:48px;height:48px;bottom:14px;right:14px;font-size:20px}
+  
+  footer{padding:40px 5% 20px}
+}
+
+@media(max-width:480px){
+  nav{padding:0}
+  .nav-inner{padding:0 2%;height:52px}
+  .nav-cta{padding:6px 12px;font-size:.54rem}
+  .logo img{height:34px}
+  
+  .hero{padding:0 4%;min-height:60vh}
+  h1{font-size:clamp(1.4rem,3.5vw,1.8rem);margin-bottom:10px;line-height:1.15}
+  .subtitle{font-size:.73rem;margin-bottom:16px;line-height:1.6}
+  .cta-group{gap:6px;flex-direction:column}
+  .btn{width:100%;padding:10px 12px;font-size:.58rem;justify-content:center}
+  
+  .search-hero{padding:32px 4%;width:100%}
+  .search-grid{grid-template-columns:1fr;gap:8px}
+  .search-label{font-size:.56rem;margin-bottom:5px}
+  .search-input,.search-select{padding:8px 8px;font-size:.65rem;width:100%}
+  .btn-search{width:100%;padding:8px 10px;font-size:.6rem}
+  .btn-clear{width:100%;padding:8px 10px;font-size:.6rem}
+  
+  section{padding:32px 4%}
+  .st{font-size:clamp(1.2rem,3.2vw,1.6rem)}
+  .ey{font-size:.5rem;margin-bottom:8px}
+  .ey::before{width:16px}
+  
+  .prop-card{aspect-ratio:2.8/4}
+  .pc-badge{top:8px;left:8px;font-size:.44rem;padding:2px 5px}
+  .pc-info{bottom:12px;left:10px;right:10px}
+  .pc-tipo{font-size:.48rem;margin-bottom:3px}
+  .pc-title{font-size:.92rem;margin-bottom:4px}
+  .pc-meta{font-size:.52rem;margin-bottom:4px;gap:6px}
+  .pc-price{font-size:.6rem}
+  
+  .wa-float{width:40px;height:40px;bottom:10px;right:10px;font-size:16px}
+  
+  footer{padding:32px 4% 16px;font-size:.75rem}
 }
 </style>
 </head>
 <body>
+
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><em>ZONA</em>&nbsp;INNMUEBLE<sub>Real Estate</sub></a>
+    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="Zona INNmueble"></a>
     <ul class="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
       <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
       <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
     </ul>
-    <a href="https://wa.me/50245542088?text=Hola%2C%20quiero%20asesor%C3%ADa%20de%20Zona%20INNmueble." target="_blank" rel="noopener" class="nav-cta">Asesoría</a>
+    <button class="nav-cta" onclick="document.querySelector('.search-hero').scrollIntoView({behavior:'smooth'})">Buscar</button>
   </div>
 </nav>
 
-
-<!-- HERO -->
-<section style="min-height:93vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
-  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.97) 0%,rgba(13,27,62,.68) 55%,rgba(20,34,64,.9) 100%),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70') center/cover no-repeat"></div>
-  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.65) 0%,transparent 40%)"></div>
-  <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
-    <div class="ey">Guatemala · Premium Real Estate</div>
-    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6.5vw,5.4rem);font-weight:300;line-height:1.06;margin-bottom:22px">
-      Hay propiedades que simplemente se sienten <em style="color:var(--or);font-style:italic">diferentes.</em>
-    </h1>
-    <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
-      Residencias exclusivas, apartamentos y oportunidades de inversión en Guatemala. Asesoría privada y personalizada.
-    </p>
-    <div style="display:flex;gap:14px;flex-wrap:wrap">
-      <a href="/propiedades.html" class="btn-or">Ver Propiedades</a>
-      <a href="https://wa.me/50245542088?text=Hola%2C%20quiero%20una%20asesor%C3%ADa%20privada%20de%20Zona%20INNmueble." target="_blank" rel="noopener" class="btn-ol"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Asesoría por WhatsApp</a>
+<div class="hero">
+  <div class="hero-content">
+    <p class="ey">Guatemala · Patrimonio Inmobiliario</p>
+    <h1>En Guatemala, la diferencia entre una casa y una <em>residencia exclusiva</em> está en cada detalle.</h1>
+    <p class="subtitle">Propiedades verificadas, oportunidades de inversión y un equipo que entiende que cada propiedad cuenta una historia. Asesoría privada para quienes saben qué buscan.</p>
+    <div class="cta-group">
+      <a href="/propiedades.html" class="btn btn-primary">Ver Propiedades</a>
+      <a href="https://wa.me/50245542088?text=Hola, quiero asesoría de Zona INNmueble" target="_blank" rel="noopener" class="btn btn-secondary">WhatsApp</a>
     </div>
   </div>
-  <!-- Stats bar -->
-  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.8);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap">
-    <div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">+31</div>
-      <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">Propiedades</div>
-    </div><div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">10+</div>
-      <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">Años en el Mercado</div>
-    </div><div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">5</div>
-      <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">Zonas Premium</div>
-    </div><div style="padding:20px 44px;text-align:center;border-right:1px solid var(--bd);flex:1;max-width:220px;min-width:140px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:500;color:var(--or);line-height:1;margin-bottom:5px">100%</div>
-      <div style="font-size:.58rem;font-weight:500;letter-spacing:.19em;text-transform:uppercase;color:var(--mt)">Asesoría Personal</div>
+</div>
+
+<div class="search-hero">
+  <div class="search-container">
+    <div>
+      <div class="ey">Herramienta de Búsqueda</div>
+      <h2 class="search-title">Encuentra tu próxima <em>propiedad ideal</em></h2>
     </div>
+    <form onsubmit="document.location='/propiedades.html'; return false">
+      <div class="search-grid">
+        <div class="search-field">
+          <label class="search-label">Tipo</label>
+          <select class="search-select" id="searchType">
+            <option value="">Todas</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Fincas">Fincas</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label class="search-label">Zona</label>
+          <input type="text" class="search-input" placeholder="ej: Zona 10, Cayalá">
+        </div>
+      </div>
+      <div class="search-actions">
+        <button type="button" class="btn-search" onclick="buscar()">Buscar</button>
+        <button type="reset" class="btn-clear">Limpiar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<section>
+  <div class="ey">Destacado</div>
+  <h2 class="st">Cada detalle <em>cuenta una historia</em></h2>
+  <div class="prop-grid">
+    <a href="/propiedades/santarosalia.html" class="prop-card">
+      <img src="https://images.unsplash.com/photo-1572120471610-2f4ff2b7ef52?w=600&q=70" alt="Santa Rosalía" loading="lazy">
+      <div class="pc-ov"></div>
+      <div class="pc-info">
+        <div class="pc-tipo">Residencia</div>
+        <div class="pc-title">Santa Rosalía</div>
+        <div class="pc-meta"><span>4 hab</span><span>3 baños</span></div>
+        <div class="pc-price">$890,000</div>
+      </div>
+    </a>
+    <a href="/propiedades/zona10.html" class="prop-card">
+      <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=70" alt="Zona 10" loading="lazy">
+      <div class="pc-ov"></div>
+      <div class="pc-info">
+        <div class="pc-tipo">Apartamento</div>
+        <div class="pc-title">El Prado, Zona 10</div>
+        <div class="pc-meta"><span>3 hab</span><span>2 baños</span></div>
+        <div class="pc-price">$650,000</div>
+      </div>
+    </a>
+    <a href="/propiedades/fincas-premium.html" class="prop-card">
+      <img src="https://images.unsplash.com/photo-1604768394159-f7e29eb7e9bf?w=600&q=70" alt="Fincas Premium" loading="lazy">
+      <div class="pc-ov"></div>
+      <div class="pc-info">
+        <div class="pc-tipo">Fincas</div>
+        <div class="pc-title">Fincas Premium</div>
+        <div class="pc-meta"><span>Terreno</span><span>8 hectáreas</span></div>
+        <div class="pc-price">$2,400,000</div>
+      </div>
+    </a>
   </div>
 </section>
 
-<!-- FEATURED -->
-<section style="padding:80px 0 0;background:var(--ink2)">
-  <div style="padding:0 6% 44px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px">
-    <div><div class="ey">Portafolio Selectivo</div><h2 class="st">Propiedades que <em>inspiran</em> decisiones.</h2></div>
-    <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or)">Ver todo →</a>
-  </div>
-  <div class="prop-grid"><a class="prop-card" href="/propiedades/sancristobal2.html"
-  data-tipo="Casa" data-ciudad="Mixco"
-  data-cinta="Venta" data-precio="0.144"
-  data-habs="2">
-  <img referrerpolicy="no-referrer" src="https://wsrv.nl/?url=https%3A%2F%2Fstatic.wixstatic.com%2Fmedia%2F71b3d1_cbfbac3ce3084040941b5c8abef11fa7~mv2.jpeg&amp;w=600&amp;q=85&amp;output=webp" alt="El Manzanillo | Granja | Mixco" loading="lazy">
-  <div class="pc-ov"></div>
-  <span class="pc-badge ">Venta</span>
-  <div class="pc-info">
-    <div class="pc-tipo">Casa · Mixco</div>
-    <div class="pc-title">El Manzanillo | Granja | Mixco</div>
-    <div class="pc-meta"><span>2 Hab.</span><span>2 Baños</span><span>2,451 m²</span></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">Q. 1,440,000</div>
-      <span class="pc-arr">→</span>
-    </div>
-  </div>
-</a><a class="prop-card" href="/propiedades/hacienda-nueva-1.html"
-  data-tipo="Casa" data-ciudad="San José Pinula"
-  data-cinta="Usada" data-precio="590000"
-  data-habs="3">
-  <img referrerpolicy="no-referrer" src="https://wsrv.nl/?url=https%3A%2F%2Fstatic.wixstatic.com%2Fmedia%2F71b3d1_2c1a0e76fda744b485acff4f1d43ab54~mv2.jpeg&amp;w=600&amp;q=85&amp;output=webp" alt="Hacienda Nueva Country Club, Carretera a San José Pinula" loading="lazy">
-  <div class="pc-ov"></div>
-  <span class="pc-badge ">Usada</span>
-  <div class="pc-info">
-    <div class="pc-tipo">Casa · San José Pinula</div>
-    <div class="pc-title">Hacienda Nueva Country Club, Carretera a San José Pinula</div>
-    <div class="pc-meta"><span>3 Hab.</span><span>2.5 Baños</span><span>2048 m²</span></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">$590,000</div>
-      <span class="pc-arr">→</span>
-    </div>
-  </div>
-</a><a class="prop-card" href="/propiedades/elgin.html"
-  data-tipo="Casa" data-ciudad="Guatemala"
-  data-cinta="Venta" data-precio="585000"
-  data-habs="3">
-  <img referrerpolicy="no-referrer" src="https://wsrv.nl/?url=https%3A%2F%2Fstatic.wixstatic.com%2Fmedia%2F71b3d1_a4663ba1c8934309b341935ef5fc3dc6~mv2.jpeg&amp;w=600&amp;q=85&amp;output=webp" alt="Residencia Exclusiva en Elgin de Zona 13" loading="lazy">
-  <div class="pc-ov"></div>
-  <span class="pc-badge ">Venta</span>
-  <div class="pc-info">
-    <div class="pc-tipo">Casa · Guatemala</div>
-    <div class="pc-title">Residencia Exclusiva en Elgin de Zona 13</div>
-    <div class="pc-meta"><span>3 Hab.</span><span>4 Baños</span></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">$585,000</div>
-      <span class="pc-arr">→</span>
-    </div>
-  </div>
-</a><a class="prop-card" href="/propiedades/villas-de-alcala.html"
-  data-tipo="Casa" data-ciudad="Fraijanes"
-  data-cinta="Nueva" data-precio="270000"
-  data-habs="3">
-  <img referrerpolicy="no-referrer" src="https://wsrv.nl/?url=https%3A%2F%2Fstatic.wixstatic.com%2Fmedia%2F71b3d1_29d9f01027434d3aa479ee2b9b01629a~mv2.jpeg&amp;w=600&amp;q=85&amp;output=webp" alt="Villas de Alcalá, Km.16.5, Carretera a El Salvador, Boulevard Santuaria Muxbal" loading="lazy">
-  <div class="pc-ov"></div>
-  <span class="pc-badge ">Nueva</span>
-  <div class="pc-info">
-    <div class="pc-tipo">Casa · Fraijanes</div>
-    <div class="pc-title">Villas de Alcalá, Km.16.5, Carretera a El Salvador, Boulevard Santuaria Muxbal</div>
-    <div class="pc-meta"><span>3 Hab.</span><span>2.5 Baños</span></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">$270,000</div>
-      <span class="pc-arr">→</span>
-    </div>
-  </div>
-</a><a class="prop-card" href="/propiedades/bouganvilias-arrazola.html"
-  data-tipo="Casa" data-ciudad="Fraijanes"
-  data-cinta="Nueva" data-precio="190000"
-  data-habs="3">
-  <img referrerpolicy="no-referrer" src="https://wsrv.nl/?url=https%3A%2F%2Fstatic.wixstatic.com%2Fmedia%2F71b3d1_ab5e0ef2b41b489e8607a7862c41ad33~mv2.jpeg&amp;w=600&amp;q=85&amp;output=webp" alt="Bouganvilias de Arrazola, Carretera a Olmeca" loading="lazy">
-  <div class="pc-ov"></div>
-  <span class="pc-badge ">Nueva</span>
-  <div class="pc-info">
-    <div class="pc-tipo">Casa · Fraijanes</div>
-    <div class="pc-title">Bouganvilias de Arrazola, Carretera a Olmeca</div>
-    <div class="pc-meta"><span>3 Hab.</span><span>2.5 Baños</span><span>212 m²</span></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">$190,000</div>
-      <span class="pc-arr">→</span>
-    </div>
-  </div>
-</a><a class="prop-card" href="/propiedades/zona16.html"
-  data-tipo="Casa" data-ciudad="Guatemala"
-  data-cinta="Venta" data-precio="625000"
-  data-habs="4">
-  <img referrerpolicy="no-referrer" src="https://wsrv.nl/?url=https%3A%2F%2Fstatic.wixstatic.com%2Fmedia%2F71b3d1_bbafa422b9274fbcb71f557b21005995~mv2.jpeg&amp;w=600&amp;q=85&amp;output=webp" alt="Kanajuyú | Zona 16 | Casa en Venta" loading="lazy">
-  <div class="pc-ov"></div>
-  <span class="pc-badge ">Venta</span>
-  <div class="pc-info">
-    <div class="pc-tipo">Casa · Guatemala</div>
-    <div class="pc-title">Kanajuyú | Zona 16 | Casa en Venta</div>
-    <div class="pc-meta"><span>4 Hab.</span><span>4 Baños</span><span>700 m²</span></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="pc-price">$625,000</div>
-      <span class="pc-arr">→</span>
-    </div>
-  </div>
-</a></div>
-  <div style="text-align:center;padding:44px 6%">
-    <a href="/propiedades.html" class="btn-or">Ver catálogo completo</a>
+<section>
+  <h2 class="st">¿Listo para dar el siguiente paso?</h2>
+  <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;text-align:center">Nuestro equipo está disponible para asesorarte. Sin compromiso.</p>
+  <div style="text-align:center">
+    <a href="https://wa.me/50245542088?text=Hola, tengo una consulta sobre propiedades" target="_blank" rel="noopener" class="btn btn-primary">Contactar por WhatsApp</a>
   </div>
 </section>
 
-<!-- TYPES -->
-<section style="background:var(--ink)">
-  <div style="max-width:560px;margin-bottom:52px">
-    <div class="ey">Lo Que Encontrarás</div>
-    <h2 class="st">Un portafolio para <em>cada visión</em> de vida.</h2>
+<section>
+  <div style="text-align:center">
+    <div class="ey" style="justify-content:center">Zona INNmueble en Números</div>
+    <h2 class="st">Resultados que <em>hablan por sí solos</em></h2>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--bd)">
-    <div style="background:var(--ink2);padding:38px 30px;border-top:2px solid transparent;transition:all .4s;cursor:pointer" onmouseover="this.style.background='var(--ink3)';this.style.borderTopColor='var(--or)'" onmouseout="this.style.background='var(--ink2)';this.style.borderTopColor='transparent'">
-      <div style="font-size:1.7rem;margin-bottom:18px">🏠</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:10px">Residencias Premium</div>
-      <p style="font-size:.73rem;color:var(--sv);line-height:1.8;font-weight:300">Casas en Zona 10, 14, 15, 16 y Cayalá. Privacidad y plusvalía.</p>
-    </div><div style="background:var(--ink2);padding:38px 30px;border-top:2px solid transparent;transition:all .4s;cursor:pointer" onmouseover="this.style.background='var(--ink3)';this.style.borderTopColor='var(--or)'" onmouseout="this.style.background='var(--ink2)';this.style.borderTopColor='transparent'">
-      <div style="font-size:1.7rem;margin-bottom:18px">🏙️</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:10px">Apartamentos</div>
-      <p style="font-size:.73rem;color:var(--sv);line-height:1.8;font-weight:300">Penthouse y apartamentos de alto nivel con alto retorno de inversión.</p>
-    </div><div style="background:var(--ink2);padding:38px 30px;border-top:2px solid transparent;transition:all .4s;cursor:pointer" onmouseover="this.style.background='var(--ink3)';this.style.borderTopColor='var(--or)'" onmouseout="this.style.background='var(--ink2)';this.style.borderTopColor='transparent'">
-      <div style="font-size:1.7rem;margin-bottom:18px">🌿</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:10px">Fincas & Terrenos</div>
-      <p style="font-size:.73rem;color:var(--sv);line-height:1.8;font-weight:300">Propiedades rurales con potencial para desarrollo e inversión.</p>
-    </div><div style="background:var(--ink2);padding:38px 30px;border-top:2px solid transparent;transition:all .4s;cursor:pointer" onmouseover="this.style.background='var(--ink3)';this.style.borderTopColor='var(--or)'" onmouseout="this.style.background='var(--ink2)';this.style.borderTopColor='transparent'">
-      <div style="font-size:1.7rem;margin-bottom:18px">📈</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:10px">Inversión</div>
-      <p style="font-size:.73rem;color:var(--sv);line-height:1.8;font-weight:300">Identificamos oportunidades antes que el mercado las descubra.</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;max-width:900px;margin:0 auto;text-align:center">
+    <div>
+      <div style="font-size:2.8rem;font-weight:700;color:var(--or);margin-bottom:8px">31+</div>
+      <div style="font-size:.9rem;color:var(--sv);letter-spacing:.15em;text-transform:uppercase">Propiedades Verificadas</div>
+    </div>
+    <div>
+      <div style="font-size:2.8rem;font-weight:700;color:var(--or);margin-bottom:8px">500+</div>
+      <div style="font-size:.9rem;color:var(--sv);letter-spacing:.15em;text-transform:uppercase">Familias Satisfechas</div>
+    </div>
+    <div>
+      <div style="font-size:2.8rem;font-weight:700;color:var(--or);margin-bottom:8px">100%</div>
+      <div style="font-size:.9rem;color:var(--sv);letter-spacing:.15em;text-transform:uppercase">Transparencia</div>
     </div>
   </div>
 </section>
-
-<!-- CTA -->
-<section id="contacto" style="background:var(--ink2);position:relative;overflow:hidden">
-  <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=40') center/cover no-repeat;opacity:.03"></div>
-  <div style="position:relative;z-index:1;max-width:620px;margin:0 auto;text-align:center">
-    <div class="ey" style="justify-content:center">Contáctanos</div>
-    <h2 class="st">Tu próxima propiedad empieza <em>con una conversación.</em></h2>
-    <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;font-weight:300">Nuestro equipo está disponible para asesorarte de forma privada. Sin compromiso.</p>
-    <div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto">
-      <a href="https://wa.me/50245542088?text=Hola%2C%20me%20interesa%20una%20asesor%C3%ADa%20de%20Zona%20INNmueble." target="_blank" rel="noopener" class="wa-btn" style="justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Escribir por WhatsApp</a>
-      <a href="/propiedades.html" class="btn-ol" style="justify-content:center">Ver propiedades disponibles</a>
-    </div>
-    <p style="margin-top:18px;font-size:.63rem;color:var(--mt)"><span class="live"></span>+502 4554-2088 · Lun–Vie 8:00–18:00</p>
-  </div>
-</section>
-
-<!-- WhatsApp Float -->
-<a href="https://wa.me/50245542088?text=Hola%2C%20me%20interesa%20una%20propiedad%20de%20Zona%20INNmueble." class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
 
 <footer>
-  <div class="ft">
-    <div><div class="ft-brand"><em>ZONA</em> INNMUEBLE</div><p class="ft-tag">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p></div>
-    <div class="ft-col"><h4>Propiedades</h4><ul><li>Residencias</li><li>Apartamentos</li><li>Fincas</li><li>Inversión</li></ul></div>
-    <div class="ft-col"><h4>Zonas</h4><ul><li>Zona 10 · Zona 14</li><li>Zona 15 · Zona 16</li><li>Cayalá · Fraijanes</li><li>Carretera al Salvador</li></ul></div>
-  </div>
-  <div class="ft-bot">
-    <span>© 2026 Zona INNmueble Real Estate · Guatemala</span>
-    <span>+502 4554-2088 · WhatsApp</span>
-  </div>
+  <p>© 2026 Zona INNmueble. Todos los derechos reservados.</p>
 </footer>
+
+<a href="https://wa.me/50245542088" target="_blank" rel="noopener" class="wa-float" title="Contactar por WhatsApp">💬</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/lightbox.min.js"></script>
+<script>
+function buscar(){
+  const tipo=document.getElementById('searchType').value;
+  let url='/propiedades.html';
+  if(tipo)url+='?tipo='+encodeURIComponent(tipo);
+  document.location=url;
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"RealEstateAgent",
+  "name":"Zona INNmueble",
+  "url":"https://zona-innmueble.com",
+  "logo":"https://zona-innmueble.com/assets/images/logo.png",
+  "areaServed":{"@type":"AdministrativeArea","name":"Guatemala"},
+  "contactPoint":{"@type":"ContactPoint","contactType":"Customer Service","telephone":"+502-4554-2088"}
+}
+</script>
 
 <script src="/assets/zona-fase1.js" defer></script>
 </body>

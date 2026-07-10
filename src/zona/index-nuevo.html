@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zona INNmueble | Propiedades Premium Guatemala</title>
+<meta name="description" content="Propiedades premium en Guatemala. Busca casas, apartamentos y fincas de inversión con asesoría personalizada.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0D1B3E;--ink2:#142240;--ink3:#1A3060;--or:#F5820D;--or2:#FF9B2E;--bl:#4A90D9;--bl2:#6BAEE8;--wh:#fff;--cream:#F0EBE1;--sv:#8A9BB0;--mt:#56647A;--bd:rgba(255,255,255,.08);--gl:rgba(245,130,13,.25);--wa:#25D366;--wa2:#1ebe5d;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gl);padding:0 6%}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:baseline;gap:0}
+.logo em{font-style:normal;color:var(--or)}
+.logo sub{font-size:.48rem;font-weight:400;letter-spacing:.24em;color:var(--sv);margin-left:8px;font-family:'Montserrat',sans-serif}
+.nav-links{display:flex;gap:26px;list-style:none}
+.nav-links a{font-size:.66rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--sv);transition:color .3s}
+.nav-links a:hover{color:var(--or)}
+.nav-cta{border:1px solid var(--gl);color:var(--or);padding:9px 20px;font-size:.63rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:all .3s;cursor:pointer}
+.nav-cta:hover{background:var(--or);color:var(--ink);border-color:var(--or)}
+
+/* HERO */
+.hero{min-height:80vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.97) 0%,rgba(13,27,62,.68) 55%,rgba(20,34,64,.9) 100%),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=70') center/cover no-repeat}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.65) 0%,transparent 40%)}
+.hero-content{position:relative;z-index:2;max-width:760px;width:100%}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;line-height:1.1;margin-bottom:20px}
+h1 em{color:var(--or);font-style:italic}
+.subtitle{font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:40px}
+.cta-group{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;transition:all .3s;cursor:pointer;border:1px solid transparent}
+.btn-primary{background:var(--or);color:var(--ink);border-color:var(--or)}
+.btn-primary:hover{background:var(--or2);border-color:var(--or2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,130,13,.35)}
+.btn-secondary{background:transparent;color:var(--wh);border:1px solid rgba(255,255,255,.22)}
+.btn-secondary:hover{border-color:var(--gl);color:var(--or)}
+
+/* SEARCH SECTION */
+.search-hero{background:linear-gradient(135deg,rgba(13,27,62,.95) 0%,rgba(20,34,64,.85) 100%);padding:50px 6%;border-top:1px solid var(--gl);position:relative;z-index:10}
+.search-container{max-width:900px;margin:0 auto}
+.search-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:30px;color:var(--wh)}
+.search-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.search-field{display:flex;flex-direction:column}
+.search-label{font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.search-input,.search-select{background:rgba(255,255,255,.08);border:1px solid var(--bd);color:var(--wh);padding:11px 12px;font-family:'Montserrat',sans-serif;font-size:.75rem;border-radius:3px;outline:none;transition:border-color .2s;cursor:pointer}
+.search-input:focus,.search-select:focus{border-color:var(--gl)}
+.search-input::placeholder{color:var(--mt)}
+.search-actions{display:flex;gap:10px}
+.btn-search{background:var(--or);color:var(--ink);padding:11px 28px;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--or);border-radius:3px;cursor:pointer;transition:all .3s}
+.btn-search:hover{background:var(--or2);border-color:var(--or2)}
+.btn-clear{background:transparent;color:var(--sv);border:1px solid var(--bd);padding:11px 20px;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all .3s}
+.btn-clear:hover{border-color:var(--or);color:var(--or)}
+
+/* SECTION */
+section{padding:88px 6%}
+.ey{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.59rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--or)}
+.ey::before{content:'';width:26px;height:1px;background:var(--or)}
+.st{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,3.1rem);font-weight:300;line-height:1.12;margin-bottom:12px}
+.st em{font-style:italic;color:var(--or)}
+.prop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.prop-card{position:relative;overflow:hidden;aspect-ratio:4/5;display:block;cursor:pointer}
+.prop-card img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1);filter:brightness(.72) saturate(.85)}
+.prop-card:hover img{transform:scale(1.07);filter:brightness(.82) saturate(1)}
+.pc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.97) 0%,rgba(13,27,62,.25) 50%,transparent 100%)}
+.pc-badge{position:absolute;top:14px;left:14px;background:var(--or);color:var(--ink);font-size:.54rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:4px 9px}
+.pc-info{position:absolute;bottom:22px;left:20px;right:20px}
+.pc-tipo{font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
+.pc-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;line-height:1.2;margin-bottom:7px}
+.pc-meta{display:flex;gap:10px;font-size:.62rem;color:var(--sv);margin-bottom:8px}
+.pc-price{font-size:.7rem;font-weight:600;color:var(--or);letter-spacing:.1em}
+
+/* WA BUTTON */
+.wa-btn{display:inline-flex;align-items:center;gap:10px;background:var(--wa);color:var(--wh);padding:12px 18px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;cursor:pointer}
+.wa-btn:hover{background:var(--wa2);transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,211,102,.3)}
+
+/* FOOTER */
+footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
+
+@media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  section{padding:62px 5%}
+  .prop-grid{grid-template-columns:1fr}
+  .search-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  h1{font-size:clamp(2rem,4vw,3rem)}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo"><em>ZONA</em>&nbsp;INNMUEBLE<sub>Real Estate</sub></a>
+    <ul class="nav-links">
+      <li><a href="/propiedades.html">Propiedades</a></li>
+      <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
+      <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
+      <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.querySelector('.search-hero').scrollIntoView({behavior:'smooth'})">Buscar</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <p class="ey">Guatemala · Premium Real Estate</p>
+    <h1>Hay propiedades que simplemente se sienten <em>diferentes.</em></h1>
+    <p class="subtitle">Residencias exclusivas, apartamentos y oportunidades de inversión en Guatemala. Asesoría privada y personalizada.</p>
+    <div class="cta-group">
+      <a href="/propiedades.html" class="btn btn-primary">Ver Propiedades</a>
+      <a href="https://wa.me/50245542088?text=Hola, quiero asesoría de Zona INNmueble" target="_blank" rel="noopener" class="btn btn-secondary">WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH SECTION -->
+<div class="search-hero">
+  <div class="search-container">
+    <h2 class="search-title">Busca tu próxima propiedad</h2>
+    <form onsubmit="document.location='/propiedades.html'; return false">
+      <div class="search-grid">
+        <div class="search-field">
+          <label class="search-label">Tipo</label>
+          <select class="search-select" id="searchType">
+            <option value="">Todas</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Fincas">Fincas</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label class="search-label">Zona</label>
+          <select class="search-select" id="searchZone">
+            <option value="">Todas</option>
+            <option value="Mixco">Mixco</option>
+            <option value="Cayalá">Cayalá</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Fraijanes">Fraijanes</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label class="search-label">Precio máx</label>
+          <select class="search-select" id="searchPrice">
+            <option value="">Sin límite</option>
+            <option value="500000">Q. 500K</option>
+            <option value="1000000">Q. 1M</option>
+            <option value="2000000">Q. 2M+</option>
+          </select>
+        </div>
+      </div>
+      <div class="search-actions">
+        <button type="submit" class="btn-search">Buscar Propiedades</button>
+        <button type="reset" class="btn-clear">Limpiar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<section style="background:var(--ink2)">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;flex-wrap:wrap;gap:18px">
+    <div>
+      <div class="ey">Portafolio Selectivo</div>
+      <h2 class="st">Propiedades que <em>inspiran</em></h2>
+    </div>
+    <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or)">Ver todas →</a>
+  </div>
+  <div class="prop-grid" id="featuredProps"></div>
+  <div style="text-align:center;padding:44px 0">
+    <a href="/propiedades.html" class="btn btn-primary">Ver Catálogo Completo</a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--ink2);text-align:center">
+  <h2 class="st">Tu próxima propiedad empieza con una <em>conversación.</em></h2>
+  <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto">Nuestro equipo está disponible para asesorarte. Sin compromiso.</p>
+  <a href="https://wa.me/50245542088?text=Hola, quiero asesoría personalizada" class="wa-btn" target="_blank" rel="noopener">💬 Iniciar Chat por WhatsApp</a>
+</section>
+
+<footer>
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;padding-bottom:40px;border-bottom:1px solid var(--bd);margin-bottom:22px">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.17em;text-transform:uppercase;color:var(--cream);margin-bottom:12px"><em style="color:var(--or)">ZONA</em> INNMUEBLE</div>
+      <p style="font-size:.7rem;color:var(--mt);line-height:1.9;font-weight:300;max-width:265px">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
+    </div>
+    <div>
+      <h4 style="font-size:.56rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Propiedades</h4>
+      <ul style="list-style:none">
+        <li style="font-size:.7rem;color:var(--mt);margin-bottom:9px"><a href="/propiedades.html?tipo=Casa" style="color:inherit;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">Residencias</a></li>
+        <li style="font-size:.7rem;color:var(--mt);margin-bottom:9px"><a href="/propiedades.html?tipo=Apartamento" style="color:inherit;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">Apartamentos</a></li>
+        <li style="font-size:.7rem;color:var(--mt);margin-bottom:9px"><a href="/propiedades.html?tipo=Fincas" style="color:inherit;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">Fincas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:.56rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Contacto</h4>
+      <ul style="list-style:none">
+        <li style="font-size:.7rem;color:var(--mt);margin-bottom:9px">+502 4554-2088</li>
+        <li style="font-size:.7rem;color:var(--mt);margin-bottom:9px">Lun–Vie 8:00–18:00</li>
+        <li style="font-size:.7rem;color:var(--mt)"><a href="https://wa.me/50245542088" target="_blank" style="color:var(--wa);text-decoration:none">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="font-size:.6rem;color:var(--mt);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span>© 2026 Zona INNmueble · Guatemala</span>
+    <span>Premium Real Estate</span>
+  </div>
+</footer>
+
+<script>
+// Cargar propiedades destacadas (esto se reemplazará dinámicamente en build)
+const props = PROPIEDADES_DATA || [];
+const featured = props.slice(0, 6);
+const container = document.getElementById('featuredProps');
+if(featured.length === 0) {
+  container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--sv)">Propiedades cargándose...</p>';
+} else {
+  container.innerHTML = featured.map(p => `
+    <a href="/propiedades/${p.slug}.html" class="prop-card">
+      <img src="${p.image}" alt="${p.title}" loading="lazy">
+      <div class="pc-ov"></div>
+      <span class="pc-badge">${p.estado}</span>
+      <div class="pc-info">
+        <div class="pc-tipo">${p.tipo} · ${p.zona}</div>
+        <div class="pc-title">${p.title}</div>
+        <div class="pc-meta"><span>${p.habs} Hab.</span><span>${p.banos} Baños</span></div>
+        <div class="pc-price">${p.precio}</div>
+      </div>
+    </a>
+  `).join('');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "zona-innmueble-real-estate",
+  "pages_build_config": {
+    "build_command": "npm install && npm run build:zona",
+    "destination_dir": "dist/zona",
+    "root_dir": "/"
+  }
+}

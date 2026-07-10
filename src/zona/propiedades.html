@@ -2,9 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="/assets/favicon.png" sizes="32x32">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Catálogo Propiedades Premium Guatemala | Zona INNmueble</title>
-<meta name="description" content="31 propiedades premium en Guatemala. Casas, apartamentos, fincas e inversiones con asesoría.">
+<title>31 Propiedades Premium en Guatemala | Zona INNmueble</title>
+<meta name="description" content="Descubre 31 propiedades premium verificadas en Guatemala. Casas, apartamentos, fincas e inversiones en Zona 10, 14, 15, 16 y más. Asesoría profesional.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://zona-innmueble.com/propiedades.html">
 <meta property="og:type"        content="website">
@@ -26,6 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
 <style>
 :root{
   --ink:#0D1B3E;--ink2:#142240;--ink3:#1A3060;
@@ -42,9 +44,9 @@ img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
 /* NAV */
 nav{position:sticky;top:0;z-index:200;background:rgba(13,27,62,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--gl);padding:0 6%}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:baseline;gap:0}
-.logo em{font-style:normal;color:var(--or)}
-.logo sub{font-size:.48rem;font-weight:400;letter-spacing:.24em;color:var(--sv);margin-left:8px;font-family:'Montserrat',sans-serif}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;transition:opacity .2s}
+.logo img{height:50px;width:auto;object-fit:contain}
+.logo:hover{opacity:.85}
 .nav-links{display:flex;gap:26px;list-style:none}
 .nav-links a{font-size:.66rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--sv);transition:color .3s}
 .nav-links a:hover{color:var(--or)}
@@ -90,14 +92,15 @@ section{padding:88px 6%}
 #cl2:hover{border-color:var(--or);color:var(--or)}
 .f-count{font-size:.68rem;color:var(--mt);margin-left:auto}
 /* DETAIL */
-.det-header{background:var(--ink2);padding:34px 6% 0;border-bottom:1px solid var(--bd)}
+.det-header{background:var(--ink2);padding:0px 6%;border-bottom:1px solid var(--bd);min-height:0}
 .breadcrumb{font-size:.67rem;color:var(--mt);display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:18px}
 .breadcrumb a:hover{color:var(--or)}
 .det-body{display:grid;grid-template-columns:1fr 370px;gap:56px;padding:56px 6%;align-items:start}
 .main-img img{width:100%;aspect-ratio:4/3;object-fit:cover}
 .gal-mini{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:3px}
-.gal-mini img{width:100%;aspect-ratio:1;object-fit:cover;cursor:pointer;filter:brightness(.8);transition:filter .2s}
-.gal-mini img:hover{filter:brightness(1)}
+.gal-mini a{display:block}
+.gal-mini img{width:100%;aspect-ratio:1;object-fit:cover;cursor:pointer;filter:brightness(.8);transition:all .3s}
+.gal-mini img:hover{filter:brightness(1);transform:scale(1.05)}
 .det-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;line-height:1.15;margin-bottom:10px}
 .det-price{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--or);margin-bottom:22px}
 .specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);margin-bottom:26px}
@@ -138,19 +141,70 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 /* RESPONSIVE */
 @media(max-width:1024px){.prop-grid{grid-template-columns:repeat(2,1fr)}.det-body{grid-template-columns:1fr}}
 @media(max-width:768px){
-  .nav-links{display:none}section{padding:62px 5%}
-  .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
-  .ft{grid-template-columns:1fr;gap:32px}
-  .det-body{padding:30px 5%;gap:32px}.gal-mini{grid-template-columns:repeat(4,1fr)}
-  .specs{grid-template-columns:1fr}.wa-float{right:14px;bottom:14px;width:48px;height:48px}
-  .related{padding:52px 5%}
+  nav{padding:0 3%}
+  .nav-inner{height:56px}
+  .nav-links{display:none}
+  .nav-cta{padding:7px 16px;font-size:.58rem}
+  .logo img{height:40px}
+  
+  section{padding:48px 5%}
+  .prop-grid{grid-template-columns:1fr;gap:2px}
+  .filter-bar{padding:12px 4%;gap:8px;flex-wrap:wrap}
+  .ft{grid-template-columns:1fr;gap:20px}
+  .det-body{padding:24px 4%;gap:24px}
+  .gal-mini{grid-template-columns:repeat(4,1fr);gap:2px}
+  .specs{grid-template-columns:1fr;gap:12px}
+  .wa-float{right:12px;bottom:12px;width:44px;height:44px;font-size:18px}
+  .related{padding:40px 4%}
+  
+  /* Property cards mobile */
+  .prop-card{aspect-ratio:3/4}
+  .pc-badge{top:8px;left:8px;font-size:.44rem;padding:2px 5px}
+  .pc-info{bottom:12px;left:10px;right:10px}
+  .pc-tipo{font-size:.48rem;margin-bottom:3px}
+  .pc-title{font-size:.92rem;margin-bottom:4px}
+  .pc-meta{font-size:.52rem;margin-bottom:4px}
+  .pc-price{font-size:.6rem}
+  
+  h1{font-size:clamp(1.6rem,4vw,2.2rem)}
+  h2{font-size:clamp(1.2rem,3.5vw,1.8rem)}
+}
+
+@media(max-width:480px){
+  nav{padding:0 2%}
+  .nav-inner{height:52px}
+  .logo img{height:34px}
+  
+  section{padding:32px 3%}
+  .prop-grid{grid-template-columns:1fr;gap:1px}
+  .filter-bar{padding:10px 3%;gap:6px;flex-direction:column}
+  .search-select,.search-input{font-size:.65rem;padding:7px 8px;width:100%}
+  .ft{gap:14px}
+  .det-body{padding:16px 3%;gap:16px}
+  .gal-mini{grid-template-columns:repeat(3,1fr);gap:1px}
+  .specs{gap:8px}
+  .related{padding:32px 3%}
+  
+  /* Property cards extra small */
+  .prop-card{aspect-ratio:2.8/4}
+  .pc-badge{top:6px;left:6px;font-size:.4rem;padding:1px 4px}
+  .pc-info{bottom:8px;left:8px;right:8px;padding:0}
+  .pc-tipo{font-size:.44rem;margin-bottom:2px}
+  .pc-title{font-size:.8rem;margin-bottom:3px;line-height:1.1}
+  .pc-meta{font-size:.48rem;margin-bottom:3px;gap:4px}
+  .pc-price{font-size:.56rem}
+  
+  .wa-float{width:40px;height:40px;bottom:10px;right:10px;font-size:16px}
+  
+  h1{font-size:clamp(1.3rem,3.5vw,1.8rem);line-height:1.15}
+  h2{font-size:clamp(1rem,3vw,1.4rem)}
 }
 </style>
 </head>
 <body>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><em>ZONA</em>&nbsp;INNMUEBLE<sub>Real Estate</sub></a>
+    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="Zona INNmueble"></a>
     <ul class="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
       <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
@@ -735,4 +789,4 @@ Hermosa 2 | Casa en Venta</div>
 })();</script>
 <script src="/assets/zona-fase1.js" defer></script>
 </body>
-</html>
+</html><!-- Lightbox2 será agregado por build system -->
