@@ -147,6 +147,8 @@ console.log(`   ✔  ${props.length} propiedades ${kvData ? 'desde KV' : 'desde 
 fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
 
+copyAssets();  console.log('   ✔  assets copiados');
+
 write(path.join(OUT,'index.html'),        indexPage(props));   console.log('   ✔  index.html');
 write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   ✔  propiedades.html');
 
