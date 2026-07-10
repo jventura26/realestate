@@ -196,6 +196,7 @@ ${body}
   </div>
 </footer>
 ${scripts}
+<script src="/assets/zona-fase1.js" defer></script>
 </body>
 </html>`;
 }
