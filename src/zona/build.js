@@ -120,6 +120,12 @@ function copyAssets() {
   if (fs.existsSync(imagesDir)) {
     fs.cpSync(imagesDir, dstImagesDir, { recursive: true });
   }
+
+  // Copiar zona-fase1.js (Sort, Area filter, Lightbox, Mobile CTA)
+  const fase1Src = path.join(__dirname, 'assets/zona-fase1.js');
+  if (fs.existsSync(fase1Src)) {
+    fs.copyFileSync(fase1Src, path.join(dstDir, 'zona-fase1.js'));
+  }
 }
 
 console.log('\n⚡  Building Zona INNmueble…\n');
