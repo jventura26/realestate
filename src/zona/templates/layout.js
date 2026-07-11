@@ -771,6 +771,31 @@ document.querySelectorAll(".nav-has-dd").forEach(function(li) {
 });
 </script>
 <script src="/assets/zona-fase1.js" defer></script>
+<!-- Lead Capture Pop-up -->
+<div id="zpPopup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(13,27,62,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center">
+<div style="background:linear-gradient(145deg,#0D1B3E 0%,#142240 100%);border:1px solid rgba(193,145,75,.3);border-radius:20px;padding:40px 32px;max-width:420px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+<button onclick="document.getElementById('zpPopup').style.display='none';sessionStorage.setItem('zpPopDismissed','1')" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(255,255,255,.4);font-size:22px;cursor:pointer;line-height:1">&times;</button>
+<div style="text-align:center">
+<div style="font-size:28px;margin-bottom:12px">🏡</div>
+<div style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#F5820D;margin-bottom:14px">Acceso exclusivo</div>
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,1.8rem);font-weight:300;color:#fff;line-height:1.3;margin-bottom:12px">Recibe propiedades <em style="color:#F5820D;font-style:italic">antes que nadie</em></h3>
+<p style="font-size:.82rem;color:#8A9BB0;line-height:1.7;margin-bottom:24px">Nuevas propiedades, oportunidades de inversi&oacute;n y propiedades exclusivas directamente a tu WhatsApp. Sin spam.</p>
+<a href="https://wa.me/50245542088?text=Hola%2C%20quiero%20recibir%20propiedades%20nuevas%20y%20oportunidades%20de%20inversi%C3%B3n." style="display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;padding:14px 24px;border-radius:10px;font-size:.85rem;font-weight:600;text-decoration:none;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(37,211,102,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+${WA_SVG} Quiero recibir propiedades
+</a>
+<p style="font-size:.65rem;color:rgba(138,155,176,.5);margin-top:14px">Respuesta en menos de 2 horas &middot; Sin compromiso</p>
+</div>
+</div>
+</div>
+<script>
+(function(){
+if(sessionStorage.getItem('zpPopDismissed')) return;
+var shown=false;
+function showPop(){if(shown)return;shown=true;document.getElementById('zpPopup').style.display='flex';}
+setTimeout(showPop,35000);
+document.addEventListener('mouseout',function(e){if(!e.relatedTarget&&e.clientY<5)showPop();});
+})();
+</script>
 </html>`;
 }
 
