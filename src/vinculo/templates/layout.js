@@ -749,6 +749,7 @@ ${body}
   </style>
 </footer>
 ${scripts}
+<script src="/assets/vinculo-fase1.js" defer></script>
 <script>
 (function(){
   var nav = document.querySelector('nav');

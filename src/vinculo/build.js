@@ -23,10 +23,8 @@ function fetchKV() {
 
 function cleanArea(area) {
   if (!area) return '';
-  // Quitar apostrofes, guiones solos, ceros solos
   const s = String(area).trim();
   if (s === '0' || s === "'-" || s === "'--" || s === "'---" || s === "0 v²" || s === "0 m²" || s === "0v²") return '';
-  // Quitar el apostrofe inicial
   return s.replace(/^'+/, '').trim();
 }
 function normalizeKV(kvProps) {
@@ -64,36 +62,38 @@ const PROPS = path.join(OUT, 'propiedades');
 const ZONAS = path.join(OUT, 'zonas');
 
 function write(p, c) { fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeFileSync(p,c,'utf-8'); }
-function slugZona(z) { return z.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function slugZona(z) { return z.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 function copyAssets() {
   const dstDir = path.join(OUT, 'assets');
   fs.mkdirSync(dstDir, { recursive: true });
   
-  // Copiar favicon desde src/vinculo/assets
   const faviconSrc = path.join(__dirname, 'assets/favicon.png');
   const faviconDst = path.join(dstDir, 'favicon.png');
   if (fs.existsSync(faviconSrc)) {
     fs.copyFileSync(faviconSrc, faviconDst);
   }
   
-  // Copiar logo desde src/vinculo/assets
   const logoSrc = path.join(__dirname, 'assets/logo.png');
   const logoDst = path.join(dstDir, 'logo.png');
   if (fs.existsSync(logoSrc)) {
     fs.copyFileSync(logoSrc, logoDst);
+  }
+
+  // Copiar vinculo-fase1.js (Sort, Area filter, Lightbox)
+  const fase1Src = path.join(__dirname, 'assets/vinculo-fase1.js');
+  if (fs.existsSync(fase1Src)) {
+    fs.copyFileSync(fase1Src, path.join(dstDir, 'vinculo-fase1.js'));
   }
 }
 
 console.log('\n Building INMUHUB.COM\n');
 fetchKV().then(kvData => {
 let allProps = kvData ? normalizeKV(kvData) : parseProperties(CSV);
-// Filter: only props assigned to InmuHub + Activa
 allProps = allProps.filter(p => {
   if (p.estado && p.estado !== 'Activa') return false;
   if (p.sitios && Array.isArray(p.sitios) && !p.sitios.includes('inmu')) return false;
   return true;
 });
-// Sort: destacadas first
 allProps.sort((a, b) => (b.destacada ? 1 : 0) - (a.destacada ? 1 : 0));
 const props = allProps;
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
@@ -103,7 +103,7 @@ fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
 fs.mkdirSync(ZONAS, { recursive:true });
 
-write(path.join(OUT,'index.html'), indexPage(props)); console.log(' ✨ index.html (PÁGINA MEJORADA)');
+write(path.join(OUT,'index.html'), indexPage(props)); console.log(' index.html');
 write(path.join(OUT,'propiedades.html'), catalogPage(props)); console.log(' propiedades.html');
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
@@ -115,12 +115,11 @@ zonas.forEach(zona => {
   if (zonaProps.length === 0) return;
   const slug = slugZona(zona);
   write(path.join(ZONAS, `${slug}.html`), zonaPage(zonaProps, zona));
-  console.log(` zona: ${zona} (${zonaProps.length} props) → /zonas/${slug}.html`);
+  console.log(` zona: ${zona} (${zonaProps.length} props)`);
 });
 console.log(` ${zonas.length} zona pages`);
 
-
-// B1: Favoritos page
+// Favoritos page
 const favoritosHTML = layout({
   title: 'Mis Favoritos',
   desc: 'Tus propiedades guardadas en INMUHUB',
@@ -128,13 +127,13 @@ const favoritosHTML = layout({
   body: `<div style="max-width:1200px;margin:0 auto;padding:48px 6%">
     <div style="margin-bottom:32px">
       <h1 style="font-size:28px;font-weight:800;color:#111;margin-bottom:8px">Mis Favoritos</h1>
-      <p style="color:#666;font-size:15px">Las propiedades que has guardado para revisar después.</p>
+      <p style="color:#666;font-size:15px">Las propiedades que has guardado para revisar despu&eacute;s.</p>
     </div>
     <div id="zpFavGrid" class="prop-grid" style="min-height:200px"></div>
     <div id="zpFavEmpty" style="display:none;text-align:center;padding:80px 20px">
       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin:0 auto 20px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      <h3 style="font-size:20px;font-weight:700;color:#374151;margin-bottom:8px">No tienes favoritos aún</h3>
-      <p style="color:#9ca3af;margin-bottom:24px">Explora propiedades y presiona el corazón para guardarlas aquí.</p>
+      <h3 style="font-size:20px;font-weight:700;color:#374151;margin-bottom:8px">No tienes favoritos a&uacute;n</h3>
+      <p style="color:#9ca3af;margin-bottom:24px">Explora propiedades y presiona el coraz&oacute;n para guardarlas aqu&iacute;.</p>
       <a href="/propiedades.html" style="display:inline-block;background:#1a3a5c;color:white;padding:12px 32px;border-radius:8px;font-weight:600;text-decoration:none">Ver propiedades</a>
     </div>
   </div>
@@ -155,13 +154,12 @@ const favoritosHTML = layout({
       grid.appendChild(a);
     });
   })();
-  </script>`
+  <\/script>`
 });
 write(path.join(OUT,'favoritos.html'), favoritosHTML);
 console.log(' favoritos.html');
 
-
-// B8: Mapa page
+// Mapa page
 var propsWithCoords = props.filter(function(p){return p.lat && p.lng});
 var mapaBody = '<div style="max-width:1400px;margin:0 auto;padding:24px 6%">' +
   '<div style="margin-bottom:20px"><h1 style="font-size:28px;font-weight:800;color:#111;margin-bottom:6px">Mapa de Propiedades</h1><p style="color:#666;font-size:14px">' + propsWithCoords.length + ' propiedades con ubicación en Guatemala</p></div>' +
@@ -202,14 +200,12 @@ const urls = [
   ...props.map(p=>({ loc:`/propiedades/${p.slug}.html`, priority:'0.8', changefreq:'weekly' })),
 ];
 write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(' sitemap.xml');
-// 404
 const src404 = require('path').join(__dirname, '404.html');
 if(fs.existsSync(src404)){fs.copyFileSync(src404, require('path').join(OUT,'404.html'));console.log(' 404.html');}
 
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
 write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
 
-// Generar páginas de herramientas DENTRO del then para que no las borre rmSync
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
 const { simuladorInversionPage } = require('./templates/simulador-page');
 const { valuacionPage } = require('./templates/valuacion-page');
@@ -219,35 +215,28 @@ const HERRAMIENTAS = path.join(OUT, 'herramientas');
 fs.mkdirSync(HERRAMIENTAS, { recursive: true });
 
 write(path.join(HERRAMIENTAS, 'calculadora-hipotecaria.html'), mortgageCalculatorPage()); 
-console.log(' herramientas: calculadora-hipotecaria.html ✅');
+console.log(' calculadora-hipotecaria.html');
 
 write(path.join(HERRAMIENTAS, 'valuador.html'), valuacionPage()); 
-console.log(' herramientas: valuador.html ✅');
+console.log(' valuador.html');
 
 write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPae()); 
-console.log(' herramientas: guia-compra.html ✅');
+console.log(' guia-compra.html');
 
 write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), simuladorInversionPage()); 
-console.log(' herramientas: simulador-inversion.html ✅');
+console.log(' simulador-inversion.html');
 
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
-console.log(' herramientas: dashboard-inversionistas.html ✅');
+console.log(' dashboard-inversionistas.html');
 
-console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} páginas de zona\n`);
-console.log('\n✨ INMUHUB.COM BUILD COMPLETE\n');
-console.log(' Página Principal: MEJORADA CON 3 TOOLS DESTACADOS');
-console.log(' Herramientas: Todas con Meta Tags + Schema Markup\n');
+console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} zonas\n`);
 
-// Copiar assets
-copyAssets(); console.log(' Assets copiados (favicon, logo)\n');
+copyAssets(); console.log(' Assets copiados');
 
-// Copiar planes.html (página estática de membresía para asesores)
 const planesSrc = path.join(__dirname, 'planes.html');
 if (fs.existsSync(planesSrc)) {
   fs.copyFileSync(planesSrc, path.join(OUT, 'planes.html'));
-  console.log(' planes.html copiado ✅');
-} else {
-  console.warn(' [WARN] planes.html no encontrado en src/vinculo/');
+  console.log(' planes.html copiado');
 }
 
 }).catch(e => { console.error('Build error:', e); process.exit(1); });
