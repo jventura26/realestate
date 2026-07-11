@@ -1650,7 +1650,170 @@ function zonasIndexPage(zonasMap) {
   });
 }
 
-module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO, zonasIndexPage };
+// ── LANDING PAGES POR TIPO ───────────────────────────────────
+function tipoPage(tipo, props, allProps) {
+  const tipoSlug = tipo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const propsDelTipo = props.filter(function(p) { return (p.tipo||'').toLowerCase() === tipo.toLowerCase(); });
+  const otrosTipos = [...new Set(allProps.map(function(p){ return p.tipo; }).filter(Boolean))].filter(function(t){ return t.toLowerCase() !== tipo.toLowerCase(); });
+  const precios = propsDelTipo.map(function(p){ return p.priceNumeric; }).filter(function(n){ return n > 0; });
+  const precioMin = precios.length ? Math.min.apply(null, precios) : 0;
+  const precioMax = precios.length ? Math.max.apply(null, precios) : 0;
+  const zonasDelTipo = [...new Set(propsDelTipo.map(function(p){ return p.municipio; }).filter(Boolean))];
+
+  var TIPO_CONTENT = {
+    'casa': {
+      titulo: 'Casas en Venta en Guatemala',
+      subtitulo: 'Residencias premium verificadas en las mejores zonas de Guatemala. Desde casas familiares hasta residencias de lujo.',
+      desc: 'Encuentra la casa ideal en Guatemala. Residencias en condominio, casas independientes y propiedades de lujo en Zona 10, Zona 14, Zona 15, Fraijanes, Cayala y Carretera a El Salvador. Todas las propiedades son verificadas con precios actualizados y asesoria personalizada.',
+      faqs: [
+        { q: 'Cual es el precio promedio de una casa en Guatemala?', a: 'Los precios varian segun la zona. En Fraijanes puedes encontrar desde $125,000, mientras que en Zona 14 o Zona 10 los precios van desde $400,000 en adelante. Consulta nuestro catalogo para precios actualizados.' },
+        { q: 'Que zonas son las mejores para comprar casa en Guatemala?', a: 'Las zonas mas demandadas son Zona 10, Zona 14, Zona 15, Zona 16, Cayala y Fraijanes. Cada una ofrece un estilo de vida diferente, desde urbano y exclusivo hasta residencial con naturaleza.' },
+        { q: 'Ofrecen asesoria para comprar casa?', a: 'Si, ofrecemos asesoria personalizada sin compromiso. Te acompanamos en todo el proceso, desde la busqueda hasta el cierre. Contactanos por WhatsApp para una respuesta rapida.' }
+      ]
+    },
+    'apartamento': {
+      titulo: 'Apartamentos en Venta en Guatemala',
+      subtitulo: 'Apartamentos modernos y exclusivos en las mejores ubicaciones de Ciudad de Guatemala.',
+      desc: 'Descubre apartamentos en venta en Guatemala. Desde studios hasta penthouses en Zona 10, Zona 14, Zona 15 y Cayala. Edificios con amenidades, seguridad 24/7 y acabados premium. Ideales para vivir o invertir.',
+      faqs: [
+        { q: 'Donde estan los mejores apartamentos en Guatemala?', a: 'Las zonas con mayor oferta de apartamentos premium son Zona 10, Zona 14, Zona 15 y Cayala. Cada zona ofrece diferentes amenidades y estilos de vida.' },
+        { q: 'Es buena inversion comprar un apartamento?', a: 'Si, especialmente en zonas de alta demanda como Zona 10 y Cayala. Los apartamentos ofrecen buena plusvalia y pueden generar ingresos por renta.' }
+      ]
+    },
+    'finca': {
+      titulo: 'Fincas en Venta en Guatemala',
+      subtitulo: 'Fincas productivas, recreativas y de inversion en las mejores regiones de Guatemala.',
+      desc: 'Fincas en venta en Guatemala: productivas, recreativas, ganaderas y de inversion. Terrenos amplios con potencial de desarrollo en ubicaciones estrategicas. Ideales para proyectos agricolas, turisticos o residenciales de campo.',
+      faqs: [
+        { q: 'Que tipos de fincas hay disponibles?', a: 'Ofrecemos fincas productivas (cafe, macadamia, ganaderia), fincas recreativas con amenidades, fincas de inversion para desarrollo y terrenos rurales amplios.' },
+        { q: 'Donde se encuentran las fincas?', a: 'Las fincas disponibles estan en Baja Verapaz, Chimaltenango, Escuintla, Fraijanes y otras regiones estrategicas de Guatemala.' }
+      ]
+    },
+    'terreno': {
+      titulo: 'Terrenos en Venta en Guatemala',
+      subtitulo: 'Terrenos para construccion, desarrollo e inversion en ubicaciones estrategicas.',
+      desc: 'Terrenos en venta en Guatemala ideales para construccion residencial, desarrollo inmobiliario o inversion a largo plazo. Lotes en condominios cerrados, terrenos en zonas de alta plusvalia y parcelas con vistas panoramicas.',
+      faqs: [
+        { q: 'Que tamanos de terrenos tienen disponibles?', a: 'Los terrenos varian desde lotes en condominio de 200-500 m2 hasta terrenos de desarrollo de varias manzanas. Consulta nuestro catalogo para opciones actualizadas.' },
+        { q: 'Se puede construir en todos los terrenos?', a: 'Todos nuestros terrenos cuentan con uso de suelo verificado. Te asesoramos sobre permisos y factibilidad de construccion.' }
+      ]
+    }
+  };
+
+  var content = TIPO_CONTENT[tipoSlug] || {
+    titulo: tipo + ' en Venta en Guatemala',
+    subtitulo: 'Propiedades tipo ' + tipo + ' disponibles en Guatemala.',
+    desc: 'Encuentra ' + tipo.toLowerCase() + ' en venta en Guatemala. Propiedades verificadas con precios actualizados.',
+    faqs: []
+  };
+
+  var faqHTML = '';
+  if (content.faqs && content.faqs.length) {
+    faqHTML = `
+    <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
+      <div style="max-width:800px;margin:0 auto">
+        <div class="ey" style="margin-bottom:14px">Preguntas frecuentes</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:300;color:var(--wh);margin-bottom:40px;line-height:1.2">Lo que mas nos preguntan sobre <em style="color:var(--or);font-style:italic">${escapeHtml(tipo.toLowerCase())}</em></h2>
+        <div style="display:flex;flex-direction:column;gap:0">
+          ${content.faqs.map(function(faq, i) { return `
+          <details style="border-top:1px solid var(--bd);padding:20px 0" ${i===0?'open':''}>
+            <summary style="cursor:pointer;font-size:.85rem;font-weight:600;color:var(--wh);line-height:1.5;list-style:none;display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+              <span>${escapeHtml(faq.q)}</span>
+              <svg style="flex-shrink:0;margin-top:3px;transition:transform .25s" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p style="font-size:.82rem;color:var(--sv);line-height:1.85;margin-top:14px;margin-bottom:0;padding-right:32px">${escapeHtml(faq.a)}</p>
+          </details>`; }).join('')}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  var body = `
+  <section style="position:relative;min-height:45vh;display:flex;align-items:flex-end;padding:0;overflow:hidden;background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%)">
+    <div style="position:relative;z-index:2;padding:80px 6% 48px;max-width:1000px;width:100%">
+      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px">
+        <a href="/" style="color:inherit;text-decoration:none">Inicio</a> / <a href="/propiedades.html" style="color:inherit;text-decoration:none">Propiedades</a> / ${escapeHtml(tipo)}
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:18px">
+        <span style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">${propsDelTipo.length} ${tipo.toLowerCase()}${propsDelTipo.length!==1?'s':''} disponible${propsDelTipo.length!==1?'s':''}</span>
+      </div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:300;line-height:1.08;color:var(--wh);margin-bottom:14px">${escapeHtml(content.titulo)}</h1>
+      <p style="font-size:.9rem;color:var(--sv);font-weight:300;max-width:560px;line-height:1.7">${escapeHtml(content.subtitulo)}</p>
+    </div>
+  </section>
+
+  <div style="background:var(--ink2);border-bottom:1px solid var(--bd);padding:0 6%">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap">
+      ${[
+        [propsDelTipo.length + ' propiedad' + (propsDelTipo.length!==1?'es':''), 'Disponibles'],
+        [precioMin && precioMax ? '$'+precioMin.toLocaleString('en-US')+' – $'+precioMax.toLocaleString('en-US') : '—', 'Rango de precios'],
+        [zonasDelTipo.length + ' zona' + (zonasDelTipo.length!==1?'s':''), 'Ubicaciones'],
+      ].map(function(pair){ return '<div style="flex:1;min-width:160px;padding:22px 24px;border-right:1px solid var(--bd)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:5px">'+pair[0]+'</div><div style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mt)">'+pair[1]+'</div></div>'; }).join('')}
+    </div>
+  </div>
+
+  <section style="padding:64px 6%;background:var(--ink)">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="max-width:700px;margin-bottom:40px">
+        <div class="ey" style="margin-bottom:14px">Sobre este tipo</div>
+        <p style="font-size:.88rem;color:var(--sv);line-height:2;font-weight:300">${escapeHtml(content.desc)}</p>
+      </div>
+      ${zonasDelTipo.length ? `
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px">
+        <span style="font-size:.65rem;font-weight:600;color:var(--mt);padding:6px 0;margin-right:8px">Zonas con ${tipo.toLowerCase()}:</span>
+        ${zonasDelTipo.map(function(z){ var zSlug = zonaSlug(z); return '<a href="/zonas/'+zSlug+'.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:5px 12px;font-size:.67rem;font-weight:600;color:var(--or);letter-spacing:.06em;text-decoration:none">'+escapeHtml(z)+'</a>'; }).join('')}
+      </div>` : ''}
+    </div>
+  </section>
+
+  <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="ey" style="margin-bottom:14px">Disponibles ahora</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--wh);margin-bottom:32px;line-height:1.2">${escapeHtml(tipo)} en <em style="color:var(--or);font-style:italic">Guatemala</em></h2>
+      ${propsDelTipo.length ? '<div class="prop-grid">'+propsDelTipo.map(function(p){ return card(p); }).join('')+'</div>' : '<p style="color:var(--sv);text-align:center;padding:40px 0">No hay propiedades de este tipo disponibles en este momento.</p>'}
+    </div>
+  </section>
+
+  ${faqHTML}
+
+  ${otrosTipos.length ? `
+  <section style="padding:48px 6%;background:var(--ink);border-top:1px solid var(--bd)">
+    <div style="max-width:1200px;margin:0 auto;text-align:center">
+      <p style="font-size:.75rem;color:var(--mt);margin-bottom:16px">Tambien te puede interesar</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+        ${otrosTipos.map(function(t){ var tSlug = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-'); return '<a href="/tipos/'+tSlug+'.html" style="background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:8px 20px;font-size:.72rem;font-weight:600;color:var(--or);text-decoration:none">'+escapeHtml(t)+'</a>'; }).join('')}
+        <a href="/propiedades.html" class="btn-or" style="margin-left:8px">Ver todo el catalogo</a>
+      </div>
+    </div>
+  </section>` : ''}`;
+
+  var schemaBreadcrumb = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Inicio","item":"https://zona-innmueble.com"},
+      {"@type":"ListItem","position":2,"name":"Propiedades","item":"https://zona-innmueble.com/propiedades.html"},
+      {"@type":"ListItem","position":3,"name":content.titulo,"item":"https://zona-innmueble.com/tipos/"+tipoSlug+".html"}
+    ]
+  });
+  var schemaFaq = (content.faqs && content.faqs.length) ? JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": content.faqs.map(function(faq) {
+      return { "@type": "Question", "name": faq.q, "acceptedAnswer": { "@type": "Answer", "text": faq.a } };
+    })
+  }) : null;
+
+  return layout({
+    title: content.titulo + ' — Precios y Ubicaciones',
+    desc: propsDelTipo.length + ' ' + tipo.toLowerCase() + (propsDelTipo.length!==1?'s':'') + ' en venta en Guatemala. ' + (precioMin && precioMax ? 'Desde $'+precioMin.toLocaleString('en-US')+' hasta $'+precioMax.toLocaleString('en-US')+'. ' : '') + 'Propiedades verificadas con asesoria personalizada.',
+    canonical: '/tipos/' + tipoSlug + '.html',
+    body: body,
+    scripts: '<script type="application/ld+json">' + schemaBreadcrumb + '<\/script>' + (schemaFaq ? '<script type="application/ld+json">' + schemaFaq + '<\/script>' : '')
+  });
+}
+
+module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO, zonasIndexPage, tipoPage };
 
 // ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
 function testimonialsSection() {

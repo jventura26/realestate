@@ -51,7 +51,7 @@ function normalizeKV(kvProps) {
 const path = require('path');
 const { parseProperties } = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
-const { catalogPage, detailPage, zonaPage } = require('./templates/pages');
+const { catalogPage, detailPage, zonaPage, tipoPage } = require('./templates/pages');
 const { layout } = require('./templates/layout');
 const { indexPageNew: indexPage } = require('./templates/index-page-new');
 
@@ -118,6 +118,17 @@ zonas.forEach(zona => {
   console.log(` zona: ${zona} (${zonaProps.length} props)`);
 });
 console.log(` ${zonas.length} zona pages`);
+
+// Generar landing pages por tipo /tipos/*.html
+var TIPOS_DIR = path.join(OUT, 'tipos');
+fs.mkdirSync(TIPOS_DIR, { recursive: true });
+var tiposUnicos = [...new Set(props.map(function(p){ return p.tipo; }).filter(Boolean))];
+tiposUnicos.forEach(function(tipo) {
+  var tipoSlug = tipo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  write(path.join(TIPOS_DIR, tipoSlug + '.html'), tipoPage(tipo, props));
+  console.log(' tipo: /tipos/' + tipoSlug + '.html');
+});
+console.log(' ' + tiposUnicos.length + ' tipo pages');
 
 // Favoritos page
 const favoritosHTML = layout({

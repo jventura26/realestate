@@ -78,7 +78,7 @@ function normalizeKV(kvProps) {
 const path = require('path');
 const { parseProperties }  = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
-const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, zonasIndexPage } = require('./templates/pages');
+const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, zonasIndexPage, tipoPage } = require('./templates/pages');
 const { sharePage } = require('./templates/share-page');
 
 const DOMAIN = 'https://zona-innmueble.com';
@@ -257,6 +257,17 @@ ZONAS_PREMIUM.forEach(function(slug) {
     console.log("   zone editorial: /zonas/" + slug + ".html");
   }
 });
+// Generar landing pages por tipo /tipos/*.html
+var TIPOS_DIR = path.join(OUT, 'tipos');
+fs.mkdirSync(TIPOS_DIR, { recursive: true });
+var tiposUnicos = [...new Set(props.map(function(p){ return p.tipo; }).filter(Boolean))];
+tiposUnicos.forEach(function(tipo) {
+  var tipoSlug = tipo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  write(path.join(TIPOS_DIR, tipoSlug + '.html'), tipoPage(tipo, props, props));
+  console.log('   tipo: /tipos/' + tipoSlug + '.html (' + props.filter(function(p){ return p.tipo === tipo; }).length + ' props)');
+});
+console.log('   ' + tiposUnicos.length + ' tipo pages');
+
 // Generar paginas compartibles /share/*.html - rebuild 2026-06-16
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
@@ -288,6 +299,7 @@ const urls = [
     lastmod: (p.fechaPublicacion || p.createdAt || '').toString().substring(0,10) || new Date().toISOString().substring(0,10)
   })),
   ...Object.keys(zonasMap).map(slug=>({ loc:`/zonas/${slug}.html`, priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) })),
+  ...tiposUnicos.map(function(t){ var s = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); return { loc:'/tipos/'+s+'.html', priority:'0.8', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) }; }),
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');

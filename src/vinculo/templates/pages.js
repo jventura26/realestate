@@ -837,7 +837,52 @@ function guiaCompraPage(props) {
 
 function slugZona(z){return z.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
 
-module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
+function tipoPage(tipo, props) {
+var tipoSlug = tipo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+var propsDelTipo = props.filter(function(p){ return (p.tipo||'').toLowerCase() === tipo.toLowerCase(); });
+var precios = propsDelTipo.map(function(p){ return p.priceNumeric; }).filter(function(n){ return n > 0; });
+var precioMin = precios.length ? Math.min.apply(null, precios) : 0;
+var precioMax = precios.length ? Math.max.apply(null, precios) : 0;
+var rangoPrecios = precioMin && precioMax ? '$' + precioMin.toLocaleString('en-US') + ' - $' + precioMax.toLocaleString('en-US') : '';
+var zonasDelTipo = [].concat(new Set(propsDelTipo.map(function(p){ return p.municipio; }).filter(Boolean)));
+// deduplicate
+var zonasUniq = [];
+zonasDelTipo.forEach(function(z){ if(zonasUniq.indexOf(z)===-1) zonasUniq.push(z); });
+
+var body = '<div style="background:var(--gray-900);padding:48px 6%;color:var(--white)">' +
+'<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px"><a href="/" style="color:rgba(255,255,255,.5)">Inicio</a> / <a href="/propiedades.html" style="color:rgba(255,255,255,.5)">Propiedades</a> / ' + escapeHtml(tipo) + '</div>' +
+'<h1 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px">' + escapeHtml(tipo) + ' en Venta en <span style="color:var(--gold)">Guatemala</span></h1>' +
+'<p style="color:rgba(255,255,255,.65);font-size:16px;max-width:600px;line-height:1.7">' + propsDelTipo.length + ' ' + tipo.toLowerCase() + (propsDelTipo.length!==1?'s':'') + ' disponible' + (propsDelTipo.length!==1?'s':'') + ' con precios verificados.' + (rangoPrecios ? ' Desde ' + rangoPrecios + '.' : '') + '</p>' +
+(zonasUniq.length ? '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">' +
+  zonasUniq.map(function(z){ var zSlug = slugZona(z); return '<a href="/zonas/' + zSlug + '.html" style="background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;text-decoration:none">' + escapeHtml(z) + '</a>'; }).join('') +
+  '</div>' : '') +
+'</div>' +
+'<div class="prop-grid" style="padding:32px 6%">' + propsDelTipo.map(function(p){ return card(p); }).join('') + '</div>' +
+'<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">' +
+'<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles</p>' +
+'<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>' +
+'</div>';
+
+var schemaBreadcrumb = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
+    { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
+    { '@type':'ListItem', 'position':3, 'name': tipo + ' en Guatemala' }
+  ]
+});
+
+return layout({
+  title: tipo + ' en Venta en Guatemala — Precios Verificados',
+  desc: propsDelTipo.length + ' ' + tipo.toLowerCase() + (propsDelTipo.length!==1?'s':'') + ' en venta en Guatemala. ' + (rangoPrecios ? 'Desde ' + rangoPrecios + '. ' : '') + 'Precios verificados y actualizados en INMUHUB.',
+  canonical: '/tipos/' + tipoSlug + '.html',
+  body: body,
+  scripts: '<script type="application/ld+json">' + schemaBreadcrumb + '<\/script>'
+});
+}
+
+module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage, tipoPage };
 
 // Función helper para generar calculadora inline
 function generateCalculator(prop) {
