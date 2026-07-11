@@ -86,10 +86,13 @@
 
       // Extract area from card text and store as data attribute
       var grid = document.getElementById('g');
-      var cards = [].slice.call(grid.querySelectorAll('.prop-card'));
-      var originalOrder = cards.slice();
+      var wraps = [].slice.call(grid.querySelectorAll('.prop-card-wrap'));
+      var cards = wraps.map(function(w){ return w.querySelector('.prop-card'); }).filter(Boolean);
+      var originalOrder = wraps.slice();
 
-      cards.forEach(function(c) {
+      wraps.forEach(function(w) {
+        var c = w.querySelector('.prop-card');
+        if (!c) return;
         var metaSpans = c.querySelectorAll('.pc-meta span');
         var area = 0;
         for (var i = 0; i < metaSpans.length; i++) {
@@ -127,7 +130,9 @@
         var visible = [];
         var n = 0;
 
-        cards.forEach(function(c) {
+        wraps.forEach(function(w) {
+          var c = w.querySelector('.prop-card');
+          if (!c) return;
           var ok = true;
           if (q && c.textContent.toLowerCase().indexOf(q) === -1) ok = false;
           if (ok && ti && c.dataset.tipo !== ti) ok = false;
@@ -144,19 +149,22 @@
             var ats = ar.split('-').map(Number);
             if (a < ats[0] || (ats[1] && a > ats[1])) ok = false;
           }
-          c.style.display = ok ? '' : 'none';
-          if (ok) { n++; visible.push(c); }
+          w.style.display = ok ? '' : 'none';
+          if (ok) { n++; visible.push(w); }
         });
 
         // Sort
         if (so && visible.length > 1) {
-          if (so === 'price-asc') visible.sort(function(a, b) { return getPrice(a) - getPrice(b); });
-          else if (so === 'price-desc') visible.sort(function(a, b) { return getPrice(b) - getPrice(a); });
-          else if (so === 'area-desc') visible.sort(function(a, b) { return getArea(b) - getArea(a); });
-          else if (so === 'habs-desc') visible.sort(function(a, b) { return (parseInt(b.dataset.habs) || 0) - (parseInt(a.dataset.habs) || 0); });
-          visible.forEach(function(c) { grid.appendChild(c); });
+          var getCardPrice = function(w){ return getPrice(w.querySelector('.prop-card')); };
+          var getCardArea = function(w){ return getArea(w.querySelector('.prop-card')); };
+          var getCardHabs = function(w){ return parseInt((w.querySelector('.prop-card')||{}).dataset.habs) || 0; };
+          if (so === 'price-asc') visible.sort(function(a, b) { return getCardPrice(a) - getCardPrice(b); });
+          else if (so === 'price-desc') visible.sort(function(a, b) { return getCardPrice(b) - getCardPrice(a); });
+          else if (so === 'area-desc') visible.sort(function(a, b) { return getCardArea(b) - getCardArea(a); });
+          else if (so === 'habs-desc') visible.sort(function(a, b) { return getCardHabs(b) - getCardHabs(a); });
+          visible.forEach(function(w) { grid.appendChild(w); });
         } else if (!so) {
-          originalOrder.forEach(function(c) { grid.appendChild(c); });
+          originalOrder.forEach(function(w) { grid.appendChild(w); });
         }
 
         if (cnt) cnt.textContent = n + ' propiedad' + (n !== 1 ? 'es' : '');
