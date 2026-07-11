@@ -61,8 +61,10 @@
   if (isListingPage) {
     var filterBar = document.querySelector('.filter-bar');
     var clearBtn = document.getElementById('cl2');
-    
-    if (filterBar && clearBtn) {
+    // Si el catálogo nuevo ya tiene sort inline (fsort), no interferir
+    var hasNewCatalog = !!document.getElementById('fsort');
+
+    if (filterBar && clearBtn && !hasNewCatalog) {
       // Add Area filter
       var areaSelect = document.createElement('select');
       areaSelect.id = 'fa';
