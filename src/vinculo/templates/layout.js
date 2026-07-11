@@ -4,9 +4,9 @@ const DOMAIN = 'https://inmuhub.com';
 
 function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
 const pageTitle = title
-? `${escapeHtml(title)} | INMUHUB.COM`
-: 'INMUHUB.COM | Donde las oportunidades inmobiliarias se conectan';
-const metaDesc = escapeHtml(desc || 'Catálogo de propiedades premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en las mejores zonas.');
+? `${escapeHtml(title)} | INMUHUB`
+: 'Propiedades en Venta en Guatemala | INMUHUB — Portal Inmobiliario Premium';
+const metaDesc = escapeHtml(desc || 'Portal inmobiliario premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en Zona 10, Zona 14, Zona 15, Cayala, Fraijanes y Carretera a El Salvador. Precios actualizados.');
 const ogImg = ogImage || `${DOMAIN}/assets/og.jpg`;
 const canon = `${DOMAIN}${canonical || '/'}`;
 

@@ -10,8 +10,8 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
                   pixelId = '1668269500330907', ga4Id = 'G-5KVQZYZ7B3' }) {
   const pageTitle = title
     ? `${escapeHtml(title)} | Zona INNmueble`
-    : 'Casas y Fincas en Venta Guatemala | Zona INNmueble';
-  const metaDesc  = escapeHtml(desc || 'Casas, fincas y apartamentos en venta en Guatemala. Propiedades premium en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada por WhatsApp.');
+    : 'Casas y Fincas en Venta en Guatemala | Zona INNmueble — Inmobiliaria Premium';
+  const metaDesc  = escapeHtml(desc || 'Inmobiliaria premium en Guatemala. Casas, fincas, apartamentos y terrenos en venta en Zona 10, Zona 14, Zona 15, Fraijanes, Cayala y Carretera a El Salvador. Propiedades verificadas con asesoria personalizada.');
   const ogImg     = ogImage || 'https://ik.imagekit.io/Zona/Imagen%201%20Reel.png';
   const canon     = `${DOMAIN}${canonical || '/'}`;
 

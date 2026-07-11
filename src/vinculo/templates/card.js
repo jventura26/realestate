@@ -45,8 +45,8 @@ function card(p) {
     ? `<div class="card-specs" style="margin-top:auto">${specs.join('<span class="cs-sep"></span>')}</div>`
     : '';
 
-  // ALT TEXT SIMPLE - sin NAN
-  const altText = `${escapeHtml(p.title || 'Propiedad')}`;
+  // ALT TEXT con tipo y ubicacion para SEO
+  const altText = escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''));
 
   return `<a class="property-card" href="/propiedades/${p.slug}.html"
   data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"

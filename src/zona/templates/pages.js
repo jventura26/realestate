@@ -78,7 +78,7 @@ function card(p) {
     data-habs="${p.habitaciones||0}"
     data-fecha="${escapeHtml(String(p.fechaPublicacion||p.createdAt||''))}"
     data-area="${parseFloat(p.areaConst)||parseFloat(p.area)||0}">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml(p.title)}" loading="lazy" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''))}" loading="lazy" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
     <div class="pc-ov"></div>
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
     ${exclusivaBadge}
@@ -553,7 +553,7 @@ function catalogPage(props) {
   </div>
 </div>`;
 
-  return layout({ title: 'Catálogo Propiedades Premium Guatemala', desc: `${props.length} casas, fincas y apartamentos en venta en Guatemala. Propiedades en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Filtra por precio y zona.`, canonical: '/propiedades.html', body, scripts: filterJS });
+  return layout({ title: 'Propiedades en Venta en Guatemala — Casas, Fincas y Apartamentos', desc: `${props.length} propiedades premium en venta en Guatemala. Casas, fincas y apartamentos en Zona 10, Zona 14, Zona 15, Cayala, Fraijanes y Carretera a El Salvador. Precios verificados, asesoria personalizada.`, canonical: '/propiedades.html', body, scripts: filterJS });
 }
 
 // ── DETAIL ────────────────────────────────────────────────────────────

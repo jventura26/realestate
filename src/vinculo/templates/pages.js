@@ -171,31 +171,109 @@ const body = `
 <div class="prop-grid" id="g">${props.map(p=>card(p)).join('')}</div>
 <div class="no-res" id="nr" style="display:none"><p>No se encontraron propiedades</p><small>Intenta ajustar los filtros</small></div>
 ${filterJS}`;
-return layout({ title: 'Propiedades en Guatemala', desc: 'Catalogo completo de casas, apartamentos, fincas y terrenos en Guatemala. Filtra por zona, tipo y precio. INMUHUB.COM', canonical: '/propiedades.html', body });
+return layout({ title: 'Propiedades en Venta en Guatemala — Casas, Apartamentos, Fincas', desc: 'Catalogo de ' + props.length + ' propiedades en venta en Guatemala. Casas, apartamentos, fincas y terrenos en Zona 10, Zona 14, Cayala, Fraijanes. Precios verificados y actualizados.', canonical: '/propiedades.html', body });
 }
 
 function zonaPage(props, zona) {
-const tipos = uniqueValues(props, 'tipo');
-const slug = zona.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const body = `
-<div style="background:var(--gray-900);padding:48px 6%;color:var(--white)">
-<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px"><a href="/" style="color:rgba(255,255,255,.5)">Inicio</a> / <a href="/propiedades.html" style="color:rgba(255,255,255,.5)">Propiedades</a> / ${escapeHtml(zona)}</div>
-<h1 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px">Propiedades en <span style="color:var(--gold)">${escapeHtml(zona)}</span></h1>
-<p style="color:rgba(255,255,255,.65);font-size:16px">${props.length} propiedad${props.length!==1?'es':''} disponible${props.length!==1?'s':''} en ${escapeHtml(zona)}, Guatemala</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">
-${tipos.map(t=>`<span style="background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">${escapeHtml(t)}</span>`).join('')}
-</div>
-</div>
-<div class="prop-grid" style="padding:32px 6%">${props.map(p=>card(p)).join('')}</div>
-<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">
-<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles en Guatemala</p>
-<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>
-</div>`;
+var tipos = uniqueValues(props, 'tipo');
+var slug = zona.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+var precios = props.map(function(p){ return p.priceNumeric; }).filter(function(n){ return n > 0; });
+var precioMin = precios.length ? Math.min.apply(null, precios) : 0;
+var precioMax = precios.length ? Math.max.apply(null, precios) : 0;
+var rangoPrecios = precioMin && precioMax ? '$' + precioMin.toLocaleString('en-US') + ' - $' + precioMax.toLocaleString('en-US') : '';
+
+var ZONA_CONTENT = {
+  'zona-10': { desc: 'Zona 10 es el epicentro financiero y diplomatico de Ciudad de Guatemala. Alberga hoteles cinco estrellas, restaurantes de autor, centros comerciales exclusivos y embajadas. Las propiedades aqui combinan ubicacion estrategica con prestigio y alta plusvalia.', faqs: [
+    { q: 'Que tipos de propiedades hay en Zona 10?', a: 'En Zona 10 encontraras principalmente apartamentos de lujo, oficinas corporativas y residencias exclusivas. Los precios varian segun el edificio y las amenidades.' },
+    { q: 'Es buena inversion comprar en Zona 10?', a: 'Si, Zona 10 es una de las areas con mayor plusvalia en Guatemala. La demanda es constante por su ubicacion central, conectividad y oferta comercial.' },
+    { q: 'Cual es el rango de precios en Zona 10?', a: rangoPrecios ? 'Actualmente las propiedades van desde ' + rangoPrecios + '.' : 'Los precios varian segun tipo y tamano. Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'zona-14': { desc: 'Zona 14 es sinonimo de exclusividad residencial en Guatemala. Con amplias avenidas arboladas, clubs privados, colegios de prestigio y la cercan\u00eda al aeropuerto internacional, es la eleccion natural para familias que buscan calidad de vida premium y seguridad.', faqs: [
+    { q: 'Que hace especial a Zona 14 para vivir?', a: 'Zona 14 ofrece un entorno residencial tranquilo con acceso rapido a centros comerciales, hospitales y colegios de primer nivel. Su plusvalia historica es una de las mas altas del pais.' },
+    { q: 'Que tipos de propiedades hay en Zona 14?', a: 'Predominan las casas amplias en condominios cerrados y apartamentos de lujo. Tambien hay opciones de terrenos y oficinas.' },
+    { q: 'Cual es el rango de precios en Zona 14?', a: rangoPrecios ? 'Las propiedades actualmente van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'zona-15': { desc: 'Zona 15 combina naturaleza y modernidad. Con desarrollos residenciales contemporaneos, areas verdes extensas y acceso directo a centros educativos y comerciales, es ideal para familias jovenes y profesionales que buscan un equilibrio entre ciudad y tranquilidad.', faqs: [
+    { q: 'Que ventajas tiene vivir en Zona 15?', a: 'Zona 15 destaca por sus areas verdes, condominios modernos con amenidades completas y excelente conectividad vial hacia zonas 10 y 14.' },
+    { q: 'Cual es el rango de precios en Zona 15?', a: rangoPrecios ? 'Las propiedades van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'zona-16': { desc: 'Zona 16 ofrece un estilo de vida residencial exclusivo con amplios terrenos, vistas panoramicas y proyectos de baja densidad. Ideal para quienes buscan privacidad, naturaleza y propiedades de gran tamano sin alejarse de la ciudad.', faqs: [
+    { q: 'Que tipo de propiedades se encuentran en Zona 16?', a: 'Zona 16 se caracteriza por casas amplias en condominios de baja densidad, terrenos para construccion y desarrollos exclusivos rodeados de naturaleza.' },
+    { q: 'Cual es el rango de precios en Zona 16?', a: rangoPrecios ? 'Actualmente las propiedades van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'cayala': { desc: 'Cayala es el desarrollo urbanistico mas innovador de Guatemala. Su concepto de ciudad dentro de la ciudad integra residencias, comercios, restaurantes, oficinas y espacios publicos en un entorno peatonal seguro y sofisticado. Alta demanda y plusvalia creciente.', faqs: [
+    { q: 'Que hace unica a Cayala?', a: 'Cayala es una ciudad planificada con arquitectura europea, calles peatonales, seguridad 24/7 y una comunidad activa. Combina residencia, trabajo y entretenimiento en un solo lugar.' },
+    { q: 'Cual es el rango de precios en Cayala?', a: rangoPrecios ? 'Las propiedades van desde ' + rangoPrecios + '.' : 'Los precios varian segun tipo. Consulta las propiedades disponibles.' }
+  ]},
+  'fraijanes': { desc: 'Fraijanes se ha consolidado como destino premium para quienes buscan residencias amplias, fincas y terrenos de inversion a minutos de la capital. Su clima templado, entorno natural y desarrollos modernos atraen a familias y inversionistas.', faqs: [
+    { q: 'Es buena inversion comprar en Fraijanes?', a: 'Si, Fraijanes ha experimentado un crecimiento sostenido en plusvalia gracias a nuevos desarrollos residenciales, mejora de infraestructura vial y alta demanda.' },
+    { q: 'Que tipos de propiedades hay en Fraijanes?', a: 'Encontraras casas en condominio, fincas, terrenos para desarrollo y residencias de campo. Es ideal para quienes buscan espacio y naturaleza.' },
+    { q: 'Cual es el rango de precios en Fraijanes?', a: rangoPrecios ? 'Las propiedades van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]}
+};
+
+var zoneKey = slug;
+var zoneContent = ZONA_CONTENT[zoneKey] || { desc: 'Descubre las propiedades disponibles en ' + zona + ', Guatemala. Residencias, apartamentos, fincas y terrenos verificados con precios actualizados.', faqs: [] };
+
+var faqHTML = '';
+if (zoneContent.faqs && zoneContent.faqs.length) {
+  faqHTML = '<div style="padding:40px 6%;background:var(--gray-50);border-top:1px solid var(--border)">' +
+    '<div style="max-width:800px;margin:0 auto">' +
+    '<h2 style="font-size:22px;font-weight:700;margin-bottom:24px;color:var(--gray-900)">Preguntas frecuentes sobre ' + escapeHtml(zona) + '</h2>' +
+    zoneContent.faqs.map(function(faq, i) {
+      return '<details style="border-bottom:1px solid var(--border);padding:16px 0"' + (i===0?' open':'') + '>' +
+        '<summary style="cursor:pointer;font-size:15px;font-weight:600;color:var(--gray-900);list-style:none;display:flex;justify-content:space-between;align-items:center">' +
+        '<span>' + escapeHtml(faq.q) + '</span>' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>' +
+        '</summary>' +
+        '<p style="font-size:14px;color:var(--gray-600);line-height:1.7;margin-top:12px">' + escapeHtml(faq.a) + '</p>' +
+        '</details>';
+    }).join('') +
+    '</div></div>';
+}
+
+var body = '<div style="background:var(--gray-900);padding:48px 6%;color:var(--white)">' +
+'<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px"><a href="/" style="color:rgba(255,255,255,.5)">Inicio</a> / <a href="/propiedades.html" style="color:rgba(255,255,255,.5)">Propiedades</a> / ' + escapeHtml(zona) + '</div>' +
+'<h1 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px">Propiedades en Venta en <span style="color:var(--gold)">' + escapeHtml(zona) + '</span></h1>' +
+'<p style="color:rgba(255,255,255,.65);font-size:16px;line-height:1.7;max-width:700px">' + escapeHtml(zoneContent.desc) + '</p>' +
+'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">' +
+tipos.map(function(t){ return '<span style="background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">' + escapeHtml(t) + '</span>'; }).join('') +
+(rangoPrecios ? '<span style="background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">' + rangoPrecios + '</span>' : '') +
+'</div></div>' +
+'<div class="prop-grid" style="padding:32px 6%">' + props.map(function(p){ return card(p); }).join('') + '</div>' +
+faqHTML +
+'<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">' +
+'<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles en Guatemala</p>' +
+'<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>' +
+'</div>';
+
+var schemaBreadcrumb = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
+    { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
+    { '@type':'ListItem', 'position':3, 'name': 'Propiedades en ' + zona }
+  ]
+});
+
+var schemaFaq = (zoneContent.faqs && zoneContent.faqs.length) ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': zoneContent.faqs.map(function(faq) {
+    return { '@type': 'Question', 'name': faq.q, 'acceptedAnswer': { '@type': 'Answer', 'text': faq.a } };
+  })
+}) : null;
+
+var scripts = '<script type="application/ld+json">' + schemaBreadcrumb + '<\/script>';
+if (schemaFaq) scripts += '<script type="application/ld+json">' + schemaFaq + '<\/script>';
+
 return layout({
-  title: `Propiedades en ${zona}, Guatemala`,
-  desc: `${props.length} propiedades en ${zona} Guatemala. Casas, apartamentos y mas en venta y renta. Precios verificados en INMUHUB.COM`,
-  canonical: `/zonas/${slug}.html`,
-  body
+  title: 'Propiedades en Venta en ' + zona + ', Guatemala \u2014 Casas y Apartamentos',
+  desc: props.length + ' propiedades en venta en ' + zona + ', Guatemala. ' + tipos.join(', ') + ' con precios verificados.' + (rangoPrecios ? ' Desde ' + rangoPrecios + '.' : ''),
+  canonical: '/zonas/' + slug + '.html',
+  body: body,
+  scripts: scripts
 });
 }
 
@@ -230,13 +308,13 @@ function detailPage(prop, allProps) {
   const totalPhotos = imgs.length;
 
   const mobGalHTML = imgs.length ? `<div class="zp-mob-gal">
-    <div class="zp-mob-track" id="zpMobTrack">${imgs.map(src=>`<div class="zp-mob-slide"><img src="${esc(src)}" alt="" loading="lazy"></div>`).join('')}</div>
+    <div class="zp-mob-track" id="zpMobTrack">${imgs.map((src,i)=>`<div class="zp-mob-slide"><img src="${esc(src)}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala') + (i>0?' - foto '+(i+1):''))}" loading="lazy"></div>`).join('')}</div>
     <div class="zp-mob-counter" id="zpMobCounter">1 / ${imgs.length}</div>
     <div class="zp-mob-dots">${imgs.map((_,i)=>`<div class="zp-mob-dot${i===0?' active':''}" id="zpDot${i}"></div>`).join('')}</div>
   </div>` : '';
 
   const galHTML = `<div class="zp-gal">
-    <div class="zp-gal-main"><img src="${esc(g1)}" alt="" loading="eager"></div>
+    <div class="zp-gal-main"><img src="${esc(g1)}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala'))}" loading="eager"></div>
     <div class="zp-gal-grid">
       ${g2?`<div class="zp-gal-cell"><img src="${esc(g2)}" alt="" loading="lazy"></div>`:''}
       ${g3?`<div class="zp-gal-cell"><img src="${esc(g3)}" alt="" loading="lazy"></div>`:''}
