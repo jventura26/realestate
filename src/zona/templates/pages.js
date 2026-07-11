@@ -78,7 +78,7 @@ function card(p) {
     data-habs="${p.habitaciones||0}"
     data-fecha="${escapeHtml(String(p.fechaPublicacion||p.createdAt||''))}"
     data-area="${parseFloat(p.areaConst)||parseFloat(p.area)||0}">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''))}" loading="lazy" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''))}" loading="lazy" width="600" height="750" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
     <div class="pc-ov"></div>
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
     ${exclusivaBadge}
@@ -196,9 +196,10 @@ function indexPage(props) {
   const body = `
 <!-- HERO -->
 <section style="min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
-  <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none">
+  <video autoplay muted loop playsinline preload="none" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect fill='%230D1B3E' width='1' height='1'/%3E%3C/svg%3E" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;background:var(--ink)">
     <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
   </video>
+  <script>setTimeout(function(){var v=document.querySelector('video[preload=none]');if(v){v.preload='auto';v.load();}},1500);<\/script>
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.6) 55%,rgba(20,34,64,.82) 100%);z-index:1"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,rgba(13,27,62,.4) 35%,transparent 60%);z-index:1"></div>
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
@@ -304,7 +305,7 @@ function indexPage(props) {
     </div>
     <div style="position:relative">
       <div style="position:relative;border-radius:4px;overflow:hidden;aspect-ratio:4/5">
-        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Propiedad exclusiva Guatemala" style="width:100%;height:100%;object-fit:cover" loading="lazy" width="800" height="1000">
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.85) 0%,transparent 50%)"></div>
         <div style="position:absolute;bottom:28px;left:28px;right:28px">
           <div style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Off-Market</div>
