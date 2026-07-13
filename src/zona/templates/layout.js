@@ -66,12 +66,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KH4VCQBZ');</script>
 <!-- End Google Tag Manager -->
 
-<!-- GA4 + Meta Pixel diferidos para no bloquear rendering -->
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
-setTimeout(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=${ga4Id}';document.head.appendChild(s);s.onload=function(){gtag('js',new Date());gtag('config','${ga4Id}');}},2500);
-setTimeout(function(){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${pixelId}');fbq('track','PageView');},2500);
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1" alt=""></noscript>
+<!-- GA4 + Meta Pixel ahora manejados por GTM (GTM-KH4VCQBZ) -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
