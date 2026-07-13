@@ -322,4 +322,168 @@
     + '<a href="tel:+50245542088" class="zi-scta-call">📞 Llamar</a>';
   document.body.appendChild(stickyBar);
 
+  // ═══════════════════════════════════════
+  // 4. META PIXEL + GA4 CONVERSION EVENTS
+  // ═══════════════════════════════════════
+
+  // Helper: wait for fbq to be available (deferred load)
+  function whenFbq(fn) {
+    if (window.fbq) { fn(); return; }
+    var attempts = 0;
+    var timer = setInterval(function() {
+      attempts++;
+      if (window.fbq) { clearInterval(timer); fn(); }
+      else if (attempts > 40) { clearInterval(timer); } // give up after 20s
+    }, 500);
+  }
+
+  // Helper: wait for gtag
+  function whenGtag(fn) {
+    if (window.gtag) { fn(); return; }
+    var attempts = 0;
+    var timer = setInterval(function() {
+      attempts++;
+      if (window.gtag) { clearInterval(timer); fn(); }
+      else if (attempts > 40) { clearInterval(timer); }
+    }, 500);
+  }
+
+  // --- ViewContent on detail pages ---
+  if (isDetailPage) {
+    var detTitle = document.querySelector('.det-title');
+    var detPrice = document.querySelector('.det-price');
+    var propTitle = detTitle ? detTitle.textContent.trim() : '';
+    var propPrice = detPrice ? detPrice.textContent.trim() : '';
+    var propSlug = location.pathname.replace('/propiedades/', '').replace('.html', '');
+
+    whenFbq(function() {
+      fbq('track', 'ViewContent', {
+        content_name: propTitle,
+        content_category: 'property',
+        content_ids: [propSlug],
+        content_type: 'product',
+        value: parseFloat(propPrice.replace(/[^0-9.]/g, '')) || 0,
+        currency: propPrice.indexOf('Q') >= 0 ? 'GTQ' : 'USD'
+      });
+    });
+
+    whenGtag(function() {
+      gtag('event', 'view_item', {
+        items: [{ item_id: propSlug, item_name: propTitle, price: propPrice }]
+      });
+    });
+  }
+
+  // --- Search event on catalog when filters are used ---
+  if (isListingPage) {
+    var searchFired = false;
+    var filterEls = document.querySelectorAll('.filter-bar select, .filter-bar input');
+    for (var fi = 0; fi < filterEls.length; fi++) {
+      filterEls[fi].addEventListener('change', function() {
+        if (searchFired) return;
+        searchFired = true;
+        var searchQuery = '';
+        var tipo = document.getElementById('ft');
+        var ciudad = document.getElementById('fc2');
+        if (tipo && tipo.value) searchQuery += tipo.value + ' ';
+        if (ciudad && ciudad.value) searchQuery += ciudad.value;
+        searchQuery = searchQuery.trim() || 'filtro_general';
+
+        whenFbq(function() {
+          fbq('track', 'Search', { search_string: searchQuery, content_category: 'properties' });
+        });
+        whenGtag(function() {
+          gtag('event', 'search', { search_term: searchQuery });
+        });
+        // Reset after 5s so new searches can fire
+        setTimeout(function() { searchFired = false; }, 5000);
+      });
+    }
+  }
+
+  // --- Lead event on WhatsApp clicks ---
+  function fireLeadEvent(source, propName) {
+    whenFbq(function() {
+      fbq('track', 'Lead', {
+        content_name: propName || 'WhatsApp Click',
+        content_category: source || 'whatsapp'
+      });
+    });
+    whenGtag(function() {
+      gtag('event', 'generate_lead', {
+        event_category: 'engagement',
+        event_label: source + ': ' + (propName || 'general'),
+        value: 1
+      });
+    });
+  }
+
+  // Track all WhatsApp links
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href*="wa.me"]');
+    if (!link) return;
+    var source = 'unknown';
+    if (link.closest('.zi-sticky-cta')) source = 'sticky_cta';
+    else if (link.closest('.wa-float')) source = 'floating_button';
+    else if (link.closest('.sidebar')) source = 'sidebar';
+    else if (link.closest('nav')) source = 'nav_cta';
+    else if (link.closest('#zpPopup')) source = 'popup';
+    else if (link.closest('footer')) source = 'footer';
+    var propName = '';
+    var dt = document.querySelector('.det-title');
+    if (dt) propName = dt.textContent.trim();
+    fireLeadEvent(source, propName);
+  });
+
+  // Track phone call clicks
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href^="tel:"]');
+    if (!link) return;
+    whenFbq(function() {
+      fbq('track', 'Contact', { content_category: 'phone_call' });
+    });
+    whenGtag(function() {
+      gtag('event', 'contact', { method: 'phone', event_category: 'engagement' });
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // 5. UTM TRACKING IN WHATSAPP LINKS
+  // ═══════════════════════════════════════
+  var urlParams = new URLSearchParams(window.location.search);
+  var utmSource = urlParams.get('utm_source') || '';
+  var utmMedium = urlParams.get('utm_medium') || '';
+  var utmCampaign = urlParams.get('utm_campaign') || '';
+  var utmContent = urlParams.get('utm_content') || '';
+
+  if (utmSource || utmCampaign) {
+    // Store UTMs in sessionStorage so they persist across page navigation
+    if (utmSource) sessionStorage.setItem('zi_utm_source', utmSource);
+    if (utmMedium) sessionStorage.setItem('zi_utm_medium', utmMedium);
+    if (utmCampaign) sessionStorage.setItem('zi_utm_campaign', utmCampaign);
+    if (utmContent) sessionStorage.setItem('zi_utm_content', utmContent);
+  }
+
+  // Retrieve stored UTMs (may come from a previous page in same session)
+  var storedSource = sessionStorage.getItem('zi_utm_source') || '';
+  var storedCampaign = sessionStorage.getItem('zi_utm_campaign') || '';
+
+  if (storedSource || storedCampaign) {
+    // Append UTM info to all WhatsApp links so we know the campaign source
+    var utmTag = '';
+    if (storedSource) utmTag += '[' + storedSource;
+    if (storedCampaign) utmTag += '/' + storedCampaign;
+    if (storedSource || storedCampaign) utmTag += ']';
+
+    var waLinks = document.querySelectorAll('a[href*="wa.me"]');
+    for (var wi = 0; wi < waLinks.length; wi++) {
+      var href = waLinks[wi].getAttribute('href');
+      if (href.indexOf('text=') >= 0) {
+        // Append UTM tag to the message
+        var encoded = encodeURIComponent(' ' + utmTag);
+        waLinks[wi].setAttribute('href', href + encoded);
+      }
+    }
+  }
+
 })();

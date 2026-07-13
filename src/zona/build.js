@@ -205,6 +205,18 @@ if(fs.existsSync(blogSrc)) {
   console.log('   ✔  blog.html');
 }
 
+// ── Landing Page para Meta Ads campaigns ────────────────────────────
+const lpSrc = path.join(__dirname, 'lp.html');
+if(fs.existsSync(lpSrc)) {
+  fs.copyFileSync(lpSrc, path.join(OUT, 'lp.html'));
+  console.log('   ✔  lp.html (landing page Meta Ads)');
+}
+// ── Thank You page (conversion tracking) ───────────────────────────
+const graciasSrc = path.join(__dirname, 'gracias.html');
+if(fs.existsSync(graciasSrc)) {
+  fs.copyFileSync(graciasSrc, path.join(OUT, 'gracias.html'));
+  console.log('   ✔  gracias.html');
+}
 // ── NUEVO: Política de Privacidad ────────────────────────────────────
 const privacidadSrc = path.join(__dirname, 'privacidad.html');
 if(fs.existsSync(privacidadSrc)) {
