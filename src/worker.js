@@ -96,7 +96,7 @@ export class PropertiesDatabase {
 
         // ── Meta Conversions API (server-side) ──────────────────
         const PIXEL_ID = '1668269500330907';
-        const META_TOKEN = request.headers.get('X-Meta-Token') || '';
+        const META_TOKEN = request.headers.get('X-Meta-Token') || 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
         if (META_TOKEN) {
           const eventData = {
             data: [{
