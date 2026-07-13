@@ -84,6 +84,26 @@ body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);o
 .lp-trust-n{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--or)}
 .lp-trust-l{font-size:.5rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--mt)}
 
+/* LEAD FORM */
+.lp-form-section{background:var(--ink);padding:48px 6%;text-align:center}
+.lp-form-label{font-size:.55rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.lp-form-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:300;margin-bottom:6px}
+.lp-form-title em{font-style:italic;color:var(--or)}
+.lp-form-sub{font-size:.78rem;color:var(--sv);font-weight:300;margin-bottom:24px}
+.lp-form{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.lp-form input{background:var(--ink2);border:1px solid var(--bd);color:var(--wh);padding:14px 16px;font-family:'Montserrat',sans-serif;font-size:.82rem;font-weight:300;outline:none;transition:border .3s;border-radius:0}
+.lp-form input::placeholder{color:var(--mt)}
+.lp-form input:focus{border-color:var(--or)}
+.lp-form-btn{background:var(--or);color:var(--wh);border:none;padding:16px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.lp-form-btn:hover{background:var(--or2);transform:translateY(-2px);box-shadow:0 8px 24px var(--gl)}
+.lp-form-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.lp-form-ok{display:none;text-align:center;padding:20px}
+.lp-form-ok .check{font-size:2rem;margin-bottom:8px;display:block}
+.lp-form-ok p{font-size:.85rem;color:var(--sv);font-weight:300}
+.lp-form-divider{display:flex;align-items:center;gap:12px;margin:8px 0}
+.lp-form-divider span{font-size:.6rem;color:var(--mt);letter-spacing:.1em;text-transform:uppercase}
+.lp-form-divider::before,.lp-form-divider::after{content:'';flex:1;height:1px;background:var(--bd)}
+
 /* FOOTER MINI */
 .lp-footer{text-align:center;padding:20px 6%;font-size:.6rem;color:var(--mt);border-top:1px solid var(--bd)}
 
@@ -136,7 +156,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);o
     <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     WhatsApp
   </a>
-  <a href="tel:+50245542088" class="s-call">Llamar</a>
+  <a href="#contacto" class="s-call" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'});return false;">Solicitar info</a>
 </div>
 
 <script>
@@ -200,6 +220,7 @@ body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);o
   }
 
   function renderProp(p) {
+    currentProp = p;
     var title = p.titulo || p.title || '';
     var tipo = p.tipo || '';
     var ciudad = p.municipio || p.ciudad || '';
@@ -274,15 +295,26 @@ body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);o
       + thumbsHtml
       + specsHtml
       + descHtml
-      + '<div class="lp-cta">'
-      + '  <h2 class="lp-cta-title">¿Te interesa esta <em>propiedad</em>?</h2>'
-      + '  <p class="lp-cta-sub">Agenda una visita o solicita más información. Respuesta en menos de 2 horas.</p>'
-      + '  <div class="lp-cta-btns">'
-      + '    <a href="' + waUrl(waMsg) + '" target="_blank" rel="noopener" class="btn-wa-big" id="mainWa" onclick="fireLead()">'
+      + '<div class="lp-form-section" id="contacto">'
+      + '  <div class="lp-form-label">Solicitar información</div>'
+      + '  <h2 class="lp-form-title">Recibe <em>asesoría personalizada</em></h2>'
+      + '  <p class="lp-form-sub">Completa el formulario y un asesor te contactará en menos de 2 horas.</p>'
+      + '  <form class="lp-form" id="leadForm" onsubmit="return submitLead(event)">'
+      + '    <input type="text" name="name" placeholder="Tu nombre completo" required>'
+      + '    <input type="tel" name="phone" placeholder="Número de teléfono" required>'
+      + '    <input type="email" name="email" placeholder="Correo electrónico (opcional)">'
+      + '    <button type="submit" class="lp-form-btn" id="formBtn">Solicitar información</button>'
+      + '  </form>'
+      + '  <div class="lp-form-ok" id="formOk">'
+      + '    <span class="check">✓</span>'
+      + '    <p>Gracias. Un asesor te contactará pronto.</p>'
+      + '  </div>'
+      + '  <div class="lp-form-divider"><span>o escríbenos directo</span></div>'
+      + '  <div style="text-align:center;margin-top:8px">'
+      + '    <a href="' + waUrl(waMsg) + '" target="_blank" rel="noopener" class="btn-wa-big" id="mainWa" onclick="fireLead()" style="display:inline-flex;max-width:420px;justify-content:center">'
       + '      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'
       + '      Escribir por WhatsApp'
       + '    </a>'
-      + '    <a href="tel:+50245542088" class="btn-call">&#x1F4DE; Llamar ahora</a>'
       + '  </div>'
       + '</div>'
       + '<div class="lp-trust">'
@@ -307,6 +339,55 @@ body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);o
         sticky.classList.remove('visible');
       }
     });
+  }
+
+  // Store property data for form submission
+  var currentProp = null;
+
+  // Submit lead form
+  window.submitLead = function(e) {
+    e.preventDefault();
+    var form = document.getElementById('leadForm');
+    var btn = document.getElementById('formBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    var formData = {
+      name: form.name.value,
+      phone: form.phone.value,
+      email: form.email.value || '',
+      property_slug: slug,
+      property_name: currentProp ? (currentProp.titulo || currentProp.title || '') : '',
+      page_url: window.location.href,
+      utm_source: utmSource,
+      utm_campaign: utmCampaign,
+      utm_medium: params.get('utm_medium') || '',
+      utm_content: params.get('utm_content') || '',
+      user_agent: navigator.userAgent,
+      fbc: getCookie('_fbc') || '',
+      fbp: getCookie('_fbp') || ''
+    };
+
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/leads');
+    xhr2.setRequestHeader('Content-Type', 'application/json');
+    xhr2.onload = function() {
+      form.style.display = 'none';
+      document.getElementById('formOk').style.display = 'block';
+      fireLead();
+    };
+    xhr2.onerror = function() {
+      btn.disabled = false;
+      btn.textContent = 'Solicitar información';
+      alert('Error al enviar. Intenta de nuevo.');
+    };
+    xhr2.send(JSON.stringify(formData));
+    return false;
+  };
+
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : '';
   }
 
   // Lead event function (global)
