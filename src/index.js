@@ -10,6 +10,17 @@ const LOGIN_LOCKOUT_SECONDS = 60 * 15;
 const HOOK_ZONA = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/8105bd67-0276-4485-a0e0-50dcdb0e525d';
 const HOOK_INMU = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/8a9c31c6-547b-4bef-b8d4-d7661fcda2f6';
 
+// Meta Conversions API config
+var PIXEL_ID = '1668269500330907';
+var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
+
+async function hashSHA256(value) {
+  var encoder = new TextEncoder();
+  var data = encoder.encode(value);
+  var hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+}
+
 async function triggerRebuild() {
   try {
     await Promise.all([
@@ -309,16 +320,62 @@ export default {
       return jsonRes(data.sort((a, b) => new Date(b.fecha || b.createdAt || 0) - new Date(a.fecha || a.createdAt || 0)));
     }
 
-    // ── POST /api/lead (desde sitio público) ─────────────────────
+    // ── POST /api/lead (desde sitio público) + Meta CAPI ────────
     if (method === 'POST' && (path === '/api/lead' || path === '/api/leads')) {
       let body;
       try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
-      const raw = await env.DB.get('leads');
-      const data = raw ? JSON.parse(raw) : [];
-      const lead = { ...body, id: String(Date.now()), createdAt: new Date().toISOString(), fecha: new Date().toISOString() };
+      var raw = await env.DB.get('leads');
+      var data = raw ? JSON.parse(raw) : [];
+      var lead = { ...body, id: String(Date.now()), createdAt: new Date().toISOString(), fecha: new Date().toISOString() };
       data.push(lead);
       await env.DB.put('leads', JSON.stringify(data));
-      return jsonRes({ ok: true });
+
+      // ── Meta Conversions API (server-side) ──────────────────
+      var token = env.META_CAPI_TOKEN || META_CAPI_TOKEN;
+      if (token) {
+        var userData = {
+          client_user_agent: lead.user_agent || '',
+          fbc: lead.fbc || '',
+          fbp: lead.fbp || ''
+        };
+        // Hash PII before sending
+        if (lead.email) {
+          userData.em = [await hashSHA256(lead.email.toLowerCase().trim())];
+        }
+        if (lead.phone) {
+          userData.ph = [await hashSHA256(lead.phone.replace(/[^0-9]/g, ''))];
+        }
+        if (lead.name || lead.nombre) {
+          var nameVal = (lead.name || lead.nombre).toLowerCase().trim().split(' ')[0];
+          userData.fn = [await hashSHA256(nameVal)];
+        }
+        var eventData = {
+          data: [{
+            event_name: 'Lead',
+            event_time: Math.floor(Date.now() / 1000),
+            event_source_url: lead.page_url || '',
+            action_source: 'website',
+            user_data: userData,
+            custom_data: {
+              property_slug: lead.property_slug || '',
+              property_name: lead.property_name || lead.propiedad || '',
+              utm_source: lead.utm_source || '',
+              utm_campaign: lead.utm_campaign || '',
+              lead_type: 'form'
+            }
+          }]
+        };
+        // Fire and forget — don't block the response
+        ctx.waitUntil(
+          fetch('https://graph.facebook.com/v21.0/' + PIXEL_ID + '/events?access_token=' + token, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventData)
+          }).catch(function() {})
+        );
+      }
+
+      return jsonRes({ ok: true, id: lead.id });
     }
 
     // ── POST /api/rebuild ─────────────────────────────────────────
