@@ -199,7 +199,7 @@ function indexPage(props) {
   <video autoplay muted loop playsinline preload="none" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect fill='%230D1B3E' width='1' height='1'/%3E%3C/svg%3E" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;background:var(--ink)">
     <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
   </video>
-  <script>setTimeout(function(){var v=document.querySelector('video[preload=none]');if(v){v.preload='auto';v.load();}},1500);<\/script>
+  <script>setTimeout(function(){var v=document.querySelector('video[preload]');if(v){v.preload='auto';v.load();v.play().catch(function(){});}},1500);<\/script>
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,27,62,.92) 0%,rgba(13,27,62,.6) 55%,rgba(20,34,64,.82) 100%);z-index:1"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,rgba(13,27,62,.4) 35%,transparent 60%);z-index:1"></div>
   <div style="position:relative;z-index:2;max-width:760px;padding:100px 0 130px">
