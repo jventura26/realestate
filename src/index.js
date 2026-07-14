@@ -12,6 +12,7 @@ const HOOK_INMU = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_ho
 
 // Meta Conversions API config
 var PIXEL_ID = '1668269500330907';
+var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby7NaHNK7PThTwR9y3sjWw0Pvpfpdbm7VpCZGI1spi1TiVzeMRcVw5H7z6EpkOCl5xY/exec';
 var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
 
 async function hashSHA256(value) {
@@ -408,6 +409,29 @@ export default {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(eventData)
+          }).catch(function() {})
+        );
+      }
+
+      // ── Notificación email via Google Apps Script ───────────
+      var NOTIFY_URL = env.NOTIFY_WEBHOOK || NOTIFY_WEBHOOK || '';
+      if (NOTIFY_URL) {
+        var notifyData = {
+          nombre: lead.nombre || lead.name || 'Sin nombre',
+          telefono: lead.telefono || lead.phone || '',
+          email: lead.email || '',
+          propiedad: lead.propiedad || lead.property_name || '',
+          presupuesto: lead.presupuesto || '',
+          zona: lead.zona_interes || '',
+          tipo: lead.tipo_propiedad || lead.tipo || '',
+          fuente: lead.utm_source || lead.source || 'Sitio web',
+          fecha: lead.fecha
+        };
+        ctx.waitUntil(
+          fetch(NOTIFY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(notifyData)
           }).catch(function() {})
         );
       }
