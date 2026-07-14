@@ -335,8 +335,14 @@ export default {
       if (token) {
         var userData = {
           client_user_agent: lead.user_agent || '',
+          client_ip_address: request.headers.get('cf-connecting-ip') || '',
           fbc: lead.fbc || '',
-          fbp: lead.fbp || ''
+          fbp: lead.fbp || '',
+          external_id: [await hashSHA256(lead.id)],
+          ct: [await hashSHA256('guatemala city')],
+          st: [await hashSHA256('guatemala')],
+          country: [await hashSHA256('gt')],
+          zp: [await hashSHA256('01010')]
         };
         // Hash PII before sending
         if (lead.email) {
@@ -383,6 +389,46 @@ export default {
       const authed = await requireAuth(request, env);
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
       ctx.waitUntil(triggerRebuild());
+      return jsonRes({ ok: true });
+    }
+
+    // ── POST /api/pageview (CAPI server-side PageView) ─────────
+    if (method === 'POST' && path === '/api/pageview') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ ok: true }); }
+      var token = env.META_CAPI_TOKEN || META_CAPI_TOKEN;
+      if (token) {
+        var pvUserData = {
+          client_user_agent: body.user_agent || request.headers.get('user-agent') || '',
+          client_ip_address: request.headers.get('cf-connecting-ip') || '',
+          fbc: body.fbc || '',
+          fbp: body.fbp || '',
+          ct: [await hashSHA256('guatemala city')],
+          st: [await hashSHA256('guatemala')],
+          country: [await hashSHA256('gt')],
+          zp: [await hashSHA256('01010')]
+        };
+        if (body.external_id) {
+          pvUserData.external_id = [await hashSHA256(body.external_id)];
+        }
+        var pvEvent = {
+          data: [{
+            event_name: body.event_name || 'PageView',
+            event_time: Math.floor(Date.now() / 1000),
+            event_source_url: body.page_url || '',
+            action_source: 'website',
+            user_data: pvUserData,
+            custom_data: body.custom_data || {}
+          }]
+        };
+        ctx.waitUntil(
+          fetch('https://graph.facebook.com/v21.0/' + PIXEL_ID + '/events?access_token=' + token, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pvEvent)
+          }).catch(function() {})
+        );
+      }
       return jsonRes({ ok: true });
     }
 

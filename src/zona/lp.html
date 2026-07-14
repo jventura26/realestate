@@ -248,6 +248,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (window.gtag) {
       gtag('event', 'view_item', { items: [{ item_id: slug, item_name: title, price: price }] });
     }
+    // CAPI ViewContent (server-side)
+    var vcXhr = new XMLHttpRequest();
+    vcXhr.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');
+    vcXhr.setRequestHeader('Content-Type', 'application/json');
+    vcXhr.send(JSON.stringify({
+      page_url: window.location.href,
+      user_agent: navigator.userAgent,
+      fbc: getCookie('_fbc'),
+      fbp: getCookie('_fbp'),
+      external_id: getCookie('_fbp') || String(Date.now()),
+      event_name: 'ViewContent',
+      custom_data: { content_name: title, content_ids: [slug], content_type: 'product' }
+    }));
 
     // Build gallery thumbs
     var thumbsHtml = '';
@@ -405,6 +418,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       gtag('event', 'generate_lead', { event_category: 'landing_page', event_label: slug, value: 1 });
     }
   };
+
+  // Server-side PageView (CAPI) — mejora match quality
+  (function() {
+    var pvData = {
+      page_url: window.location.href,
+      user_agent: navigator.userAgent,
+      fbc: getCookie('_fbc'),
+      fbp: getCookie('_fbp'),
+      external_id: getCookie('_fbp') || String(Date.now()),
+      event_name: 'PageView',
+      custom_data: { content_name: slug, content_category: 'landing_page' }
+    };
+    var xhr3 = new XMLHttpRequest();
+    xhr3.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');
+    xhr3.setRequestHeader('Content-Type', 'application/json');
+    xhr3.send(JSON.stringify(pvData));
+  })();
 
 })();
 </script>

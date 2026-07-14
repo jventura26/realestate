@@ -486,4 +486,24 @@
     }
   }
 
+  // 6. SERVER-SIDE PAGEVIEW (CAPI) — mejora match quality del Pixel
+  (function() {
+    function getCk(n) {
+      var m = document.cookie.match(new RegExp('(^| )' + n + '=([^;]+)'));
+      return m ? m[2] : '';
+    }
+    var pvData = {
+      page_url: window.location.href,
+      user_agent: navigator.userAgent,
+      fbc: getCk('_fbc'),
+      fbp: getCk('_fbp'),
+      external_id: getCk('_fbp') || String(Date.now()),
+      event_name: 'PageView'
+    };
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(pvData));
+  })();
+
 })();
