@@ -12,7 +12,7 @@ const HOOK_INMU = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_ho
 
 // Meta Conversions API config
 var PIXEL_ID = '1668269500330907';
-var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby7NaHNK7PThTwR9y3sjWw0Pvpfpdbm7VpCZGI1spi1TiVzeMRcVw5H7z6EpkOCl5xY/exec';
+var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby8sAQtzXYJHyRnO5sIHgyju-_dNdS6xyjjCJPQtjWghKcWZKc3xjqX6lUxRUP3Dniu/exec';
 var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
 
 async function hashSHA256(value) {
