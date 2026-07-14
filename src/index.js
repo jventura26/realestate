@@ -320,6 +320,39 @@ export default {
       return jsonRes(data.sort((a, b) => new Date(b.fecha || b.createdAt || 0) - new Date(a.fecha || a.createdAt || 0)));
     }
 
+    // ── POST /api/leads/import (bulk import desde admin) ────────
+    if (method === 'POST' && path === '/api/leads/import') {
+      var authed2 = await requireAuth(request, env);
+      if (!authed2) return jsonRes({ error: 'No autenticado' }, 401);
+      var importBody;
+      try { importBody = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!Array.isArray(importBody)) return jsonRes({ error: 'Se espera un array' }, 400);
+      // Get existing leads
+      var existingRaw = await env.DB.get('leads');
+      var existing = existingRaw ? JSON.parse(existingRaw) : [];
+      // Build phone index of existing leads to avoid duplicates
+      var phoneIndex = {};
+      for (var ei = 0; ei < existing.length; ei++) {
+        var ep = (existing[ei].phone || '').replace(/[^0-9]/g, '');
+        if (ep) phoneIndex[ep] = true;
+      }
+      // Add only new leads
+      var added = 0;
+      for (var ii = 0; ii < importBody.length; ii++) {
+        var imp = importBody[ii];
+        var impPhone = (imp.phone || '').replace(/[^0-9]/g, '');
+        if (impPhone && phoneIndex[impPhone]) continue;
+        if (!imp.id) imp.id = String(Date.now()) + '_' + ii;
+        if (!imp.createdAt) imp.createdAt = new Date().toISOString();
+        if (!imp.fecha) imp.fecha = imp.createdAt.slice(0, 10);
+        existing.push(imp);
+        if (impPhone) phoneIndex[impPhone] = true;
+        added++;
+      }
+      await env.DB.put('leads', JSON.stringify(existing));
+      return jsonRes({ ok: true, imported: added, total: existing.length, duplicates: importBody.length - added });
+    }
+
     // ── POST /api/lead (desde sitio público) + Meta CAPI ────────
     if (method === 'POST' && (path === '/api/lead' || path === '/api/leads')) {
       let body;
