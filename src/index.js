@@ -323,6 +323,7 @@ export default {
 
     // ── POST /api/leads/import (bulk import) ────────
     if (method === 'POST' && path === '/api/leads/import') {
+      if (!(await requireAuth(request, env))) return jsonRes({ error: 'No autorizado' }, 401);
       var importBody;
       try { importBody = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
       if (!Array.isArray(importBody)) return jsonRes({ error: 'Se espera un array' }, 400);
