@@ -1643,27 +1643,56 @@ function setLeadFilter(f) {
   if (mc) renderLeads(mc);
 }
 
+function getLeadPhone(l) {
+  var p = l.telefono || l.phone || '';
+  return p.replace(/[^0-9+]/g, '');
+}
+function getLeadName(l) { return l.nombre || l.name || 'Sin nombre'; }
+function getLeadSource(l) {
+  if (l.fuente) return l.fuente;
+  if ((l.source||'').includes('zona')) return 'Zona INNmueble';
+  if ((l.source||'').includes('inmu')) return 'InmuHub';
+  return 'Sin origen';
+}
+function buildWaLink(l) {
+  var ph = getLeadPhone(l);
+  if (!ph) return '';
+  var cleanPh = ph.replace(/\D/g, '');
+  if (cleanPh.length <= 8) cleanPh = '502' + cleanPh;
+  var nombre = (getLeadName(l)).split(' ')[0];
+  var msg = 'Hola ' + nombre + ', soy Jorge de Zona-INNmueble. Tengo opciones de propiedades que podrían interesarte. ¿Te las comparto?';
+  return 'https://wa.me/' + cleanPh + '?text=' + encodeURIComponent(msg);
+}
 function buildLeadCard(l) {
   const stage = l.stage || 'Nuevo';
   const stageClass = {'Nuevo':'ls-nuevo','Contactado':'ls-contactado','Calificado':'ls-calificado','Negociación':'ls-calificado','Cerrado':'ls-cerrado','Perdido':'ls-perdido'}[stage]||'ls-nuevo';
   const lid = esc(l.id||l._id||'');
+  const ph = getLeadPhone(l);
+  const nombre = getLeadName(l);
+  const fuente = getLeadSource(l);
+  const pres = l.presupuesto || '';
+  const fase = l.fase || '';
+  const email = l.email || '';
+  const waLink = buildWaLink(l);
   return `<div class="lead-card">
     <div class="lead-card-top">
       <div>
-        <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
+        <div class="lead-name">${esc(nombre)}</div>
         <span class="badge ${stageClass}" style="margin-top:5px;display:inline-flex">${stage}</span>
+        ${fase?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;background:#EFF6FF;color:#1E40AF;border-radius:4px">${esc(fase)}</span>`:''}
       </div>
       <div class="lead-time">${formatDate(l.fecha)}</div>
     </div>
-    ${l.telefono?`<div class="lead-detail"><i class="ti ti-phone"></i>${esc(l.telefono)}</div>`:''}
+    ${ph?`<div class="lead-detail"><i class="ti ti-phone"></i>${esc(ph)}</div>`:''}
+    ${email?`<div class="lead-detail"><i class="ti ti-mail"></i>${esc(email)}</div>`:''}
+    ${pres&&pres!=='SIN PRESUPUESTO'?`<div class="lead-detail"><i class="ti ti-currency-dollar"></i><strong>${esc(pres)}</strong></div>`:''}
     ${l.propiedad?`<div class="lead-detail"><i class="ti ti-building"></i>${esc(l.propiedad)}</div>`:''}
-    ${l.tipo?`<div class="lead-detail"><i class="ti ti-tag"></i>${esc(l.tipo)}</div>`:''}
-    <div class="lead-source ${(l.source||'').includes('zona')?'src-zona':(l.source||'').includes('inmu')?'src-inmu':'src-unknown'}"><i class="ti ti-world" style="font-size:11px"></i> ${(l.source||'').includes('zona')?'Zona INNmueble':(l.source||'').includes('inmu')?'InmuHub':'Sin origen'}</div>
+    <div class="lead-source" style="font-size:10px"><i class="ti ti-world" style="font-size:11px"></i> ${esc(fuente)}</div>
     <div class="lead-card-actions">
       <select class="lead-stage-select" onchange="updateLeadStage('${lid}',this.value)">
         ${['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'].map(s=>`<option value="${s}"${stage===s?' selected':''}>${s}</option>`).join('')}
       </select>
-      ${l.telefono?`<a class="wa-btn" href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank" title="Contactar por WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>`:''}
+      ${waLink?`<a class="wa-btn" href="${waLink}" target="_blank" title="WhatsApp con mensaje"><i class="ti ti-brand-whatsapp"></i></a>`:''}
     </div>
   </div>`;
 }
@@ -1695,15 +1724,20 @@ function renderCRM(mc) {
       </div>
       ${sl.length===0
         ? '<div class="pipe-empty">Sin leads</div>'
-        : sl.map(l=>`
-          <div class="pipe-card">
-            <div class="pipe-card-name">${esc(l.nombre||'Sin nombre')}</div>
-            <div class="pipe-card-prop">${esc(l.propiedad||'—')}</div>
+        : sl.map(l=>{
+          var waL = buildWaLink(l);
+          var nm = getLeadName(l);
+          var ph = getLeadPhone(l);
+          var pres = l.presupuesto||'';
+          return `<div class="pipe-card">
+            <div class="pipe-card-name">${esc(nm)}</div>
+            <div class="pipe-card-prop">${esc(l.propiedad||l.tipo_propiedad||'—')}</div>
+            ${pres&&pres!=='SIN PRESUPUESTO'?`<div style="font-size:10px;color:#166534;font-weight:600;margin:2px 0">${esc(pres)}</div>`:''}
             <div class="pipe-card-footer">
               <span class="pipe-card-date">${formatDate(l.fecha)}</span>
-              ${l.telefono?`<a href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank" style="color:#25D366;font-size:18px;line-height:1"><i class="ti ti-brand-whatsapp"></i></a>`:''}
+              ${waL?`<a href="${waL}" target="_blank" style="color:#25D366;font-size:18px;line-height:1" title="WhatsApp con mensaje"><i class="ti ti-brand-whatsapp"></i></a>`:''}
             </div>
-          </div>`).join('')}
+          </div>`;}).join('')}
     </div>`;
   }).join('');
 
