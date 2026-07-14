@@ -286,6 +286,17 @@ fs.mkdirSync(SHARE, { recursive: true });
 props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
 console.log(`   ✔  ${props.length} share pages`);
 
+// Copiar páginas hiperlocales estáticas de src/zona/zonas/ (solo si no existen ya)
+var staticZonasDir = path.join(__dirname, 'zonas');
+if (fs.existsSync(staticZonasDir)) {
+  fs.readdirSync(staticZonasDir).forEach(function(file) {
+    if (!file.endsWith('.html')) return;
+    var dest = path.join(ZONAS, file);
+    fs.copyFileSync(path.join(staticZonasDir, file), dest);
+    console.log('   ✔  zona hiperlocal (override): /zonas/' + file);
+  });
+}
+
 // FASE 3: Zonas index
 write(path.join(ZONAS, 'index.html'), zonasIndexPage(zonasMap));
 console.log('   zone index: /zonas/index.html');
@@ -311,6 +322,9 @@ const urls = [
     lastmod: (p.fechaPublicacion || p.createdAt || '').toString().substring(0,10) || new Date().toISOString().substring(0,10)
   })),
   ...Object.keys(zonasMap).map(slug=>({ loc:`/zonas/${slug}.html`, priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) })),
+  { loc:'/zonas/cayala.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/zonas/fraijanes.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/zonas/carretera-el-salvador.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
   ...tiposUnicos.map(function(t){ var s = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); return { loc:'/tipos/'+s+'.html', priority:'0.8', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) }; }),
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
