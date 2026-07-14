@@ -1679,6 +1679,7 @@ function buildLeadCard(l) {
       <div>
         <div class="lead-name">${esc(nombre)}</div>
         <span class="badge ${stageClass}" style="margin-top:5px;display:inline-flex">${stage}</span>
+        ${l.lead_tier?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;background:${l.lead_tier==='HOT'?'#FEE2E2':l.lead_tier==='WARM'?'#FEF9C3':'#F3F4F6'};color:${l.lead_tier==='HOT'?'#991B1B':l.lead_tier==='WARM'?'#854D0E':'#6B7280'}">${l.lead_tier==='HOT'?'🔥':''}${l.lead_tier} ${l.lead_score||''}</span>`:''}
         ${fase?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;background:#EFF6FF;color:#1E40AF;border-radius:4px">${esc(fase)}</span>`:''}
       </div>
       <div class="lead-time">${formatDate(l.fecha)}</div>

@@ -359,6 +359,30 @@ export default {
       var raw = await env.DB.get('leads');
       var data = raw ? JSON.parse(raw) : [];
       var lead = { ...body, id: String(Date.now()), createdAt: new Date().toISOString(), fecha: new Date().toISOString() };
+
+      // ── Lead Scoring Automático ────────────────────────────
+      var score = 0;
+      var pres = (lead.presupuesto || '').toLowerCase();
+      if (pres.indexOf('500') >= 0 || pres.indexOf('millon') >= 0 || pres.indexOf('1,000') >= 0) score += 40;
+      else if (pres.indexOf('300') >= 0 || pres.indexOf('400') >= 0) score += 30;
+      else if (pres.indexOf('200') >= 0 || pres.indexOf('150') >= 0) score += 20;
+      else if (pres.indexOf('100') >= 0) score += 10;
+      var zona = (lead.zona_interes || lead.zona || '').toLowerCase();
+      if (zona.indexOf('14') >= 0 || zona.indexOf('15') >= 0 || zona.indexOf('cayal') >= 0) score += 25;
+      else if (zona.indexOf('10') >= 0 || zona.indexOf('16') >= 0) score += 20;
+      else if (zona.indexOf('fraijanes') >= 0 || zona.indexOf('salvador') >= 0) score += 15;
+      else if (zona) score += 5;
+      var tipo = (lead.tipo_propiedad || lead.tipo || '').toLowerCase();
+      if (tipo.indexOf('finca') >= 0 || tipo.indexOf('luxury') >= 0 || tipo.indexOf('penthouse') >= 0) score += 20;
+      else if (tipo.indexOf('casa') >= 0 || tipo.indexOf('residencia') >= 0) score += 15;
+      else if (tipo.indexOf('apartamento') >= 0 || tipo.indexOf('apto') >= 0) score += 10;
+      else if (tipo.indexOf('terreno') >= 0 || tipo.indexOf('lote') >= 0) score += 10;
+      if (lead.email && lead.email.indexOf('@') >= 0) score += 10;
+      if (lead.telefono || lead.phone) score += 5;
+      lead.lead_score = score;
+      lead.lead_tier = score >= 60 ? 'HOT' : score >= 35 ? 'WARM' : 'COLD';
+      lead.stage = lead.lead_tier === 'HOT' ? 'Nuevo' : 'Nuevo';
+
       data.push(lead);
       await env.DB.put('leads', JSON.stringify(data));
 
@@ -425,7 +449,9 @@ export default {
           zona: lead.zona_interes || '',
           tipo: lead.tipo_propiedad || lead.tipo || '',
           fuente: lead.utm_source || lead.source || 'Sitio web',
-          fecha: lead.fecha
+          fecha: lead.fecha,
+          lead_score: lead.lead_score,
+          lead_tier: lead.lead_tier
         };
         ctx.waitUntil(
           fetch(NOTIFY_URL, {
