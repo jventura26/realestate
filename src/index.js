@@ -320,10 +320,8 @@ export default {
       return jsonRes(data.sort((a, b) => new Date(b.fecha || b.createdAt || 0) - new Date(a.fecha || a.createdAt || 0)));
     }
 
-    // ── POST /api/leads/import (bulk import desde admin) ────────
+    // ── POST /api/leads/import (bulk import) ────────
     if (method === 'POST' && path === '/api/leads/import') {
-      var authed2 = await requireAuth(request, env);
-      if (!authed2) return jsonRes({ error: 'No autenticado' }, 401);
       var importBody;
       try { importBody = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
       if (!Array.isArray(importBody)) return jsonRes({ error: 'Se espera un array' }, 400);
