@@ -58,6 +58,11 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/favicon.png">
 
+<!-- Meta Pixel (inline para _fbp cookie inmediata) -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','` + pixelId + `');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=` + pixelId + `&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -66,7 +71,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KH4VCQBZ');</script>
 <!-- End Google Tag Manager -->
 
-<!-- GA4 + Meta Pixel ahora manejados por GTM (GTM-KH4VCQBZ) -->
+<!-- GA4 manejado por GTM (GTM-KH4VCQBZ) | Meta Pixel ahora inline arriba -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>

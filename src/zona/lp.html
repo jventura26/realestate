@@ -13,6 +13,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Google Tag Manager -->
+<!-- Meta Pixel (inline para _fbp cookie inmediata) -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1668269500330907');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1668269500330907&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -390,54 +394,3 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var leadName = formData.name.split(' ')[0];
       var propTitle = formData.property_name || '';
       var waText = 'Hola, soy ' + leadName + '. Acabo de solicitar información sobre: ' + propTitle + '. Me gustaría recibir más detalles.';
-      var waRedirect = 'https://wa.me/50245542088?text=' + encodeURIComponent(waText);
-      setTimeout(function() {
-        window.open(waRedirect, '_blank');
-      }, 1500);
-    };
-    xhr2.onerror = function() {
-      btn.disabled = false;
-      btn.textContent = 'Solicitar información';
-      alert('Error al enviar. Intenta de nuevo.');
-    };
-    xhr2.send(JSON.stringify(formData));
-    return false;
-  };
-
-  function getCookie(name) {
-    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? match[2] : '';
-  }
-
-  // Lead event function (global)
-  window.fireLead = function() {
-    if (window.fbq) {
-      fbq('track', 'Lead', { content_name: slug, content_category: 'landing_page_wa' });
-    }
-    if (window.gtag) {
-      gtag('event', 'generate_lead', { event_category: 'landing_page', event_label: slug, value: 1 });
-    }
-  };
-
-  // Server-side PageView (CAPI) — mejora match quality
-  (function() {
-    var pvData = {
-      page_url: window.location.href,
-      user_agent: navigator.userAgent,
-      fbc: getCookie('_fbc'),
-      fbp: getCookie('_fbp'),
-      external_id: getCookie('_fbp') || String(Date.now()),
-      event_name: 'PageView',
-      custom_data: { content_name: slug, content_category: 'landing_page' }
-    };
-    var xhr3 = new XMLHttpRequest();
-    xhr3.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');
-    xhr3.setRequestHeader('Content-Type', 'application/json');
-    xhr3.send(JSON.stringify(pvData));
-  })();
-
-})();
-</script>
-
-</body>
-</html>
