@@ -305,7 +305,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       + '  </form>'
       + '  <div class="lp-form-ok" id="formOk">'
       + '    <span class="check">✓</span>'
-      + '    <p>Gracias. Un asesor te contactará pronto.</p>'
+      + '    <p>Gracias. Te redirigimos a WhatsApp para conectarte con un asesor.</p>'
       + '  </div>'
       + '  <div class="lp-form-divider"><span>o escríbenos directo</span></div>'
       + '  <div style="text-align:center;margin-top:8px">'
@@ -373,6 +373,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       form.style.display = 'none';
       document.getElementById('formOk').style.display = 'block';
       fireLead();
+      // Auto-redirect a WhatsApp después de 1.5s
+      var leadName = formData.name.split(' ')[0];
+      var propTitle = formData.property_name || '';
+      var waText = 'Hola, soy ' + leadName + '. Acabo de solicitar información sobre: ' + propTitle + '. Me gustaría recibir más detalles.';
+      var waRedirect = 'https://wa.me/50245542088?text=' + encodeURIComponent(waText);
+      setTimeout(function() {
+        window.open(waRedirect, '_blank');
+      }, 1500);
     };
     xhr2.onerror = function() {
       btn.disabled = false;
