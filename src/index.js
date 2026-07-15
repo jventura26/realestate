@@ -15,6 +15,7 @@ var PIXEL_ID = '1668269500330907';
 var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby8sAQtzXYJHyRnO5sIHgyju-_dNdS6xyjjCJPQtjWghKcWZKc3xjqX6lUxRUP3Dniu/exec';
 var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
 var META_PAGE_ID = '1616853578595692';
+var META_PAGE_TOKEN = 'EAAaB8PdEbm0BR9apOesnvDsqcNnrfBpHYkzi9U0W5ByPBYVvQBZB1wodErfhbpAyg85H8etiONqRLTjUuKnCgYfYNIXdRe5VBs2WXc72XIZAhWSDRUlGp2b1HPIazf7EuZCWxkOZBhvnOrOIZA076u78HkCeSJWMI4DaTPzUZAzq4PomzJqQnWvzU2oLZCgZCRfuM0u8MWWtxZBofFH0NPq9tdAd51SjjZB4sIAYsD';
 
 async function hashSHA256(value) {
   var encoder = new TextEncoder();
@@ -580,7 +581,7 @@ export default {
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
       var body;
       try { body = await request.json(); } catch { body = {}; }
-      var pageToken = body.page_token || '';
+      var pageToken = body.page_token || env.META_PAGE_TOKEN || META_PAGE_TOKEN || '';
       if (!pageToken) return jsonRes({ error: 'Se requiere page_token' }, 400);
       var pageId = env.META_PAGE_ID || META_PAGE_ID;
 

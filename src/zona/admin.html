@@ -1790,7 +1790,7 @@ function renderCRM(mc) {
     + '<div class="page-header-title">Pipeline CRM</div>'
     + '<div class="page-header-sub">'+leads.length+' leads en total</div></div>'
     + '<div style="display:flex;gap:8px">'
-    + '<button class="btn btn-ghost btn-sm" onclick="openSyncMeta()"><i class="ti ti-brand-meta"></i> Sync Meta Leads</button>'
+    + '<button class="btn btn-ghost btn-sm" onclick="syncMetaQuick(this)"><i class="ti ti-brand-meta"></i> Sync Meta Leads</button>'
     + '<button class="btn btn-ghost btn-sm" onclick="showPage(\'leads\')"><i class="ti ti-list"></i> Vista lista</button>'
     + '<button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>'
     + '</div></div>'
@@ -1801,6 +1801,21 @@ function renderCRM(mc) {
     + '<div class="ld-body" id="ldBody"></div></div></div>';
 }
 
+function syncMetaQuick(btn){
+  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i> Sincronizando...';
+  fetch(API+'/api/leads/sync-meta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-meta"></i> Sync Meta Leads';
+      if(d.error){
+        if(d.error.indexOf('token')>-1||d.error.indexOf('Token')>-1){openSyncMeta();return;}
+        alert('Error: '+d.error);return;
+      }
+      if(d.new_leads>0){alert('✓ '+d.new_leads+' leads nuevos importados');setTimeout(function(){location.reload();},500);}
+      else{alert('Sin leads nuevos ('+d.total_forms+' formularios revisados)');}
+    })
+    .catch(function(e){btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-meta"></i> Sync Meta Leads';alert('Error: '+e.message);});
+}
 function openSyncMeta(){
   var saved = localStorage.getItem('zi_meta_page_token')||'';
   var html = '<div style="padding:24px;max-width:480px;margin:40px auto;background:var(--wh);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15)">'
