@@ -485,25 +485,55 @@ export default {
       var body;
       try { body = await request.json(); } catch { return jsonRes({ ok: true }); }
 
-      // Meta sends: { entry: [{ changes: [{ value: { leadgen_id, form_id, ... } }] }] }
+      // Meta sends: { entry: [{ id, changes: [{ value: { leadgen_id, form_id, page_id, created_time } }] }] }
+      // We must fetch actual lead data from Graph API using leadgen_id
+      var graphToken = env.META_CAPI_TOKEN || META_CAPI_TOKEN;
       var entries = body.entry || [];
       for (var e = 0; e < entries.length; e++) {
         var changes = entries[e].changes || [];
         for (var ch = 0; ch < changes.length; ch++) {
           var val = changes[ch].value || {};
+          var leadgenId = val.leadgen_id || '';
+          var formId = val.form_id || '';
+          var pageId = val.page_id || entries[e].id || '';
+
+          // Fetch lead details from Graph API
+          var nombre = '';
+          var email = '';
+          var telefono = '';
+          var formName = '';
+          if (leadgenId && graphToken) {
+            try {
+              var graphRes = await fetch('https://graph.facebook.com/v21.0/' + leadgenId + '?access_token=' + graphToken);
+              var graphData = await graphRes.json();
+              if (graphData.field_data) {
+                for (var f = 0; f < graphData.field_data.length; f++) {
+                  var fd = graphData.field_data[f];
+                  var fn = (fd.name || '').toLowerCase();
+                  var fv = (fd.values && fd.values[0]) || '';
+                  if (fn === 'full_name' || fn === 'nombre_completo' || fn === 'nombre') nombre = fv;
+                  else if (fn === 'email' || fn === 'correo') email = fv;
+                  else if (fn === 'phone_number' || fn === 'telefono' || fn === 'whatsapp') telefono = fv;
+                }
+              }
+              formName = graphData.form_id || formId;
+            } catch(graphErr) { /* continue with empty fields */ }
+          }
+
           var lead = {
             id: String(Date.now()) + '_' + Math.random().toString(36).slice(2,6),
-            nombre: val.full_name || '',
-            email: val.email || '',
-            telefono: val.phone_number || '',
-            propiedad: val.form_id || '',
+            nombre: nombre,
+            email: email,
+            telefono: telefono,
+            propiedad: formName || formId,
             fuente: 'Meta Lead Ad',
-            leadgen_id: val.leadgen_id || '',
-            form_id: val.form_id || '',
-            page_id: val.page_id || entries[e].id || '',
+            leadgen_id: leadgenId,
+            form_id: formId,
+            page_id: pageId,
             fecha: new Date().toISOString(),
             createdAt: new Date().toISOString(),
             stage: 'Nuevo',
+            fase: 'NUEVO LEAD',
             lead_score: 30,
             lead_tier: 'WARM'
           };
