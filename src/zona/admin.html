@@ -1754,11 +1754,12 @@ function mapFaseToStage(l) {
 function renderCRM(mc) {
   var cols = pipeStages.map(function(stage){
     var sl = leads.filter(function(l){return mapFaseToStage(l)===stage;});
+    var maxShow = 15;
     var cards = '';
     if (sl.length===0) {
       cards = '<div class="pipe-empty">Sin leads</div>';
     } else {
-      sl.forEach(function(l){
+      sl.slice(0,maxShow).forEach(function(l){
         var nm = getLeadName(l);
         var pres = l.presupuesto||'';
         var lid = l.id||l._id||l.fecha;
@@ -1769,6 +1770,9 @@ function renderCRM(mc) {
           + '<div class="pipe-card-footer"><span class="pipe-card-date">'+formatDate(l.fecha)+'</span></div>'
           + '</div>';
       });
+      if (sl.length>maxShow) {
+        cards += '<div style="text-align:center;padding:8px;font-size:11px;color:var(--text3)">+'+(sl.length-maxShow)+' más</div>';
+      }
     }
     return '<div class="pipe-col">'
       + '<div class="pipe-col-header"><span style="color:'+pipeStageColors[stage]+'">'+stage+'</span>'
