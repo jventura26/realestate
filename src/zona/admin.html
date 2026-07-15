@@ -1790,6 +1790,7 @@ function renderCRM(mc) {
     + '<div class="page-header-title">Pipeline CRM</div>'
     + '<div class="page-header-sub">'+leads.length+' leads en total</div></div>'
     + '<div style="display:flex;gap:8px">'
+    + '<button class="btn btn-ghost btn-sm" onclick="openSyncMeta()"><i class="ti ti-brand-meta"></i> Sync Meta Leads</button>'
     + '<button class="btn btn-ghost btn-sm" onclick="showPage(\'leads\')"><i class="ti ti-list"></i> Vista lista</button>'
     + '<button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>'
     + '</div></div>'
@@ -1800,6 +1801,42 @@ function renderCRM(mc) {
     + '<div class="ld-body" id="ldBody"></div></div></div>';
 }
 
+function openSyncMeta(){
+  var saved = localStorage.getItem('zi_meta_page_token')||'';
+  var html = '<div style="padding:24px;max-width:480px;margin:40px auto;background:var(--wh);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15)">'
+    + '<h3 style="margin:0 0 8px">Sincronizar leads de Meta</h3>'
+    + '<p style="font-size:13px;color:var(--text3);margin:0 0 16px">Pega tu Page Access Token de Graph Explorer para importar leads de formularios instantáneos.</p>'
+    + '<textarea id="metaTokenInput" rows="3" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:12px;resize:vertical" placeholder="Pega tu Page Access Token aquí...">'+saved+'</textarea>'
+    + '<div style="display:flex;gap:8px;margin-top:12px">'
+    + '<button class="btn btn-primary btn-sm" onclick="syncMetaLeads()" id="syncMetaBtn">Sincronizar</button>'
+    + '<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'syncMetaOverlay\').remove()">Cancelar</button>'
+    + '</div>'
+    + '<div id="syncMetaResult" style="margin-top:12px;font-size:13px"></div>'
+    + '</div>';
+  var ov = document.createElement('div');
+  ov.id = 'syncMetaOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;overflow-y:auto';
+  ov.innerHTML = html;
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function syncMetaLeads(){
+  var token = document.getElementById('metaTokenInput').value.trim();
+  if(!token){document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Pega un token válido</span>';return;}
+  localStorage.setItem('zi_meta_page_token',token);
+  var btn = document.getElementById('syncMetaBtn');
+  btn.disabled=true;btn.textContent='Sincronizando...';
+  document.getElementById('syncMetaResult').innerHTML='<span style="color:var(--text3)">Conectando con Meta Graph API...</span>';
+  fetch(API+'/api/leads/sync-meta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({page_token:token})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      btn.disabled=false;btn.textContent='Sincronizar';
+      if(d.error){document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Error: '+d.error+'</span>';return;}
+      document.getElementById('syncMetaResult').innerHTML='<span style="color:#166534">✓ '+d.new_leads+' leads nuevos importados ('+d.total_forms+' formularios)</span>';
+      if(d.new_leads>0){setTimeout(function(){location.reload();},1500);}
+    })
+    .catch(function(e){btn.disabled=false;btn.textContent='Sincronizar';document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Error: '+e.message+'</span>';});
+}
 function closeLd(){ document.getElementById('ldOverlay').classList.remove('open'); }
 
 function openLeadDetail(lid) {

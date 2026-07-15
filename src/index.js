@@ -14,6 +14,7 @@ const HOOK_INMU = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_ho
 var PIXEL_ID = '1668269500330907';
 var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby8sAQtzXYJHyRnO5sIHgyju-_dNdS6xyjjCJPQtjWghKcWZKc3xjqX6lUxRUP3Dniu/exec';
 var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
+var META_PAGE_ID = '1616853578595692';
 
 async function hashSHA256(value) {
   var encoder = new TextEncoder();
@@ -571,6 +572,84 @@ export default {
         }
       }
       return jsonRes({ ok: true });
+    }
+
+    // ── POST /api/leads/sync-meta ── Pull leads from Meta Graph API ──
+    if (method === 'POST' && path === '/api/leads/sync-meta') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { body = {}; }
+      var pageToken = body.page_token || '';
+      if (!pageToken) return jsonRes({ error: 'Se requiere page_token' }, 400);
+      var pageId = env.META_PAGE_ID || META_PAGE_ID;
+
+      // Get all leadgen forms for the page
+      var formsRes = await fetch('https://graph.facebook.com/v21.0/' + pageId + '/leadgen_forms?access_token=' + pageToken);
+      var formsData = await formsRes.json();
+      if (formsData.error) return jsonRes({ error: 'Error Graph API: ' + formsData.error.message }, 400);
+
+      var forms = formsData.data || [];
+      var raw = await env.DB.get('leads');
+      var existingLeads = raw ? JSON.parse(raw) : [];
+      var existingIds = {};
+      for (var i = 0; i < existingLeads.length; i++) {
+        if (existingLeads[i].leadgen_id) existingIds[existingLeads[i].leadgen_id] = true;
+      }
+
+      var newCount = 0;
+      for (var fi = 0; fi < forms.length; fi++) {
+        var formId = forms[fi].id;
+        var formName = forms[fi].name || formId;
+        // Get leads for this form
+        var leadsRes = await fetch('https://graph.facebook.com/v21.0/' + formId + '/leads?access_token=' + pageToken);
+        var leadsData = await leadsRes.json();
+        if (leadsData.error) continue;
+        var metaLeads = leadsData.data || [];
+
+        for (var li = 0; li < metaLeads.length; li++) {
+          var ml = metaLeads[li];
+          if (existingIds[ml.id]) continue; // already imported
+
+          var nombre = '';
+          var email = '';
+          var telefono = '';
+          var fieldData = ml.field_data || [];
+          for (var fd = 0; fd < fieldData.length; fd++) {
+            var fn = (fieldData[fd].name || '').toLowerCase();
+            var fv = (fieldData[fd].values && fieldData[fd].values[0]) || '';
+            if (fn === 'full_name' || fn === 'nombre_completo' || fn === 'nombre') nombre = fv;
+            else if (fn === 'email' || fn === 'correo' || fn === 'correo_electrónico') email = fv;
+            else if (fn === 'phone_number' || fn === 'telefono' || fn === 'número_de_teléfono' || fn === 'whatsapp') telefono = fv;
+          }
+
+          var lead = {
+            id: String(Date.now()) + '_' + Math.random().toString(36).slice(2,6),
+            nombre: nombre,
+            email: email,
+            telefono: telefono,
+            propiedad: formName,
+            fuente: 'Meta Lead Ad',
+            leadgen_id: ml.id,
+            form_id: formId,
+            page_id: pageId,
+            fecha: ml.created_time || new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+            stage: 'Nuevo',
+            fase: 'NUEVO LEAD',
+            lead_score: 30,
+            lead_tier: 'WARM'
+          };
+          existingLeads.push(lead);
+          existingIds[ml.id] = true;
+          newCount++;
+        }
+      }
+
+      if (newCount > 0) {
+        await env.DB.put('leads', JSON.stringify(existingLeads));
+      }
+      return jsonRes({ ok: true, new_leads: newCount, total_forms: forms.length });
     }
 
     // ── PUT /api/leads/update ─────────────────────────────────────
