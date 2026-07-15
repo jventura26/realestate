@@ -175,6 +175,28 @@ tr:hover td{background:#FAFBFF}
 .pipe-card-footer{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .pipe-card-date{font-size:10px;color:var(--text3)}
 .pipe-empty{text-align:center;color:var(--text3);font-size:12px;padding:20px 10px;border:1.5px dashed var(--border2);border-radius:8px}
+.pipe-card{cursor:pointer}
+/* LEAD DETAIL MODAL */
+.ld-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:600;overflow-y:auto;padding:20px}
+.ld-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.ld-panel{background:var(--wh);width:100%;max-width:580px;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);margin-top:40px}
+.ld-header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.ld-header h3{color:var(--wh);font-size:15px;font-weight:700;margin:0}
+.ld-header button{background:none;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer}
+.ld-body{padding:20px}
+.ld-row{display:flex;gap:12px;margin-bottom:14px}
+.ld-field{flex:1}
+.ld-field label{display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.ld-field .ld-val{font-size:13px;color:var(--navy);font-weight:500}
+.ld-field select,.ld-field input,.ld-field textarea{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;background:var(--bg);outline:none}
+.ld-field select:focus,.ld-field input:focus,.ld-field textarea:focus{border-color:var(--or)}
+.ld-notes{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+.ld-notes h4{font-size:13px;font-weight:700;color:var(--navy);margin:0 0 10px}
+.ld-note-item{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--or)}
+.ld-note-item .ld-note-date{font-size:10px;color:var(--text3);margin-bottom:3px}
+.ld-note-item .ld-note-text{font-size:12px;color:var(--text1)}
+.ld-actions{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.ld-actions .btn{flex:1}
 
 /* LEADS */
 .leads-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
@@ -1712,48 +1734,142 @@ async function updateLeadStage(id, stage) {
 }
 
 // ── CRM PIPELINE ─────────────────────────────────────────────
-function renderCRM(mc) {
-  const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado'];
-  const stageColors = {'Nuevo':'#1E40AF','Contactado':'#9A3412','Calificado':'#92400E','Negociación':'#166534','Cerrado':'#15803d'};
+const pipeStages = ['Nuevo','Contactado','Interesado','Visita','Cierre','Perdido'];
+const pipeStageColors = {'Nuevo':'#1E40AF','Contactado':'#D97706','Interesado':'#9A3412','Visita':'#7C3AED','Cierre':'#15803d','Perdido':'#991B1B'};
 
-  const cols = stages.map(stage => {
-    const sl = leads.filter(l=>(l.stage||'Nuevo')===stage);
-    return `<div class="pipe-col">
-      <div class="pipe-col-header">
-        <span style="color:${stageColors[stage]}">${stage}</span>
-        <span class="pipe-count ${sl.length>0?'has-leads':''}">${sl.length}</span>
-      </div>
-      ${sl.length===0
-        ? '<div class="pipe-empty">Sin leads</div>'
-        : sl.map(l=>{
-          var waL = buildWaLink(l);
-          var nm = getLeadName(l);
-          var ph = getLeadPhone(l);
-          var pres = l.presupuesto||'';
-          return `<div class="pipe-card">
-            <div class="pipe-card-name">${esc(nm)}</div>
-            <div class="pipe-card-prop">${esc(l.propiedad||l.tipo_propiedad||'—')}</div>
-            ${pres&&pres!=='SIN PRESUPUESTO'?`<div style="font-size:10px;color:#166534;font-weight:600;margin:2px 0">${esc(pres)}</div>`:''}
-            <div class="pipe-card-footer">
-              <span class="pipe-card-date">${formatDate(l.fecha)}</span>
-              ${waL?`<a href="${waL}" target="_blank" style="color:#25D366;font-size:18px;line-height:1" title="WhatsApp con mensaje"><i class="ti ti-brand-whatsapp"></i></a>`:''}
-            </div>
-          </div>`;}).join('')}
-    </div>`;
+function mapFaseToStage(l) {
+  if (l.stage && pipeStages.includes(l.stage)) return l.stage;
+  var f = (l.fase||l.stage||'').toUpperCase();
+  if (!f || f==='NUEVO LEAD' || f==='CLIENTES NUEVO FORM') return 'Nuevo';
+  if (f==='CONTACTADO') return 'Contactado';
+  if (f==='CALIENTE' || f==='INTERESADO') return 'Interesado';
+  if (f.startsWith('COMPRA') || f==='VISITA') return 'Visita';
+  if (f==='CERRADO' || f==='CIERRE') return 'Cierre';
+  if (f==='CLIENTES FRIOS' || f==='PERDIDO') return 'Perdido';
+  if (f==='PROPIETARIO QUIERE VENDER' || f==='PROPIETARIOS QUE YA ENVIARON FOTOS') return 'Interesado';
+  if (f==='ASESORES') return 'Contactado';
+  return 'Nuevo';
+}
+
+function renderCRM(mc) {
+  var cols = pipeStages.map(function(stage){
+    var sl = leads.filter(function(l){return mapFaseToStage(l)===stage;});
+    var cards = '';
+    if (sl.length===0) {
+      cards = '<div class="pipe-empty">Sin leads</div>';
+    } else {
+      sl.forEach(function(l){
+        var nm = getLeadName(l);
+        var pres = l.presupuesto||'';
+        var lid = l.id||l._id||l.fecha;
+        cards += '<div class="pipe-card" onclick="openLeadDetail(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')">'
+          + '<div class="pipe-card-name">'+esc(nm)+'</div>'
+          + '<div class="pipe-card-prop">'+esc(l.propiedad||l.tipo_propiedad||'—')+'</div>'
+          + (pres&&pres!=='SIN PRESUPUESTO'?'<div style="font-size:10px;color:#166534;font-weight:600;margin:2px 0">'+esc(pres)+'</div>':'')
+          + '<div class="pipe-card-footer"><span class="pipe-card-date">'+formatDate(l.fecha)+'</span></div>'
+          + '</div>';
+      });
+    }
+    return '<div class="pipe-col">'
+      + '<div class="pipe-col-header"><span style="color:'+pipeStageColors[stage]+'">'+stage+'</span>'
+      + '<span class="pipe-count '+(sl.length>0?'has-leads':'')+'">'+sl.length+'</span></div>'
+      + cards+'</div>';
   }).join('');
 
-  mc.innerHTML = `
-    <div class="page-header">
-      <div>
-        <div class="page-header-title">Pipeline CRM</div>
-        <div class="page-header-sub">${leads.length} leads en total</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" onclick="showPage('leads')"><i class="ti ti-list"></i> Vista lista</button>
-        <button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>
-      </div>
-    </div>
-    <div class="pipeline-wrap">${cols}</div>`;
+  mc.innerHTML = '<div class="page-header"><div>'
+    + '<div class="page-header-title">Pipeline CRM</div>'
+    + '<div class="page-header-sub">'+leads.length+' leads en total</div></div>'
+    + '<div style="display:flex;gap:8px">'
+    + '<button class="btn btn-ghost btn-sm" onclick="showPage(\'leads\')"><i class="ti ti-list"></i> Vista lista</button>'
+    + '<button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>'
+    + '</div></div>'
+    + '<div class="pipeline-wrap">'+cols+'</div>'
+    + '<div class="ld-overlay" id="ldOverlay">'
+    + '<div class="ld-panel"><div class="ld-header"><h3 id="ldTitle">Lead</h3>'
+    + '<button onclick="closeLd()">&times;</button></div>'
+    + '<div class="ld-body" id="ldBody"></div></div></div>';
+}
+
+function closeLd(){ document.getElementById('ldOverlay').classList.remove('open'); }
+
+function openLeadDetail(lid) {
+  var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+  if (!l) return;
+  var nm = getLeadName(l);
+  var ph = getLeadPhone(l);
+  var waL = buildWaLink(l);
+  var stg = mapFaseToStage(l);
+  var notes = l.notes_history || [];
+
+  document.getElementById('ldTitle').textContent = nm;
+  var opts = pipeStages.map(function(s){return '<option value="'+s+'"'+(s===stg?' selected':'')+'>'+s+'</option>';}).join('');
+  var notesHtml = '';
+  if (notes.length>0) {
+    notes.slice().reverse().forEach(function(n){
+      notesHtml += '<div class="ld-note-item"><div class="ld-note-date">'+(n.date||'')+' '+(n.author||'')+'</div><div class="ld-note-text">'+esc(n.text||n)+'</div></div>';
+    });
+  } else {
+    notesHtml = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:10px">Sin notas aún</div>';
+  }
+
+  document.getElementById('ldBody').innerHTML = '<div class="ld-row">'
+    + '<div class="ld-field"><label>Etapa</label><select id="ldStage">'+opts+'</select></div>'
+    + '<div class="ld-field"><label>Fecha seguimiento</label><input type="date" id="ldFollowup" value="'+(l.followup_date||'')+'"></div></div>'
+    + '<div class="ld-row"><div class="ld-field"><label>Propiedad</label><div class="ld-val">'+esc(l.propiedad||l.tipo_propiedad||'—')+'</div></div>'
+    + '<div class="ld-field"><label>Presupuesto</label><div class="ld-val">'+esc(l.presupuesto||'—')+'</div></div></div>'
+    + '<div class="ld-row"><div class="ld-field"><label>Email</label><div class="ld-val">'+esc(l.email||'—')+'</div></div>'
+    + '<div class="ld-field"><label>Fuente</label><div class="ld-val">'+esc(l.fuente||l.source||'—')+'</div></div></div>'
+    + (waL?'<div style="margin-bottom:14px"><a class="wa-btn" href="'+waL+'" target="_blank"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a></div>':'')
+    + '<div class="ld-notes"><h4><i class="ti ti-notes" style="margin-right:4px"></i> Notas y seguimiento</h4>'+notesHtml+'</div>'
+    + '<div style="margin-top:12px"><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Agregar nota</label>'
+    + '<textarea id="ldNewNote" rows="2" placeholder="Escribe una nota..." style="width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;background:var(--bg);outline:none;resize:vertical"></textarea></div>'
+    + '<div class="ld-actions"><button class="btn btn-ghost" onclick="closeLd()">Cancelar</button>'
+    + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="saveLeadDetail(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-check"></i> Guardar</button></div>';
+
+  document.getElementById('ldOverlay').classList.add('open');
+}
+
+async function saveLeadDetail(lid) {
+  var stage = document.getElementById('ldStage').value;
+  var followup = document.getElementById('ldFollowup').value;
+  var note = (document.getElementById('ldNewNote').value||'').trim();
+
+  try {
+    // Update stage & followup
+    await fetch(API + '/api/leads/update', {
+      method:'PUT', credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:lid, stage:stage, followup_date:followup, contacted_at: new Date().toISOString()})
+    });
+
+    // Add note if any
+    if (note) {
+      await fetch(API + '/api/leads/note', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:lid, text:note})
+      });
+    }
+
+    // Update local
+    var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+    if (l) {
+      l.stage = stage;
+      l.followup_date = followup;
+      if (note) {
+        if (!l.notes_history) l.notes_history = [];
+        l.notes_history.push({text:note, date:new Date().toISOString().slice(0,10), author:'Admin'});
+      }
+    }
+
+    closeLd();
+    showToast('Lead actualizado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderCRM(mc);
+  } catch(e) {
+    showToast('Error al guardar','error');
+    console.error(e);
+  }
 }
 
 // ── MODAL ────────────────────────────────────────────────────
