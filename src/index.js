@@ -452,7 +452,8 @@ export default {
           fuente: lead.utm_source || lead.source || 'Sitio web',
           fecha: lead.fecha,
           lead_score: lead.lead_score,
-          lead_tier: lead.lead_tier
+          lead_tier: lead.lead_tier,
+          whatsapp_link: (function(){ var ph = (lead.telefono || lead.phone || '').replace(/[^0-9]/g, ''); return ph ? 'https://wa.me/' + (ph.startsWith('502') ? ph : '502' + ph) : ''; })()
         };
         ctx.waitUntil(
           fetch(NOTIFY_URL, {
@@ -464,6 +465,123 @@ export default {
       }
 
       return jsonRes({ ok: true, id: lead.id });
+    }
+
+    // ── META LEAD ADS WEBHOOK ──────────────────────────────────────
+    // GET: verification challenge from Meta
+    if (method === 'GET' && path === '/api/leads/webhook') {
+      var params = new URL(request.url).searchParams;
+      var mode = params.get('hub.mode');
+      var token = params.get('hub.verify_token');
+      var challenge = params.get('hub.challenge');
+      if (mode === 'subscribe' && token === 'zona_innmueble_webhook_2026') {
+        return new Response(challenge, { status: 200, headers: { 'Content-Type': 'text/plain' } });
+      }
+      return jsonRes({ error: 'Verification failed' }, 403);
+    }
+
+    // POST: receive lead data from Meta Lead Ads
+    if (method === 'POST' && path === '/api/leads/webhook') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ ok: true }); }
+
+      // Meta sends: { entry: [{ changes: [{ value: { leadgen_id, form_id, ... } }] }] }
+      var entries = body.entry || [];
+      for (var e = 0; e < entries.length; e++) {
+        var changes = entries[e].changes || [];
+        for (var ch = 0; ch < changes.length; ch++) {
+          var val = changes[ch].value || {};
+          var lead = {
+            id: String(Date.now()) + '_' + Math.random().toString(36).slice(2,6),
+            nombre: val.full_name || '',
+            email: val.email || '',
+            telefono: val.phone_number || '',
+            propiedad: val.form_id || '',
+            fuente: 'Meta Lead Ad',
+            leadgen_id: val.leadgen_id || '',
+            form_id: val.form_id || '',
+            page_id: val.page_id || entries[e].id || '',
+            fecha: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+            stage: 'Nuevo',
+            lead_score: 30,
+            lead_tier: 'WARM'
+          };
+
+          // Save to KV
+          var raw = await env.DB.get('leads');
+          var data = raw ? JSON.parse(raw) : [];
+          data.push(lead);
+          await env.DB.put('leads', JSON.stringify(data));
+
+          // Notify via Google Apps Script (includes WhatsApp link)
+          var NOTIFY_URL = env.NOTIFY_WEBHOOK || NOTIFY_WEBHOOK || '';
+          if (NOTIFY_URL) {
+            var phone = (lead.telefono || '').replace(/[^0-9]/g, '');
+            var waLink = phone ? 'https://wa.me/' + (phone.startsWith('502') ? phone : '502' + phone) : '';
+            ctx.waitUntil(
+              fetch(NOTIFY_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  nombre: lead.nombre,
+                  telefono: lead.telefono,
+                  email: lead.email,
+                  propiedad: 'Meta Lead Ad Form',
+                  fuente: 'Meta Lead Ad',
+                  fecha: lead.fecha,
+                  lead_score: lead.lead_score,
+                  lead_tier: lead.lead_tier,
+                  whatsapp_link: waLink,
+                  tipo: 'instant_form'
+                })
+              }).catch(function() {})
+            );
+          }
+        }
+      }
+      return jsonRes({ ok: true });
+    }
+
+    // ── PUT /api/leads/update ─────────────────────────────────────
+    if (method === 'PUT' && path === '/api/leads/update') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      var raw = await env.DB.get('leads');
+      var data = raw ? JSON.parse(raw) : [];
+      var found = false;
+      for (var i = 0; i < data.length; i++) {
+        if ((data[i].id || data[i]._id || data[i].fecha) == body.id) {
+          if (body.stage) data[i].stage = body.stage;
+          if (body.followup_date) data[i].followup_date = body.followup_date;
+          if (body.contacted_at) data[i].contacted_at = body.contacted_at;
+          found = true;
+          break;
+        }
+      }
+      if (found) await env.DB.put('leads', JSON.stringify(data));
+      return jsonRes({ ok: found });
+    }
+
+    // ── POST /api/leads/note ──────────────────────────────────────
+    if (method === 'POST' && path === '/api/leads/note') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      var raw = await env.DB.get('leads');
+      var data = raw ? JSON.parse(raw) : [];
+      for (var i = 0; i < data.length; i++) {
+        if ((data[i].id || data[i]._id || data[i].fecha) == body.id) {
+          if (!data[i].notes_history) data[i].notes_history = [];
+          data[i].notes_history.push({ text: body.text, date: new Date().toISOString().slice(0, 10), author: 'Admin' });
+          break;
+        }
+      }
+      await env.DB.put('leads', JSON.stringify(data));
+      return jsonRes({ ok: true });
     }
 
     // ── POST /api/rebuild ─────────────────────────────────────────

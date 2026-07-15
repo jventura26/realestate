@@ -1298,7 +1298,7 @@ function renderDashboard(mc) {
   const vendidas = props.filter(p => p.estado === 'Vendida').length;
   const pausadas = props.filter(p => p.estado === 'Pausada').length;
   const totalLeads = leads.length;
-  const sinContactar = leads.filter(l => !l.stage || l.stage === 'Nuevo').length;
+  const sinContactar = leads.filter(l => mapFaseToStage(l)==='Nuevo').length;
   const portfolioVal = computePortfolioValue();
   const enZona = props.filter(p => !p.sitios || p.sitios.includes('zona')).length;
   const enInmu = props.filter(p => !p.sitios || p.sitios.includes('inmu')).length;
@@ -1407,13 +1407,19 @@ function renderDashboard(mc) {
           <div class="leads-chart-wrap"><div class="leads-bar-chart">${buildLeadsChart()}</div></div>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Funnel de conversión</div>
+          <div class="chart-title">Pipeline CRM</div>
           <div class="funnel-wrap">${buildFunnel()}</div>
         </div>
       </div>
-      <div class="chart-card timeline-card">
-        <div class="timeline-header"><span>Actividad reciente</span><i class="ti ti-activity" style="color:var(--text3)"></i></div>
-        <div class="timeline-feed">${buildTimeline()}</div>
+      <div>
+        <div class="chart-card" style="margin-bottom:18px">
+          <div class="chart-title">Leads por fuente</div>
+          <div style="padding:8px 0">${buildSourceChart()}</div>
+        </div>
+        <div class="chart-card timeline-card">
+          <div class="timeline-header"><span>Actividad reciente</span><i class="ti ti-activity" style="color:var(--text3)"></i></div>
+          <div class="timeline-feed">${buildTimeline()}</div>
+        </div>
       </div>
     </div>`;
   checkNewLeads();
@@ -2319,16 +2325,33 @@ function buildLeadsChart() {
 
 // ── CONVERSION FUNNEL ────────────────────────────────────────
 function buildFunnel() {
-  var stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado'];
-  var colors = ['#3B82F6','#F5820D','#f59e0b','#8b5cf6','#22c55e'];
-  var counts = stages.map(function(s) { return leads.filter(function(l){ return (l.stage||'Nuevo')===s; }).length; });
+  var stages = ['Nuevo','Contactado','Interesado','Visita','Cierre','Perdido'];
+  var colors = ['#1E40AF','#D97706','#9A3412','#7C3AED','#15803d','#991B1B'];
+  var counts = stages.map(function(s) { return leads.filter(function(l){ return mapFaseToStage(l)===s; }).length; });
   var max = Math.max.apply(null, counts);
   if (max < 1) max = 1;
   var html = '';
   stages.forEach(function(s, i) {
+    var pct = leads.length>0 ? Math.round(counts[i]/leads.length*100) : 0;
     html += '<div class="funnel-step"><div class="funnel-label">'+s+'</div>'
       + '<div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:'+(counts[i]/max*100)+'%;background:'+colors[i]+'">'+counts[i]+'</div></div>'
-      + '<div class="funnel-count">'+counts[i]+'</div></div>';
+      + '<div class="funnel-count">'+pct+'%</div></div>';
+  });
+  return html;
+}
+
+function buildSourceChart() {
+  var sources = {};
+  leads.forEach(function(l){ var s = l.fuente||l.source||'Directo'; sources[s]=(sources[s]||0)+1; });
+  var sorted = Object.keys(sources).sort(function(a,b){return sources[b]-sources[a];});
+  var max = sources[sorted[0]]||1;
+  var colors = ['#F5820D','#0D1B3E','#3B82F6','#22c55e','#f59e0b','#8b5cf6'];
+  var html = '';
+  sorted.slice(0,6).forEach(function(s,i){
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      + '<div style="width:80px;font-size:11px;color:var(--text2);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+s+'</div>'
+      + '<div style="flex:1;height:20px;background:var(--bg);border-radius:4px;overflow:hidden">'
+      + '<div style="height:100%;width:'+(sources[s]/max*100)+'%;background:'+colors[i%6]+';border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;color:#fff;font-weight:700">'+sources[s]+'</div></div></div>';
   });
   return html;
 }
