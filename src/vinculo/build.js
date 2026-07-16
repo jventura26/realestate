@@ -153,7 +153,7 @@ fs.mkdirSync(ASESORES, { recursive: true });
 write(path.join(OUT, 'asesores.html'), brokersDirectoryPage(brokers));
 console.log(' asesores.html (' + brokers.length + ' brokers)');
 brokers.filter(function(b){ return b.activo !== false; }).forEach(function(b) {
-  b.propiedades_count = props.filter(function(p){ return p.asesor_id === b.id || p.asesor_slug === b.slug; }).length;
+  b.propiedades_count = props.filter(function(p){ return p.broker_id === b.id; }).length;
   write(path.join(ASESORES, b.slug + '.html'), brokerProfilePage(b, props));
 });
 console.log(' ' + brokers.filter(function(b){ return b.activo !== false; }).length + ' broker profile pages');

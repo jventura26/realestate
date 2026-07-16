@@ -6,7 +6,7 @@ const { escapeHtml } = require('../../shared/utils');
 function brokerProfilePage(broker, allProps) {
   const b = broker;
   const brokerProps = allProps.filter(function(p) {
-    return p.asesor_id === b.id || p.asesor_slug === b.slug;
+    return p.broker_id === b.id;
   });
   const propsHTML = brokerProps.length > 0
     ? '<div class="prop-grid">' + brokerProps.map(function(p){ return card(p); }).join('') + '</div>'

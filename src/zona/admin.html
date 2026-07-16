@@ -1149,6 +1149,16 @@ body.dark .share-link-box { background: var(--dm-bg); }
           </div>
 
           <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-user-star"></i> Asesor asignado</div>
+            <div class="fg">
+              <select id="fBrokerId" style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;background:#fff">
+                <option value="">Sin asesor</option>
+              </select>
+            </div>
+            <div style="margin-top:6px;padding:6px 8px;background:#EFF6FF;border-radius:4px;font-size:10px;color:#1E40AF;line-height:1.4"><strong>Nota:</strong> El asesor aparecerá en la página de la propiedad y en su perfil público.</div>
+          </div>
+
+          <div class="side-card">
             <div class="side-card-title"><i class="ti ti-trending-up"></i> Inversion & Comparables</div>
             <div id="roiCalcWrap"></div>
             <div id="compWrap"></div>
@@ -2180,6 +2190,7 @@ function openBrokerForm(id) {
     + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_activo" '+(b&&b.activo===false?'':'checked')+'/> Activo</label>'
     + '</div>'
     + '</div>'
+    + (isEdit ? '<div id="brokerPropsSection" style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#0a1628"><i class="ti ti-home"></i> Propiedades asignadas</span><button onclick="openAssignPropModal(\''+b.id+'\')" style="background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer"><i class="ti ti-plus"></i> Asignar</button></div><div id="brokerPropsList" style="font-size:12px;color:#64748b">Cargando...</div></div>' : '')
     + '<div style="display:flex;justify-content:space-between;margin-top:24px">'
     + (isEdit?'<button onclick="deleteBroker(\''+b.id+'\')" style="background:none;border:1.5px solid #FECACA;color:#dc2626;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer"><i class="ti ti-trash"></i> Eliminar</button>':'<div></div>')
     + '<div style="display:flex;gap:8px"><button onclick="document.getElementById(\'brokerOverlay\').remove()" class="btn btn-ghost">Cancelar</button>'
@@ -2188,6 +2199,98 @@ function openBrokerForm(id) {
 
   overlay.innerHTML = form;
   document.body.appendChild(overlay);
+  if (isEdit) loadBrokerProps(b.id);
+}
+
+function loadBrokerProps(brokerId) {
+  var container = document.getElementById('brokerPropsList');
+  if (!container) return;
+  var assigned = (props||[]).filter(function(p){return p.broker_id===brokerId;});
+  if (assigned.length === 0) {
+    container.innerHTML = '<div style="color:#94a3b8;font-style:italic;padding:8px 0">Sin propiedades asignadas</div>';
+    return;
+  }
+  container.innerHTML = assigned.map(function(p){
+    var pid = encodeURIComponent(p.id||p.slug);
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#f8fafc;border-radius:6px;margin-bottom:6px">'
+      + '<div style="flex:1;min-width:0"><div style="font-weight:600;color:#0a1628;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(p.titulo||'Sin título')+'</div>'
+      + '<div style="font-size:11px;color:#94a3b8">'+(p.zona||'')+(p.precio?' · '+p.precio:'')+'</div></div>'
+      + '<button onclick="unassignProp(\''+pid+'\',\''+brokerId+'\')" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:14px;padding:4px" title="Quitar asignación"><i class="ti ti-x"></i></button>'
+      + '</div>';
+  }).join('');
+}
+
+async function unassignProp(propId, brokerId) {
+  var decoded = decodeURIComponent(propId);
+  var p = props.find(function(x){return (x.id||x.slug)===decoded || encodeURIComponent(x.id||x.slug)===propId;});
+  if (!p) return;
+  p.broker_id = '';
+  try {
+    await fetch(API+'/api/propiedades',{
+      method:'PUT',credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:p.id||p.slug,broker_id:''})
+    });
+    showToast('Propiedad desasignada','success');
+    loadBrokerProps(brokerId);
+  } catch(e){showToast('Error al desasignar','error');}
+}
+
+function openAssignPropModal(brokerId) {
+  var unassigned = (props||[]).filter(function(p){return !p.broker_id || p.broker_id===brokerId;});
+  var assigned = (props||[]).filter(function(p){return p.broker_id===brokerId;});
+  var assignedIds = assigned.map(function(p){return p.id||p.slug;});
+
+  var modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.id = 'assignPropOverlay';
+  modal.onclick = function(e){if(e.target===modal)modal.remove();};
+
+  var items = unassigned.map(function(p){
+    var pid = p.id||p.slug;
+    var checked = assignedIds.indexOf(pid)>=0;
+    return '<label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;transition:all .2s" onmouseover="this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.borderColor=\'#e2e8f0\'">'
+      + '<input type="checkbox" value="'+encodeURIComponent(pid)+'" '+(checked?'checked':'')+' style="width:16px;height:16px"/>'
+      + '<div style="flex:1;min-width:0"><div style="font-weight:600;color:#0a1628;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(p.titulo||'Sin título')+'</div>'
+      + '<div style="font-size:11px;color:#94a3b8">'+(p.zona||'')+(p.precio?' · '+p.precio:'')+'</div></div></label>';
+  }).join('');
+
+  modal.innerHTML = '<div style="background:white;border-radius:16px;max-width:480px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">'
+    + '<div style="padding:20px 24px;border-bottom:1px solid #e2e8f0"><h3 style="margin:0;font-size:16px;font-weight:700;color:#0a1628">Asignar propiedades</h3><p style="margin:4px 0 0;font-size:12px;color:#64748b">Selecciona las propiedades para este asesor</p></div>'
+    + '<div style="padding:16px 24px;overflow-y:auto;display:grid;gap:8px">'+items+'</div>'
+    + '<div style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:8px">'
+    + '<button onclick="document.getElementById(\'assignPropOverlay\').remove()" class="btn btn-ghost">Cancelar</button>'
+    + '<button onclick="saveAssignments(\''+brokerId+'\')" class="btn" style="background:var(--navy);color:var(--wh)"><i class="ti ti-check"></i> Guardar</button>'
+    + '</div></div>';
+
+  document.body.appendChild(modal);
+}
+
+async function saveAssignments(brokerId) {
+  var checkboxes = document.querySelectorAll('#assignPropOverlay input[type=checkbox]');
+  var promises = [];
+  checkboxes.forEach(function(cb){
+    var pid = decodeURIComponent(cb.value);
+    var p = props.find(function(x){return (x.id||x.slug)===pid;});
+    if (!p) return;
+    var newBrokerId = cb.checked ? brokerId : '';
+    if (p.broker_id !== newBrokerId) {
+      p.broker_id = newBrokerId;
+      promises.push(fetch(API+'/api/propiedades',{
+        method:'PUT',credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:p.id||p.slug,broker_id:newBrokerId})
+      }));
+    }
+  });
+  if (promises.length > 0) {
+    try {
+      await Promise.all(promises);
+      showToast(promises.length+' propiedad(es) actualizada(s)','success');
+    } catch(e){showToast('Error al guardar','error');}
+  }
+  document.getElementById('assignPropOverlay').remove();
+  loadBrokerProps(brokerId);
 }
 
 async function saveBroker(id) {
@@ -2302,6 +2405,7 @@ function showWaTemplates(lid) {
 function openModal(id) {
   editingId = null; galUrls = []; currentStatus = 'Activa'; currentCinta = '';
   clearForm();
+  populateBrokerSelect();
   if (id) {
     const decoded = decodeURIComponent(id);
     const p = props.find(x=>(x.id||x.slug)===decoded || encodeURIComponent(x.id||x.slug)===id);
@@ -2311,6 +2415,23 @@ function openModal(id) {
   }
   formDirty = false;
   document.getElementById('modalOverlay').classList.add('open');
+}
+
+async function populateBrokerSelect() {
+  var sel = document.getElementById('fBrokerId');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Sin asesor</option>';
+  try {
+    var r = await fetch(API+'/api/brokers',{credentials:'include'});
+    var list = await r.json();
+    if (!Array.isArray(list)) return;
+    list.filter(function(b){return b.activo!==false;}).forEach(function(b){
+      var opt = document.createElement('option');
+      opt.value = b.id;
+      opt.textContent = b.nombre + (b.verificado?' ✓':'');
+      sel.appendChild(opt);
+    });
+  } catch(e){}
 }
 
 let formDirty = false;
@@ -2336,6 +2457,7 @@ function clearForm() {
    'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen','fVideoUrl','fGoogleMaps','fWhatsappProp'
   ].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados','fDepartamento'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('fBrokerId').value='';
   document.getElementById('fTipo').value='Casa';
   document.getElementById('fOperacion').value='Venta';
   document.getElementById('fMoneda').value='Q';
@@ -2371,6 +2493,7 @@ function loadForm(p) {
   sel('fTipo',p.tipo); sel('fOperacion',p.operacion); sel('fTipoListing',p.tipoListing); sel('fDepartamento',p.departamento);
   sel('fMoneda',p.moneda);
   set('fVideoUrl',p.videoUrl); set('fGoogleMaps',p.googleMapsUrl); set('fWhatsappProp',p.whatsappProp);
+  sel('fBrokerId',p.broker_id);
   document.getElementById('fDestacada').checked=!!p.destacada;
   descBloques=p.descBloques||[]; renderDescBlocks();
   document.getElementById('fPrivada').checked=!!p.privada;
@@ -2453,7 +2576,7 @@ async function saveProp() {
     imagen:g('fImagen'),gallery:galUrls,
     estado:currentStatus,cinta:currentCinta,caracteristicas:chars,sitios,
     moneda:g('fMoneda'),destacada:document.getElementById('fDestacada').checked,
-    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),slug:g('fSlug'),iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),
+    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),slug:g('fSlug'),broker_id:g('fBrokerId'),
     descBloques:getDescBloques(),
     privConfig: {
       hidePrecio: document.getElementById('pcHidePrecio')?.checked || false,
