@@ -2,7 +2,8 @@
 const { layout } = require('./layout');
 const { card } = require('./card');
 
-function indexPageNew(props) {
+function indexPageNew(props, brokers) {
+  brokers = brokers || [];
   const featured = props.slice(0, 6);
   const zonas = [...new Set(props.map(p=>p.municipio).filter(Boolean))].slice(0, 6);
   
@@ -44,6 +45,14 @@ function indexPageNew(props) {
       <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.8;max-width:520px;margin-bottom:44px;font-weight:300">
         ${props.length} propiedades verificadas en Guatemala. Casas, apartamentos, fincas e inversiones en las zonas mas exclusivas.
       </p>
+      <div style="max-width:560px;margin-bottom:40px">
+        <form action="/propiedades.html" method="GET" style="display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;overflow:hidden;backdrop-filter:blur(10px)">
+          <input type="text" name="q" placeholder="Buscar por zona, tipo o precio..." style="flex:1;background:transparent;border:none;padding:14px 20px;font-size:14px;color:white;outline:none;font-family:inherit" />
+          <button type="submit" style="background:var(--gold);border:none;padding:14px 24px;cursor:pointer;display:flex;align-items:center;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a1628" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
+        </form>
+      </div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px">
         <a href="/propiedades.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
         <a href="/planes.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.35);font-size:14px;font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.background='rgba(201,169,110,.25)'" onmouseout="this.style.background='rgba(201,169,110,.15)'">Para asesores &rarr;</a>
@@ -97,6 +106,33 @@ function indexPageNew(props) {
     <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
   </div>
 </section>
+
+${brokers.length > 0 ? `
+<section style="padding:80px 6%;background:white;border-bottom:1px solid #eef0f3">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Red de confianza</div>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:#0a1628;line-height:1.1;margin:0">Asesores <em style="font-style:italic">destacados</em></h2>
+      </div>
+      <a href="/asesores.html" style="font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:.04em" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ver todos &rarr;</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px">
+      ${brokers.filter(b=>b.activo!==false&&b.destacado).slice(0,4).map(b=>{
+        const initials = (b.nombre||'').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+        const zones = (b.zonas||[]).slice(0,3).join(' · ');
+        return `<a href="/asesores/${b.slug}.html" style="display:flex;align-items:center;gap:16px;padding:24px;background:#f8f9fb;border:1.5px solid #eef0f3;border-radius:14px;text-decoration:none;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 30px rgba(0,0,0,.06)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none';this.style.boxShadow='none'">
+          <div style="flex-shrink:0;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0a1628,#1a2a4e);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gold);letter-spacing:.04em;overflow:hidden">${b.foto?`<img src="${b.foto}" style="width:100%;height:100%;object-fit:cover" alt="${b.nombre}"/>`:initials}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span style="font-size:15px;font-weight:700;color:#0a1628">${b.nombre}</span>${b.verificado?'<svg width="14" height="14" viewBox="0 0 24 24" fill="#c9a96e" stroke="white" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>':''}</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:4px">${b.titulo||'Asesor inmobiliario'}</div>
+            <div style="font-size:11px;color:#94a3b8">${zones||'Guatemala'}</div>
+          </div>
+        </a>`;
+      }).join('')}
+    </div>
+  </div>
+</section>` : ''}
 
 <section style="padding:80px 6%;background:white">
   <div style="max-width:1200px;margin:0 auto;text-align:center">

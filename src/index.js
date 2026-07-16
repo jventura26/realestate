@@ -712,6 +712,108 @@ export default {
       return jsonRes({ error: 'Lead no encontrado' }, 404);
     }
 
+    // ── GET /api/public/brokers ── public broker profiles ──
+    if (method === 'GET' && path === '/api/public/brokers') {
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var pub = data.filter(function(b){ return b.activo !== false; }).map(function(b){
+        var o = Object.assign({}, b);
+        delete o.telefono; delete o.whatsapp_raw; delete o.email;
+        return o;
+      });
+      return new Response(JSON.stringify(pub), {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', ...cors(request) },
+      });
+    }
+
+    // ── GET /api/brokers ── all brokers (admin) ──
+    if (method === 'GET' && path === '/api/brokers') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      return jsonRes(data);
+    }
+
+    // ── POST /api/brokers ── create broker ──
+    if (method === 'POST' && path === '/api/brokers') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.nombre) return jsonRes({ error: 'Nombre requerido' }, 400);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var slug = (body.nombre||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      var existing = data.find(function(b){ return b.slug === slug; });
+      if (existing) slug = slug + '-' + Date.now().toString(36);
+      var broker = {
+        id: 'bk_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+        slug: slug,
+        nombre: body.nombre,
+        titulo: body.titulo || 'Asesor Inmobiliario',
+        bio: body.bio || '',
+        foto: body.foto || '',
+        telefono: body.telefono || '',
+        whatsapp: body.whatsapp || '',
+        whatsapp_raw: body.whatsapp || '',
+        email: body.email || '',
+        zonas: body.zonas || [],
+        especialidad: body.especialidad || [],
+        verificado: body.verificado || false,
+        destacado: body.destacado || false,
+        activo: true,
+        propiedades_count: 0,
+        rating: body.rating || 0,
+        reviews_count: 0,
+        response_time: body.response_time || 'Menos de 2 horas',
+        created_at: new Date().toISOString(),
+      };
+      data.push(broker);
+      await env.DB.put('brokers', JSON.stringify(data));
+      return jsonRes({ ok: true, broker: broker });
+    }
+
+    // ── PUT /api/brokers ── update broker ──
+    if (method === 'PUT' && path === '/api/brokers') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var found = false;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].id === body.id) {
+          var fields = ['nombre','titulo','bio','foto','telefono','whatsapp','whatsapp_raw','email','zonas','especialidad','verificado','destacado','activo','rating','response_time'];
+          fields.forEach(function(f){ if (body[f] !== undefined) data[i][f] = body[f]; });
+          found = true;
+          break;
+        }
+      }
+      if (found) await env.DB.put('brokers', JSON.stringify(data));
+      return jsonRes({ ok: found });
+    }
+
+    // ── DELETE /api/brokers ── delete broker ──
+    if (method === 'DELETE' && path === '/api/brokers') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var before = data.length;
+      data = data.filter(function(b){ return b.id !== body.id; });
+      if (data.length < before) {
+        await env.DB.put('brokers', JSON.stringify(data));
+        return jsonRes({ ok: true, deleted: true });
+      }
+      return jsonRes({ error: 'Broker no encontrado' }, 404);
+    }
+
     // ── GET /api/meta-ads-stats ── return cached Meta Ads stats ──
     if (method === 'GET' && path === '/api/meta-ads-stats') {
       var authed = await requireAuth(request, env);

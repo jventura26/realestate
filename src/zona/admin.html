@@ -748,6 +748,8 @@ body.dark .share-link-box { background: var(--dm-bg); }
         <div class="sb-section">Clientes</div>
         <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge" id="leadsCount">0</span></div>
         <div class="sb-item" id="nav-crm" onclick="showPage('crm')"><i class="ti ti-layout-kanban"></i> Pipeline CRM</div>
+        <div class="sb-section">InmuHub</div>
+        <div class="sb-item" id="nav-brokers" onclick="showPage('brokers')"><i class="ti ti-user-star"></i> Asesores</div>
         <div class="sb-section">Sitios</div>
         <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Zona INNmueble</div>
         <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> IncmuHub</div>
@@ -1277,13 +1279,13 @@ async function loadLeads() {
 
 // ── NAVIGATION ───────────────────────────────────────────────
 function showPage(page) {
-  ['dashboard','propiedades','leads','nueva','crm'].forEach(p => {
+  ['dashboard','propiedades','leads','nueva','crm','brokers'].forEach(p => {
     const n = document.getElementById('nav-' + p);
     if (n) n.classList.remove('active');
   });
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
-  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads', crm:'Pipeline CRM'};
+  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads', crm:'Pipeline CRM', brokers:'Asesores'};
   document.getElementById('pageTitle').textContent = titles[page] || page;
   const mc = document.getElementById('mainContent');
   if (!mc) return;
@@ -1291,6 +1293,7 @@ function showPage(page) {
   if (page === 'propiedades') renderPropiedades(mc);
   if (page === 'leads')       renderLeads(mc);
   if (page === 'crm')         renderCRM(mc);
+  if (page === 'brokers')     renderBrokers(mc);
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────
@@ -2096,6 +2099,154 @@ async function deleteLead(lid) {
     showToast('Lead eliminado','success');
     var mc = document.getElementById('mainContent');
     if (mc) renderCRM(mc);
+  } catch(e) { showToast('Error al eliminar','error'); console.error(e); }
+}
+
+// ── BROKERS MANAGEMENT ──────────────────────────────────────
+var brokersList = [];
+
+async function loadBrokers() {
+  try {
+    var r = await fetch(API+'/api/brokers',{credentials:'include'});
+    var d = await r.json();
+    brokersList = Array.isArray(d) ? d : [];
+  } catch(e) { brokersList = []; }
+}
+
+function renderBrokers(mc) {
+  loadBrokers().then(function() { renderBrokersUI(mc); });
+  mc.innerHTML = '<div style="text-align:center;padding:60px"><div class="spinner"></div><p style="color:#64748b;margin-top:16px">Cargando asesores...</p></div>';
+}
+
+function renderBrokersUI(mc) {
+  var activos = brokersList.filter(function(b){return b.activo!==false;}).length;
+  var verificados = brokersList.filter(function(b){return b.verificado;}).length;
+
+  mc.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">'
+    + '<div style="display:flex;gap:16px">'
+    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#16a34a">'+activos+'</div><div style="font-size:11px;color:#64748b">Activos</div></div>'
+    + '<div style="background:#fefce8;border:1px solid #fef08a;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#ca8a04">'+verificados+'</div><div style="font-size:11px;color:#64748b">Verificados</div></div>'
+    + '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#334155">'+brokersList.length+'</div><div style="font-size:11px;color:#64748b">Total</div></div>'
+    + '</div>'
+    + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="openBrokerForm()"><i class="ti ti-plus"></i> Nuevo asesor</button>'
+    + '</div>'
+    + '<div id="brokersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">'
+    + brokersList.map(function(b) {
+        var initials = (b.nombre||'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+        var zones = (b.zonas||[]).slice(0,3).join(', ');
+        return '<div style="background:white;border:1.5px solid #eef0f3;border-radius:12px;padding:20px;transition:all .2s;cursor:pointer" onclick="openBrokerForm(\''+b.id+'\')" onmouseover="this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.borderColor=\'#eef0f3\'">'
+          + '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">'
+          + '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0a1628,#1a2a4e);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#C9A96E;overflow:hidden;flex-shrink:0">'+(b.foto?'<img src="'+b.foto+'" style="width:100%;height:100%;object-fit:cover"/>':initials)+'</div>'
+          + '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:#0a1628;font-size:15px">'+b.nombre+'</span>'+(b.verificado?'<span style="color:#C9A96E" title="Verificado">&#10003;</span>':'')+'</div>'
+          + '<div style="font-size:12px;color:#64748b">'+(b.titulo||'Asesor')+'</div></div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;'+(b.activo!==false?'background:#f0fdf4;color:#16a34a':'background:#fef2f2;color:#dc2626')+'">'+(b.activo!==false?'Activo':'Inactivo')+'</span>'
+          + (b.destacado?'<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#fefce8;color:#ca8a04">Destacado</span>':'')
+          + '</div></div>'
+          + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
+          + (zones?'<span style="font-size:11px;color:#94a3b8"><i class="ti ti-map-pin" style="font-size:12px"></i> '+zones+'</span>':'')
+          + '<span style="font-size:11px;color:#94a3b8;margin-left:auto">'+(b.propiedades_count||0)+' props</span>'
+          + '</div></div>';
+      }).join('')
+    + '</div>';
+}
+
+function openBrokerForm(id) {
+  var b = id ? brokersList.find(function(x){return x.id===id;}) : null;
+  var isEdit = !!b;
+
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.id = 'brokerOverlay';
+  overlay.onclick = function(e){if(e.target===overlay)overlay.remove();};
+
+  var form = '<div style="background:white;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;padding:32px">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><h3 style="margin:0;font-size:18px;font-weight:700;color:#0a1628">'+(isEdit?'Editar':'Nuevo')+' asesor</h3><button onclick="document.getElementById(\'brokerOverlay\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8">&times;</button></div>'
+    + '<div style="display:grid;gap:16px">'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Nombre completo *</label><input id="bf_nombre" value="'+(b?b.nombre:'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Juan Pérez"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Título / Cargo</label><input id="bf_titulo" value="'+(b?b.titulo||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Asesor Senior"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Bio</label><textarea id="bf_bio" rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;resize:vertical" placeholder="Experiencia y especialización...">'+(b?b.bio||'':'')+'</textarea></div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Teléfono</label><input id="bf_tel" value="'+(b?b.telefono||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="+502 5555-1234"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">WhatsApp</label><input id="bf_wa" value="'+(b?b.whatsapp||b.whatsapp_raw||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="50255551234"/></div>'
+    + '</div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Email</label><input id="bf_email" value="'+(b?b.email||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="juan@email.com"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Foto URL</label><input id="bf_foto" value="'+(b?b.foto||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="https://..."/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Zonas (separar con comas)</label><input id="bf_zonas" value="'+(b?(b.zonas||[]).join(', '):'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Zona 14, Zona 15, Cayalá"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Especialidad (separar con comas)</label><input id="bf_esp" value="'+(b?(b.especialidad||[]).join(', '):'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Casas, Apartamentos, Inversión"/></div>'
+    + '<div style="display:flex;gap:20px;align-items:center">'
+    + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_verificado" '+(b&&b.verificado?'checked':'')+'/> Verificado</label>'
+    + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_destacado" '+(b&&b.destacado?'checked':'')+'/> Destacado</label>'
+    + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_activo" '+(b&&b.activo===false?'':'checked')+'/> Activo</label>'
+    + '</div>'
+    + '</div>'
+    + '<div style="display:flex;justify-content:space-between;margin-top:24px">'
+    + (isEdit?'<button onclick="deleteBroker(\''+b.id+'\')" style="background:none;border:1.5px solid #FECACA;color:#dc2626;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer"><i class="ti ti-trash"></i> Eliminar</button>':'<div></div>')
+    + '<div style="display:flex;gap:8px"><button onclick="document.getElementById(\'brokerOverlay\').remove()" class="btn btn-ghost">Cancelar</button>'
+    + '<button onclick="saveBroker('+(isEdit?"'"+b.id+"'":"null")+')" class="btn" style="background:var(--navy);color:var(--wh)"><i class="ti ti-check"></i> '+(isEdit?'Guardar':'Crear')+'</button></div>'
+    + '</div></div>';
+
+  overlay.innerHTML = form;
+  document.body.appendChild(overlay);
+}
+
+async function saveBroker(id) {
+  var nombre = document.getElementById('bf_nombre').value.trim();
+  if (!nombre) { showToast('Nombre requerido','error'); return; }
+
+  var slug = nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  var zonas = document.getElementById('bf_zonas').value.split(',').map(function(z){return z.trim();}).filter(Boolean);
+  var esp = document.getElementById('bf_esp').value.split(',').map(function(e){return e.trim();}).filter(Boolean);
+
+  var data = {
+    nombre: nombre,
+    slug: slug,
+    titulo: document.getElementById('bf_titulo').value.trim(),
+    bio: document.getElementById('bf_bio').value.trim(),
+    telefono: document.getElementById('bf_tel').value.trim(),
+    whatsapp_raw: document.getElementById('bf_wa').value.trim(),
+    email: document.getElementById('bf_email').value.trim(),
+    foto: document.getElementById('bf_foto').value.trim(),
+    zonas: zonas,
+    especialidad: esp,
+    verificado: document.getElementById('bf_verificado').checked,
+    destacado: document.getElementById('bf_destacado').checked,
+    activo: document.getElementById('bf_activo').checked
+  };
+
+  if (id) data.id = id;
+
+  try {
+    var r = await fetch(API+'/api/brokers',{
+      method: id ? 'PUT' : 'POST',
+      credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    var d = await r.json();
+    if (d.error) { showToast('Error: '+d.error,'error'); return; }
+    showToast(id?'Asesor actualizado':'Asesor creado','success');
+    document.getElementById('brokerOverlay').remove();
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error al guardar','error'); console.error(e); }
+}
+
+async function deleteBroker(id) {
+  if (!confirm('¿Eliminar este asesor? Esta acción no se puede deshacer.')) return;
+  try {
+    var r = await fetch(API+'/api/brokers',{
+      method:'DELETE',
+      credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id:id})
+    });
+    var d = await r.json();
+    if (d.error) { showToast('Error: '+d.error,'error'); return; }
+    showToast('Asesor eliminado','success');
+    document.getElementById('brokerOverlay').remove();
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
   } catch(e) { showToast('Error al eliminar','error'); console.error(e); }
 }
 

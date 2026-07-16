@@ -20,6 +20,21 @@ function fetchKV() {
   });
 }
 
+function fetchBrokers() {
+  return new Promise((resolve) => {
+    https.get('https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/brokers', (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const brokers = JSON.parse(data);
+          if (Array.isArray(brokers)) { resolve(brokers); } else { resolve([]); }
+        } catch(e) { resolve([]); }
+      });
+    }).on('error', () => resolve([]));
+  });
+}
+
 
 function cleanArea(area) {
   if (!area) return '';
@@ -54,6 +69,7 @@ const { generateSitemap, generateRobots, generateRedirects } = require('../share
 const { catalogPage, detailPage, zonaPage, tipoPage } = require('./templates/pages');
 const { layout } = require('./templates/layout');
 const { indexPageNew: indexPage } = require('./templates/index-page-new');
+const { brokerProfilePage, brokersDirectoryPage } = require('./templates/broker-pages');
 
 const DOMAIN = 'https://inmuhub.com';
 const CSV = path.resolve(__dirname, '../../data/propiedades.csv');
@@ -62,17 +78,17 @@ const PROPS = path.join(OUT, 'propiedades');
 const ZONAS = path.join(OUT, 'zonas');
 
 function write(p, c) { fs.mkdirSync(path.dirname(p),{recursive:true}); fs.writeFileSync(p,c,'utf-8'); }
-function slugZona(z) { return z.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function slugZona(z) { return z.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 function copyAssets() {
   const dstDir = path.join(OUT, 'assets');
   fs.mkdirSync(dstDir, { recursive: true });
-  
+
   const faviconSrc = path.join(__dirname, 'assets/favicon.png');
   const faviconDst = path.join(dstDir, 'favicon.png');
   if (fs.existsSync(faviconSrc)) {
     fs.copyFileSync(faviconSrc, faviconDst);
   }
-  
+
   const logoSrc = path.join(__dirname, 'assets/logo.png');
   const logoDst = path.join(dstDir, 'logo.png');
   if (fs.existsSync(logoSrc)) {
@@ -87,7 +103,8 @@ function copyAssets() {
 }
 
 console.log('\n Building INMUHUB.COM\n');
-fetchKV().then(kvData => {
+Promise.all([fetchKV(), fetchBrokers()]).then(([kvData, brokersData]) => {
+const brokers = brokersData || [];
 let allProps = kvData ? normalizeKV(kvData) : parseProperties(CSV);
 allProps = allProps.filter(p => {
   if (p.estado && p.estado !== 'Activa') return false;
@@ -103,7 +120,7 @@ fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
 fs.mkdirSync(ZONAS, { recursive:true });
 
-write(path.join(OUT,'index.html'), indexPage(props)); console.log(' index.html');
+write(path.join(OUT,'index.html'), indexPage(props, brokersData || [])); console.log(' index.html');
 write(path.join(OUT,'propiedades.html'), catalogPage(props)); console.log(' propiedades.html');
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
@@ -129,6 +146,17 @@ tiposUnicos.forEach(function(tipo) {
   console.log(' tipo: /tipos/' + tipoSlug + '.html');
 });
 console.log(' ' + tiposUnicos.length + ' tipo pages');
+
+// Broker pages
+const ASESORES = path.join(OUT, 'asesores');
+fs.mkdirSync(ASESORES, { recursive: true });
+write(path.join(OUT, 'asesores.html'), brokersDirectoryPage(brokers));
+console.log(' asesores.html (' + brokers.length + ' brokers)');
+brokers.filter(function(b){ return b.activo !== false; }).forEach(function(b) {
+  b.propiedades_count = props.filter(function(p){ return p.asesor_id === b.id || p.asesor_slug === b.slug; }).length;
+  write(path.join(ASESORES, b.slug + '.html'), brokerProfilePage(b, props));
+});
+console.log(' ' + brokers.filter(function(b){ return b.activo !== false; }).length + ' broker profile pages');
 
 // Favoritos page
 const favoritosHTML = layout({
@@ -198,12 +226,15 @@ write(path.join(OUT,'mapa.html'), layout({
 console.log(' mapa.html');
 
 const zonaUrls = zonas.map(z => ({ loc: `/zonas/${slugZona(z)}.html`, priority:'0.85', changefreq:'weekly' }));
+const brokerUrls = brokers.filter(function(b){ return b.activo !== false; }).map(function(b){ return { loc: '/asesores/' + b.slug + '.html', priority: '0.8', changefreq: 'weekly' }; });
 
 const urls = [
   { loc:'/', priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily' },
   { loc:'/favoritos.html', priority:'0.7', changefreq:'weekly' },
   { loc:'/mapa.html', priority:'0.8', changefreq:'weekly' },
+  { loc:'/asesores.html', priority:'0.85', changefreq:'weekly' },
+  ...brokerUrls,
   { loc:'/herramientas/calculadora-hipotecaria.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/guia-compra.html', priority:'0.85', changefreq:'monthly' },
@@ -225,16 +256,16 @@ const { dashboardInversionistasPage } = require('./templates/dashboard-inversion
 const HERRAMIENTAS = path.join(OUT, 'herramientas');
 fs.mkdirSync(HERRAMIENTAS, { recursive: true });
 
-write(path.join(HERRAMIENTAS, 'calculadora-hipotecaria.html'), mortgageCalculatorPage()); 
+write(path.join(HERRAMIENTAS, 'calculadora-hipotecaria.html'), mortgageCalculatorPage());
 console.log(' calculadora-hipotecaria.html');
 
-write(path.join(HERRAMIENTAS, 'valuador.html'), valuacionPage()); 
+write(path.join(HERRAMIENTAS, 'valuador.html'), valuacionPage());
 console.log(' valuador.html');
 
-write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPae()); 
+write(path.join(HERRAMIENTAS, 'guia-compra.html'), guiaCompraPae());
 console.log(' guia-compra.html');
 
-write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), simuladorInversionPage()); 
+write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), simuladorInversionPage());
 console.log(' simulador-inversion.html');
 
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
