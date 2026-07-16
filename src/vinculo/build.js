@@ -150,10 +150,13 @@ console.log(' ' + tiposUnicos.length + ' tipo pages');
 // Broker pages
 const ASESORES = path.join(OUT, 'asesores');
 fs.mkdirSync(ASESORES, { recursive: true });
+// Calcular propiedades_count ANTES de generar directorio y perfiles
+brokers.filter(function(b){ return b.activo !== false; }).forEach(function(b) {
+  b.propiedades_count = props.filter(function(p){ return p.broker_id === b.id; }).length;
+});
 write(path.join(OUT, 'asesores.html'), brokersDirectoryPage(brokers));
 console.log(' asesores.html (' + brokers.length + ' brokers)');
 brokers.filter(function(b){ return b.activo !== false; }).forEach(function(b) {
-  b.propiedades_count = props.filter(function(p){ return p.broker_id === b.id; }).length;
   write(path.join(ASESORES, b.slug + '.html'), brokerProfilePage(b, props));
 });
 console.log(' ' + brokers.filter(function(b){ return b.activo !== false; }).length + ' broker profile pages');
