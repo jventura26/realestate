@@ -2405,19 +2405,20 @@ function showWaTemplates(lid) {
 function openModal(id) {
   editingId = null; galUrls = []; currentStatus = 'Activa'; currentCinta = '';
   clearForm();
-  populateBrokerSelect();
+  var selectedBrokerId = '';
   if (id) {
     const decoded = decodeURIComponent(id);
     const p = props.find(x=>(x.id||x.slug)===decoded || encodeURIComponent(x.id||x.slug)===id);
-    if (p) { editingId = p.id||p.slug; document.getElementById('modalTitle').textContent='Editar propiedad'; loadForm(p); }
+    if (p) { editingId = p.id||p.slug; selectedBrokerId = p.broker_id||''; document.getElementById('modalTitle').textContent='Editar propiedad'; loadForm(p); }
   } else {
     document.getElementById('modalTitle').textContent = 'Nueva propiedad';
   }
+  populateBrokerSelect(selectedBrokerId);
   formDirty = false;
   document.getElementById('modalOverlay').classList.add('open');
 }
 
-async function populateBrokerSelect() {
+async function populateBrokerSelect(selectedId) {
   var sel = document.getElementById('fBrokerId');
   if (!sel) return;
   sel.innerHTML = '<option value="">Sin asesor</option>';
@@ -2431,6 +2432,7 @@ async function populateBrokerSelect() {
       opt.textContent = b.nombre + (b.verificado?' ✓':'');
       sel.appendChild(opt);
     });
+    if (selectedId) sel.value = selectedId;
   } catch(e){}
 }
 
