@@ -1897,8 +1897,8 @@ function renderCRM(mc) {
     if (sl.length===0) {
       cards = '<div class="pipe-empty">Sin leads</div>';
     } else {
-      // Sort: urgent first
-      sl.sort(function(a,b){ return daysSince(b.contacted_at||b.fecha) - daysSince(a.contacted_at||a.fecha); });
+      // Sort: newest first by date
+      sl.sort(function(a,b){ return new Date(b.fecha||0) - new Date(a.fecha||0); });
       sl.slice(0,maxShow).forEach(function(l){
         var nm = getLeadName(l);
         var pres = l.presupuesto||'';
@@ -2032,8 +2032,9 @@ function openLeadDetail(lid) {
     + '<div class="ld-notes"><h4><i class="ti ti-notes" style="margin-right:4px"></i> Notas y seguimiento</h4>'+notesHtml+'</div>'
     + '<div style="margin-top:12px"><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Agregar nota</label>'
     + '<textarea id="ldNewNote" rows="2" placeholder="Escribe una nota..." style="width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;background:var(--bg);outline:none;resize:vertical"></textarea></div>'
-    + '<div class="ld-actions"><button class="btn btn-ghost" onclick="closeLd()">Cancelar</button>'
-    + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="saveLeadDetail(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-check"></i> Guardar</button></div>';
+    + '<div class="ld-actions" style="justify-content:space-between"><div><button class="btn btn-ghost" style="color:#dc2626;border-color:#FECACA" onclick="deleteLead(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-trash"></i> Eliminar</button></div>'
+    + '<div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="closeLd()">Cancelar</button>'
+    + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="saveLeadDetail(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-check"></i> Guardar</button></div></div>';
 
   document.getElementById('ldOverlay').classList.add('open');
 }
@@ -2079,6 +2080,23 @@ async function saveLeadDetail(lid) {
     showToast('Error al guardar','error');
     console.error(e);
   }
+}
+
+// ── DELETE LEAD ─────────────────────────────────────────────
+async function deleteLead(lid) {
+  var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+  var nm = l ? getLeadName(l) : lid;
+  if (!confirm('¿Eliminar el lead "'+nm+'"?\n\nEsta acción no se puede deshacer.')) return;
+  try {
+    var r = await fetch(API+'/api/leads/delete',{method:'DELETE',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:lid})});
+    var d = await r.json();
+    if (d.error) { showToast('Error: '+d.error,'error'); return; }
+    leads = leads.filter(function(x){return (x.id||x._id||x.fecha)!=lid;});
+    closeLd();
+    showToast('Lead eliminado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderCRM(mc);
+  } catch(e) { showToast('Error al eliminar','error'); console.error(e); }
 }
 
 // ── WHATSAPP SEQUENCES ──────────────────────────────────────

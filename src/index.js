@@ -694,6 +694,24 @@ export default {
       return jsonRes({ ok: true });
     }
 
+    // ── DELETE /api/leads/delete ─────────────────────────────────
+    if (method === 'DELETE' && path === '/api/leads/delete') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('leads');
+      var data = raw ? JSON.parse(raw) : [];
+      var before = data.length;
+      data = data.filter(function(l) { return (l.id || l._id || l.fecha) != body.id; });
+      if (data.length < before) {
+        await env.DB.put('leads', JSON.stringify(data));
+        return jsonRes({ ok: true, deleted: true });
+      }
+      return jsonRes({ error: 'Lead no encontrado' }, 404);
+    }
+
     // ── GET /api/meta-ads-stats ── return cached Meta Ads stats ──
     if (method === 'GET' && path === '/api/meta-ads-stats') {
       var authed = await requireAuth(request, env);
