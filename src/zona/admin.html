@@ -2144,6 +2144,7 @@ function renderBrokersUI(mc) {
     + brokersList.map(function(b) {
         var initials = (b.nombre||'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
         var zones = (b.zonas||[]).slice(0,3).join(', ');
+        var propCount = (props||[]).filter(function(p){return p.broker_id===b.id;}).length;
         return '<div style="background:white;border:1.5px solid #eef0f3;border-radius:12px;padding:20px;transition:all .2s;cursor:pointer" onclick="openBrokerForm(\''+b.id+'\')" onmouseover="this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.borderColor=\'#eef0f3\'">'
           + '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">'
           + '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0a1628,#1a2a4e);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#C9A96E;overflow:hidden;flex-shrink:0">'+(b.foto?'<img src="'+b.foto+'" style="width:100%;height:100%;object-fit:cover"/>':initials)+'</div>'
@@ -2155,7 +2156,7 @@ function renderBrokersUI(mc) {
           + '</div></div>'
           + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
           + (zones?'<span style="font-size:11px;color:#94a3b8"><i class="ti ti-map-pin" style="font-size:12px"></i> '+zones+'</span>':'')
-          + '<span style="font-size:11px;color:#94a3b8;margin-left:auto">'+(b.propiedades_count||0)+' props</span>'
+          + '<span style="font-size:11px;color:#94a3b8;margin-left:auto">'+propCount+' props</span>'
           + '</div></div>';
       }).join('')
     + '</div>';
