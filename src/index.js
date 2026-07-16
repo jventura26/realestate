@@ -694,6 +694,25 @@ export default {
       return jsonRes({ ok: true });
     }
 
+    // ── GET /api/meta-ads-stats ── return cached Meta Ads stats ──
+    if (method === 'GET' && path === '/api/meta-ads-stats') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var cached = await env.DB.get('meta_ads_stats');
+      if (cached) return jsonRes(JSON.parse(cached));
+      return jsonRes({ error: 'Sin datos. Actualiza desde Cowork.' }, 404);
+    }
+
+    // ── POST /api/meta-ads-stats ── save Meta Ads stats from Cowork ──
+    if (method === 'POST' && path === '/api/meta-ads-stats') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      await env.DB.put('meta_ads_stats', JSON.stringify(body));
+      return jsonRes({ ok: true });
+    }
+
     // ── POST /api/rebuild ─────────────────────────────────────────
     if (method === 'POST' && path === '/api/rebuild') {
       const authed = await requireAuth(request, env);

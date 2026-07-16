@@ -714,6 +714,7 @@ body.dark .share-link-box { background: var(--dm-bg); }
 
 /* Property views counter */
 .prop-views { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text3); margin-top: 2px; }
+@keyframes spin{to{transform:rotate(360deg)}}
 
 </style>
 </head>
@@ -1421,8 +1422,106 @@ function renderDashboard(mc) {
           <div class="timeline-feed">${buildTimeline()}</div>
         </div>
       </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:22px">
+      <div class="chart-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span><i class="ti ti-brand-meta" style="color:#1877F2;margin-right:6px"></i>Meta Ads — Últimos 30 días</span>
+        <button class="btn btn-ghost btn-sm" onclick="refreshMetaAds(this)"><i class="ti ti-refresh"></i> Actualizar</button>
+      </div>
+      <div id="metaAdsData" style="padding:8px 0">
+        <div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">
+          <i class="ti ti-loader" style="font-size:20px;display:block;margin-bottom:8px;animation:spin 1s linear infinite"></i>
+          Cargando datos de Meta Ads...
+        </div>
+      </div>
     </div>`;
+
+  loadMetaAdsData();
   checkNewLeads();
+}
+
+function loadMetaAdsData() {
+  var container = document.getElementById('metaAdsData');
+  if (!container) return;
+  // Use cached data if available and fresh (<30 min)
+  var cached = localStorage.getItem('zi_meta_ads_cache');
+  var cacheTime = parseInt(localStorage.getItem('zi_meta_ads_cache_time')||'0');
+  if (cached && (Date.now() - cacheTime) < 1800000) {
+    renderMetaAdsWidget(JSON.parse(cached));
+    return;
+  }
+  // Show static fallback - data will be updated when user clicks Refresh or via MCP
+  container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">'
+    + '<i class="ti ti-brand-meta" style="font-size:24px;color:#1877F2;display:block;margin-bottom:8px"></i>'
+    + 'Haz clic en "Actualizar" para cargar datos en vivo de Meta Ads.</div>';
+}
+
+function refreshMetaAds(btn) {
+  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Cargando...'; }
+  var container = document.getElementById('metaAdsData');
+  if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px"><i class="ti ti-loader" style="animation:spin 1s linear infinite"></i> Conectando con Meta Ads API...</div>';
+  // This will be populated via the MCP connector from Cowork
+  // For now show the last known data or prompt to use Cowork
+  fetch(API+'/api/meta-ads-stats',{credentials:'include'})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if (btn) { btn.disabled=false; btn.innerHTML='<i class="ti ti-refresh"></i> Actualizar'; }
+      if (d.error) { container.innerHTML='<div style="text-align:center;padding:16px;color:#991B1B;font-size:12px">'+d.error+'</div>'; return; }
+      localStorage.setItem('zi_meta_ads_cache', JSON.stringify(d));
+      localStorage.setItem('zi_meta_ads_cache_time', String(Date.now()));
+      renderMetaAdsWidget(d);
+    })
+    .catch(function(e){
+      if (btn) { btn.disabled=false; btn.innerHTML='<i class="ti ti-refresh"></i> Actualizar'; }
+      if (container) container.innerHTML='<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">No se pudo conectar. Los datos de Meta Ads se actualizan desde Cowork.</div>';
+    });
+}
+
+function renderMetaAdsWidget(data) {
+  var container = document.getElementById('metaAdsData');
+  if (!container || !data) return;
+  var a = data.account || {};
+  var campaigns = data.campaigns || [];
+
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px">'
+    + metaStatCard('Gasto total', a.amount_spent||'—', 'ti-currency-dollar', '#F5820D')
+    + metaStatCard('Leads', a.lead||'—', 'ti-users', '#15803d')
+    + metaStatCard('CPL', a.cost_per_lead||'—', 'ti-target', '#1E40AF')
+    + metaStatCard('CTR', a.ctr||'—', 'ti-click', '#7C3AED')
+    + metaStatCard('CPC', a.cpc||'—', 'ti-pointer', '#D97706')
+    + metaStatCard('Alcance', a.reach||'—', 'ti-eye', '#0D1B3E')
+    + '</div>';
+
+  if (campaigns.length > 0) {
+    html += '<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">Campañas</div>';
+    html += '<div style="overflow-x:auto"><table style="width:100%;font-size:11px;border-collapse:collapse">'
+      + '<tr style="background:var(--bg);font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">'
+      + '<td style="padding:6px 8px">Campaña</td><td style="padding:6px 8px">Estado</td>'
+      + '<td style="padding:6px 8px">Gasto</td><td style="padding:6px 8px">Leads</td>'
+      + '<td style="padding:6px 8px">CPL</td><td style="padding:6px 8px">CTR</td></tr>';
+    campaigns.forEach(function(c){
+      var statusColor = c.status==='ACTIVE'?'#15803d':'#6B7280';
+      var statusLabel = c.status==='ACTIVE'?'Activa':'Pausada';
+      html += '<tr style="border-bottom:1px solid var(--border)">'
+        + '<td style="padding:8px;font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(c.name||'')+'">'+esc(c.name||'—')+'</td>'
+        + '<td style="padding:8px"><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:'+(c.status==='ACTIVE'?'#DCFCE7':'#F3F4F6')+';color:'+statusColor+';font-weight:600">'+statusLabel+'</span></td>'
+        + '<td style="padding:8px">'+esc(c.amount_spent||'—')+'</td>'
+        + '<td style="padding:8px;font-weight:700;color:#15803d">'+esc(c.lead||'0')+'</td>'
+        + '<td style="padding:8px">'+esc(c.cost_per_lead||'—')+'</td>'
+        + '<td style="padding:8px">'+esc(c.ctr||'—')+'</td></tr>';
+    });
+    html += '</table></div>';
+  }
+  html += '<div style="font-size:10px;color:var(--text3);margin-top:8px;text-align:right">Actualizado: '+new Date().toLocaleString('es-GT')+'</div>';
+  container.innerHTML = html;
+}
+
+function metaStatCard(label, value, icon, color) {
+  return '<div style="background:var(--bg);border-radius:8px;padding:10px 12px;text-align:center">'
+    + '<i class="ti '+icon+'" style="font-size:16px;color:'+color+';display:block;margin-bottom:4px"></i>'
+    + '<div style="font-size:15px;font-weight:800;color:var(--navy)">'+esc(String(value))+'</div>'
+    + '<div style="font-size:10px;color:var(--text3);margin-top:2px">'+label+'</div></div>';
 }
 
 // ── PROPIEDADES PAGE ─────────────────────────────────────────
@@ -1598,6 +1697,7 @@ function buildTable(data, sortable) {
           <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
           <div class="icon-btn" title="Ver en Zona INNmueble" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
           <div class="icon-btn" title="Ver en InmuHub" onclick="window.open('https://inmuhub.com/propiedades/${p.slug||p.id}.html','_blank')" style="border-color:#C9A96E"><i class="ti ti-building-skyscraper" style="color:#C9A96E"></i></div>
+          <div class="icon-btn" title="Landing Page para Ads" onclick="copyLP('${p.slug||p.id}')" style="border-color:#F5820D"><i class="ti ti-ad-2" style="color:#F5820D"></i></div>
           <div class="icon-btn" title="Ficha interactiva" onclick="generateFichaInteractiva('${id}')" style="color:#3B82F6"><i class="ti ti-device-mobile"></i></div>
           <div class="icon-btn" title="Exportar PDF" onclick="exportPropPDF('${id}')" style="color:#DC2626"><i class="ti ti-file-type-pdf"></i></div>
           <div class="icon-btn" title="Duplicar" onclick="duplicateProp('${id}')"><i class="ti ti-copy"></i></div>\n          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
@@ -1757,7 +1857,39 @@ function mapFaseToStage(l) {
   return 'Nuevo';
 }
 
+function daysSince(dateStr) {
+  if (!dateStr) return 999;
+  var d = new Date(dateStr);
+  if (isNaN(d)) return 999;
+  return Math.floor((Date.now() - d.getTime()) / 86400000);
+}
+function getUrgencyBadge(l) {
+  var stg = mapFaseToStage(l);
+  if (stg === 'Cierre' || stg === 'Perdido') return '';
+  var lastContact = l.contacted_at || l.fecha;
+  var days = daysSince(lastContact);
+  var followup = l.followup_date;
+  var badge = '';
+  if (days >= 7) badge = '<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#991B1B;font-weight:700">⚠ '+days+'d sin contacto</span>';
+  else if (days >= 3) badge = '<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#FEF9C3;color:#854D0E;font-weight:700">'+days+'d sin contacto</span>';
+  if (followup) {
+    var fd = daysSince(followup);
+    if (fd >= 0 && fd <= 1) badge += ' <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#DBEAFE;color:#1E40AF;font-weight:700">📅 Hoy</span>';
+    else if (fd > 1) badge += ' <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#991B1B;font-weight:700">📅 Vencido</span>';
+  }
+  return badge ? '<div style="margin:3px 0">'+badge+'</div>' : '';
+}
 function renderCRM(mc) {
+  // Count urgent leads
+  var urgentLeads = leads.filter(function(l){
+    var stg = mapFaseToStage(l);
+    if (stg==='Cierre'||stg==='Perdido') return false;
+    return daysSince(l.contacted_at||l.fecha) >= 7;
+  });
+  var overdueFollowups = leads.filter(function(l){
+    return l.followup_date && daysSince(l.followup_date) > 1 && mapFaseToStage(l)!=='Cierre' && mapFaseToStage(l)!=='Perdido';
+  });
+
   var cols = pipeStages.map(function(stage){
     var sl = leads.filter(function(l){return mapFaseToStage(l)===stage;});
     var maxShow = 15;
@@ -1765,6 +1897,8 @@ function renderCRM(mc) {
     if (sl.length===0) {
       cards = '<div class="pipe-empty">Sin leads</div>';
     } else {
+      // Sort: urgent first
+      sl.sort(function(a,b){ return daysSince(b.contacted_at||b.fecha) - daysSince(a.contacted_at||a.fecha); });
       sl.slice(0,maxShow).forEach(function(l){
         var nm = getLeadName(l);
         var pres = l.presupuesto||'';
@@ -1773,6 +1907,7 @@ function renderCRM(mc) {
           + '<div class="pipe-card-name">'+esc(nm)+'</div>'
           + '<div class="pipe-card-prop">'+esc(l.propiedad||l.tipo_propiedad||'—')+'</div>'
           + (pres&&pres!=='SIN PRESUPUESTO'?'<div style="font-size:10px;color:#166534;font-weight:600;margin:2px 0">'+esc(pres)+'</div>':'')
+          + getUrgencyBadge(l)
           + '<div class="pipe-card-footer"><span class="pipe-card-date">'+formatDate(l.fecha)+'</span></div>'
           + '</div>';
       });
@@ -1786,6 +1921,14 @@ function renderCRM(mc) {
       + cards+'</div>';
   }).join('');
 
+  var alertBanner = '';
+  if (urgentLeads.length > 0 || overdueFollowups.length > 0) {
+    var msgs = [];
+    if (urgentLeads.length > 0) msgs.push('<i class="ti ti-alert-triangle"></i> <strong>'+urgentLeads.length+'</strong> lead'+(urgentLeads.length>1?'s':'')+' sin contactar en 7+ días');
+    if (overdueFollowups.length > 0) msgs.push('<i class="ti ti-calendar-event"></i> <strong>'+overdueFollowups.length+'</strong> seguimiento'+(overdueFollowups.length>1?'s':'')+' vencido'+(overdueFollowups.length>1?'s':''));
+    alertBanner = '<div style="background:linear-gradient(135deg,#FEF2F2,#FFF7ED);border:1px solid #FECACA;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:#991B1B">'+msgs.join(' <span style="color:#D97706">·</span> ')+'</div>';
+  }
+
   mc.innerHTML = '<div class="page-header"><div>'
     + '<div class="page-header-title">Pipeline CRM</div>'
     + '<div class="page-header-sub">'+leads.length+' leads en total</div></div>'
@@ -1794,6 +1937,7 @@ function renderCRM(mc) {
     + '<button class="btn btn-ghost btn-sm" onclick="showPage(\'leads\')"><i class="ti ti-list"></i> Vista lista</button>'
     + '<button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>'
     + '</div></div>'
+    + alertBanner
     + '<div class="pipeline-wrap">'+cols+'</div>'
     + '<div class="ld-overlay" id="ldOverlay">'
     + '<div class="ld-panel"><div class="ld-header"><h3 id="ldTitle">Lead</h3>'
@@ -1881,7 +2025,10 @@ function openLeadDetail(lid) {
     + '<div class="ld-field"><label>Presupuesto</label><div class="ld-val">'+esc(l.presupuesto||'—')+'</div></div></div>'
     + '<div class="ld-row"><div class="ld-field"><label>Email</label><div class="ld-val">'+esc(l.email||'—')+'</div></div>'
     + '<div class="ld-field"><label>Fuente</label><div class="ld-val">'+esc(l.fuente||l.source||'—')+'</div></div></div>'
-    + (waL?'<div style="margin-bottom:14px"><a class="wa-btn" href="'+waL+'" target="_blank"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a></div>':'')
+    + (waL?'<div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">'
+      + '<a class="wa-btn" href="'+waL+'" target="_blank"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>'
+      + '<button class="btn btn-ghost btn-sm" onclick="showWaTemplates(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-template"></i> Secuencias</button>'
+      + '</div>':'')
     + '<div class="ld-notes"><h4><i class="ti ti-notes" style="margin-right:4px"></i> Notas y seguimiento</h4>'+notesHtml+'</div>'
     + '<div style="margin-top:12px"><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Agregar nota</label>'
     + '<textarea id="ldNewNote" rows="2" placeholder="Escribe una nota..." style="width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;background:var(--bg);outline:none;resize:vertical"></textarea></div>'
@@ -1932,6 +2079,54 @@ async function saveLeadDetail(lid) {
     showToast('Error al guardar','error');
     console.error(e);
   }
+}
+
+// ── WHATSAPP SEQUENCES ──────────────────────────────────────
+function showWaTemplates(lid) {
+  var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+  if (!l) return;
+  var ph = getLeadPhone(l);
+  if (!ph) return;
+  var cleanPh = ph.replace(/\D/g, '');
+  if (cleanPh.length <= 8) cleanPh = '502' + cleanPh;
+  var nombre = (getLeadName(l)).split(' ')[0];
+  var prop = l.propiedad || l.tipo_propiedad || 'propiedad';
+
+  var templates = [
+    { icon:'ti-message-circle', label:'Bienvenida', color:'#15803d',
+      msg:'Hola '+nombre+', gracias por tu interés en '+prop+'. Soy Jorge de Zona-INNmueble, asesor inmobiliario especializado en propiedades premium en Guatemala. ¿Te gustaría que te comparta más detalles sobre esta propiedad?' },
+    { icon:'ti-building', label:'Propiedades similares', color:'#1E40AF',
+      msg:'Hola '+nombre+', además de '+prop+', tenemos otras opciones que podrían interesarte en zonas premium de Guatemala. ¿Te gustaría que te envíe un catálogo personalizado con propiedades similares?' },
+    { icon:'ti-clock', label:'Seguimiento 3 días', color:'#D97706',
+      msg:'Hola '+nombre+', hace unos días conversamos sobre '+prop+'. ¿Tuviste oportunidad de revisar la información? Quedo atento a cualquier consulta que tengas.' },
+    { icon:'ti-map-pin', label:'Invitación a visita', color:'#7C3AED',
+      msg:'Hola '+nombre+', me gustaría invitarte a conocer '+prop+' en persona. ¿Qué día y horario te funcionaría mejor para una visita privada? Te aseguro que vale la pena.' },
+    { icon:'ti-star', label:'Exclusividad', color:'#991B1B',
+      msg:'Hola '+nombre+', quería compartirte que '+prop+' ha generado bastante interés. Si estás considerando esta opción, con gusto te reservo un espacio para conocerla antes que otros interesados. ¿Te parece?' },
+    { icon:'ti-heart', label:'Post-visita', color:'#9A3412',
+      msg:'Hola '+nombre+', fue un gusto mostrarte '+prop+'. ¿Qué te pareció? Si tienes alguna consulta adicional o quieres revisar números, estoy a la orden.' }
+  ];
+
+  var html = '<div style="padding:20px;max-width:520px;margin:40px auto;background:var(--wh);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15)">'
+    + '<h3 style="margin:0 0 4px;font-size:16px">Secuencias de WhatsApp</h3>'
+    + '<p style="font-size:12px;color:var(--text3);margin:0 0 16px">Elige un mensaje para enviar a <strong>'+esc(getLeadName(l))+'</strong></p>';
+  templates.forEach(function(t){
+    var waUrl = 'https://wa.me/'+cleanPh+'?text='+encodeURIComponent(t.msg);
+    html += '<a href="'+waUrl+'" target="_blank" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border);margin-bottom:8px;transition:all .15s"'
+      + ' onmouseover="this.style.background=\'#F0FDF4\';this.style.borderColor=\'#86EFAC\'"'
+      + ' onmouseout="this.style.background=\'transparent\';this.style.borderColor=\'var(--border)\'">'
+      + '<i class="ti '+t.icon+'" style="font-size:20px;color:'+t.color+'"></i>'
+      + '<div><div style="font-weight:600;font-size:13px">'+t.label+'</div>'
+      + '<div style="font-size:11px;color:var(--text3);line-height:1.3;margin-top:2px">'+esc(t.msg.substring(0,80))+'...</div></div></a>';
+  });
+  html += '<div style="text-align:right;margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'waSeqOverlay\').remove()">Cerrar</button></div></div>';
+
+  var ov = document.createElement('div');
+  ov.id = 'waSeqOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:800;overflow-y:auto';
+  ov.innerHTML = html;
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
 }
 
 // ── MODAL ────────────────────────────────────────────────────
@@ -2468,6 +2663,16 @@ function quickChangeStatus(propId, newStatus) {
     var page = document.querySelector('.sb-item.active');
     showPage(page ? page.id.replace('nav-','') : 'dashboard');
   }).catch(function() { showToast('Error al cambiar estado'); });
+}
+
+// ── COPY LANDING PAGE URL ────────────────────────────────────
+function copyLP(slug) {
+  var url = 'https://zona-innmueble.com/lp.html?p=' + encodeURIComponent(slug) + '&utm_source=meta&utm_medium=cpc&utm_campaign=' + encodeURIComponent(slug);
+  navigator.clipboard.writeText(url).then(function(){
+    showToast('URL de landing page copiada al portapapeles','success');
+  }).catch(function(){
+    prompt('Copia esta URL para Meta Ads:', url);
+  });
 }
 
 // ── EXPORT PROPERTY AS PDF ───────────────────────────────────
