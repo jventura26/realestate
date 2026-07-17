@@ -274,7 +274,7 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
         <li class="plan-feature"><span class="plan-feature-icon">✓</span>Badge verificado</li>
         <li class="plan-feature"><span class="plan-feature-icon">✓</span>Zona exclusiva asignada</li>
       </ul>
-      <a href="/registro-asesor.html" class="plan-btn plan-btn-outline" onclick="document.getElementById('agentForm').scrollIntoView({behavior:'smooth'});return false;">Solicitar plan Premium</a>
+      <a href="/registro-asesor.html" class="plan-btn plan-btn-outline">Solicitar plan Premium</a>
     </div>
 
   </div>
@@ -309,7 +309,7 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
         <tr><td>Zona exclusiva</td><td class="cross">—</td><td class="cross">—</td><td class="featured-col cross">—</td><td class="check">✓</td></tr>
         <tr><td>Dashboard de analytics</td><td class="cross">—</td><td class="cross">—</td><td class="featured-col check">✓</td><td class="check">✓</td></tr>
         <tr><td>Soporte prioritario</td><td class="cross">—</td><td class="cross">—</td><td class="featured-col check">✓</td><td class="check">✓</td></tr>
-        <tr><td>Comisión por venta</td><td><strong>0%</strong></td><td class="featured-col"><strong>0%</strong></td><td><strong>0%</strong></td></tr>
+        <tr><td>Comisión por venta</td><td><strong>0%</strong></td><td><strong>0%</strong></td><td class="featured-col"><strong>0%</strong></td><td><strong>0%</strong></td></tr>
       </tbody>
     </table>
   </div>
@@ -407,49 +407,17 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
   </div>
 </section>
 
-<!-- REGISTER FORM -->
+<!-- CTA FINAL -->
 <section class="register-section" id="registro">
-  <div class="register-wrap">
+  <div class="register-wrap" style="max-width:640px;text-align:center">
     <div class="section-head" style="margin-bottom:40px">
-      <div class="eyebrow" style="color:rgba(201,168,76,.7)">Registro de Asesor</div>
-      <h2 class="section-title" style="color:#fff;font-size:clamp(1.6rem,3vw,2.2rem)">Empieza hoy.<br><em>Primera semana gratis.</em></h2>
-      <p class="section-sub" style="color:rgba(255,255,255,.55);margin-top:12px">Sin tarjeta de crédito. Activa tu cuenta en 5 minutos.</p>
+      <div class="eyebrow" style="color:rgba(201,168,76,.7)">Empieza ahora</div>
+      <h2 class="section-title" style="color:#fff;font-size:clamp(1.6rem,3vw,2.2rem)">Crea tu cuenta.<br><em>Publica tu primera propiedad hoy.</em></h2>
+      <p class="section-sub" style="color:rgba(255,255,255,.55);margin-top:12px">Sin tarjeta de crédito. Sin comisiones ocultas. Tu plan gratuito te espera.</p>
     </div>
-    <div class="register-form" id="agentForm">
-      <div class="form-grid">
-        <div class="form-row">
-          <label class="form-label">Nombre</label>
-          <input type="text" class="form-input" placeholder="Tu nombre" id="f-nombre">
-        </div>
-        <div class="form-row">
-          <label class="form-label">Apellido</label>
-          <input type="text" class="form-input" placeholder="Tu apellido" id="f-apellido">
-        </div>
-      </div>
-      <div class="form-row">
-        <label class="form-label">WhatsApp / Teléfono</label>
-        <input type="tel" class="form-input" placeholder="+502 ____-____" id="f-telefono">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Correo electrónico</label>
-        <input type="email" class="form-input" placeholder="tu@email.com" id="f-email">
-      </div>
-      <div class="form-row">
-        <label class="form-label">Plan de interés</label>
-        <select class="form-select form-input" id="f-plan">
-          <option value="">Selecciona un plan</option>
-          <option value="gratis">Gratis — Q0 (siempre gratis)</option>
-          <option value="basico">Básico — Q149/mes</option>
-          <option value="pro">Pro — Q349/mes (Más popular)</option>
-          <option value="premium">Premium — Q699/mes</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label class="form-label">Zonas donde trabajas</label>
-        <input type="text" class="form-input" placeholder="Ej: Zona 10, Fraijanes, Santa Catarina" id="f-zonas">
-      </div>
-      <p id="form-msg" style="font-size:.75rem;min-height:18px;margin-bottom:8px;text-align:center"></p><button class="form-btn" onclick="submitAsesor()">Activar mi cuenta gratis →</button>
-      <p class="form-note">Al registrarte aceptas nuestros <a href="/privacidad.html" style="color:rgba(255,255,255,.5)">Términos y Política de Privacidad</a>. Primera semana sin costo, sin compromiso.</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+      <a href="/registro-asesor.html" class="form-btn" style="display:inline-block;max-width:360px;text-decoration:none;text-align:center">Crear mi cuenta gratis →</a>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.6">¿Ya tienes cuenta? <a href="/dashboard.html" style="color:var(--gold2);text-decoration:none;font-weight:600">Inicia sesión →</a></p>
     </div>
   </div>
 </section>
@@ -464,42 +432,6 @@ footer a{color:rgba(255,255,255,.4);text-decoration:none}
 function toggleFaq(el) {
   const item = el.closest('.faq-item');
   item.classList.toggle('open');
-}
-
-async function submitAsesor() {
-  const btn = document.querySelector('.form-btn');
-  const box = document.getElementById('agentForm');
-  const nombre   = (document.getElementById('f-nombre')   ||{}).value||'';
-  const apellido = (document.getElementById('f-apellido') ||{}).value||'';
-  const telefono = (document.getElementById('f-telefono') ||{}).value||'';
-  const email    = (document.getElementById('f-email')    ||{}).value||'';
-  const plan     = (document.getElementById('f-plan')     ||{}).value||'';
-  const zonas    = (document.getElementById('f-zonas')    ||{}).value||'';
-  const msg = document.getElementById('form-msg');
-
-  if (!nombre.trim() || !email.trim() || !telefono.trim()) {
-    if(msg){ msg.textContent = 'Completa nombre, telefono y correo.'; msg.style.color='#f87171'; }
-    return;
-  }
-
-  btn.textContent = 'Enviando...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch('https://script.google.com/macros/s/AKfycbzzTtXr_zbBkko8Z7i64zcsmA5Ws7iMOLaEocNfYmoDWf6hITpSyyGhzVimx7NihKoFYA/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ nombre, apellido, telefono, email, plan, zonas,
-        _subject: 'Nuevo asesor INMUHUB: ' + nombre + ' ' + apellido })
-    });
-    if (res.ok) {
-      box.innerHTML = '<div style="text-align:center;padding:48px 24px"><div style="font-size:3.5rem;margin-bottom:20px">&#10003;</div><h3 style="color:white;font-size:1.5rem;font-weight:700;margin-bottom:12px">Solicitud recibida</h3><p style="color:rgba(255,255,255,.6);line-height:1.8;max-width:340px;margin:0 auto">Revisaremos tu informacion y te contactaremos en las proximas 24 horas.</p></div>';
-    } else { throw new Error(); }
-  } catch(e) {
-    btn.textContent = 'Activar mi cuenta gratis →';
-    btn.disabled = false;
-    if(msg){ msg.textContent = 'Error al enviar. Intenta de nuevo.'; msg.style.color='#f87171'; }
-  }
 }
 </script>
 </body>

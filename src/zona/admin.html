@@ -2133,34 +2133,49 @@ function renderBrokersUI(mc) {
   var verificados = brokersList.filter(function(b){return b.verificado;}).length;
   var pendientes = brokersList.filter(function(b){return b.estado==='pendiente';}).length;
 
-  mc.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">'
+  var brokerFilter = window._brokerFilter || 'todos';
+  var filtered = brokersList;
+  if (brokerFilter === 'pendientes') filtered = brokersList.filter(function(b){return b.estado==='pendiente';});
+  else if (brokerFilter === 'aprobados') filtered = brokersList.filter(function(b){return b.estado==='aprobado';});
+  else if (brokerFilter === 'sinestado') filtered = brokersList.filter(function(b){return !b.estado;});
+
+  var sinEstado = brokersList.filter(function(b){return !b.estado;}).length;
+
+  mc.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">'
     + '<div style="display:flex;gap:16px">'
-    + (pendientes?'<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#dc2626">'+pendientes+'</div><div style="font-size:11px;color:#64748b">Pendientes</div></div>':'')
-    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#16a34a">'+activos+'</div><div style="font-size:11px;color:#64748b">Activos</div></div>'
-    + '<div style="background:#fefce8;border:1px solid #fef08a;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#ca8a04">'+verificados+'</div><div style="font-size:11px;color:#64748b">Verificados</div></div>'
-    + '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 20px"><div style="font-size:22px;font-weight:700;color:#334155">'+brokersList.length+'</div><div style="font-size:11px;color:#64748b">Total</div></div>'
+    + (pendientes?'<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'pendientes\')"><div style="font-size:22px;font-weight:700;color:#dc2626">'+pendientes+'</div><div style="font-size:11px;color:#64748b">Pendientes</div></div>':'')
+    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'aprobados\')"><div style="font-size:22px;font-weight:700;color:#16a34a">'+activos+'</div><div style="font-size:11px;color:#64748b">Aprobados</div></div>'
+    + (sinEstado?'<div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'sinestado\')"><div style="font-size:22px;font-weight:700;color:#a16207">'+sinEstado+'</div><div style="font-size:11px;color:#64748b">Sin estado</div></div>':'')
+    + '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'todos\')"><div style="font-size:22px;font-weight:700;color:#334155">'+brokersList.length+'</div><div style="font-size:11px;color:#64748b">Total</div></div>'
     + '</div>'
     + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="openBrokerForm()"><i class="ti ti-plus"></i> Nuevo asesor</button>'
     + '</div>'
+    + (sinEstado ? '<div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#92400e"><strong>⚠ '+sinEstado+' asesor(es) sin estado asignado.</strong> Fueron creados antes del sistema de aprobación. <button onclick="approveAllLegacy()" style="background:#16a34a;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px">Aprobar todos</button></div>' : '')
     + '<div id="brokersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">'
-    + brokersList.map(function(b) {
+    + filtered.map(function(b) {
         var initials = (b.nombre||'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
         var zones = (b.zonas||[]).slice(0,3).join(', ');
         var propCount = (props||[]).filter(function(p){return p.broker_id===b.id;}).length;
-        return '<div style="background:white;border:1.5px solid #eef0f3;border-radius:12px;padding:20px;transition:all .2s;cursor:pointer" onclick="openBrokerForm(\''+b.id+'\')" onmouseover="this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.borderColor=\'#eef0f3\'">'
-          + '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">'
+        var isPending = b.estado==='pendiente';
+        var noEstado = !b.estado;
+        return '<div style="background:white;border:1.5px solid '+(isPending?'#fde68a':noEstado?'#fde047':'#eef0f3')+';border-radius:12px;padding:20px;transition:all .2s">'
+          + '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;cursor:pointer" onclick="openBrokerForm(\''+b.id+'\')">'
           + '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0a1628,#1a2a4e);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#C9A96E;overflow:hidden;flex-shrink:0">'+(b.foto?'<img src="'+b.foto+'" style="width:100%;height:100%;object-fit:cover"/>':initials)+'</div>'
           + '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:#0a1628;font-size:15px">'+b.nombre+'</span>'+(b.verificado?'<span style="color:#C9A96E" title="Verificado">&#10003;</span>':'')+'</div>'
-          + '<div style="font-size:12px;color:#64748b">'+(b.titulo||'Asesor')+'</div></div>'
+          + '<div style="font-size:12px;color:#64748b">'+(b.titulo||'Asesor')+' &middot; '+(b.email||'')+'</div></div>'
           + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
-          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;'+(b.estado==='pendiente'?'background:#fef3c7;color:#92400e':b.estado==='aprobado'||b.activo!==false?'background:#f0fdf4;color:#16a34a':'background:#fef2f2;color:#dc2626')+'">'+(b.estado==='pendiente'?'Pendiente':b.estado==='aprobado'?'Aprobado':b.activo!==false?'Activo':'Inactivo')+'</span>'
+          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;'+(isPending?'background:#fef3c7;color:#92400e':noEstado?'background:#fef9c3;color:#a16207':b.estado==='aprobado'?'background:#f0fdf4;color:#16a34a':'background:#fef2f2;color:#dc2626')+'">'+(isPending?'Pendiente':noEstado?'Sin estado':b.estado==='aprobado'?'Aprobado':'Rechazado')+'</span>'
           + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#f1f5f9;color:#475569">'+(b.plan||'free').toUpperCase()+'</span>'
           + (b.destacado?'<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#fefce8;color:#ca8a04">Destacado</span>':'')
           + '</div></div>'
-          + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
+          + '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
           + (zones?'<span style="font-size:11px;color:#94a3b8"><i class="ti ti-map-pin" style="font-size:12px"></i> '+zones+'</span>':'')
-          + '<span style="font-size:11px;color:#94a3b8;margin-left:auto">'+propCount+' props</span>'
-          + '</div></div>';
+          + '<span style="font-size:11px;color:#94a3b8">'+propCount+' props</span>'
+          + '<span style="margin-left:auto;display:flex;gap:6px">'
+          + (isPending||noEstado ? '<button onclick="event.stopPropagation();quickApprove(\''+b.id+'\')" style="background:#16a34a;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer" title="Aprobar"><i class="ti ti-check"></i> Aprobar</button>' : '')
+          + (isPending||noEstado ? '<button onclick="event.stopPropagation();quickReject(\''+b.id+'\')" style="background:#dc2626;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer" title="Rechazar"><i class="ti ti-x"></i> Rechazar</button>' : '')
+          + '<button onclick="event.stopPropagation();openBrokerForm(\''+b.id+'\')" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer"><i class="ti ti-pencil"></i></button>'
+          + '</span></div></div>';
       }).join('')
     + '</div>';
 }
@@ -2367,6 +2382,45 @@ async function deleteBroker(id) {
     var mc = document.getElementById('mainContent');
     if (mc) renderBrokers(mc);
   } catch(e) { showToast('Error al eliminar','error'); console.error(e); }
+}
+
+// ── QUICK BROKER ACTIONS ──────────────────────────────────────
+function filterBrokers(f) {
+  window._brokerFilter = f;
+  var mc = document.getElementById('mainContent');
+  if (mc) renderBrokersUI(mc);
+}
+
+async function quickApprove(id) {
+  try {
+    await fetch(API+'/api/brokers',{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,estado:'aprobado',activo:true})});
+    showToast('Asesor aprobado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error','error'); }
+}
+
+async function quickReject(id) {
+  if (!confirm('¿Rechazar este asesor?')) return;
+  try {
+    await fetch(API+'/api/brokers',{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,estado:'rechazado',activo:false})});
+    showToast('Asesor rechazado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error','error'); }
+}
+
+async function approveAllLegacy() {
+  if (!confirm('¿Aprobar todos los asesores sin estado asignado?')) return;
+  var legacy = brokersList.filter(function(b){return !b.estado;});
+  for (var i=0; i<legacy.length; i++) {
+    try {
+      await fetch(API+'/api/brokers',{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:legacy[i].id,estado:'aprobado',activo:true})});
+    } catch(e) {}
+  }
+  showToast(legacy.length+' asesor(es) aprobados','success');
+  var mc = document.getElementById('mainContent');
+  if (mc) renderBrokers(mc);
 }
 
 // ── WHATSAPP SEQUENCES ──────────────────────────────────────
