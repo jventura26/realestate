@@ -786,7 +786,7 @@ export default {
       var found = false;
       for (var i = 0; i < data.length; i++) {
         if (data[i].id === body.id) {
-          var fields = ['nombre','titulo','bio','foto','telefono','whatsapp','whatsapp_raw','email','zonas','especialidad','verificado','destacado','activo','rating','response_time'];
+          var fields = ['nombre','titulo','bio','foto','telefono','whatsapp','whatsapp_raw','email','zonas','especialidad','verificado','destacado','activo','rating','response_time','estado','plan'];
           fields.forEach(function(f){ if (body[f] !== undefined) data[i][f] = body[f]; });
           found = true;
           break;
@@ -879,6 +879,317 @@ export default {
         );
       }
       return jsonRes({ ok: true });
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // ══ BROKER AUTH & SELF-SERVICE ENDPOINTS ══════════════════
+    // ════════════════════════════════════════════════════════════
+
+    // ── POST /api/broker/register ── public registration ──
+    if (method === 'POST' && path === '/api/broker/register') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.nombre || !body.email || !body.password) {
+        return jsonRes({ error: 'Nombre, email y contraseña son requeridos' }, 400);
+      }
+      if (body.password.length < 6) {
+        return jsonRes({ error: 'La contraseña debe tener al menos 6 caracteres' }, 400);
+      }
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var emailExists = data.find(function(b){ return b.email && b.email.toLowerCase() === body.email.toLowerCase(); });
+      if (emailExists) return jsonRes({ error: 'Ya existe una cuenta con este email' }, 409);
+      var slug = (body.nombre||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      var existingSlug = data.find(function(b){ return b.slug === slug; });
+      if (existingSlug) slug = slug + '-' + Date.now().toString(36);
+      var passwordHash = await hashSHA256(body.password + ':broker_salt_zi');
+      var broker = {
+        id: 'bk_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+        slug: slug,
+        nombre: body.nombre,
+        titulo: body.titulo || 'Asesor Inmobiliario',
+        bio: body.bio || '',
+        foto: body.foto || '',
+        telefono: body.telefono || '',
+        whatsapp: body.whatsapp || '',
+        whatsapp_raw: body.whatsapp || '',
+        email: body.email.toLowerCase(),
+        zonas: body.zonas || [],
+        especialidad: body.especialidad || [],
+        verificado: false,
+        destacado: false,
+        activo: false,
+        estado: 'pendiente',
+        plan: 'free',
+        password_hash: passwordHash,
+        propiedades_count: 0,
+        rating: 0,
+        reviews_count: 0,
+        response_time: 'Menos de 2 horas',
+        created_at: new Date().toISOString(),
+      };
+      data.push(broker);
+      await env.DB.put('brokers', JSON.stringify(data));
+      return jsonRes({ ok: true, message: 'Registro exitoso. Tu cuenta está pendiente de aprobación.' });
+    }
+
+    // ── POST /api/broker/login ── broker authentication ──
+    if (method === 'POST' && path === '/api/broker/login') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.email || !body.password) return jsonRes({ error: 'Email y contraseña requeridos' }, 400);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var broker = data.find(function(b){ return b.email && b.email.toLowerCase() === body.email.toLowerCase(); });
+      if (!broker || !broker.password_hash) return jsonRes({ error: 'Credenciales inválidas' }, 401);
+      var hash = await hashSHA256(body.password + ':broker_salt_zi');
+      if (hash !== broker.password_hash) return jsonRes({ error: 'Credenciales inválidas' }, 401);
+      if (broker.estado === 'pendiente') return jsonRes({ error: 'Tu cuenta está pendiente de aprobación' }, 403);
+      if (broker.estado === 'rechazado') return jsonRes({ error: 'Tu cuenta ha sido rechazada' }, 403);
+      if (broker.activo === false && broker.estado !== 'aprobado') return jsonRes({ error: 'Tu cuenta no está activa' }, 403);
+      var token = generateToken();
+      await env.DB.put('broker_session:' + token, broker.id, { expirationTtl: SESSION_TTL });
+      return jsonRes({ ok: true, token: token, broker: { id: broker.id, nombre: broker.nombre, plan: broker.plan, estado: broker.estado } });
+    }
+
+    // ── POST /api/broker/logout ──
+    if (method === 'POST' && path === '/api/broker/logout') {
+      var authHeader = request.headers.get('Authorization') || '';
+      var bToken = authHeader.replace('Bearer ', '');
+      if (bToken) await env.DB.delete('broker_session:' + bToken);
+      return jsonRes({ ok: true });
+    }
+
+    // ── Helper: authenticate broker from Bearer token ──
+    async function requireBrokerAuth(request, env) {
+      var authHeader = request.headers.get('Authorization') || '';
+      var token = authHeader.replace('Bearer ', '');
+      if (!token) return null;
+      var brokerId = await env.DB.get('broker_session:' + token);
+      if (!brokerId) return null;
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      return data.find(function(b){ return b.id === brokerId; }) || null;
+    }
+
+    // ── GET /api/broker/me ── broker profile ──
+    if (method === 'GET' && path === '/api/broker/me') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var planLimits = { free: 2, pro: 5, premium: 999 };
+      var raw = await env.DB.get('propiedades');
+      var allProps = raw ? JSON.parse(raw) : [];
+      var myProps = allProps.filter(function(p){ return p.broker_id === broker.id; });
+      var stats = await env.DB.get('broker_stats:' + broker.id);
+      var statsData = stats ? JSON.parse(stats) : { views: 0, wa_clicks: 0 };
+      return jsonRes({
+        id: broker.id,
+        slug: broker.slug,
+        nombre: broker.nombre,
+        titulo: broker.titulo,
+        bio: broker.bio,
+        foto: broker.foto,
+        email: broker.email,
+        telefono: broker.telefono,
+        whatsapp: broker.whatsapp,
+        zonas: broker.zonas,
+        especialidad: broker.especialidad,
+        verificado: broker.verificado,
+        destacado: broker.destacado,
+        plan: broker.plan || 'free',
+        estado: broker.estado || 'aprobado',
+        propiedades_count: myProps.length,
+        propiedades_limit: planLimits[broker.plan || 'free'] || 2,
+        stats: statsData,
+        created_at: broker.created_at,
+      });
+    }
+
+    // ── PUT /api/broker/me ── broker updates own profile ──
+    if (method === 'PUT' && path === '/api/broker/me') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var allowedFields = ['nombre','titulo','bio','foto','telefono','whatsapp','zonas','especialidad','response_time'];
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].id === broker.id) {
+          allowedFields.forEach(function(f){ if (body[f] !== undefined) data[i][f] = body[f]; });
+          if (body.whatsapp) data[i].whatsapp_raw = body.whatsapp;
+          break;
+        }
+      }
+      await env.DB.put('brokers', JSON.stringify(data));
+      ctx.waitUntil(triggerRebuild());
+      return jsonRes({ ok: true });
+    }
+
+    // ── GET /api/broker/propiedades ── broker's own properties ──
+    if (method === 'GET' && path === '/api/broker/propiedades') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var raw = await env.DB.get('propiedades');
+      var allProps = raw ? JSON.parse(raw) : [];
+      var myProps = allProps.filter(function(p){ return p.broker_id === broker.id; });
+      return jsonRes(myProps);
+    }
+
+    // ── POST /api/broker/propiedades ── broker creates property ──
+    if (method === 'POST' && path === '/api/broker/propiedades') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var planLimits = { free: 2, pro: 5, premium: 999 };
+      var limit = planLimits[broker.plan || 'free'] || 2;
+      var raw = await env.DB.get('propiedades');
+      var allProps = raw ? JSON.parse(raw) : [];
+      var myCount = allProps.filter(function(p){ return p.broker_id === broker.id; }).length;
+      if (myCount >= limit) {
+        return jsonRes({ error: 'Has alcanzado el límite de propiedades de tu plan (' + limit + '). Actualiza tu plan para publicar más.' }, 403);
+      }
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.titulo) return jsonRes({ error: 'Título requerido' }, 400);
+      var slug = (body.titulo||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      var existingSlug = allProps.find(function(p){ return p.slug === slug; });
+      if (existingSlug) slug = slug + '-' + Date.now().toString(36);
+      var prop = Object.assign({}, body, {
+        id: slug,
+        slug: slug,
+        broker_id: broker.id,
+        estado: 'Activa',
+        sitios: ['inmu'],
+        createdAt: new Date().toISOString(),
+      });
+      allProps.push(prop);
+      await env.DB.put('propiedades', JSON.stringify(allProps));
+      ctx.waitUntil(triggerRebuild());
+      return jsonRes({ ok: true, propiedad: prop });
+    }
+
+    // ── PUT /api/broker/propiedades ── broker edits own property ──
+    if (method === 'PUT' && path === '/api/broker/propiedades') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('propiedades');
+      var allProps = raw ? JSON.parse(raw) : [];
+      var idx = allProps.findIndex(function(p){ return (p.id||p.slug) === body.id && p.broker_id === broker.id; });
+      if (idx === -1) return jsonRes({ error: 'Propiedad no encontrada o no te pertenece' }, 404);
+      var id = body.id; delete body.id;
+      delete body.broker_id;
+      allProps[idx] = Object.assign({}, allProps[idx], body, { id: id, broker_id: broker.id });
+      await env.DB.put('propiedades', JSON.stringify(allProps));
+      ctx.waitUntil(triggerRebuild());
+      return jsonRes({ ok: true });
+    }
+
+    // ── DELETE /api/broker/propiedades ── broker deletes own property ──
+    if (method === 'DELETE' && path === '/api/broker/propiedades') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('propiedades');
+      var allProps = raw ? JSON.parse(raw) : [];
+      var before = allProps.length;
+      allProps = allProps.filter(function(p){ return !((p.id||p.slug) === body.id && p.broker_id === broker.id); });
+      if (allProps.length < before) {
+        await env.DB.put('propiedades', JSON.stringify(allProps));
+        ctx.waitUntil(triggerRebuild());
+        return jsonRes({ ok: true });
+      }
+      return jsonRes({ error: 'Propiedad no encontrada o no te pertenece' }, 404);
+    }
+
+    // ── POST /api/broker/view/:slug ── track profile view (public) ──
+    if (method === 'POST' && path.startsWith('/api/broker/view/')) {
+      var slug = path.split('/api/broker/view/')[1];
+      if (slug) {
+        var statsKey = 'broker_stats_by_slug:' + slug;
+        var raw = await env.DB.get('brokers');
+        var data = raw ? JSON.parse(raw) : [];
+        var b = data.find(function(x){ return x.slug === slug; });
+        if (b) {
+          var sRaw = await env.DB.get('broker_stats:' + b.id);
+          var s = sRaw ? JSON.parse(sRaw) : { views: 0, wa_clicks: 0 };
+          s.views = (s.views || 0) + 1;
+          await env.DB.put('broker_stats:' + b.id, JSON.stringify(s));
+        }
+      }
+      return jsonRes({ ok: true });
+    }
+
+    // ── POST /api/broker/wa-click/:slug ── track WhatsApp click (public) ──
+    if (method === 'POST' && path.startsWith('/api/broker/wa-click/')) {
+      var slug = path.split('/api/broker/wa-click/')[1];
+      if (slug) {
+        var raw = await env.DB.get('brokers');
+        var data = raw ? JSON.parse(raw) : [];
+        var b = data.find(function(x){ return x.slug === slug; });
+        if (b) {
+          var sRaw = await env.DB.get('broker_stats:' + b.id);
+          var s = sRaw ? JSON.parse(sRaw) : { views: 0, wa_clicks: 0 };
+          s.wa_clicks = (s.wa_clicks || 0) + 1;
+          await env.DB.put('broker_stats:' + b.id, JSON.stringify(s));
+        }
+      }
+      return jsonRes({ ok: true });
+    }
+
+    // ── PUT /api/brokers/approve ── admin approves/rejects broker ──
+    if (method === 'PUT' && path === '/api/brokers/approve') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id || !body.estado) return jsonRes({ error: 'ID y estado requeridos' }, 400);
+      if (['aprobado','rechazado','pendiente'].indexOf(body.estado) === -1) return jsonRes({ error: 'Estado inválido' }, 400);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var found = false;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].id === body.id) {
+          data[i].estado = body.estado;
+          data[i].activo = body.estado === 'aprobado';
+          if (body.plan) data[i].plan = body.plan;
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        await env.DB.put('brokers', JSON.stringify(data));
+        ctx.waitUntil(triggerRebuild());
+      }
+      return jsonRes({ ok: found });
+    }
+
+    // ── PUT /api/brokers/plan ── admin changes broker plan ──
+    if (method === 'PUT' && path === '/api/brokers/plan') {
+      var authed = await requireAuth(request, env);
+      if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id || !body.plan) return jsonRes({ error: 'ID y plan requeridos' }, 400);
+      if (['free','pro','premium'].indexOf(body.plan) === -1) return jsonRes({ error: 'Plan inválido' }, 400);
+      var raw = await env.DB.get('brokers');
+      var data = raw ? JSON.parse(raw) : [];
+      var found = false;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].id === body.id) {
+          data[i].plan = body.plan;
+          if (body.plan === 'pro' || body.plan === 'premium') data[i].verificado = true;
+          if (body.plan === 'premium') data[i].destacado = true;
+          found = true;
+          break;
+        }
+      }
+      if (found) await env.DB.put('brokers', JSON.stringify(data));
+      return jsonRes({ ok: found });
     }
 
     return jsonRes({ error: 'Not found' }, 404);

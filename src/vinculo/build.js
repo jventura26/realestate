@@ -237,6 +237,8 @@ const urls = [
   { loc:'/favoritos.html', priority:'0.7', changefreq:'weekly' },
   { loc:'/mapa.html', priority:'0.8', changefreq:'weekly' },
   { loc:'/asesores.html', priority:'0.85', changefreq:'weekly' },
+  { loc:'/registro-asesor.html', priority:'0.8', changefreq:'monthly' },
+  { loc:'/dashboard.html', priority:'0.7', changefreq:'monthly' },
   ...brokerUrls,
   { loc:'/herramientas/calculadora-hipotecaria.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
@@ -273,6 +275,16 @@ console.log(' simulador-inversion.html');
 
 write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
 console.log(' dashboard-inversionistas.html');
+
+// Registro asesor page
+const { registroAsesorPage } = require('./templates/registro-asesor-page');
+write(path.join(OUT, 'registro-asesor.html'), registroAsesorPage());
+console.log(' registro-asesor.html');
+
+// Dashboard asesor page
+const { dashboardAsesorPage } = require('./templates/dashboard-asesor-page');
+write(path.join(OUT, 'dashboard.html'), dashboardAsesorPage());
+console.log(' dashboard.html');
 
 console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} zonas\n`);
 
