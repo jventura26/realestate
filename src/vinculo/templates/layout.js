@@ -679,15 +679,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="/propiedades.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Propiedades</a>
     <a href="/herramientas/valuador.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Valuador</a>
     <a href="/herramientas/calculadora-hipotecaria.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Calculadora</a>
-    <a href="/asesores.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Asesores</a>
+    <a href="/asesores.html" id="navAsesores" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Asesores</a>
     <span style="width:1px;height:18px;background:#e2e8f0;margin:0 8px;flex-shrink:0;display:inline-block"></span>
     <a href="/planes.html" style="font-size:13px;font-weight:500;color:#C9A96E;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.background='#fdf8f0'" onmouseout="this.style.background='transparent'">Publicar</a>
     <a href="/como-funciona.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Cómo funciona</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div id="navGuest" style="display:flex;align-items:center;gap:10px;flex-shrink:0">
     <a href="/registro-asesor.html" style="font-size:13px;font-weight:700;color:#2d2416;background:#C9A96E;padding:9px 18px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Para Asesores</a>
-    <a href="/dashboard.html" style="font-size:13px;font-weight:600;color:#1a2a4e;border:1.5px solid #d1d5db;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='#1a2a4e';this.style.background='#f9fafb'" onmouseout="this.style.borderColor='#d1d5db';this.style.background='transparent'">Iniciar sesión</a>
+    <a href="/dashboard.html" style="font-size:13px;font-weight:600;color:#1a2a4e;border:1.5px solid #d1d5db;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='#1a2a4e';this.style.background='#f9fafb'" onmouseout="this.style.borderColor='#d1d5db';this.style.background='transparent'">Iniciar sesi&oacute;n</a>
+  </div>
+  <div id="navAuth" style="display:none;align-items:center;gap:10px;flex-shrink:0">
+    <a href="/dashboard.html" style="font-size:13px;font-weight:700;color:#2d2416;background:#C9A96E;padding:9px 18px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Mi Dashboard</a>
   </div>
   </div>
 </div>
@@ -769,6 +772,18 @@ ${scripts}
   function ck(){ if((window.scrollY||window.pageYOffset)>60) nav.classList.add('nav-scrolled'); else nav.classList.remove('nav-scrolled'); }
   window.addEventListener('scroll',ck,{passive:true});
   ck();
+})();
+(function(){
+  var t=localStorage.getItem('broker_token');
+  var g=document.getElementById('navGuest');
+  var a=document.getElementById('navAuth');
+  var nl=document.getElementById('navAsesores');
+  if(t){
+    if(g)g.style.display='none';
+    if(a)a.style.display='flex';
+  } else {
+    if(nl)nl.addEventListener('click',function(e){e.preventDefault();window.location.href='/dashboard.html';});
+  }
 })();
 (function(){
   var cards = document.querySelectorAll('.property-card');
