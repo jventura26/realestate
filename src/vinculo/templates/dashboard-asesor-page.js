@@ -284,8 +284,8 @@ function dashboardAsesorPage() {
           '<div class="dash-prop-title">'+(p.titulo||p.title||'')+'</div>' +
           '<div style="font-size:12px;color:#94a3b8;margin-top:4px">'+(p.zona||p.municipio||p.locationFull||'')+'</div>' +
           '<div class="dash-prop-actions">' +
-          '<button class="dash-edit-btn" onclick="editProp(\''+encodeURIComponent(p.id||p.slug)+'\')">Editar</button>' +
-          '<button class="dash-del-btn" onclick="deleteProp(\''+encodeURIComponent(p.id||p.slug)+'\')">Eliminar</button>' +
+          '<button class="dash-edit-btn" onclick="editProp(\\''+encodeURIComponent(p.id||p.slug)+'\\')">Editar</button>' +
+          '<button class="dash-del-btn" onclick="deleteProp(\\''+encodeURIComponent(p.id||p.slug)+'\\')">Eliminar</button>' +
           '</div></div>';
         grid.appendChild(card);
       });
