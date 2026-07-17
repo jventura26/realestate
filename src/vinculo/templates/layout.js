@@ -663,7 +663,41 @@ footer h4 { font-size: 11px !important; }
 footer > div:last-child { padding: 24px 6% !important; }
 footer > div:last-child > div { text-align: center !important; }
 }
-</style>
+/* MOBILE ALIGNMENT FIXES — InmuHub */
+@media(max-width:640px){
+/* Dashboard login card */
+.dash-login{padding:32px 20px !important;margin:40px 16px !important;max-width:100% !important}
+/* Dashboard modal */
+.dash-modal{padding:24px 18px !important;margin:16px !important;max-width:100% !important;border-radius:14px !important}
+.dash-modal-overlay{padding:16px 8px !important}
+/* Hero inner padding */
+section[style*="min-height:92vh"] > div[style*="padding:100px"]{padding:60px 5% 40px !important}
+section[style*="min-height:92vh"] > div[style*="padding:100px"] h1{font-size:clamp(2rem,7vw,3rem) !important}
+/* Nav auth buttons */
+#navGuest a,#navAuth a{font-size:11px !important;padding:7px 12px !important}
+/* Toast notifications */
+div[style*="position:fixed"][style*="top:24px"][style*="right:24px"]{right:12px !important;left:12px !important;max-width:none !important}
+/* Registration card */
+.reg-card{padding:28px 20px !important;margin:0 12px !important}
+/* Plans page cards on small mobile */
+.plan-card{padding:28px 20px !important}
+/* Agent section padding */
+.agent-grid > div:last-child > div[style*="padding:40px"]{padding:24px 20px !important}
+/* Zonas tags wrap */
+div[style*="flex-wrap:wrap"][style*="gap:8px"] a{padding:8px 12px !important;font-size:12px !important}
+/* Stats bar compact */
+.stats-bar > div > div{padding:0 3% !important}
+}
+@media(max-width:380px){
+/* Extra small screens */
+#navGuest a,#navAuth a{font-size:10px !important;padding:6px 10px !important}
+.dash-login{padding:24px 16px !important;margin:24px 12px !important}
+section[style*="min-height:92vh"] > div[style*="padding:100px"]{padding:40px 4% 24px !important}
+section[style*="min-height:92vh"] > div[style*="padding:100px"] h1{font-size:1.8rem !important}
+section[style*="min-height:92vh"] > div[style*="padding:100px"] p{font-size:.85rem !important}
+/* CTA buttons */
+a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !important;font-size:13px !important}
+}
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -750,51 +784,4 @@ ${body}
     @media(max-width:768px){
       .footer-grid{grid-template-columns:1fr 1fr !important;}
       .footer-brand{grid-column:1/-1;}
-      footer > div:first-child { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
-      footer > div:first-child > div:first-child { grid-column: 1/-1; }
-    }
-    @media(max-width:480px){
-      .footer-grid{grid-template-columns:1fr !important;}
-      footer > div:first-child { grid-template-columns: 1fr !important; gap: 24px !important; }
-      footer > div:first-child { padding: 40px 5% 0 !important; }
-      .nav-inner{height:auto !important;min-height:80px !important;padding:12px 0 !important;}
-      .nav-inner > div:nth-child(2){display:none !important;}
-    }
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  </style>
-</footer>
-${scripts}
-<script src="/assets/vinculo-fase1.js" defer></script>
-<script>
-(function(){
-  var nav = document.querySelector('nav');
-  if(!nav) return;
-  function ck(){ if((window.scrollY||window.pageYOffset)>60) nav.classList.add('nav-scrolled'); else nav.classList.remove('nav-scrolled'); }
-  window.addEventListener('scroll',ck,{passive:true});
-  ck();
-})();
-(function(){
-  var t=localStorage.getItem('broker_token');
-  var g=document.getElementById('navGuest');
-  var a=document.getElementById('navAuth');
-  var nl=document.getElementById('navAsesores');
-  if(t){
-    if(g)g.style.display='none';
-    if(a)a.style.display='flex';
-  } else {
-    if(nl)nl.addEventListener('click',function(e){e.preventDefault();window.location.href='/dashboard.html';});
-  }
-})();
-(function(){
-  var cards = document.querySelectorAll('.property-card');
-  if(!cards.length||!('IntersectionObserver' in window)){cards.forEach(function(c){c.classList.add('visible');});return;}
-  var obs = new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
-  cards.forEach(function(c){obs.observe(c);});
-})();
-</script>
-</body>
-</html>`;
-}
-
-module.exports = { layout };
-<!-- INMUHUB v2.0.16 - PIXEL ACTIVO -->
+      foo

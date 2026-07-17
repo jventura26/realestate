@@ -62,6 +62,23 @@ function dashboardAsesorPage() {
 .reg-chip.active{background:rgba(201,169,110,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
 .reg-chip:hover{border-color:#c9a96e}
 @keyframes fadeInToast{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+/* MOBILE FIXES */
+@media(max-width:640px){
+.dash-login{padding:32px 20px !important;margin:40px 16px !important}
+.dash-modal-overlay{padding:16px 8px !important}
+.dash-modal{padding:24px 18px !important;border-radius:14px !important}
+.dash-modal h3{font-size:1.2rem !important}
+.dash-container{padding:20px 4% !important}
+.dash-stats{grid-template-columns:1fr 1fr !important;gap:12px !important}
+.dash-prop-card{border-radius:10px !important}
+div[style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr !important}
+div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+}
+@media(max-width:380px){
+.dash-login{padding:24px 16px !important;margin:24px 12px !important}
+.dash-stats{grid-template-columns:1fr !important}
+.dash-modal{padding:20px 14px !important}
+}
 </style>
 
 <!-- LOGIN VIEW -->
@@ -499,30 +516,4 @@ function dashboardAsesorPage() {
   };
 
   window.deleteProp = function(encodedId){
-    if(!confirm('¿Eliminar esta propiedad?')) return;
-    var id = decodeURIComponent(encodedId);
-    fetch(API+'/api/broker/propiedades', {method:'DELETE', headers:headers(), body:JSON.stringify({id:id})})
-    .then(function(r){return r.json();})
-    .then(function(d){ if(d.ok) loadDashboard(); });
-  };
-
-  window.doLogout = function(){
-    fetch(API+'/api/broker/logout', {method:'POST', headers:headers()}).catch(function(){});
-    localStorage.removeItem('broker_token');
-    token = null;
-    updateNav(false);
-    showLogin();
-  };
-})();
-<\/script>
-`;
-
-  return layout({
-    title: 'Dashboard de Asesor',
-    desc: 'Administra tus propiedades, perfil y métricas como asesor inmobiliario en InmuHub.',
-    canonical: '/dashboard.html',
-    body: body
-  });
-}
-
-module.exports = { dashboardAsesorPage };
+    if(
