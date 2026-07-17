@@ -148,6 +148,7 @@ return layout({ title: null, desc: `Casas, apartamentos, fincas y terrenos en Gu
 
 function catalogPage(props) {
 const tipos = uniqueValues(props, 'tipo');
+
 const ciudades = uniqueValues(props, 'municipio');
 const cintas = uniqueValues(props, 'cinta');
 const filterJS = `<script>(function(){const grid=document.getElementById('g'),count=document.getElementById('fc');const cards=[...grid.querySelectorAll('.property-card')];function run(){const q=document.getElementById('fq').value.toLowerCase();const ti=document.getElementById('ft').value,ci=document.getElementById('fc2').value,ci2=document.getElementById('fc3').value,pr=document.getElementById('fp').value,hb=document.getElementById('fh').value;let n=0;cards.forEach(c=>{const ok=(!q||c.textContent.toLowerCase().includes(q))&&(!ti||c.dataset.tipo===ti)&&(!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&(!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&(!pr||(()=>{const p=parseFloat(c.dataset.precio),parts=pr.split('-').map(Number);return p>=parts[0]&&(!parts[1]||p<=parts[1]);})());c.style.display=ok?'':'none';if(ok)n++;});count.textContent=n+' propiedad'+(n!==1?'es':'');document.getElementById('nr').style.display=n===0?'block':'none';}['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).addEventListener('input',run));document.getElementById('fq').addEventListener('change',run);document.getElementById('cl').addEventListener('click',()=>{['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).value='');run();});const p=new URLSearchParams(location.search);if(p.get('tipo'))document.getElementById('ft').value=p.get('tipo');if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');run();count.textContent='${props.length} propiedades';})();<\/script>`;
@@ -770,6 +771,17 @@ ${mobGalHTML}${galHTML}
 
       ${planoHTML}
 
+
+      <hr class="zp-divider">
+      <div class="zp-contact-form" id="zpContactForm">
+        <h3 style="font-size:14px;font-weight:700;color:#0a1628;margin-bottom:14px;display:flex;align-items:center;gap:8px"><i class="ti ti-mail" style="color:#C9A96E"></i> Contactar al asesor</h3>
+        <div style="margin-bottom:10px"><input type="text" id="zpCName" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+        <div style="margin-bottom:10px"><input type="email" id="zpCEmail" placeholder="Tu email" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+        <div style="margin-bottom:10px"><input type="tel" id="zpCPhone" placeholder="Tu teléfono (opcional)" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+        <div style="margin-bottom:12px"><textarea id="zpCMsg" rows="3" placeholder="Me interesa esta propiedad..." style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box"></textarea></div>
+        <button onclick="zpSendMsg()" id="zpCBtn" style="width:100%;padding:12px;background:#1a3a5c;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s">Enviar mensaje</button>
+        <div id="zpCResult" style="margin-top:10px;font-size:13px;display:none"></div>
+      </div>
       <p class="zp-meta">inmuhub.com — Real Estate Guatemala</p>
     </div>
   </div>
@@ -801,6 +813,25 @@ document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(
 </script>
 <script type="application/ld+json">${schemaListing}</script>
 <script type="application/ld+json">${schemaBreadcrumb}</script>
+<script>
+function zpSendMsg(){
+  var btn=document.getElementById('zpCBtn');
+  var res=document.getElementById('zpCResult');
+  var name=document.getElementById('zpCName').value.trim();
+  var email=document.getElementById('zpCEmail').value.trim();
+  var phone=document.getElementById('zpCPhone').value.trim();
+  var msg=document.getElementById('zpCMsg').value.trim();
+  if(!name||!email||!msg){res.style.display='block';res.style.color='#991b1b';res.textContent='Completa nombre, email y mensaje';return;}
+  btn.disabled=true;btn.textContent='Enviando...';
+  fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/messages',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({broker_id:'${esc(prop.broker_id||"")}',propiedad_id:'${esc(prop.slug||prop.id||"")}',propiedad_titulo:'${esc(prop.titulo||"")}',nombre:name,email:email,telefono:phone,mensaje:msg})
+  }).then(function(r){return r.json()}).then(function(d){
+    if(d.ok){res.style.display='block';res.style.color='#166534';res.textContent='Mensaje enviado. El asesor te contactará pronto.';btn.textContent='Enviado';document.getElementById('zpCName').value='';document.getElementById('zpCEmail').value='';document.getElementById('zpCMsg').value='';document.getElementById('zpCPhone').value='';}
+    else{res.style.display='block';res.style.color='#991b1b';res.textContent=d.error||'Error al enviar';btn.disabled=false;btn.textContent='Enviar mensaje';}
+  }).catch(function(){res.style.display='block';res.style.color='#991b1b';res.textContent='Error de conexión';btn.disabled=false;btn.textContent='Enviar mensaje';});
+}
+</script>
 </body></html>`;
 }
 function mortgageCalcPage(props) {

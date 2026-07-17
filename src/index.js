@@ -1192,6 +1192,429 @@ export default {
       return jsonRes({ ok: found });
     }
 
+
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 3: MENSAJES, BÚSQUEDA, FAVORITOS
+    // ═══════════════════════════════════════════════════════════════
+
+    // ── POST /api/messages ── visitor sends message to broker ──
+    if (method === 'POST' && path === '/api/messages') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.broker_id || !body.nombre || !body.email || !body.mensaje) {
+        return jsonRes({ error: 'broker_id, nombre, email y mensaje son requeridos' }, 400);
+      }
+      var msg = {
+        id: crypto.randomUUID(),
+        broker_id: body.broker_id,
+        propiedad_id: body.propiedad_id || null,
+        propiedad_titulo: body.propiedad_titulo || null,
+        nombre: body.nombre,
+        email: body.email,
+        telefono: body.telefono || '',
+        mensaje: body.mensaje,
+        leido: false,
+        created_at: new Date().toISOString(),
+      };
+      var raw = await env.DB.get('messages:' + body.broker_id);
+      var msgs = raw ? JSON.parse(raw) : [];
+      msgs.unshift(msg);
+      // Keep max 500 messages per broker
+      if (msgs.length > 500) msgs = msgs.slice(0, 500);
+      await env.DB.put('messages:' + body.broker_id, JSON.stringify(msgs));
+      // Update unread count
+      var unread = msgs.filter(function(m){ return !m.leido; }).length;
+      await env.DB.put('messages_unread:' + body.broker_id, String(unread));
+      // Notify broker via webhook (same pattern as lead notification)
+      var brokersRaw = await env.DB.get('brokers');
+      var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
+      var broker = brokers.find(function(b){ return b.id === body.broker_id; });
+      if (broker && broker.whatsapp_raw && NOTIFY_WEBHOOK) {
+        ctx.waitUntil(fetch(NOTIFY_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'broker_message',
+            broker_name: broker.nombre,
+            broker_phone: broker.whatsapp_raw,
+            sender_name: body.nombre,
+            property: body.propiedad_titulo || 'Consulta general',
+            message: body.mensaje.substring(0, 200),
+          })
+        }).catch(function(){}));
+      }
+      return jsonRes({ ok: true, id: msg.id });
+    }
+
+    // ── GET /api/broker/messages ── broker reads their messages ──
+    if (method === 'GET' && path === '/api/broker/messages') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var raw = await env.DB.get('messages:' + broker.id);
+      var msgs = raw ? JSON.parse(raw) : [];
+      var unread = msgs.filter(function(m){ return !m.leido; }).length;
+      return jsonRes({ messages: msgs, unread: unread });
+    }
+
+    // ── PUT /api/broker/messages/read ── mark message as read ──
+    if (method === 'PUT' && path === '/api/broker/messages/read') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('messages:' + broker.id);
+      var msgs = raw ? JSON.parse(raw) : [];
+      var found = false;
+      for (var i = 0; i < msgs.length; i++) {
+        if (msgs[i].id === body.id) { msgs[i].leido = true; found = true; break; }
+      }
+      if (found) {
+        await env.DB.put('messages:' + broker.id, JSON.stringify(msgs));
+        var unread = msgs.filter(function(m){ return !m.leido; }).length;
+        await env.DB.put('messages_unread:' + broker.id, String(unread));
+      }
+      return jsonRes({ ok: found });
+    }
+
+    // ── PUT /api/broker/messages/read-all ── mark all as read ──
+    if (method === 'PUT' && path === '/api/broker/messages/read-all') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var raw = await env.DB.get('messages:' + broker.id);
+      var msgs = raw ? JSON.parse(raw) : [];
+      for (var i = 0; i < msgs.length; i++) { msgs[i].leido = true; }
+      await env.DB.put('messages:' + broker.id, JSON.stringify(msgs));
+      await env.DB.put('messages_unread:' + broker.id, '0');
+      return jsonRes({ ok: true });
+    }
+
+    // ── DELETE /api/broker/messages ── delete a message ──
+    if (method === 'DELETE' && path === '/api/broker/messages') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.id) return jsonRes({ error: 'ID requerido' }, 400);
+      var raw = await env.DB.get('messages:' + broker.id);
+      var msgs = raw ? JSON.parse(raw) : [];
+      msgs = msgs.filter(function(m){ return m.id !== body.id; });
+      await env.DB.put('messages:' + broker.id, JSON.stringify(msgs));
+      var unread = msgs.filter(function(m){ return !m.leido; }).length;
+      await env.DB.put('messages_unread:' + broker.id, String(unread));
+      return jsonRes({ ok: true });
+    }
+
+    // ── GET /api/public/propiedades/search ── advanced property search ──
+    if (method === 'GET' && path === '/api/public/propiedades/search') {
+      var raw = await env.DB.get('propiedades');
+      var data = raw ? JSON.parse(raw) : [];
+      var results = data.filter(function(p){ return p.estado !== 'Pausada' && p.estado !== 'Eliminada'; });
+      var url = new URL(request.url);
+      var tipo = url.searchParams.get('tipo');
+      var zona = url.searchParams.get('zona');
+      var precioMin = url.searchParams.get('precio_min');
+      var precioMax = url.searchParams.get('precio_max');
+      var habMin = url.searchParams.get('habitaciones_min');
+      var banosMin = url.searchParams.get('banos_min');
+      var areaMin = url.searchParams.get('area_min');
+      var areaMax = url.searchParams.get('area_max');
+      var q = url.searchParams.get('q');
+      var broker_id = url.searchParams.get('broker_id');
+      var sort = url.searchParams.get('sort') || 'newest';
+      if (tipo) results = results.filter(function(p){ return (p.tipo || '').toLowerCase() === tipo.toLowerCase(); });
+      if (zona) results = results.filter(function(p){ return (p.zona || p.ubicacion || '').toLowerCase().indexOf(zona.toLowerCase()) !== -1; });
+      if (precioMin) results = results.filter(function(p){ return parseFloat(p.precio) >= parseFloat(precioMin); });
+      if (precioMax) results = results.filter(function(p){ return parseFloat(p.precio) <= parseFloat(precioMax); });
+      if (habMin) results = results.filter(function(p){ return parseInt(p.habitaciones) >= parseInt(habMin); });
+      if (banosMin) results = results.filter(function(p){ return parseInt(p.banos) >= parseInt(banosMin); });
+      if (areaMin) results = results.filter(function(p){ return parseFloat(p.area) >= parseFloat(areaMin); });
+      if (areaMax) results = results.filter(function(p){ return parseFloat(p.area) <= parseFloat(areaMax); });
+      if (broker_id) results = results.filter(function(p){ return p.broker_id === broker_id; });
+      if (q) {
+        var terms = q.toLowerCase().split(/\s+/);
+        results = results.filter(function(p){
+          var text = [p.titulo, p.descripcion, p.ubicacion, p.zona, p.tipo, p.municipio].join(' ').toLowerCase();
+          return terms.every(function(t){ return text.indexOf(t) !== -1; });
+        });
+      }
+      // Apply privacy config
+      results = results.map(function(p){
+        var out = Object.assign({}, p);
+        if (p.privConfig) {
+          if (p.privConfig.precio) delete out.precio;
+          if (p.privConfig.direccion) { delete out.ubicacion; delete out.municipio; }
+          if (p.privConfig.galeria) { delete out.gallery; delete out.galeria; }
+          if (p.privConfig.datos) { delete out.habitaciones; delete out.banos; delete out.area; }
+          if (p.privConfig.descripcion) delete out.descripcion;
+        }
+        return out;
+      });
+      // Sort
+      if (sort === 'price_asc') results.sort(function(a,b){ return (parseFloat(a.precio)||0)-(parseFloat(b.precio)||0); });
+      else if (sort === 'price_desc') results.sort(function(a,b){ return (parseFloat(b.precio)||0)-(parseFloat(a.precio)||0); });
+      else if (sort === 'area_desc') results.sort(function(a,b){ return (parseFloat(b.area)||0)-(parseFloat(a.area)||0); });
+      else results.sort(function(a,b){ return new Date(b.created_at||0)-new Date(a.created_at||0); });
+      return new Response(JSON.stringify({ total: results.length, results: results }), {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=30', ...cors(request) },
+      });
+    }
+
+    // ── POST /api/leads/route ── auto-route lead to matching broker ──
+    if (method === 'POST' && path === '/api/leads/route') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.lead_id) return jsonRes({ error: 'lead_id requerido' }, 400);
+      // Get lead
+      var leadsRaw = await env.DB.get('leads');
+      var leads = leadsRaw ? JSON.parse(leadsRaw) : [];
+      var lead = leads.find(function(l){ return l.id === body.lead_id; });
+      if (!lead) return jsonRes({ error: 'Lead no encontrado' }, 404);
+      // Get brokers
+      var brokersRaw = await env.DB.get('brokers');
+      var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
+      var aprobados = brokers.filter(function(b){ return b.estado === 'aprobado'; });
+      // Match by zona
+      var zona = (lead.zona || lead.propiedad || '').toLowerCase();
+      var matched = aprobados.filter(function(b){
+        if (!b.zonas || !b.zonas.length) return false;
+        return b.zonas.some(function(z){ return zona.indexOf(z.toLowerCase()) !== -1; });
+      });
+      // If no match by zona, try by especialidad/tipo
+      if (!matched.length && lead.tipo) {
+        var tipo = lead.tipo.toLowerCase();
+        matched = aprobados.filter(function(b){
+          return (b.especialidad || []).some(function(e){ return e.toLowerCase().indexOf(tipo) !== -1; });
+        });
+      }
+      // If still no match, assign to premium/pro brokers
+      if (!matched.length) {
+        matched = aprobados.filter(function(b){ return b.plan === 'premium' || b.plan === 'pro'; });
+      }
+      // Pick the one with fewest assigned leads (round robin)
+      if (matched.length) {
+        var best = matched[0];
+        var minCount = 999999;
+        for (var i = 0; i < matched.length; i++) {
+          var count = leads.filter(function(l){ return l.assigned_broker === matched[i].id; }).length;
+          if (count < minCount) { minCount = count; best = matched[i]; }
+        }
+        // Assign
+        for (var j = 0; j < leads.length; j++) {
+          if (leads[j].id === body.lead_id) {
+            leads[j].assigned_broker = best.id;
+            leads[j].assigned_broker_name = best.nombre;
+            leads[j].assigned_at = new Date().toISOString();
+            break;
+          }
+        }
+        await env.DB.put('leads', JSON.stringify(leads));
+        return jsonRes({ ok: true, assigned_to: best.nombre, broker_id: best.id });
+      }
+      return jsonRes({ ok: false, message: 'No hay asesores disponibles para esta zona' });
+    }
+
+    // ── GET /api/broker/messages/unread-count ── quick unread check ──
+    if (method === 'GET' && path === '/api/broker/messages/unread-count') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var count = await env.DB.get('messages_unread:' + broker.id);
+      return jsonRes({ unread: parseInt(count || '0') });
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // CRM AUTOMATIONS — Follow-up, Lead Routing Integration, Weekly Reports
+    // ══════════════════════════════════════════════════════════
+
+    // ── GET /api/cron/followups ── Check leads needing follow-up ──
+    if (method === 'GET' && path === '/api/cron/followups') {
+      var authH = request.headers.get('Authorization') || '';
+      if (authH !== 'Bearer ' + (env.CRON_SECRET || 'cron-secret-2026')) return jsonRes({ error: 'Unauthorized' }, 401);
+      var leads = JSON.parse(await env.DB.get('leads') || '[]');
+      var now = Date.now();
+      var oneDay = 86400000;
+      var twoDays = oneDay * 2;
+      var sevenDays = oneDay * 7;
+      var actions = [];
+
+      for (var i = 0; i < leads.length; i++) {
+        var ld = leads[i];
+        if (ld.etapa === 'cerrado' || ld.etapa === 'perdido') continue;
+        var created = new Date(ld.fecha || ld.created_at || 0).getTime();
+        var lastContact = ld.last_contact ? new Date(ld.last_contact).getTime() : created;
+        var age = now - created;
+        var sinceContact = now - lastContact;
+        var score = ld.score || 0;
+
+        // High-score leads not contacted in 24h
+        if (score >= 70 && sinceContact > oneDay && !ld.followup_sent_hot) {
+          actions.push({ lead_id: ld.id, type: 'hot_lead_reminder', nombre: ld.nombre, score: score, hours_since: Math.round(sinceContact / 3600000) });
+          leads[i].followup_sent_hot = true;
+        }
+        // New leads not moved from 'nuevo' in 48h
+        else if (ld.etapa === 'nuevo' && age > twoDays && !ld.followup_sent_48h) {
+          actions.push({ lead_id: ld.id, type: 'stale_new_lead', nombre: ld.nombre, hours_since: Math.round(age / 3600000) });
+          leads[i].followup_sent_48h = true;
+        }
+        // Any lead with no contact in 7 days
+        else if (sinceContact > sevenDays && !ld.followup_sent_7d) {
+          actions.push({ lead_id: ld.id, type: 'cold_lead_7d', nombre: ld.nombre, days_since: Math.round(sinceContact / oneDay) });
+          leads[i].followup_sent_7d = true;
+        }
+      }
+
+      if (actions.length > 0) {
+        await env.DB.put('leads', JSON.stringify(leads));
+        // Send webhook notification with follow-up actions
+        if (env.NOTIFY_WEBHOOK) {
+          try {
+            await fetch(env.NOTIFY_WEBHOOK, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ type: 'followup_reminders', actions: actions, count: actions.length, timestamp: new Date().toISOString() })
+            });
+          } catch(e) {}
+        }
+      }
+      return jsonRes({ ok: true, followups: actions.length, actions: actions });
+    }
+
+    // ── POST /api/leads/auto-route ── Enhanced lead routing with auto-assignment ──
+    if (method === 'POST' && path === '/api/leads/auto-route') {
+      var authH = request.headers.get('Authorization') || '';
+      if (authH !== 'Bearer ' + (env.ADMIN_KEY || '')) return jsonRes({ error: 'Unauthorized' }, 401);
+      var body = await request.json();
+      var leads = JSON.parse(await env.DB.get('leads') || '[]');
+      var brokers = JSON.parse(await env.DB.get('brokers') || '[]');
+      var approvedBrokers = brokers.filter(function(b) { return b.status === 'aprobado'; });
+      if (!approvedBrokers.length) return jsonRes({ error: 'No hay asesores aprobados' }, 400);
+      var routed = 0;
+      var results = [];
+
+      for (var i = 0; i < leads.length; i++) {
+        var ld = leads[i];
+        if (ld.assigned_broker) continue; // Already assigned
+        if (ld.etapa === 'cerrado' || ld.etapa === 'perdido') continue;
+
+        // Match by zona
+        var zona = (ld.zona || ld.ubicacion || '').toLowerCase();
+        var tipo = (ld.tipo || ld.interes || '').toLowerCase();
+        var matched = [];
+
+        for (var j = 0; j < approvedBrokers.length; j++) {
+          var b = approvedBrokers[j];
+          var bZonas = (b.zonas || []).map(function(z) { return z.toLowerCase(); });
+          var bEsp = (b.especialidad || []).map(function(e) { return e.toLowerCase(); });
+          var zMatch = zona && bZonas.some(function(z) { return zona.indexOf(z) !== -1 || z.indexOf(zona) !== -1; });
+          var tMatch = tipo && bEsp.some(function(e) { return tipo.indexOf(e) !== -1 || e.indexOf(tipo) !== -1; });
+          if (zMatch && tMatch) matched.push({ broker: b, priority: 3 });
+          else if (zMatch) matched.push({ broker: b, priority: 2 });
+          else if (tMatch) matched.push({ broker: b, priority: 1 });
+        }
+
+        if (matched.length === 0) {
+          // Round-robin among all approved
+          var assignedCounts = {};
+          leads.forEach(function(l) { if (l.assigned_broker) assignedCounts[l.assigned_broker] = (assignedCounts[l.assigned_broker] || 0) + 1; });
+          var best = approvedBrokers.reduce(function(a, b) { return (assignedCounts[a.id] || 0) <= (assignedCounts[b.id] || 0) ? a : b; });
+          matched.push({ broker: best, priority: 0 });
+        }
+
+        // Sort by priority desc, then by fewest assigned
+        matched.sort(function(a, b) { return b.priority - a.priority; });
+        var winner = matched[0].broker;
+        leads[i].assigned_broker = winner.id;
+        leads[i].assigned_broker_name = winner.nombre;
+        leads[i].assigned_at = new Date().toISOString();
+        routed++;
+        results.push({ lead: ld.nombre, broker: winner.nombre, priority: matched[0].priority });
+      }
+
+      if (routed > 0) {
+        await env.DB.put('leads', JSON.stringify(leads));
+      }
+      return jsonRes({ ok: true, routed: routed, results: results });
+    }
+
+    // ── GET /api/reports/weekly ── Generate weekly performance report ──
+    if (method === 'GET' && path === '/api/reports/weekly') {
+      var authH = request.headers.get('Authorization') || '';
+      if (authH !== 'Bearer ' + (env.CRON_SECRET || 'cron-secret-2026') && authH !== 'Bearer ' + (env.ADMIN_KEY || ''))
+        return jsonRes({ error: 'Unauthorized' }, 401);
+
+      var leads = JSON.parse(await env.DB.get('leads') || '[]');
+      var brokers = JSON.parse(await env.DB.get('brokers') || '[]');
+      var now = Date.now();
+      var weekAgo = now - 7 * 86400000;
+
+      // Leads this week
+      var weekLeads = leads.filter(function(l) { return new Date(l.fecha || l.created_at || 0).getTime() > weekAgo; });
+      var totalLeads = leads.length;
+
+      // By etapa
+      var byEtapa = {};
+      leads.forEach(function(l) { byEtapa[l.etapa || 'sin_etapa'] = (byEtapa[l.etapa || 'sin_etapa'] || 0) + 1; });
+
+      // By source
+      var bySource = {};
+      weekLeads.forEach(function(l) { var s = l.utm_source || l.source || 'directo'; bySource[s] = (bySource[s] || 0) + 1; });
+
+      // High score leads
+      var hotLeads = leads.filter(function(l) { return (l.score || 0) >= 70 && l.etapa !== 'cerrado' && l.etapa !== 'perdido'; });
+
+      // Broker performance
+      var brokerStats = {};
+      leads.forEach(function(l) {
+        if (l.assigned_broker) {
+          if (!brokerStats[l.assigned_broker]) brokerStats[l.assigned_broker] = { total: 0, nuevo: 0, contactado: 0, cerrado: 0, perdido: 0, name: l.assigned_broker_name || l.assigned_broker };
+          brokerStats[l.assigned_broker].total++;
+          brokerStats[l.assigned_broker][l.etapa || 'nuevo']++;
+        }
+      });
+
+      // Conversion rate
+      var cerrados = leads.filter(function(l) { return l.etapa === 'cerrado'; }).length;
+      var convRate = totalLeads > 0 ? Math.round((cerrados / totalLeads) * 100) : 0;
+
+      // Stale leads (no contact in 7+ days, still active)
+      var staleLeads = leads.filter(function(l) {
+        if (l.etapa === 'cerrado' || l.etapa === 'perdido') return false;
+        var lastC = l.last_contact ? new Date(l.last_contact).getTime() : new Date(l.fecha || l.created_at || 0).getTime();
+        return (now - lastC) > 7 * 86400000;
+      });
+
+      var report = {
+        period: { from: new Date(weekAgo).toISOString().split('T')[0], to: new Date(now).toISOString().split('T')[0] },
+        summary: {
+          total_leads: totalLeads,
+          new_this_week: weekLeads.length,
+          hot_leads: hotLeads.length,
+          stale_leads: staleLeads.length,
+          conversion_rate: convRate + '%',
+          active_brokers: brokers.filter(function(b) { return b.status === 'aprobado'; }).length
+        },
+        pipeline: byEtapa,
+        sources_this_week: bySource,
+        broker_performance: Object.values(brokerStats),
+        alerts: []
+      };
+
+      if (hotLeads.length > 0) report.alerts.push({ type: 'hot_leads', message: hotLeads.length + ' leads calientes sin cerrar', leads: hotLeads.map(function(l) { return { nombre: l.nombre, score: l.score, etapa: l.etapa }; }).slice(0, 10) });
+      if (staleLeads.length > 0) report.alerts.push({ type: 'stale_leads', message: staleLeads.length + ' leads sin contacto en 7+ dias' });
+      if (weekLeads.length === 0) report.alerts.push({ type: 'no_leads', message: 'No se generaron leads esta semana' });
+
+      // Send via webhook if configured
+      if (env.NOTIFY_WEBHOOK) {
+        try {
+          await fetch(env.NOTIFY_WEBHOOK, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'weekly_report', report: report, timestamp: new Date().toISOString() })
+          });
+        } catch(e) {}
+      }
+
+      return jsonRes(report);
+    }
+
     return jsonRes({ error: 'Not found' }, 404);
   },
 };

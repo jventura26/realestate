@@ -135,6 +135,10 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
         <div class="dash-stat-val" id="statClicks">0</div>
         <div class="dash-stat-label">Clicks WhatsApp</div>
       </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val" id="statMsgs">0</div>
+        <div class="dash-stat-label">Mensajes</div>
+      </div>
     </div>
 
     <div class="dash-section">
@@ -146,6 +150,19 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       <div id="dashPropsEmpty" class="dash-empty" style="display:none">
         <p style="font-size:16px;margin-bottom:8px">No tienes propiedades publicadas a&uacute;n</p>
         <p style="font-size:13px">Haz click en &ldquo;Nueva propiedad&rdquo; para comenzar.</p>
+      </div>
+    </div>
+
+    <!-- MESSAGES INBOX -->
+    <div class="dash-section">
+      <div class="dash-section-head">
+        <span class="dash-section-title">Mensajes <span id="dashUnreadBadge" style="display:none;background:#ef4444;color:white;font-size:10px;padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:700"></span></span>
+        <button class="dash-add-btn" style="background:#f1f5f9;color:#374151" onclick="markAllRead()">Marcar todo como le&iacute;do</button>
+      </div>
+      <div id="dashMsgsGrid" style="display:grid;gap:12px"></div>
+      <div id="dashMsgsEmpty" class="dash-empty" style="display:none">
+        <p style="font-size:16px;margin-bottom:8px">No tienes mensajes a&uacute;n</p>
+        <p style="font-size:13px">Cuando alguien te contacte desde una propiedad, aparecer&aacute; aqu&iacute;.</p>
       </div>
     </div>
 
@@ -365,6 +382,7 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       showDash();
       showWelcome(d.nombre.split(' ')[0]);
       loadMyProps();
+      loadMessages();
     })
     .catch(function(e){ if(e!=='auth') console.error(e); });
   }
@@ -395,6 +413,63 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       });
     });
   }
+
+  
+  function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+  function loadMessages() {
+    fetch(API+'/api/broker/messages', {headers:headers()})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var grid = document.getElementById('dashMsgsGrid');
+      var empty = document.getElementById('dashMsgsEmpty');
+      var badge = document.getElementById('dashUnreadBadge');
+      var statMsgs = document.getElementById('statMsgs');
+      if(!grid) return;
+      grid.innerHTML = '';
+      var msgs = d.messages || [];
+      if(statMsgs) statMsgs.textContent = msgs.length;
+      if(!msgs.length){ empty.style.display=''; badge.style.display='none'; return; }
+      empty.style.display='none';
+      if(d.unread > 0){ badge.style.display='inline'; badge.textContent=d.unread; }
+      else{ badge.style.display='none'; }
+      msgs.slice(0,20).forEach(function(m){
+        var card = document.createElement('div');
+        card.style.cssText='background:white;border-radius:12px;padding:20px;border:1.5px solid '+(m.leido?'#eef0f3':'#C9A96E')+';transition:all .2s';
+        card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
+          '<div><div style="font-weight:700;font-size:14px;color:#0a1628">'+escH(m.nombre)+'</div>' +
+          '<div style="font-size:12px;color:#94a3b8">'+escH(m.email)+(m.telefono?' &middot; '+escH(m.telefono):'')+'</div></div>' +
+          '<div style="text-align:right"><div style="font-size:11px;color:#94a3b8">'+new Date(m.created_at).toLocaleDateString('es-GT')+'</div>' +
+          (!m.leido?'<span style="display:inline-block;background:#C9A96E;color:white;font-size:9px;padding:2px 8px;border-radius:10px;margin-top:4px;font-weight:700">NUEVO</span>':'') +
+          '</div></div>' +
+          (m.propiedad_titulo?'<div style="font-size:12px;color:#64748b;margin-bottom:8px">'+escH(m.propiedad_titulo)+'</div>':'') +
+          '<div style="font-size:13px;color:#374151;line-height:1.6;background:#f8f9fb;padding:12px 16px;border-radius:8px">'+escH(m.mensaje)+'</div>' +
+          '<div style="display:flex;gap:8px;margin-top:12px">' +
+          (!m.leido?'<button onclick="markRead(\\''+m.id+'\\')" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;background:white">Marcar leido</button>':'') +
+          '<button onclick="deleteMsg(\\''+m.id+'\\')" style="padding:6px 14px;border:1px solid #fecaca;border-radius:6px;font-size:12px;font-weight:600;color:#ef4444;cursor:pointer;background:white">Eliminar</button>' +
+          '<a href="mailto:'+escH(m.email)+'" style="padding:6px 14px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-weight:600;color:#1a3a5c;text-decoration:none">Responder</a>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+    }).catch(function(e){ console.error('Messages error:', e); });
+  }
+
+  window.markRead = function(id) {
+    fetch(API+'/api/broker/messages/read', {method:'PUT',headers:headers(),body:JSON.stringify({id:id})})
+    .then(function(r){return r.json();})
+    .then(function(){ loadMessages(); });
+  };
+  window.markAllRead = function() {
+    fetch(API+'/api/broker/messages/read-all', {method:'PUT',headers:headers()})
+    .then(function(r){return r.json();})
+    .then(function(){ loadMessages(); });
+  };
+  window.deleteMsg = function(id) {
+    if(!confirm('Eliminar este mensaje?')) return;
+    fetch(API+'/api/broker/messages', {method:'DELETE',headers:headers(),body:JSON.stringify({id:id})})
+    .then(function(r){return r.json();})
+    .then(function(){ loadMessages(); });
+  };
 
   // Amenidades chip toggle
   document.querySelectorAll('#amenidadesChips .reg-chip').forEach(function(chip){
@@ -516,4 +591,30 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
   };
 
   window.deleteProp = function(encodedId){
-    if(
+    if(!confirm('¿Eliminar esta propiedad?')) return;
+    var id = decodeURIComponent(encodedId);
+    fetch(API+'/api/broker/propiedades', {method:'DELETE', headers:headers(), body:JSON.stringify({id:id})})
+    .then(function(r){return r.json();})
+    .then(function(d){ if(d.ok) loadDashboard(); });
+  };
+
+  window.doLogout = function(){
+    fetch(API+'/api/broker/logout', {method:'POST', headers:headers()}).catch(function(){});
+    localStorage.removeItem('broker_token');
+    token = null;
+    updateNav(false);
+    showLogin();
+  };
+})();
+<\/script>
+`;
+
+  return layout({
+    title: 'Dashboard de Asesor',
+    desc: 'Administra tus propiedades, perfil y métricas como asesor inmobiliario en InmuHub.',
+    canonical: '/dashboard.html',
+    body: body
+  });
+}
+
+module.exports = { dashboardAsesorPage };

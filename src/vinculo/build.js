@@ -233,6 +233,8 @@ console.log(' mapa.html');
 const zonaUrls = zonas.map(z => ({ loc: `/zonas/${slugZona(z)}.html`, priority:'0.85', changefreq:'weekly' }));
 const brokerUrls = activeBrokers.map(function(b){ return { loc: '/asesores/' + b.slug + '.html', priority: '0.8', changefreq: 'weekly' }; });
 
+const { articles } = require('./templates/blog');
+const { landings } = require('./templates/landing-seo');
 const urls = [
   { loc:'/', priority:'1.0', changefreq:'weekly' },
   { loc:'/propiedades.html', priority:'0.9', changefreq:'daily' },
@@ -246,6 +248,9 @@ const urls = [
   { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/guia-compra.html', priority:'0.85', changefreq:'monthly' },
   ...zonaUrls,
+  { loc:'/blog/', priority:'0.9', changefreq:'weekly' },
+  ...articles.map(a=>({ loc:"/blog/"+a.slug+".html", priority:'0.85', changefreq:'monthly' })),
+  ...landings.map(l=>({ loc:'/'+l.slug+'.html', priority:'0.9', changefreq:'monthly' })),
   ...props.map(p=>({ loc:`/propiedades/${p.slug}.html`, priority:'0.8', changefreq:'weekly' })),
 ];
 write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(' sitemap.xml');
@@ -287,6 +292,26 @@ console.log(' registro-asesor.html');
 const { dashboardAsesorPage } = require('./templates/dashboard-asesor-page');
 write(path.join(OUT, 'dashboard.html'), dashboardAsesorPage());
 console.log(' dashboard.html');
+
+
+// Blog SEO
+const { blogIndexPage, blogArticlePage } = require('./templates/blog');
+const BLOG = path.join(OUT, 'blog');
+if (!fs.existsSync(BLOG)) fs.mkdirSync(BLOG, { recursive: true });
+write(path.join(BLOG, 'index.html'), blogIndexPage(articles));
+console.log(' blog/index.html');
+articles.forEach(a => {
+  write(path.join(BLOG, a.slug + '.html'), blogArticlePage(a));
+  console.log('  blog/' + a.slug + '.html');
+});
+
+
+// SEO Landing Pages
+const { seoLandingPage } = require('./templates/landing-seo');
+landings.forEach(function(cfg) {
+  write(path.join(OUT, cfg.slug + '.html'), seoLandingPage(cfg));
+  console.log('  ' + cfg.slug + '.html');
+});
 
 console.log(`\n INMUHUB.COM built: ${props.length} propiedades + ${zonas.length} zonas\n`);
 
