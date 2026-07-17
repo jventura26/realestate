@@ -120,7 +120,8 @@ fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
 fs.mkdirSync(ZONAS, { recursive:true });
 
-write(path.join(OUT,'index.html'), indexPage(props, brokersData || [])); console.log(' index.html');
+var homeBrokers = (brokersData || []).filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; });
+write(path.join(OUT,'index.html'), indexPage(props, homeBrokers)); console.log(' index.html');
 write(path.join(OUT,'propiedades.html'), catalogPage(props)); console.log(' propiedades.html');
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
@@ -151,15 +152,16 @@ console.log(' ' + tiposUnicos.length + ' tipo pages');
 const ASESORES = path.join(OUT, 'asesores');
 fs.mkdirSync(ASESORES, { recursive: true });
 // Calcular propiedades_count ANTES de generar directorio y perfiles
-brokers.filter(function(b){ return b.activo !== false; }).forEach(function(b) {
+brokers.forEach(function(b) {
   b.propiedades_count = props.filter(function(p){ return p.broker_id === b.id; }).length;
 });
-write(path.join(OUT, 'asesores.html'), brokersDirectoryPage(brokers));
-console.log(' asesores.html (' + brokers.length + ' brokers)');
-brokers.filter(function(b){ return b.activo !== false; }).forEach(function(b) {
+var activeBrokers = brokers.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; });
+write(path.join(OUT, 'asesores.html'), brokersDirectoryPage(activeBrokers));
+console.log(' asesores.html (' + activeBrokers.length + ' active brokers)');
+activeBrokers.forEach(function(b) {
   write(path.join(ASESORES, b.slug + '.html'), brokerProfilePage(b, props));
 });
-console.log(' ' + brokers.filter(function(b){ return b.activo !== false; }).length + ' broker profile pages');
+console.log(' ' + activeBrokers.length + ' broker profile pages');
 
 // Favoritos page
 const favoritosHTML = layout({
@@ -229,7 +231,7 @@ write(path.join(OUT,'mapa.html'), layout({
 console.log(' mapa.html');
 
 const zonaUrls = zonas.map(z => ({ loc: `/zonas/${slugZona(z)}.html`, priority:'0.85', changefreq:'weekly' }));
-const brokerUrls = brokers.filter(function(b){ return b.activo !== false; }).map(function(b){ return { loc: '/asesores/' + b.slug + '.html', priority: '0.8', changefreq: 'weekly' }; });
+const brokerUrls = activeBrokers.map(function(b){ return { loc: '/asesores/' + b.slug + '.html', priority: '0.8', changefreq: 'weekly' }; });
 
 const urls = [
   { loc:'/', priority:'1.0', changefreq:'weekly' },

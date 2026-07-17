@@ -716,7 +716,7 @@ export default {
     if (method === 'GET' && path === '/api/public/brokers') {
       var raw = await env.DB.get('brokers');
       var data = raw ? JSON.parse(raw) : [];
-      var pub = data.filter(function(b){ return b.activo !== false; }).map(function(b){
+      var pub = data.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; }).map(function(b){
         var o = Object.assign({}, b);
         delete o.telefono; delete o.whatsapp_raw; delete o.email;
         return o;

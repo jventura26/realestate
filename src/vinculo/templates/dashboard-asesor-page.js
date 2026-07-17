@@ -57,6 +57,10 @@ function dashboardAsesorPage() {
 .dash-modal{background:white;border-radius:20px;max-width:640px;width:100%;padding:40px;position:relative}
 .dash-modal h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:300;margin:0 0 24px}
 .dash-modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:24px;cursor:pointer;color:#94a3b8}
+.reg-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.reg-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;background:white;user-select:none}
+.reg-chip.active{background:rgba(201,169,110,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
+.reg-chip:hover{border-color:#c9a96e}
 </style>
 
 <!-- LOGIN VIEW -->
@@ -145,7 +149,7 @@ function dashboardAsesorPage() {
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="dash-field">
-          <label>Precio</label>
+          <label>Precio *</label>
           <input type="text" id="propPrecio" placeholder="Ej: US$ 350,000">
         </div>
         <div class="dash-field">
@@ -157,6 +161,26 @@ function dashboardAsesorPage() {
             <option value="Finca">Finca</option>
             <option value="Oficina">Oficina</option>
             <option value="Local Comercial">Local Comercial</option>
+            <option value="Bodega">Bodega</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="dash-field">
+          <label>Modalidad</label>
+          <select id="propModalidad" style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:#fafbfc">
+            <option value="Venta">Venta</option>
+            <option value="Renta">Renta</option>
+            <option value="Venta y Renta">Venta y Renta</option>
+          </select>
+        </div>
+        <div class="dash-field">
+          <label>Estado</label>
+          <select id="propEstado" style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:#fafbfc">
+            <option value="Nuevo">Nuevo</option>
+            <option value="Usado">Usado</option>
+            <option value="En construcción">En construcci&oacute;n</option>
+            <option value="Sobre planos">Sobre planos</option>
           </select>
         </div>
       </div>
@@ -174,17 +198,54 @@ function dashboardAsesorPage() {
           <input type="text" id="propArea" placeholder="250">
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="dash-field">
+          <label>Parqueos</label>
+          <input type="number" id="propParqueos" placeholder="2">
+        </div>
+        <div class="dash-field">
+          <label>&Aacute;rea terreno (m&sup2;)</label>
+          <input type="text" id="propAreaTerreno" placeholder="500">
+        </div>
+      </div>
       <div class="dash-field">
         <label>Zona / Ubicaci&oacute;n</label>
         <input type="text" id="propZona" placeholder="Zona 15, Ciudad de Guatemala">
       </div>
       <div class="dash-field">
+        <label>Direcci&oacute;n</label>
+        <input type="text" id="propDireccion" placeholder="Calle, avenida, condominio...">
+      </div>
+      <div class="dash-field">
         <label>Descripci&oacute;n</label>
         <textarea id="propDesc" style="min-height:100px;width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;background:#fafbfc;resize:vertical;box-sizing:border-box" placeholder="Describe la propiedad..."></textarea>
       </div>
+
       <div class="dash-field">
-        <label>URL imagen principal</label>
+        <label>Amenidades</label>
+        <div class="reg-chips" id="amenidadesChips">
+          <span class="reg-chip" data-val="Piscina">Piscina</span>
+          <span class="reg-chip" data-val="Jardín">Jard&iacute;n</span>
+          <span class="reg-chip" data-val="Garage">Garage</span>
+          <span class="reg-chip" data-val="Seguridad 24h">Seguridad 24h</span>
+          <span class="reg-chip" data-val="Área social">Area social</span>
+          <span class="reg-chip" data-val="Gimnasio">Gimnasio</span>
+          <span class="reg-chip" data-val="Roof garden">Roof garden</span>
+          <span class="reg-chip" data-val="Bodega">Bodega</span>
+          <span class="reg-chip" data-val="Elevador">Elevador</span>
+          <span class="reg-chip" data-val="Amueblado">Amueblado</span>
+          <span class="reg-chip" data-val="Vista panorámica">Vista panor&aacute;mica</span>
+          <span class="reg-chip" data-val="Pet friendly">Pet friendly</span>
+        </div>
+      </div>
+
+      <div class="dash-field">
+        <label>Imagen principal (URL)</label>
         <input type="url" id="propImagen" placeholder="https://...">
+      </div>
+      <div class="dash-field">
+        <label>Galer&iacute;a de im&aacute;genes (URLs, una por l&iacute;nea)</label>
+        <textarea id="propGaleria" style="min-height:80px;width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;background:#fafbfc;resize:vertical;box-sizing:border-box" placeholder="https://imagen2.jpg&#10;https://imagen3.jpg&#10;https://imagen4.jpg"></textarea>
       </div>
       <input type="hidden" id="propEditId" value="">
       <button type="submit" class="dash-btn" id="propSaveBtn">Publicar propiedad</button>
@@ -292,6 +353,24 @@ function dashboardAsesorPage() {
     });
   }
 
+  // Amenidades chip toggle
+  document.querySelectorAll('#amenidadesChips .reg-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){ chip.classList.toggle('active'); });
+  });
+
+  function getAmenidades(){
+    var vals=[];
+    document.getElementById('amenidadesChips').querySelectorAll('.reg-chip.active').forEach(function(c){ vals.push(c.getAttribute('data-val')); });
+    return vals;
+  }
+  function setAmenidades(arr){
+    document.querySelectorAll('#amenidadesChips .reg-chip').forEach(function(c){ c.classList.remove('active'); });
+    if(!arr||!arr.length) return;
+    document.querySelectorAll('#amenidadesChips .reg-chip').forEach(function(c){
+      if(arr.indexOf(c.getAttribute('data-val'))!==-1) c.classList.add('active');
+    });
+  }
+
   window.openPropModal = function(){
     document.getElementById('propEditId').value = '';
     document.getElementById('propModalTitle').textContent = 'Nueva propiedad';
@@ -299,12 +378,19 @@ function dashboardAsesorPage() {
     document.getElementById('propTitulo').value = '';
     document.getElementById('propPrecio').value = '';
     document.getElementById('propTipo').value = 'Casa';
+    document.getElementById('propModalidad').value = 'Venta';
+    document.getElementById('propEstado').value = 'Nuevo';
     document.getElementById('propHabs').value = '';
     document.getElementById('propBanos').value = '';
     document.getElementById('propArea').value = '';
+    document.getElementById('propParqueos').value = '';
+    document.getElementById('propAreaTerreno').value = '';
     document.getElementById('propZona').value = '';
+    document.getElementById('propDireccion').value = '';
     document.getElementById('propDesc').value = '';
+    setAmenidades([]);
     document.getElementById('propImagen').value = '';
+    document.getElementById('propGaleria').value = '';
     document.getElementById('propMsg').style.display = 'none';
     document.getElementById('propModal').classList.add('open');
   };
@@ -319,12 +405,19 @@ function dashboardAsesorPage() {
     document.getElementById('propTitulo').value = p.titulo||p.title||'';
     document.getElementById('propPrecio').value = p.precio||p.priceFormatted||'';
     document.getElementById('propTipo').value = p.tipo||'Casa';
+    document.getElementById('propModalidad').value = p.modalidad||'Venta';
+    document.getElementById('propEstado').value = p.estadoProp||'Nuevo';
     document.getElementById('propHabs').value = p.habitaciones||'';
     document.getElementById('propBanos').value = p.banos||'';
     document.getElementById('propArea').value = p.areaConst||p.area||'';
+    document.getElementById('propParqueos').value = p.parqueos||'';
+    document.getElementById('propAreaTerreno').value = p.areaTerreno||'';
     document.getElementById('propZona').value = p.zona||p.municipio||'';
+    document.getElementById('propDireccion').value = p.direccion||'';
     document.getElementById('propDesc').value = p.descripcion||p.description||'';
+    setAmenidades(p.amenidades||[]);
     document.getElementById('propImagen').value = p.imagen||p.mainImage||'';
+    document.getElementById('propGaleria').value = (p.galeria||[]).join('\\n');
     document.getElementById('propMsg').style.display = 'none';
     document.getElementById('propModal').classList.add('open');
   };
@@ -334,22 +427,31 @@ function dashboardAsesorPage() {
   window.handleSaveProp = function(e){
     e.preventDefault();
     var editId = document.getElementById('propEditId').value;
+    var galeriaRaw = document.getElementById('propGaleria').value.trim();
+    var galeriaArr = galeriaRaw ? galeriaRaw.split('\\n').map(function(u){return u.trim();}).filter(function(u){return u;}) : [];
     var data = {
       titulo: document.getElementById('propTitulo').value.trim(),
       precio: document.getElementById('propPrecio').value.trim(),
       priceFormatted: document.getElementById('propPrecio').value.trim(),
       tipo: document.getElementById('propTipo').value,
+      modalidad: document.getElementById('propModalidad').value,
+      estadoProp: document.getElementById('propEstado').value,
       habitaciones: document.getElementById('propHabs').value,
       banos: document.getElementById('propBanos').value,
       areaConst: document.getElementById('propArea').value.trim(),
+      parqueos: document.getElementById('propParqueos').value,
+      areaTerreno: document.getElementById('propAreaTerreno').value.trim(),
       zona: document.getElementById('propZona').value.trim(),
       municipio: document.getElementById('propZona').value.trim(),
       locationFull: document.getElementById('propZona').value.trim(),
+      direccion: document.getElementById('propDireccion').value.trim(),
       descripcion: document.getElementById('propDesc').value.trim(),
       description: document.getElementById('propDesc').value.trim(),
+      amenidades: getAmenidades(),
       imagen: document.getElementById('propImagen').value.trim(),
       mainImage: document.getElementById('propImagen').value.trim(),
-      mainImageThumb: document.getElementById('propImagen').value.trim()
+      mainImageThumb: document.getElementById('propImagen').value.trim(),
+      galeria: galeriaArr
     };
     var btn = document.getElementById('propSaveBtn');
     var msg = document.getElementById('propMsg');
