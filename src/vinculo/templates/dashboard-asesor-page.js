@@ -61,6 +61,7 @@ function dashboardAsesorPage() {
 .reg-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;background:white;user-select:none}
 .reg-chip.active{background:rgba(201,169,110,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
 .reg-chip:hover{border-color:#c9a96e}
+@keyframes fadeInToast{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 
 <!-- LOGIN VIEW -->
@@ -263,8 +264,31 @@ function dashboardAsesorPage() {
 
   function headers() { return {'Content-Type':'application/json','Authorization':'Bearer '+token}; }
 
+  function updateNav(loggedIn){
+    var g=document.getElementById('navGuest');
+    var a=document.getElementById('navAuth');
+    var nl=document.getElementById('navAsesores');
+    if(loggedIn){
+      if(g)g.style.display='none';
+      if(a)a.style.display='flex';
+      if(nl){nl.href='/asesores.html';nl.onclick=null;}
+    } else {
+      if(g)g.style.display='flex';
+      if(a)a.style.display='none';
+      if(nl)nl.onclick=function(e){e.preventDefault();window.location.href='/dashboard.html';};
+    }
+  }
+
+  function showWelcome(nombre){
+    var toast=document.createElement('div');
+    toast.style.cssText='position:fixed;top:24px;right:24px;z-index:9999;background:#0a1628;color:white;padding:20px 28px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.25);font-size:14px;line-height:1.5;animation:fadeInToast .4s ease;max-width:340px;border:1px solid rgba(201,169,110,.3)';
+    toast.innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C9A96E;margin-bottom:6px">Bienvenido</div><div style="font-weight:600">Hola, '+(nombre||'Asesor')+'</div><div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">Tu dashboard est&aacute; listo.</div>';
+    document.body.appendChild(toast);
+    setTimeout(function(){toast.style.transition='opacity .5s';toast.style.opacity='0';setTimeout(function(){toast.remove();},500);},3500);
+  }
+
   // Check session on load
-  if (token) { loadDashboard(); } else { showLogin(); }
+  if (token) { updateNav(true); loadDashboard(); } else { updateNav(false); showLogin(); }
 
   function showLogin() {
     document.getElementById('loginView').style.display = '';
@@ -291,6 +315,7 @@ function dashboardAsesorPage() {
       if(d.ok && d.token){
         token = d.token;
         localStorage.setItem('broker_token', token);
+        updateNav(true);
         loadDashboard();
       } else {
         msg.className='dash-msg error'; msg.textContent=d.error||'Error'; msg.style.display='block';
@@ -321,6 +346,7 @@ function dashboardAsesorPage() {
         document.getElementById('addPropBtn').style.opacity = '.5';
       }
       showDash();
+      showWelcome(d.nombre.split(' ')[0]);
       loadMyProps();
     })
     .catch(function(e){ if(e!=='auth') console.error(e); });
@@ -484,6 +510,7 @@ function dashboardAsesorPage() {
     fetch(API+'/api/broker/logout', {method:'POST', headers:headers()}).catch(function(){});
     localStorage.removeItem('broker_token');
     token = null;
+    updateNav(false);
     showLogin();
   };
 })();
