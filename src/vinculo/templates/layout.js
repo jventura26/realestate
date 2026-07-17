@@ -686,8 +686,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
       <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <a href="/planes.html" style="font-size:13px;font-weight:700;color:#2d2416;background:#C9A96E;padding:9px 18px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Para Asesores</a>
-    <a href="/registro.html" style="font-size:13px;font-weight:600;color:#1a2a4e;border:1.5px solid #d1d5db;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='#1a2a4e';this.style.background='#f9fafb'" onmouseout="this.style.borderColor='#d1d5db';this.style.background='transparent'">Iniciar sesión</a>
+    <a href="/registro-asesor.html" style="font-size:13px;font-weight:700;color:#2d2416;background:#C9A96E;padding:9px 18px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Para Asesores</a>
+    <a href="/dashboard.html" style="font-size:13px;font-weight:600;color:#1a2a4e;border:1.5px solid #d1d5db;padding:8px 16px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='#1a2a4e';this.style.background='#f9fafb'" onmouseout="this.style.borderColor='#d1d5db';this.style.background='transparent'">Iniciar sesión</a>
   </div>
   </div>
 </div>
