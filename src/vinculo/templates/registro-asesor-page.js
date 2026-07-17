@@ -205,10 +205,11 @@ function registroAsesorPage() {
       btn.textContent = 'Crear mi cuenta';
       if (res.ok && res.data.ok) {
         msg.className = 'reg-msg success';
-        msg.innerHTML = '<strong>&iexcl;Registro exitoso!</strong><br>Tu cuenta est&aacute; pendiente de aprobaci&oacute;n. Te notificaremos por email cuando est&eacute; activa.';
+        msg.innerHTML = '<strong>&iexcl;Registro exitoso!</strong><br>Tu cuenta est&aacute; pendiente de aprobaci&oacute;n. Redirigiendo a inicio de sesi&oacute;n...';
         msg.style.display = 'block';
         document.getElementById('regForm').reset();
         document.querySelectorAll('.reg-chip.active').forEach(function(c){ c.classList.remove('active'); });
+        setTimeout(function(){ window.location.href = '/dashboard.html'; }, 2500);
       } else {
         msg.className = 'reg-msg error';
         msg.textContent = res.data.error || 'Error al registrar. Intenta de nuevo.';

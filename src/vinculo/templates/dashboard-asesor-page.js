@@ -235,7 +235,7 @@ function dashboardAsesorPage() {
         msg.className='dash-msg error'; msg.textContent=d.error||'Error'; msg.style.display='block';
       }
     })
-    .catch(function(){ btn.disabled=false; btn.textContent='Iniciar sesión'; });
+    .catch(function(err){ btn.disabled=false; btn.textContent='Iniciar sesión'; msg.className='dash-msg error'; msg.textContent='Error de conexión. Intenta de nuevo.'; msg.style.display='block'; console.error('Login error:', err); });
     return false;
   };
 

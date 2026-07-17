@@ -2153,7 +2153,7 @@ function renderBrokersUI(mc) {
           + '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:#0a1628;font-size:15px">'+b.nombre+'</span>'+(b.verificado?'<span style="color:#C9A96E" title="Verificado">&#10003;</span>':'')+'</div>'
           + '<div style="font-size:12px;color:#64748b">'+(b.titulo||'Asesor')+'</div></div>'
           + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
-          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;'+(b.estado==='pendiente'?'background:#fef3c7;color:#92400e':b.activo!==false?'background:#f0fdf4;color:#16a34a':'background:#fef2f2;color:#dc2626')+'">'+(b.estado==='pendiente'?'Pendiente':b.activo!==false?'Activo':'Inactivo')+'</span>'
+          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;'+(b.estado==='pendiente'?'background:#fef3c7;color:#92400e':b.estado==='aprobado'||b.activo!==false?'background:#f0fdf4;color:#16a34a':'background:#fef2f2;color:#dc2626')+'">'+(b.estado==='pendiente'?'Pendiente':b.estado==='aprobado'?'Aprobado':b.activo!==false?'Activo':'Inactivo')+'</span>'
           + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#f1f5f9;color:#475569">'+(b.plan||'free').toUpperCase()+'</span>'
           + (b.destacado?'<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#fefce8;color:#ca8a04">Destacado</span>':'')
           + '</div></div>'
@@ -2331,6 +2331,8 @@ async function saveBroker(id) {
     var planEl = document.getElementById('bf_plan');
     if (estadoEl) data.estado = estadoEl.value;
     if (planEl) data.plan = planEl.value;
+    // Auto-activar cuando se aprueba
+    if (data.estado === 'aprobado') data.activo = true;
   }
 
   try {
