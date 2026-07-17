@@ -682,7 +682,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="/asesores.html" id="navAsesores" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Asesores</a>
     <span style="width:1px;height:18px;background:#e2e8f0;margin:0 8px;flex-shrink:0;display:inline-block"></span>
     <a href="/planes.html" style="font-size:13px;font-weight:500;color:#C9A96E;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.background='#fdf8f0'" onmouseout="this.style.background='transparent'">Publicar</a>
-    <a href="/como-funciona.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Cómo funciona</a>
+    <a href="/planes.html" style="font-size:13px;font-weight:500;color:#4a5568;padding:8px 14px;border-radius:6px;text-decoration:none;transition:all .2s;white-space:nowrap" onmouseover="this.style.color='#0f1b2e';this.style.background='#f7f8fa'" onmouseout="this.style.color='#4a5568';this.style.background='transparent'">Cómo funciona</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
       <div id="navGuest" style="display:flex;align-items:center;gap:10px;flex-shrink:0">
