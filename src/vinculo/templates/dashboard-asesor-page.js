@@ -731,20 +731,20 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
     var plan = brokerData.plan || 'free';
     var html = '<div class="dash-modal-overlay" id="upgradeModal" style="display:flex">'
       + '<div class="dash-modal" style="max-width:500px">'
-      + '<button class="dash-modal-close" onclick="document.getElementById(\'upgradeModal\').remove()">×</button>'
+      + '<button class="dash-modal-close" onclick="document.getElementById(&apos;upgradeModal&apos;).remove()">×</button>'
       + '<h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;margin:0 0 20px">Mejorar plan</h3>';
     if(plan !== 'pro') {
       html += '<div style="border:1.5px solid #eef0f3;border-radius:12px;padding:20px;margin-bottom:12px">'
         + '<div style="display:flex;justify-content:space-between;align-items:center">'
         + '<div><strong>Plan Pro</strong><br><span style="font-size:13px;color:#94a3b8">15 propiedades • Analytics • Badge verificado</span></div>'
         + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q350</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
-        + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(\'pro\')">Solicitar Pro</button></div>';
+        + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(&apos;pro&apos;)">Solicitar Pro</button></div>';
     }
     html += '<div style="border:1.5px solid var(--gold);border-radius:12px;padding:20px;background:rgba(201,169,110,.04)">'
       + '<div style="display:flex;justify-content:space-between;align-items:center">'
       + '<div><strong>Plan Premium</strong><br><span style="font-size:13px;color:#94a3b8">Propiedades ilimitadas • Destacado • Soporte prioritario</span></div>'
       + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q750</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
-      + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(\'premium\')">Solicitar Premium</button></div>'
+      + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(&apos;premium&apos;)">Solicitar Premium</button></div>'
       + '</div></div>';
     document.body.insertAdjacentHTML('beforeend', html);
   }
