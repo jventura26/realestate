@@ -672,6 +672,7 @@ ${mobGalHTML}${galHTML}
     <div class="zp-loc"><i class="ti ti-map-pin"></i>${locStr||esc(prop.zona||'Guatemala')}</div>
     <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#94a3b8;margin-top:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="zpViewCount">0</span> vistas</div>
     <script>(function(){var k="zpViews_${prop.slug}";var c=parseInt(localStorage.getItem(k)||"0")+1;localStorage.setItem(k,String(c));document.getElementById("zpViewCount").textContent=c;})()</script>
+    <script>(function(){var bid='${prop.broker_id||""}';if(bid)fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'property_view',broker_id:bid})}).catch(function(){});})()</script>
 
 
     <div class="zp-badges">${cintaHTML}${exclHTML}</div>

@@ -1229,17 +1229,23 @@ export default {
       var brokersRaw = await env.DB.get('brokers');
       var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
       var broker = brokers.find(function(b){ return b.id === body.broker_id; });
-      if (broker && broker.whatsapp_raw && NOTIFY_WEBHOOK) {
+      if (broker && NOTIFY_WEBHOOK) {
         ctx.waitUntil(fetch(NOTIFY_WEBHOOK, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             type: 'broker_message',
             broker_name: broker.nombre,
-            broker_phone: broker.whatsapp_raw,
+            broker_phone: broker.whatsapp_raw || '',
+            broker_email: broker.email || '',
+            broker_id: broker.id,
             sender_name: body.nombre,
+            sender_email: body.email,
+            sender_phone: body.telefono || '',
             property: body.propiedad_titulo || 'Consulta general',
-            message: body.mensaje.substring(0, 200),
+            property_id: body.propiedad_id || '',
+            message: body.mensaje.substring(0, 500),
+            unread_count: unread,
           })
         }).catch(function(){}));
       }
@@ -1613,6 +1619,292 @@ export default {
       }
 
       return jsonRes(report);
+    }
+
+
+    // ══════════════════════════════════════════════════════════
+    // ECOSYSTEM GROWTH — Analytics, Reviews, Payments
+    // ══════════════════════════════════════════════════════════
+
+    // ── POST /api/track ── Track profile/property views (public, no auth) ──
+    if (method === 'POST' && path === '/api/track') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      var event = body.event; // 'profile_view', 'property_view', 'property_click', 'whatsapp_click', 'phone_click'
+      var brokerId = body.broker_id;
+      if (!event || !brokerId) return jsonRes({ error: 'event y broker_id requeridos' }, 400);
+      var today = new Date().toISOString().split('T')[0];
+      var key = 'analytics:' + brokerId;
+      var raw = await env.DB.get(key);
+      var analytics = raw ? JSON.parse(raw) : { daily: {}, totals: {} };
+      if (!analytics.daily[today]) analytics.daily[today] = {};
+      analytics.daily[today][event] = (analytics.daily[today][event] || 0) + 1;
+      analytics.totals[event] = (analytics.totals[event] || 0) + 1;
+      // Keep only last 90 days
+      var days = Object.keys(analytics.daily).sort();
+      if (days.length > 90) {
+        for (var d = 0; d < days.length - 90; d++) delete analytics.daily[days[d]];
+      }
+      await env.DB.put(key, JSON.stringify(analytics));
+      return jsonRes({ ok: true });
+    }
+
+    // ── GET /api/broker/analytics ── Broker reads their analytics ──
+    if (method === 'GET' && path === '/api/broker/analytics') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var raw = await env.DB.get('analytics:' + broker.id);
+      var analytics = raw ? JSON.parse(raw) : { daily: {}, totals: {} };
+      // Calculate last 7 and 30 day summaries
+      var now = new Date();
+      var last7 = {};
+      var last30 = {};
+      for (var i = 0; i < 30; i++) {
+        var d = new Date(now - i * 86400000).toISOString().split('T')[0];
+        var dayData = analytics.daily[d] || {};
+        Object.keys(dayData).forEach(function(ev) {
+          last30[ev] = (last30[ev] || 0) + dayData[ev];
+          if (i < 7) last7[ev] = (last7[ev] || 0) + dayData[ev];
+        });
+      }
+      // Get message count
+      var msgsRaw = await env.DB.get('messages:' + broker.id);
+      var msgs = msgsRaw ? JSON.parse(msgsRaw) : [];
+      var unread = msgs.filter(function(m) { return !m.leido; }).length;
+      // Get property count
+      var propsRaw = await env.DB.get('propiedades');
+      var allProps = propsRaw ? JSON.parse(propsRaw) : [];
+      var myProps = allProps.filter(function(p) { return p.broker_id === broker.id && p.estado !== 'Eliminada'; });
+      // Get reviews
+      var revRaw = await env.DB.get('reviews:' + broker.id);
+      var reviews = revRaw ? JSON.parse(revRaw) : [];
+      var avgRating = reviews.length > 0 ? (reviews.reduce(function(s, r) { return s + r.rating; }, 0) / reviews.length).toFixed(1) : null;
+
+      return jsonRes({
+        totals: analytics.totals,
+        last7: last7,
+        last30: last30,
+        daily: analytics.daily,
+        messages_total: msgs.length,
+        messages_unread: unread,
+        properties_active: myProps.length,
+        reviews_count: reviews.length,
+        avg_rating: avgRating,
+      });
+    }
+
+    // ── POST /api/reviews ── Submit a review for a broker (public) ──
+    if (method === 'POST' && path === '/api/reviews') {
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.broker_id || !body.nombre || !body.rating || !body.comentario) {
+        return jsonRes({ error: 'broker_id, nombre, rating y comentario son requeridos' }, 400);
+      }
+      var rating = parseInt(body.rating);
+      if (rating < 1 || rating > 5) return jsonRes({ error: 'Rating debe ser entre 1 y 5' }, 400);
+      var review = {
+        id: crypto.randomUUID(),
+        broker_id: body.broker_id,
+        nombre: body.nombre,
+        email: body.email || '',
+        rating: rating,
+        comentario: body.comentario.substring(0, 500),
+        propiedad: body.propiedad || '',
+        status: 'pending', // pending → approved → rejected
+        created_at: new Date().toISOString(),
+      };
+      var key = 'reviews:' + body.broker_id;
+      var raw = await env.DB.get(key);
+      var reviews = raw ? JSON.parse(raw) : [];
+      reviews.unshift(review);
+      if (reviews.length > 100) reviews = reviews.slice(0, 100);
+      await env.DB.put(key, JSON.stringify(reviews));
+      // Update broker avg rating (only approved reviews)
+      var approved = reviews.filter(function(r) { return r.status === 'approved'; });
+      if (approved.length > 0) {
+        var avg = (approved.reduce(function(s, r) { return s + r.rating; }, 0) / approved.length).toFixed(1);
+        var brokersRaw = await env.DB.get('brokers');
+        var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
+        for (var i = 0; i < brokers.length; i++) {
+          if (brokers[i].id === body.broker_id) {
+            brokers[i].avg_rating = parseFloat(avg);
+            brokers[i].review_count = approved.length;
+            break;
+          }
+        }
+        await env.DB.put('brokers', JSON.stringify(brokers));
+      }
+      // Notify via webhook
+      if (NOTIFY_WEBHOOK) {
+        ctx.waitUntil(fetch(NOTIFY_WEBHOOK, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'new_review', broker_id: body.broker_id, reviewer: body.nombre, rating: rating, comment: body.comentario.substring(0, 200) })
+        }).catch(function(){}));
+      }
+      return jsonRes({ ok: true, id: review.id, message: 'Reseña enviada. Será visible después de aprobación.' });
+    }
+
+    // ── GET /api/public/reviews/:broker_id ── Public: get approved reviews ──
+    if (method === 'GET' && path.startsWith('/api/public/reviews/')) {
+      var brokerId = path.replace('/api/public/reviews/', '');
+      var raw = await env.DB.get('reviews:' + brokerId);
+      var reviews = raw ? JSON.parse(raw) : [];
+      var approved = reviews.filter(function(r) { return r.status === 'approved'; });
+      // Remove emails from public view
+      approved.forEach(function(r) { delete r.email; });
+      var avg = approved.length > 0 ? (approved.reduce(function(s, r) { return s + r.rating; }, 0) / approved.length).toFixed(1) : null;
+      return jsonRes({ reviews: approved, avg_rating: avg, count: approved.length });
+    }
+
+    // ── GET /api/broker/reviews ── Broker sees all their reviews ──
+    if (method === 'GET' && path === '/api/broker/reviews') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var raw = await env.DB.get('reviews:' + broker.id);
+      var reviews = raw ? JSON.parse(raw) : [];
+      return jsonRes({ reviews: reviews });
+    }
+
+    // ── PUT /api/admin/reviews ── Admin approves/rejects reviews ──
+    if (method === 'PUT' && path === '/api/admin/reviews') {
+      if (!(await requireAuth(request, env))) return jsonRes({ error: 'No autorizado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.broker_id || !body.review_id || !body.status) return jsonRes({ error: 'broker_id, review_id y status requeridos' }, 400);
+      var key = 'reviews:' + body.broker_id;
+      var raw = await env.DB.get(key);
+      var reviews = raw ? JSON.parse(raw) : [];
+      var found = false;
+      for (var i = 0; i < reviews.length; i++) {
+        if (reviews[i].id === body.review_id) {
+          reviews[i].status = body.status;
+          found = true;
+          break;
+        }
+      }
+      if (!found) return jsonRes({ error: 'Reseña no encontrada' }, 404);
+      await env.DB.put(key, JSON.stringify(reviews));
+      // Recalculate avg rating
+      var approved = reviews.filter(function(r) { return r.status === 'approved'; });
+      var brokersRaw = await env.DB.get('brokers');
+      var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
+      for (var i = 0; i < brokers.length; i++) {
+        if (brokers[i].id === body.broker_id) {
+          brokers[i].avg_rating = approved.length > 0 ? parseFloat((approved.reduce(function(s, r) { return s + r.rating; }, 0) / approved.length).toFixed(1)) : 0;
+          brokers[i].review_count = approved.length;
+          break;
+        }
+      }
+      await env.DB.put('brokers', JSON.stringify(brokers));
+      return jsonRes({ ok: true });
+    }
+
+    // ── GET /api/admin/reviews/pending ── Admin sees all pending reviews ──
+    if (method === 'GET' && path === '/api/admin/reviews/pending') {
+      if (!(await requireAuth(request, env))) return jsonRes({ error: 'No autorizado' }, 401);
+      var brokersRaw = await env.DB.get('brokers');
+      var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
+      var pending = [];
+      for (var b = 0; b < brokers.length; b++) {
+        var raw = await env.DB.get('reviews:' + brokers[b].id);
+        var reviews = raw ? JSON.parse(raw) : [];
+        reviews.filter(function(r) { return r.status === 'pending'; }).forEach(function(r) {
+          r.broker_name = brokers[b].nombre;
+          pending.push(r);
+        });
+      }
+      pending.sort(function(a, b) { return new Date(b.created_at) - new Date(a.created_at); });
+      return jsonRes({ pending: pending });
+    }
+
+    // ── POST /api/broker/payment-request ── Broker requests plan upgrade (manual payment) ──
+    if (method === 'POST' && path === '/api/broker/payment-request') {
+      var broker = await requireBrokerAuth(request, env);
+      if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      var plan = body.plan;
+      if (plan !== 'pro' && plan !== 'premium') return jsonRes({ error: 'Plan debe ser pro o premium' }, 400);
+      var paymentRequest = {
+        id: crypto.randomUUID(),
+        broker_id: broker.id,
+        broker_name: broker.nombre,
+        broker_email: broker.email || '',
+        current_plan: broker.plan || 'free',
+        requested_plan: plan,
+        status: 'pending', // pending → confirmed → rejected
+        created_at: new Date().toISOString(),
+        payment_method: body.payment_method || '',
+        payment_reference: body.payment_reference || '',
+        notes: body.notes || '',
+      };
+      var key = 'payment_requests';
+      var raw = await env.DB.get(key);
+      var requests = raw ? JSON.parse(raw) : [];
+      requests.unshift(paymentRequest);
+      await env.DB.put(key, JSON.stringify(requests));
+      // Notify admin
+      if (NOTIFY_WEBHOOK) {
+        ctx.waitUntil(fetch(NOTIFY_WEBHOOK, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'payment_request', broker: broker.nombre, plan: plan, reference: body.payment_reference || 'Sin referencia' })
+        }).catch(function(){}));
+      }
+      return jsonRes({
+        ok: true,
+        id: paymentRequest.id,
+        message: 'Solicitud recibida. Tu plan será activado al confirmar el pago.',
+        payment_info: {
+          bank: 'Banco Industrial',
+          account: 'Monetaria 000-000000-0',
+          name: 'ZONA INNMUEBLE',
+          amount: plan === 'pro' ? 'Q350/mes' : 'Q750/mes',
+          instructions: 'Realiza la transferencia o depósito y envía el comprobante por WhatsApp o sube la referencia aquí.',
+        }
+      });
+    }
+
+    // ── GET /api/admin/payment-requests ── Admin sees payment requests ──
+    if (method === 'GET' && path === '/api/admin/payment-requests') {
+      if (!(await requireAuth(request, env))) return jsonRes({ error: 'No autorizado' }, 401);
+      var raw = await env.DB.get('payment_requests');
+      var requests = raw ? JSON.parse(raw) : [];
+      return jsonRes({ requests: requests });
+    }
+
+    // ── PUT /api/admin/payment-requests ── Admin confirms/rejects payment ──
+    if (method === 'PUT' && path === '/api/admin/payment-requests') {
+      if (!(await requireAuth(request, env))) return jsonRes({ error: 'No autorizado' }, 401);
+      var body;
+      try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
+      if (!body.request_id || !body.status) return jsonRes({ error: 'request_id y status requeridos' }, 400);
+      var raw = await env.DB.get('payment_requests');
+      var requests = raw ? JSON.parse(raw) : [];
+      var req = null;
+      for (var i = 0; i < requests.length; i++) {
+        if (requests[i].id === body.request_id) {
+          requests[i].status = body.status;
+          requests[i].confirmed_at = new Date().toISOString();
+          req = requests[i];
+          break;
+        }
+      }
+      if (!req) return jsonRes({ error: 'Solicitud no encontrada' }, 404);
+      await env.DB.put('payment_requests', JSON.stringify(requests));
+      // If confirmed, upgrade broker plan
+      if (body.status === 'confirmed') {
+        var brokersRaw = await env.DB.get('brokers');
+        var brokers = brokersRaw ? JSON.parse(brokersRaw) : [];
+        for (var i = 0; i < brokers.length; i++) {
+          if (brokers[i].id === req.broker_id) {
+            brokers[i].plan = req.requested_plan;
+            brokers[i].plan_activated_at = new Date().toISOString();
+            break;
+          }
+        }
+        await env.DB.put('brokers', JSON.stringify(brokers));
+      }
+      return jsonRes({ ok: true, plan_upgraded: body.status === 'confirmed' });
     }
 
     return jsonRes({ error: 'Not found' }, 404);

@@ -166,6 +166,67 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       </div>
     </div>
 
+    <!-- ANALYTICS SECTION -->
+    <div class="dash-section">
+      <div class="dash-section-head">
+        <span class="dash-section-title">Anal&iacute;ticas</span>
+        <select id="analyticsPeriod" onchange="loadAnalytics()" style="padding:6px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:600;background:white;color:#374151">
+          <option value="7">&Uacute;ltimos 7 d&iacute;as</option>
+          <option value="30">&Uacute;ltimos 30 d&iacute;as</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px" id="analyticsGrid">
+        <div class="dash-stat" style="padding:20px 16px">
+          <div class="dash-stat-val" id="aProfileViews">0</div>
+          <div class="dash-stat-label">Vistas de perfil</div>
+        </div>
+        <div class="dash-stat" style="padding:20px 16px">
+          <div class="dash-stat-val" id="aPropertyViews">0</div>
+          <div class="dash-stat-label">Vistas propiedades</div>
+        </div>
+        <div class="dash-stat" style="padding:20px 16px">
+          <div class="dash-stat-val" id="aPropertyClicks">0</div>
+          <div class="dash-stat-label">Clicks propiedades</div>
+        </div>
+        <div class="dash-stat" style="padding:20px 16px">
+          <div class="dash-stat-val" id="aWhatsappClicks">0</div>
+          <div class="dash-stat-label">Clicks WhatsApp</div>
+        </div>
+        <div class="dash-stat" style="padding:20px 16px">
+          <div class="dash-stat-val" id="aPhoneClicks">0</div>
+          <div class="dash-stat-label">Clicks tel&eacute;fono</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEWS SECTION -->
+    <div class="dash-section">
+      <div class="dash-section-head">
+        <span class="dash-section-title">Rese&ntilde;as <span id="dashReviewCount" style="color:#94a3b8;font-size:11px;font-weight:600"></span></span>
+      </div>
+      <div id="dashReviewsGrid" style="display:grid;gap:12px"></div>
+      <div id="dashReviewsEmpty" class="dash-empty" style="display:none">
+        <p style="font-size:16px;margin-bottom:8px">No tienes rese&ntilde;as a&uacute;n</p>
+        <p style="font-size:13px">Cuando tus clientes dejen rese&ntilde;as, aparecer&aacute;n aqu&iacute;.</p>
+      </div>
+    </div>
+
+    <!-- PLAN & PAYMENT SECTION -->
+    <div class="dash-section">
+      <div class="dash-section-head">
+        <span class="dash-section-title">Mi plan</span>
+      </div>
+      <div style="background:white;border-radius:16px;padding:28px;border:1.5px solid #eef0f3">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+          <div>
+            <span id="planCurrentName" style="font-size:18px;font-weight:700;color:#0a1628">Plan Free</span>
+            <p style="font-size:13px;color:#94a3b8;margin:4px 0 0">2 propiedades activas</p>
+          </div>
+          <button class="dash-add-btn" onclick="openUpgradeModal()" id="upgradeBtn">Mejorar plan</button>
+        </div>
+      </div>
+    </div>
+
     <div style="text-align:center;padding:20px;border-top:1px solid #eef0f3;margin-top:20px">
       <p style="font-size:12px;color:#94a3b8">&iquest;Necesitas m&aacute;s propiedades? <a href="/planes.html" style="color:var(--gold);font-weight:600;text-decoration:none">Actualiza tu plan</a></p>
     </div>
@@ -383,6 +444,8 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       showWelcome(d.nombre.split(' ')[0]);
       loadMyProps();
       loadMessages();
+      loadAnalytics();
+      loadReviews();
     })
     .catch(function(e){ if(e!=='auth') console.error(e); });
   }
@@ -606,6 +669,101 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
     showLogin();
   };
 })();
+
+  // ── ANALYTICS ──
+  function loadAnalytics() {
+    fetch(API+'/api/broker/analytics', {headers:headers()})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var period = document.getElementById('analyticsPeriod').value;
+      var data = period === '7' ? (d.last7||{}) : (d.last30||{});
+      document.getElementById('aProfileViews').textContent = data.profile_view || 0;
+      document.getElementById('aPropertyViews').textContent = data.property_view || 0;
+      document.getElementById('aPropertyClicks').textContent = data.property_click || 0;
+      document.getElementById('aWhatsappClicks').textContent = data.whatsapp_click || 0;
+      document.getElementById('aPhoneClicks').textContent = data.phone_click || 0;
+      // Update top stats too
+      document.getElementById('statViews').textContent = d.totals.profile_view || 0;
+      document.getElementById('statClicks').textContent = d.totals.whatsapp_click || 0;
+      document.getElementById('statMsgs').textContent = d.messages_total || 0;
+      // Update plan section
+      var plan = brokerData.plan || 'free';
+      var planNames = {free:'Plan Free',pro:'Plan Pro',premium:'Plan Premium'};
+      var limits = {free:'2 propiedades activas',pro:'15 propiedades activas',premium:'Propiedades ilimitadas'};
+      document.getElementById('planCurrentName').textContent = planNames[plan] || 'Plan Free';
+      document.getElementById('planCurrentName').nextElementSibling.textContent = limits[plan] || '';
+      if(plan === 'premium') document.getElementById('upgradeBtn').style.display = 'none';
+    }).catch(function(){});
+  }
+
+  // ── REVIEWS ──
+  function loadReviews() {
+    fetch(API+'/api/broker/reviews', {headers:headers()})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var grid = document.getElementById('dashReviewsGrid');
+      var empty = document.getElementById('dashReviewsEmpty');
+      var count = document.getElementById('dashReviewCount');
+      var reviews = d.reviews || [];
+      count.textContent = '(' + reviews.length + ')';
+      grid.innerHTML = '';
+      if(!reviews.length){ empty.style.display=''; return; }
+      empty.style.display='none';
+      reviews.forEach(function(r){
+        var stars = '';
+        for(var i=0;i<5;i++) stars += i < r.rating ? '★' : '☆';
+        var statusColors = {pending:'#f59e0b',approved:'#10b981',rejected:'#ef4444'};
+        var statusLabels = {pending:'Pendiente',approved:'Aprobada',rejected:'Rechazada'};
+        grid.innerHTML += '<div style="background:white;border-radius:12px;padding:20px;border:1.5px solid #eef0f3">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+          + '<div><span style="font-weight:700;color:#0a1628">' + r.nombre + '</span>'
+          + '<span style="color:' + (statusColors[r.status]||'#94a3b8') + ';font-size:11px;margin-left:8px;font-weight:600">' + (statusLabels[r.status]||r.status) + '</span></div>'
+          + '<span style="color:var(--gold);font-size:16px;letter-spacing:2px">' + stars + '</span></div>'
+          + '<p style="font-size:14px;color:#374151;margin:0 0 8px">' + r.comentario + '</p>'
+          + '<span style="font-size:11px;color:#94a3b8">' + new Date(r.created_at).toLocaleDateString() + '</span>'
+          + '</div>';
+      });
+    }).catch(function(){});
+  }
+
+  // ── UPGRADE MODAL ──
+  function openUpgradeModal() {
+    var plan = brokerData.plan || 'free';
+    var html = '<div class="dash-modal-overlay" id="upgradeModal" style="display:flex">'
+      + '<div class="dash-modal" style="max-width:500px">'
+      + '<button class="dash-modal-close" onclick="document.getElementById(\'upgradeModal\').remove()">×</button>'
+      + '<h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;margin:0 0 20px">Mejorar plan</h3>';
+    if(plan !== 'pro') {
+      html += '<div style="border:1.5px solid #eef0f3;border-radius:12px;padding:20px;margin-bottom:12px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center">'
+        + '<div><strong>Plan Pro</strong><br><span style="font-size:13px;color:#94a3b8">15 propiedades • Analytics • Badge verificado</span></div>'
+        + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q350</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
+        + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(\'pro\')">Solicitar Pro</button></div>';
+    }
+    html += '<div style="border:1.5px solid var(--gold);border-radius:12px;padding:20px;background:rgba(201,169,110,.04)">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center">'
+      + '<div><strong>Plan Premium</strong><br><span style="font-size:13px;color:#94a3b8">Propiedades ilimitadas • Destacado • Soporte prioritario</span></div>'
+      + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q750</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
+      + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(\'premium\')">Solicitar Premium</button></div>'
+      + '</div></div>';
+    document.body.insertAdjacentHTML('beforeend', html);
+  }
+
+  function requestUpgrade(plan) {
+    var ref = prompt('Referencia de pago (número de depósito o transferencia):');
+    if(!ref) return;
+    fetch(API+'/api/broker/payment-request', {
+      method:'POST', headers:Object.assign({'Content-Type':'application/json'},headers()),
+      body:JSON.stringify({plan:plan, payment_reference:ref, payment_method:'transferencia'})
+    }).then(function(r){return r.json();}).then(function(d){
+      document.getElementById('upgradeModal').remove();
+      if(d.ok){
+        alert('Solicitud enviada. Tu plan será activado al confirmar el pago.\n\nDatos bancarios:\n' + d.payment_info.bank + '\nCuenta: ' + d.payment_info.account + '\nNombre: ' + d.payment_info.name + '\nMonto: ' + d.payment_info.amount);
+      } else {
+        alert(d.error || 'Error al enviar solicitud');
+      }
+    }).catch(function(){ alert('Error de conexión'); });
+  }
 <\/script>
 `;
 

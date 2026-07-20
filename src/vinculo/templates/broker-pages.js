@@ -105,6 +105,42 @@ function brokerProfilePage(broker, allProps) {
 </section>
 `;
 
+
+  // Reviews section + tracking
+  body += '<section style="padding:60px 6%;background:white">'
+    + '<div style="max-width:1200px;margin:0 auto">'
+    + '<div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:20px">Rese\xf1as de clientes</div>'
+    + '<div id="brokerReviews" style="display:grid;gap:16px"><p style="font-size:14px;color:#94a3b8">Cargando...</p></div>'
+    + '<div style="margin-top:32px;padding-top:32px;border-top:1px solid #eef0f3">'
+    + '<div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Dejar una rese\xf1a</div>'
+    + '<form id="reviewForm" onsubmit="return submitReview(event)" style="max-width:500px">'
+    + '<input type="text" id="revNombre" placeholder="Tu nombre" required style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;margin-bottom:12px;box-sizing:border-box">'
+    + '<input type="email" id="revEmail" placeholder="Email (opcional)" style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;margin-bottom:12px;box-sizing:border-box">'
+    + '<div style="margin-bottom:12px"><span style="font-size:13px;color:#64748b;margin-right:8px">Calificaci\xf3n:</span>'
+    + '<select id="revRating" style="padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px">'
+    + '<option value="5">Excelente (5)</option><option value="4">Muy bueno (4)</option>'
+    + '<option value="3">Bueno (3)</option><option value="2">Regular (2)</option>'
+    + '<option value="1">Malo (1)</option></select></div>'
+    + '<textarea id="revComentario" placeholder="Tu experiencia..." required rows="3" style="width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;resize:vertical;box-sizing:border-box;margin-bottom:12px"></textarea>'
+    + '<button type="submit" style="padding:12px 32px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer">Enviar</button>'
+    + '<div id="revMsg" style="margin-top:12px;font-size:13px;display:none"></div>'
+    + '</form></div></div></section>';
+
+  body += '<script>'
+    + 'var BID="' + b.id + '",API="https://zona-inmu.tours-virtuales-gt.workers.dev";'
+    + 'fetch(API+"/api/track",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event:"profile_view",broker_id:BID})}).catch(function(){});'
+    + 'fetch(API+"/api/public/reviews/"+BID).then(function(r){return r.json()}).then(function(d){'
+    + 'var el=document.getElementById("brokerReviews");if(!d.reviews||!d.reviews.length){el.innerHTML="<p style=\\"font-size:14px;color:#94a3b8\\">Sin rese\xf1as a\xfan.</p>";return}'
+    + 'var h="";d.reviews.forEach(function(r){var s="";for(var i=0;i<5;i++)s+=i<r.rating?"\u2605":"\u2606";'
+    + 'h+="<div style=\\"background:#f8f9fb;border-radius:12px;padding:20px;margin-bottom:12px\\"><div style=\\"display:flex;justify-content:space-between;margin-bottom:8px\\"><b>"+r.nombre+"</b><span style=\\"color:var(--gold)\\">"+s+"</span></div><p style=\\"margin:0;font-size:14px;color:#374151\\">"+r.comentario+"</p></div>"});'
+    + 'el.innerHTML=h}).catch(function(){});'
+    + 'function submitReview(e){e.preventDefault();'
+    + 'fetch(API+"/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({broker_id:BID,nombre:document.getElementById("revNombre").value,email:document.getElementById("revEmail").value,rating:document.getElementById("revRating").value,comentario:document.getElementById("revComentario").value})})'
+    + '.then(function(r){return r.json()}).then(function(d){var m=document.getElementById("revMsg");m.style.display="block";'
+    + 'if(d.ok){m.style.color="#10b981";m.textContent="Enviada. Visible tras aprobaci\xf3n.";document.getElementById("reviewForm").reset()}'
+    + 'else{m.style.color="#ef4444";m.textContent=d.error||"Error"}}).catch(function(){});return false}'
+    + '</scr' + 'ipt>';
+
   return layout({
     title: b.nombre + ' — Asesor Inmobiliario',
     desc: (b.bio || b.nombre + ' es asesor inmobiliario verificado en InmuHub.') + ' ' + brokerProps.length + ' propiedades activas en Guatemala.',
