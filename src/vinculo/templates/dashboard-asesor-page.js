@@ -758,7 +758,7 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
     }).then(function(r){return r.json();}).then(function(d){
       document.getElementById('upgradeModal').remove();
       if(d.ok){
-        alert('Solicitud enviada. Tu plan será activado al confirmar el pago.\n\nDatos bancarios:\n' + d.payment_info.bank + '\nCuenta: ' + d.payment_info.account + '\nNombre: ' + d.payment_info.name + '\nMonto: ' + d.payment_info.amount);
+        alert('Solicitud enviada. Tu plan será activado al confirmar el pago.\\n\\nDatos bancarios:\\n' + d.payment_info.bank + '\\nCuenta: ' + d.payment_info.account + '\\nNombre: ' + d.payment_info.name + '\\nMonto: ' + d.payment_info.amount);
       } else {
         alert(d.error || 'Error al enviar solicitud');
       }
