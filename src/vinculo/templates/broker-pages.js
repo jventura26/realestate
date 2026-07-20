@@ -37,7 +37,7 @@ function brokerProfilePage(broker, allProps) {
     ? 'https://wa.me/' + String(b.whatsapp).replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent('Hola ' + b.nombre + ', vi tu perfil en InmuHub y me interesa consultar sobre propiedades.')
     : '';
 
-  const body = `
+  let body = `
 <style>
 .broker-hero{padding:0 6%;background:linear-gradient(135deg,#0a1628 0%,#0f1e38 50%,#0a1628 100%);position:relative;overflow:hidden}
 .broker-hero::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none}
