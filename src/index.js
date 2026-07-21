@@ -718,7 +718,7 @@ export default {
       var data = raw ? JSON.parse(raw) : [];
       var pub = data.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; }).map(function(b){
         var o = Object.assign({}, b);
-        delete o.telefono; delete o.whatsapp_raw; delete o.email;
+        delete o.telefono; delete o.whatsapp_raw; delete o.email; delete o.password_hash; delete o.whatsapp;
         return o;
       });
       return new Response(JSON.stringify(pub), {
