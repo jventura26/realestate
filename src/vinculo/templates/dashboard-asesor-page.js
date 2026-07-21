@@ -688,8 +688,8 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       document.getElementById('statMsgs').textContent = d.messages_total || 0;
       // Update plan section
       var plan = brokerData.plan || 'free';
-      var planNames = {free:'Plan Free',pro:'Plan Pro',premium:'Plan Premium'};
-      var limits = {free:'2 propiedades activas',pro:'15 propiedades activas',premium:'Propiedades ilimitadas'};
+      var planNames = {free:'Plan Free',basico:'Plan Básico',pro:'Plan Profesional',premium:'Plan Premium'};
+      var limits = {free:'2 propiedades activas',basico:'8 propiedades activas',pro:'25 propiedades activas',premium:'Propiedades ilimitadas'};
       document.getElementById('planCurrentName').textContent = planNames[plan] || 'Plan Free';
       document.getElementById('planCurrentName').nextElementSibling.textContent = limits[plan] || '';
       if(plan === 'premium') document.getElementById('upgradeBtn').style.display = 'none';
@@ -733,17 +733,24 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       + '<div class="dash-modal" style="max-width:500px">'
       + '<button class="dash-modal-close" onclick="document.getElementById(&apos;upgradeModal&apos;).remove()">×</button>'
       + '<h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;margin:0 0 20px">Mejorar plan</h3>';
-    if(plan !== 'pro') {
+    if(plan === 'free') {
       html += '<div style="border:1.5px solid #eef0f3;border-radius:12px;padding:20px;margin-bottom:12px">'
         + '<div style="display:flex;justify-content:space-between;align-items:center">'
-        + '<div><strong>Plan Pro</strong><br><span style="font-size:13px;color:#94a3b8">15 propiedades • Analytics • Badge verificado</span></div>'
-        + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q350</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
+        + '<div><strong>Plan Básico</strong><br><span style="font-size:13px;color:#94a3b8">8 propiedades • Perfil público</span></div>'
+        + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q149</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
+        + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(&apos;basico&apos;)">Solicitar Básico</button></div>';
+    }
+    if(plan === 'free' || plan === 'basico') {
+      html += '<div style="border:1.5px solid #eef0f3;border-radius:12px;padding:20px;margin-bottom:12px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center">'
+        + '<div><strong>Plan Profesional</strong><br><span style="font-size:13px;color:#94a3b8">25 propiedades • Analytics • Badge verificado</span></div>'
+        + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q349</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
         + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(&apos;pro&apos;)">Solicitar Pro</button></div>';
     }
     html += '<div style="border:1.5px solid var(--gold);border-radius:12px;padding:20px;background:rgba(201,169,110,.04)">'
       + '<div style="display:flex;justify-content:space-between;align-items:center">'
       + '<div><strong>Plan Premium</strong><br><span style="font-size:13px;color:#94a3b8">Propiedades ilimitadas • Destacado • Soporte prioritario</span></div>'
-      + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q750</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
+      + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q699</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
       + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(&apos;premium&apos;)">Solicitar Premium</button></div>'
       + '</div></div>';
     document.body.insertAdjacentHTML('beforeend', html);

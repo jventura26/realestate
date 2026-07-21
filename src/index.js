@@ -976,7 +976,7 @@ export default {
     if (method === 'GET' && path === '/api/broker/me') {
       var broker = await requireBrokerAuth(request, env);
       if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
-      var planLimits = { free: 2, pro: 5, premium: 999 };
+      var planLimits = { free: 2, basico: 8, pro: 25, premium: 999 };
       var raw = await env.DB.get('propiedades');
       var allProps = raw ? JSON.parse(raw) : [];
       var myProps = allProps.filter(function(p){ return p.broker_id === broker.id; });
@@ -1040,7 +1040,7 @@ export default {
     if (method === 'POST' && path === '/api/broker/propiedades') {
       var broker = await requireBrokerAuth(request, env);
       if (!broker) return jsonRes({ error: 'No autenticado' }, 401);
-      var planLimits = { free: 2, pro: 5, premium: 999 };
+      var planLimits = { free: 2, basico: 8, pro: 25, premium: 999 };
       var limit = planLimits[broker.plan || 'free'] || 2;
       var raw = await env.DB.get('propiedades');
       var allProps = raw ? JSON.parse(raw) : [];
@@ -1175,7 +1175,7 @@ export default {
       var body;
       try { body = await request.json(); } catch { return jsonRes({ error: 'JSON inválido' }, 400); }
       if (!body.id || !body.plan) return jsonRes({ error: 'ID y plan requeridos' }, 400);
-      if (['free','pro','premium'].indexOf(body.plan) === -1) return jsonRes({ error: 'Plan inválido' }, 400);
+      if (['free','basico','pro','premium'].indexOf(body.plan) === -1) return jsonRes({ error: 'Plan inválido' }, 400);
       var raw = await env.DB.get('brokers');
       var data = raw ? JSON.parse(raw) : [];
       var found = false;
@@ -1858,7 +1858,7 @@ export default {
           bank: 'Banco Industrial',
           account: 'Monetaria 000-000000-0',
           name: 'ZONA INNMUEBLE',
-          amount: plan === 'pro' ? 'Q350/mes' : 'Q750/mes',
+          amount: plan === 'basico' ? 'Q149/mes' : plan === 'pro' ? 'Q349/mes' : 'Q699/mes',
           instructions: 'Realiza la transferencia o depósito y envía el comprobante por WhatsApp o sube la referencia aquí.',
         }
       });
