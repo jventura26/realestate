@@ -293,6 +293,11 @@ const { dashboardAsesorPage } = require('./templates/dashboard-asesor-page');
 write(path.join(OUT, 'dashboard.html'), dashboardAsesorPage());
 console.log(' dashboard.html');
 
+// Admin Hub
+const { adminHubPage } = require('./templates/admin-hub-page');
+write(path.join(OUT, 'admin-hub.html'), adminHubPage());
+console.log(' admin-hub.html');
+
 
 // Blog SEO
 const { blogIndexPage, blogArticlePage } = require('./templates/blog');
