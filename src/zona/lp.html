@@ -394,3 +394,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var leadName = formData.name.split(' ')[0];
       var propTitle = formData.property_name || '';
       var waText = 'Hola, soy ' + leadName + '. Acabo de solicitar información sobre: ' + propTitle + '. Me gustaría recibir más detalles.';
+      setTimeout(function() {
+        window.location.href = 'https://wa.me/50245542088?text=' + encodeURIComponent(waText + (utmTag ? ' ' + utmTag : ''));
+      }, 1500);
+    };
+    xhr2.onerror = function() {
+      btn.disabled = false;
+      btn.textContent = 'Solicitar información';
+      alert('No pudimos enviar tus datos. Escríbenos por WhatsApp: +502 4554-2088');
+    };
+    xhr2.send(JSON.stringify(formData));
+  };
+
+  function getCookie(name) {
+    var m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return m ? m[2] : '';
+  }
+
+  function fireLead() {
+    if (window.fbq) {
+      fbq('track', 'Lead', {
+        content_name: currentProp ? (currentProp.titulo || currentProp.title || '') : '',
+        content_category: 'property_landing',
+        content_ids: [slug],
+        content_type: 'product'
+      });
+    }
+    if (window.gtag) { gtag('event', 'generate_lead', { event_label: slug }); }
+    var lx = new XMLHttpRequest();
+    lx.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');
+    lx.setRequestHeader('Content-Type', 'application/json');
+    lx.send(JSON.stringify({
+      page_url: window.location.href,
+      user_agent: navigator.userAgent,
+      fbc: getCookie('_fbc'),
+      fbp: getCookie('_fbp'),
+      external_id: getCookie('_fbp') || String(Date.now()),
+      event_name: 'Lead',
+      custom_data: { content_name: currentProp ? (currentProp.titulo || currentProp.title || '') : '', content_ids: [slug], content_type: 'product' }
+    }));
+  }
+})();
+</script>
+</body>
+</html>
