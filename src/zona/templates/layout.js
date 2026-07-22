@@ -213,10 +213,11 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   .logo{margin-right:auto;flex-shrink:0}
   .hamburger{display:flex;margin-left:auto;flex-shrink:0}
   .nav-cta{display:none}
-  .nav-links{position:fixed;top:68px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199;max-height:calc(100vh - 60px);overflow-y:auto}
-  .nav-links.active{display:flex}
-  .nav-links li{padding:0}
+  .nav-links,.mega-nav:not(.active){position:fixed;top:68px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:12px 0;border-bottom:1px solid var(--gl);display:none;z-index:199;max-height:calc(100vh - 60px);overflow-y:auto}
+  .nav-links.active,.mega-nav.active{display:flex}
+  .nav-links li,.mega-nav > li{padding:0}
   .nav-links a{display:block;padding:14px 6%;border-bottom:1px solid var(--bd);font-size:.7rem}
+  .mega-nav > li > a{display:block;padding:14px 6%;border-bottom:1px solid var(--bd);font-size:.7rem;height:auto}
   section{padding:18px 5%}
   .prop-grid{grid-template-columns:1fr}.filter-bar{padding:14px 5%}
   .ft{grid-template-columns:1fr;gap:32px}
@@ -411,6 +412,94 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
   display: inline-block;
   font-variant-numeric: tabular-nums;
 }
+/* ═══════ COMPASS MEGA-MENU ═══════ */
+.mega-nav{display:flex;align-items:center;gap:0;list-style:none;height:100%}
+.mega-nav > li{position:relative;height:100%;display:flex;align-items:center}
+.mega-nav > li > a{display:flex;align-items:center;gap:5px;height:100%;padding:0 16px;font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sv);transition:color .25s;white-space:nowrap}
+.mega-nav > li > a:hover,.mega-nav > li.mega-open > a{color:var(--or)}
+.mega-nav > li > a .dd-arrow{font-size:.45rem;opacity:.6;transition:transform .25s,opacity .25s}
+.mega-nav > li.mega-open > a .dd-arrow{transform:rotate(180deg);opacity:1}
+
+/* Mega dropdown panel */
+.mega-panel{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);opacity:0;visibility:hidden;min-width:520px;background:rgba(13,27,62,.98);backdrop-filter:blur(24px);border:1px solid var(--gl);border-radius:8px;padding:32px 36px;box-shadow:0 24px 64px rgba(0,0,0,.6);transition:opacity .3s,transform .3s,visibility .3s;z-index:400;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.mega-nav > li.mega-open .mega-panel{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+
+/* Mega panel columns */
+.mega-col h5{font-size:.52rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(245,130,13,.15)}
+.mega-col ul{list-style:none;padding:0;margin:0}
+.mega-col ul li{margin-bottom:2px}
+.mega-col ul li a{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:.72rem;font-weight:400;color:var(--sv);transition:all .2s;border-radius:4px;letter-spacing:.02em}
+.mega-col ul li a:hover{color:var(--wh);background:rgba(245,130,13,.08);transform:translateX(4px)}
+.mega-col ul li a .mega-icon{width:18px;height:18px;opacity:.5;flex-shrink:0}
+.mega-col ul li a:hover .mega-icon{opacity:1}
+
+/* Simple dropdown (for items without mega) */
+.simple-dd{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);opacity:0;visibility:hidden;min-width:240px;background:rgba(13,27,62,.98);backdrop-filter:blur(24px);border:1px solid var(--gl);border-radius:8px;padding:12px 0;box-shadow:0 20px 56px rgba(0,0,0,.5);transition:opacity .3s,transform .3s,visibility .3s;z-index:400;list-style:none}
+.mega-nav > li.mega-open .simple-dd{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.simple-dd li a{display:block;padding:10px 22px;font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sv);transition:color .2s,background .2s;white-space:nowrap}
+.simple-dd li a:hover{color:var(--wh);background:rgba(245,130,13,.08)}
+.simple-dd li.dd-sep{border-top:1px solid rgba(245,130,13,.15);margin-top:6px;padding-top:6px}
+.simple-dd li.dd-sep a{color:var(--or)}
+
+/* Mega CTA inside panel */
+.mega-cta{grid-column:1/-1;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:16px}
+.mega-cta a{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--or);transition:color .2s;display:flex;align-items:center;gap:6px}
+.mega-cta a:hover{color:var(--or2)}
+.mega-cta a svg{width:14px;height:14px}
+
+/* Mega responsive */
+@media(max-width:768px){
+  .mega-nav{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(13,27,62,.98);backdrop-filter:blur(16px);flex-direction:column;gap:0;padding:0;border-bottom:1px solid var(--gl);z-index:199;max-height:calc(100vh - 68px);overflow-y:auto}
+  .mega-nav.active{display:flex}
+  .mega-nav > li{height:auto;width:100%}
+  .mega-nav > li > a{height:auto;padding:15px 6%;border-bottom:1px solid var(--bd);width:100%;justify-content:space-between;font-size:.7rem}
+  .mega-panel{position:static;transform:none;opacity:1;visibility:visible;min-width:100%;border:none;border-radius:0;padding:0 6% 12px;box-shadow:none;grid-template-columns:1fr;gap:16px;background:rgba(255,255,255,.02);display:none}
+  .mega-nav > li.mega-open .mega-panel{display:grid}
+  .simple-dd{position:static;transform:none;opacity:1;visibility:visible;min-width:100%;border:none;border-radius:0;padding:0;box-shadow:none;background:rgba(255,255,255,.02);display:none}
+  .mega-nav > li.mega-open .simple-dd{display:block}
+  .simple-dd li a{padding:12px 10%;font-size:.65rem;border-bottom:1px solid var(--bd)}
+  .mega-cta{padding:12px 0;gap:12px;flex-direction:column;align-items:flex-start}
+}
+
+/* ═══════ PREMIUM FOOTER ═══════ */
+.footer-premium{background:linear-gradient(180deg,var(--ink) 0%,#050A14 100%);border-top:1px solid var(--gl);padding:0}
+.footer-top{max-width:1200px;margin:0 auto;padding:64px 6% 48px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.2fr;gap:40px}
+.footer-brand-block .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--wh);margin-bottom:12px;letter-spacing:.08em}
+.footer-brand-block .footer-logo em{font-style:normal;color:var(--or)}
+.footer-brand-block .footer-tagline{font-size:.78rem;color:var(--sv);line-height:1.8;max-width:260px;margin-bottom:20px;font-weight:300}
+.footer-social{display:flex;gap:10px}
+.footer-social a{width:36px;height:36px;border-radius:50%;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--sv);transition:all .3s}
+.footer-social a:hover{border-color:var(--or);color:var(--or);transform:translateY(-2px)}
+.footer-social a svg{width:16px;height:16px;fill:currentColor}
+.footer-col h4{font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:18px}
+.footer-col ul{list-style:none;padding:0;margin:0}
+.footer-col ul li{margin-bottom:10px}
+.footer-col ul li a{font-size:.76rem;color:var(--sv);transition:color .2s;font-weight:300}
+.footer-col ul li a:hover{color:var(--wh)}
+.footer-newsletter h4{font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:10px}
+.footer-newsletter p{font-size:.72rem;color:var(--sv);line-height:1.7;margin-bottom:16px;font-weight:300}
+.footer-nl-form{display:flex;gap:0;border-radius:4px;overflow:hidden;border:1px solid var(--bd)}
+.footer-nl-form input{flex:1;background:rgba(255,255,255,.04);border:none;padding:11px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;color:var(--wh);outline:none}
+.footer-nl-form input::placeholder{color:var(--mt)}
+.footer-nl-form button{background:var(--or);color:var(--ink);border:none;padding:11px 18px;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;white-space:nowrap}
+.footer-nl-form button:hover{background:var(--or2)}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:20px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-top:1px solid var(--bd)}
+.footer-bottom span{font-size:.68rem;color:var(--mt);font-weight:300}
+.footer-bottom-links{display:flex;gap:20px}
+.footer-bottom-links a{font-size:.68rem;color:var(--mt);transition:color .2s;font-weight:300}
+.footer-bottom-links a:hover{color:var(--or)}
+
+@media(max-width:768px){
+  .footer-top{grid-template-columns:1fr 1fr;gap:28px}
+  .footer-brand-block{grid-column:1/-1}
+  .footer-newsletter{grid-column:1/-1}
+}
+@media(max-width:480px){
+  .footer-top{grid-template-columns:1fr!important;gap:20px!important;padding:32px 4% 24px!important}
+  .footer-bottom{padding:14px 4%!important;flex-direction:column;align-items:center;text-align:center}
+  .footer-bottom-links{gap:14px}
+}
+
 </style>
 </head>
 <body>
@@ -422,28 +511,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="nav-inner">
     <a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="/propiedades.html">Propiedades</a></li>
-      <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
-      <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
-      <li><a href="/propiedades.html?tipo=Fincas">Fincas</a></li>
-      <li><a href="/blog.html">Blog</a></li>
-            <li class="nav-has-dd">
-        <a href="/zonas/index.html" class="nav-dd-toggle">Zonas <span style="font-size:.55rem;opacity:.7">&#9660;</span></a>
-        <ul class="nav-dropdown">
+    <ul class="mega-nav" id="nav-links">
+      <li data-mega="comprar">
+        <a href="/propiedades.html">Comprar <span class="dd-arrow">&#9660;</span></a>
+        <div class="mega-panel">
+          <div class="mega-col">
+            <h5>Por tipo</h5>
+            <ul>
+              <li><a href="/propiedades.html?tipo=Casa"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Casas &amp; Residencias</a></li>
+              <li><a href="/propiedades.html?tipo=Apartamento"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2M9 18h6"/></svg> Apartamentos</a></li>
+              <li><a href="/propiedades.html?tipo=Finca"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6M9 9h.01M15 9h.01"/></svg> Fincas</a></li>
+              <li><a href="/propiedades.html?tipo=Terreno"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20L9 8l4 6 3-4 6 10H2z"/><circle cx="17" cy="6" r="2"/></svg> Terrenos</a></li>
+            </ul>
+          </div>
+          <div class="mega-col">
+            <h5>Por zona</h5>
+            <ul>
+              <li><a href="/zonas/zona-10.html">Zona 10 &mdash; Ciudad</a></li>
+              <li><a href="/zonas/zona-14.html">Zona 14 &mdash; Premium</a></li>
+              <li><a href="/zonas/zona-15.html">Zona 15 &mdash; Vista Hermosa</a></li>
+              <li><a href="/zonas/zona-16.html">Zona 16 &mdash; Cañadas</a></li>
+              <li><a href="/zonas/fraijanes.html">Fraijanes</a></li>
+              <li><a href="/zonas/carretera-el-salvador.html">Carretera a El Salvador</a></li>
+            </ul>
+          </div>
+          <div class="mega-cta">
+            <a href="/propiedades.html">Ver todas las propiedades <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="/zonas/index.html">Explorar zonas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+      </li>
+      <li><a href="/propiedades.html?tipo=Finca">Fincas</a></li>
+      <li data-mega="zonas">
+        <a href="/zonas/index.html">Zonas <span class="dd-arrow">&#9660;</span></a>
+        <ul class="simple-dd">
           <li><a href="/zonas/zona-10.html">Zona 10</a></li>
           <li><a href="/zonas/zona-14.html">Zona 14</a></li>
           <li><a href="/zonas/zona-15.html">Zona 15</a></li>
           <li><a href="/zonas/zona-16.html">Zona 16</a></li>
           <li><a href="/zonas/fraijanes.html">Fraijanes</a></li>
           <li><a href="/zonas/carretera-el-salvador.html">Carretera El Salvador</a></li>
-          <li style="border-top:1px solid rgba(245,130,13,.2);margin-top:6px;padding-top:6px"><a href="/zonas/index.html" style="color:var(--or)">Ver todas &rarr;</a></li>
+          <li class="dd-sep"><a href="/zonas/index.html">Ver todas &rarr;</a></li>
         </ul>
       </li>
-      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/blog.html">Blog</a></li>
       <li><a href="/about.html">Nosotros</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
     </ul>
-    <a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="nav-cta">Asesoría</a>
+    <a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="nav-cta">Asesor&iacute;a</a>
   </div>
 </nav>
 
@@ -455,99 +570,63 @@ ${body}
 </a>
 
 
-<footer style="background:var(--ink);border-top:1px solid var(--gl)">
-  <div style="max-width:1200px;margin:0 auto;padding:60px 6% 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px">
-    <div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--wh);margin-bottom:16px"><em style="color:var(--or);font-style:normal">ZONA</em> INNmueble</div>
-      <p style="font-size:.82rem;color:var(--sv);line-height:1.8;max-width:280px;margin-bottom:24px">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
-      <a href="https://wa.me/${WA}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--or);color:var(--ink);font-size:.75rem;font-weight:700;padding:10px 18px;border-radius:4px;text-decoration:none;letter-spacing:.04em;transition:all .3s" onmouseover="this.style.background='var(--or2)'" onmouseout="this.style.background='var(--or)'">
-        ${WA_SVG} WhatsApp +502 4554-2088
-      </a>
+<footer class="footer-premium">
+  <div class="footer-top">
+    <div class="footer-brand-block">
+      <div class="footer-logo"><em>ZONA</em> INNmueble</div>
+      <p class="footer-tagline">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/Zona-INNmueble-1616853578595692/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="https://www.instagram.com/zona.innmueble/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg></a>
+        <a href="https://wa.me/${WA}" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      </div>
     </div>
-    <div>
-      <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Propiedades</h4>
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <li><a href="/propiedades.html?tipo=Casa" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Residencias</a></li>
-        <li><a href="/propiedades.html?tipo=Apartamento" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Apartamentos</a></li>
-        <li><a href="/propiedades.html?tipo=Finca" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fincas</a></li>
-        <li><a href="/propiedades.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Ver todas</a></li>
+    <div class="footer-col">
+      <h4>Propiedades</h4>
+      <ul>
+        <li><a href="/propiedades.html?tipo=Casa">Residencias</a></li>
+        <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
+        <li><a href="/propiedades.html?tipo=Finca">Fincas</a></li>
+        <li><a href="/propiedades.html">Ver todas</a></li>
       </ul>
     </div>
-    <div>
-      <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Zonas</h4>
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <li><a href="/zonas/guatemala.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Guatemala (Zona 10-16)</a></li>
-        <li><a href="/zonas/fraijanes.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Fraijanes</a></li>
-        <li><a href="/zonas/mixco.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Mixco</a></li>
-        <li><a href="/zonas/santa-catarina-pinula.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Santa Catarina Pinula</a></li>
-        <li><a href="/zonas/zona-14.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 14</a></li>
-        <li><a href="/zonas/zona-15.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 15</a></li>
-        <li><a href="/zonas/zona-16.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Zona 16</a></li>
-        <li><a href="/zonas/carretera-el-salvador.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Carretera a El Salvador</a></li>
+    <div class="footer-col">
+      <h4>Zonas</h4>
+      <ul>
+        <li><a href="/zonas/zona-14.html">Zona 14</a></li>
+        <li><a href="/zonas/zona-15.html">Zona 15</a></li>
+        <li><a href="/zonas/zona-16.html">Zona 16</a></li>
+        <li><a href="/zonas/fraijanes.html">Fraijanes</a></li>
+        <li><a href="/zonas/carretera-el-salvador.html">Carretera a El Salvador</a></li>
+        <li><a href="/zonas/index.html">Ver todas</a></li>
       </ul>
     </div>
-    <div>
-      <h4 style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:20px">Contacto</h4>
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <li style="font-size:.8rem;color:var(--sv)">📍 Guatemala City</li>
-        <li style="font-size:.8rem;color:var(--sv)">📞 +502 4554-2088</li>
-        <li style="font-size:.8rem;color:var(--sv)">⏰ Lun–Vie 8:00–18:00</li>
-        <li><a href="/about.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Nosotros</a></li>
-        <li><a href="/privacidad.html" style="font-size:.8rem;color:var(--sv);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--sv)'">Privacidad</a></li>
+    <div class="footer-col">
+      <h4>Recursos</h4>
+      <ul>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/faq.html">Preguntas Frecuentes</a></li>
+        <li><a href="/about.html">Nosotros</a></li>
+        <li><a href="/privacidad.html">Privacidad</a></li>
       </ul>
+    </div>
+    <div class="footer-newsletter">
+      <h4>Newsletter</h4>
+      <p>Recibe propiedades nuevas y oportunidades de inversi&oacute;n directamente en tu email.</p>
+      <form class="footer-nl-form newsletter-form" onsubmit="return false;">
+        <input type="email" placeholder="Tu email" required>
+        <button type="submit">Suscribir</button>
+      </form>
     </div>
   </div>
-  <div style="max-width:1200px;margin:0 auto;padding:28px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--gl);margin-top:48px">
-    <span style="font-size:.72rem;color:var(--mt)">© 2026 Zona INNmueble Real Estate · Guatemala</span>
-    <a href="/privacidad.html" style="font-size:.72rem;color:var(--mt);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--or)'" onmouseout="this.style.color='var(--mt)'">Política de Privacidad</a>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Zona INNmueble Real Estate &middot; Guatemala</span>
+    <div class="footer-bottom-links">
+      <a href="/privacidad.html">Pol&iacute;tica de Privacidad</a>
+      <a href="/about.html">Nosotros</a>
+      <a href="https://wa.me/${WA}" target="_blank" rel="noopener">Contacto</a>
+    </div>
   </div>
-  <style>
-    @media(max-width:768px){
-      footer > div:first-child{grid-template-columns:1fr 1fr !important;}
-      footer > div:first-child > div:first-child{grid-column:1/-1;}
-    }
-    @media(max-width:480px){
-      footer > div:first-child{grid-template-columns:1fr !important;}
-    }
-  
-/* NAV DROPDOWN */
-.nav-has-dd { position: relative; }
-.nav-dropdown {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 220px;
-  background: rgba(13,27,62,.98);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--gl);
-  border-radius: 4px;
-  padding: 10px 0;
-  list-style: none;
-  z-index: 300;
-  box-shadow: 0 16px 48px rgba(0,0,0,.5);
-}
-.nav-has-dd:hover .nav-dropdown { display: block; }
-.nav-dropdown li a {
-  display: block;
-  padding: 9px 18px;
-  font-size: .67rem;
-  font-weight: 500;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--sv);
-  transition: color .2s, background .2s;
-  white-space: nowrap;
-}
-.nav-dropdown li a:hover { color: var(--wh); background: rgba(245,130,13,.08); }
-.nav-dd-toggle { cursor: pointer; }
-@media(max-width:768px) {
-  .nav-dropdown { position: static; transform: none; border: none; background: rgba(255,255,255,.04); box-shadow: none; border-radius: 0; padding: 0; display: none; }
-  .nav-has-dd.dd-open .nav-dropdown { display: block; }
-  .nav-dropdown li a { padding: 10px 6% 10px 10%; font-size: .65rem; border-bottom: 1px solid var(--bd); }
-}
-</style>
 </footer>
 ${scripts}
 
@@ -651,29 +730,73 @@ async function subscribeNewsletter(email) {
   }
 }
 
-// HAMBURGER MENU
+// MEGA-MENU + HAMBURGER
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('nav-links');
+var megaTimer = null;
+
+// Desktop: hover open/close mega panels
+document.querySelectorAll('.mega-nav > li[data-mega]').forEach(function(li) {
+  li.addEventListener('mouseenter', function() {
+    if(window.innerWidth <= 768) return;
+    clearTimeout(megaTimer);
+    document.querySelectorAll('.mega-nav > li.mega-open').forEach(function(o) { if(o !== li) o.classList.remove('mega-open'); });
+    li.classList.add('mega-open');
+  });
+  li.addEventListener('mouseleave', function() {
+    if(window.innerWidth <= 768) return;
+    megaTimer = setTimeout(function() { li.classList.remove('mega-open'); }, 200);
+  });
+});
+
+// Mobile: click to toggle mega panels
+document.querySelectorAll('.mega-nav > li[data-mega] > a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    if(window.innerWidth <= 768) {
+      e.preventDefault();
+      var li = a.parentElement;
+      var wasOpen = li.classList.contains('mega-open');
+      document.querySelectorAll('.mega-nav > li.mega-open').forEach(function(o) { o.classList.remove('mega-open'); });
+      if(!wasOpen) li.classList.add('mega-open');
+    }
+  });
+});
+
+// Hamburger toggle
 if(hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
+  hamburger.addEventListener('click', function() {
     navLinks.classList.toggle('active');
     hamburger.classList.toggle('active');
   });
 
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('active');
-      hamburger.classList.remove('active');
-    });
+  // Close nav on link click (mobile)
+  navLinks.querySelectorAll('a:not([data-mega] > a)').forEach(function(link) {
+    if(!link.parentElement.hasAttribute('data-mega')) {
+      link.addEventListener('click', function() {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('active');
+      });
+    }
   });
 
-  document.addEventListener('click', (e) => {
+  // Close on outside click
+  document.addEventListener('click', function(e) {
     if(!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
       navLinks.classList.remove('active');
       hamburger.classList.remove('active');
+      document.querySelectorAll('.mega-nav > li.mega-open').forEach(function(o) { o.classList.remove('mega-open'); });
     }
   });
 }
+
+// Close mega on Escape
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') {
+    document.querySelectorAll('.mega-nav > li.mega-open').forEach(function(o) { o.classList.remove('mega-open'); });
+    if(navLinks) navLinks.classList.remove('active');
+    if(hamburger) hamburger.classList.remove('active');
+  }
+});
 
 // Fade in al scroll con Intersection Observer
 const fadeEls = document.querySelectorAll('.fade-in-up');
@@ -769,17 +892,7 @@ document.addEventListener('DOMContentLoaded',function(){
   });
 });
 
-// Dropdown mobile toggle
-document.querySelectorAll(".nav-has-dd").forEach(function(li) {
-  var toggle = li.querySelector(".nav-dd-toggle");
-  if (!toggle) return;
-  toggle.addEventListener("click", function(e) {
-    if (window.innerWidth <= 768) {
-      e.preventDefault();
-      li.classList.toggle("dd-open");
-    }
-  });
-});
+// Mega-menu handles all dropdown logic above
 </script>
 <script src="/assets/zona-fase1.js" defer></script>
 <!-- Lead Capture Pop-up -->
