@@ -669,7 +669,6 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
     updateNav(false);
     showLogin();
   };
-})();
 
   // ── ANALYTICS ──
   function loadAnalytics() {
@@ -772,6 +771,11 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       }
     }).catch(function(){ alert('Error de conexión'); });
   }
+
+  window.openUpgradeModal = openUpgradeModal;
+  window.requestUpgrade = requestUpgrade;
+  window.loadAnalytics = loadAnalytics;
+})();
 <\/script>
 `;
 
