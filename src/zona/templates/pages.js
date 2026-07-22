@@ -216,7 +216,12 @@ function indexPage(props) {
     <p style="font-size:.85rem;font-weight:300;color:var(--sv);line-height:1.9;max-width:480px;margin-bottom:44px">
       ${props.length} propiedades verificadas, oportunidades de inversi&oacute;n y un equipo que entiende que cada propiedad cuenta una historia. Asesor&iacute;a privada para quienes saben qu&eacute; buscan.
     </p>
-    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;max-width:620px">
+    <div class="hero-tabs">
+      <button class="hero-tab active" data-mode="comprar" onclick="setHeroMode(this)">Comprar</button>
+      <button class="hero-tab" data-mode="alquilar" onclick="setHeroMode(this)">Alquilar</button>
+      <button class="hero-tab" data-mode="invertir" onclick="setHeroMode(this)">Invertir</button>
+    </div>
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;max-width:680px">
       <div style="flex:1;min-width:200px;position:relative">
         <input type="text" id="hero-search"
           placeholder="Buscar por zona, tipo o colonia..."
@@ -232,15 +237,90 @@ function indexPage(props) {
       </select>
       <button onclick="heroGo()" style="padding:12px 22px;background:var(--or);color:var(--ink);border:none;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;font-family:'Montserrat',sans-serif">Buscar</button>
     </div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap">
-      
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+      <button onclick="openFiltrosModal()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--sv);font-size:.74rem;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--or)';this.style.color='var(--or)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)';this.style.color='var(--sv)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+        Filtros avanzados
+      </button>
+      <span style="font-size:.7rem;color:var(--mt)" id="hero-mode-label">Mostrando propiedades en venta</span>
     </div>
     <script>
     var __heroProps=${JSON.stringify(props.map(p=>({titulo:p.titulo,municipio:p.municipio,tipo:p.tipo,slug:p.slug})))};
     function heroSearch(q){var s=document.getElementById('hero-suggestions');if(!q||q.length<2){s.style.display='none';return;}var ql=q.toLowerCase();var matches=__heroProps.filter(function(p){return (p.titulo||'').toLowerCase().includes(ql)||(p.municipio||'').toLowerCase().includes(ql);}).slice(0,6);if(!matches.length){s.style.display='none';return;}s.innerHTML=matches.map(function(p){return '<div class="hero-sug-item" data-slug="'+p.slug+'"><span style="font-weight:600">'+p.titulo+'</span> <span style="opacity:.5;font-size:.75rem">'+p.municipio+'</span></div>';}).join('');s.querySelectorAll('.hero-sug-item').forEach(function(el){el.addEventListener('click',function(){window.location.href='/propiedades/'+el.getAttribute('data-slug')+'.html';});});s.style.display='block';}
     function heroGo(){var q=document.getElementById('hero-search').value;var t=document.getElementById('hero-tipo').value;var url='/propiedades.html';var params=[];if(t)params.push('tipo='+encodeURIComponent(t));if(q)params.push('q='+encodeURIComponent(q));if(params.length)url+='?'+params.join('&');window.location.href=url;}
     document.addEventListener('click',function(e){if(!e.target.closest('#hero-search')&&!e.target.closest('#hero-suggestions')){var s=document.getElementById('hero-suggestions');if(s)s.style.display='none';}});
+    var __heroMode='comprar';
+    function setHeroMode(btn){document.querySelectorAll('.hero-tab').forEach(function(t){t.classList.remove('active')});btn.classList.add('active');__heroMode=btn.dataset.mode;var lbl=document.getElementById('hero-mode-label');if(lbl){if(__heroMode==='comprar')lbl.textContent='Mostrando propiedades en venta';else if(__heroMode==='alquilar')lbl.textContent='Mostrando propiedades en alquiler';else lbl.textContent='Mostrando oportunidades de inversi\u00f3n';}}
+    function openFiltrosModal(){var m=document.getElementById('filtros-modal');if(m){m.classList.add('show');document.body.style.overflow='hidden';}}
+    function closeFiltrosModal(){var m=document.getElementById('filtros-modal');if(m){m.classList.remove('show');document.body.style.overflow='';}}
+    function applyFiltros(){var z=document.getElementById('fm-zona').value;var t=document.getElementById('fm-tipo2').value;var mn=document.getElementById('fm-pmin').value;var mx=document.getElementById('fm-pmax').value;var hb=document.getElementById('fm-habs').value;var url='/propiedades.html';var p=[];if(t)p.push('tipo='+encodeURIComponent(t));if(z)p.push('ciudad='+encodeURIComponent(z));if(mn)p.push('pmin='+mn);if(mx)p.push('pmax='+mx);if(hb)p.push('habs='+hb);if(p.length)url+='?'+p.join('&');closeFiltrosModal();window.location.href=url;}
     <\/script>
+  <!-- Filtros Avanzados Modal -->
+  <div class="filtros-modal-overlay" id="filtros-modal" onclick="if(event.target===this)closeFiltrosModal()">
+    <div class="filtros-modal">
+      <button class="fm-close" onclick="closeFiltrosModal()">&times;</button>
+      <h3>Filtros avanzados</h3>
+      <div class="fm-grid">
+        <div class="fm-group">
+          <label>Zona / Ubicaci&oacute;n</label>
+          <select id="fm-zona">
+            <option value="">Todas las zonas</option>
+            <option value="Zona 10">Zona 10</option>
+            <option value="Zona 14">Zona 14</option>
+            <option value="Zona 15">Zona 15</option>
+            <option value="Zona 16">Zona 16</option>
+            <option value="Fraijanes">Fraijanes</option>
+            <option value="Mixco">Mixco</option>
+            <option value="Villa Canales">Villa Canales</option>
+            <option value="San Jos&eacute; Pinula">San Jos&eacute; Pinula</option>
+          </select>
+        </div>
+        <div class="fm-group">
+          <label>Tipo de propiedad</label>
+          <select id="fm-tipo2">
+            <option value="">Todos</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Finca">Finca</option>
+            <option value="Terreno">Terreno</option>
+            <option value="Local Comercial">Local Comercial</option>
+          </select>
+        </div>
+        <div class="fm-group">
+          <label>Precio m&iacute;nimo (Q)</label>
+          <input type="number" id="fm-pmin" placeholder="0" min="0" step="50000">
+        </div>
+        <div class="fm-group">
+          <label>Precio m&aacute;ximo (Q)</label>
+          <input type="number" id="fm-pmax" placeholder="Sin l&iacute;mite" min="0" step="50000">
+        </div>
+        <div class="fm-group">
+          <label>Habitaciones m&iacute;nimas</label>
+          <select id="fm-habs">
+            <option value="">Cualquiera</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+        <div class="fm-group">
+          <label>Amenidades</label>
+          <div class="fm-checks">
+            <span class="fm-check" onclick="this.classList.toggle('sel')">Piscina</span>
+            <span class="fm-check" onclick="this.classList.toggle('sel')">Jard&iacute;n</span>
+            <span class="fm-check" onclick="this.classList.toggle('sel')">Seguridad</span>
+            <span class="fm-check" onclick="this.classList.toggle('sel')">Vista</span>
+          </div>
+        </div>
+      </div>
+      <div class="fm-actions">
+        <button onclick="closeFiltrosModal()" style="padding:10px 22px;background:none;border:1px solid var(--bd);color:var(--sv);border-radius:8px;font-size:.75rem;cursor:pointer;font-family:'Montserrat',sans-serif">Cancelar</button>
+        <button onclick="applyFiltros()" style="padding:10px 28px;background:var(--or);color:var(--ink);border:none;border-radius:8px;font-weight:700;font-size:.75rem;cursor:pointer;font-family:'Montserrat',sans-serif">Aplicar filtros</button>
+      </div>
+    </div>
+  </div>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.85);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
     ${(()=>{
@@ -411,6 +491,146 @@ function indexPage(props) {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Ver propiedades &rarr;</span>
       </div>
     </a>`).join('')}
+  </div>
+</section>
+
+<!-- NEIGHBORHOOD GUIDES -->
+<section style="padding:100px 6%;background:var(--ink2);border-top:1px solid var(--gl)" class="fade-in-up">
+  <div style="max-width:1300px;margin:0 auto">
+    <div class="ey" style="margin-bottom:12px">Zonas Premium de Guatemala</div>
+    <h2 class="st">Donde la ubicaci&oacute;n define <em>el estilo de vida</em></h2>
+    <p style="font-size:.82rem;color:var(--sv);max-width:520px;margin-top:12px;line-height:1.8;font-weight:300">Cada zona de Guatemala tiene su propia personalidad. Conoce las zonas m&aacute;s exclusivas y encuentra la que se adapta a tu visi&oacute;n.</p>
+    <div class="zone-guides">
+      <a href="/zonas/zona-10.html" class="zone-card">
+        <div class="zone-card-bg" style="background-image:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70')"></div>
+        <div class="zone-card-ov"></div>
+        <div class="zone-card-info">
+          <div class="zone-card-name">Zona 10</div>
+          <div class="zone-card-sub">El coraz&oacute;n financiero y gastron&oacute;mico. Vida urbana premium con acceso a todo.</div>
+          <div class="zone-card-stats">
+            <span class="zone-card-stat">Desde Q2.5M</span>
+            <span class="zone-card-stat">&middot;</span>
+            <span class="zone-card-stat">Alta plusval&iacute;a</span>
+          </div>
+        </div>
+        <span class="zone-card-arrow">&rarr;</span>
+      </a>
+      <a href="/zonas/zona-14.html" class="zone-card">
+        <div class="zone-card-bg" style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=70')"></div>
+        <div class="zone-card-ov"></div>
+        <div class="zone-card-info">
+          <div class="zone-card-name">Zona 14</div>
+          <div class="zone-card-sub">Residencias de lujo y el ecosistema de Cayal&aacute;. La zona m&aacute;s cotizada.</div>
+          <div class="zone-card-stats">
+            <span class="zone-card-stat">Desde Q3.2M</span>
+            <span class="zone-card-stat">&middot;</span>
+            <span class="zone-card-stat">M&aacute;xima exclusividad</span>
+          </div>
+        </div>
+        <span class="zone-card-arrow">&rarr;</span>
+      </a>
+      <a href="/zonas/zona-15.html" class="zone-card">
+        <div class="zone-card-bg" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=70')"></div>
+        <div class="zone-card-ov"></div>
+        <div class="zone-card-info">
+          <div class="zone-card-name">Zona 15</div>
+          <div class="zone-card-sub">Vista Hermosa. Amplias residencias con vistas panor&aacute;micas y tranquilidad.</div>
+          <div class="zone-card-stats">
+            <span class="zone-card-stat">Desde Q1.8M</span>
+            <span class="zone-card-stat">&middot;</span>
+            <span class="zone-card-stat">Familiar</span>
+          </div>
+        </div>
+        <span class="zone-card-arrow">&rarr;</span>
+      </a>
+      <a href="/zonas/zona-16.html" class="zone-card">
+        <div class="zone-card-bg" style="background-image:url('https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=70')"></div>
+        <div class="zone-card-ov"></div>
+        <div class="zone-card-info">
+          <div class="zone-card-name">Zona 16</div>
+          <div class="zone-card-sub">Ca&ntilde;adas del Valle. Naturaleza, condominios premium y calidad de vida.</div>
+          <div class="zone-card-stats">
+            <span class="zone-card-stat">Desde Q1.5M</span>
+            <span class="zone-card-stat">&middot;</span>
+            <span class="zone-card-stat">Naturaleza</span>
+          </div>
+        </div>
+        <span class="zone-card-arrow">&rarr;</span>
+      </a>
+      <a href="/zonas/fraijanes.html" class="zone-card">
+        <div class="zone-card-bg" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=70')"></div>
+        <div class="zone-card-ov"></div>
+        <div class="zone-card-info">
+          <div class="zone-card-name">Fraijanes</div>
+          <div class="zone-card-sub">El nuevo eje de inversi&oacute;n. Fincas, terrenos y desarrollos con alto retorno.</div>
+          <div class="zone-card-stats">
+            <span class="zone-card-stat">Desde Q500K</span>
+            <span class="zone-card-stat">&middot;</span>
+            <span class="zone-card-stat">Inversi&oacute;n</span>
+          </div>
+        </div>
+        <span class="zone-card-arrow">&rarr;</span>
+      </a>
+      <a href="/zonas/carretera-el-salvador.html" class="zone-card">
+        <div class="zone-card-bg" style="background-image:url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=70')"></div>
+        <div class="zone-card-ov"></div>
+        <div class="zone-card-info">
+          <div class="zone-card-name">Carretera a El Salvador</div>
+          <div class="zone-card-sub">Condominios exclusivos. Km 16-25. El corredor premium del sureste.</div>
+          <div class="zone-card-stats">
+            <span class="zone-card-stat">Desde Q1.2M</span>
+            <span class="zone-card-stat">&middot;</span>
+            <span class="zone-card-stat">Crecimiento</span>
+          </div>
+        </div>
+        <span class="zone-card-arrow">&rarr;</span>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="/zonas/index.html" class="btn-ol">Explorar todas las zonas &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET INSIGHTS -->
+<section style="padding:80px 6%;background:var(--ink);border-top:1px solid var(--gl)" class="fade-in-up">
+  <div style="max-width:1300px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:8px">
+      <div>
+        <div class="ey" style="margin-bottom:12px">Mercado Inmobiliario Guatemala</div>
+        <h2 class="st-large">Datos que informan <em>decisiones inteligentes</em></h2>
+      </div>
+      <a href="/blog.html" style="font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--or);transition:color .2s" onmouseover="this.style.color='var(--or2)'" onmouseout="this.style.color='var(--or)'">Ver an&aacute;lisis completo &rarr;</a>
+    </div>
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-val">+12%</div>
+        <div class="insight-label">Plusval&iacute;a anual</div>
+        <div class="insight-sub">Promedio en zonas premium de Guatemala 2025-2026</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-val">Q18K</div>
+        <div class="insight-label">Precio / m&sup2;</div>
+        <div class="insight-sub">Promedio en Zona 14 y Cayal&aacute;</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-val">6.8%</div>
+        <div class="insight-label">Retorno alquiler</div>
+        <div class="insight-sub">Cap rate promedio en propiedades premium</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-val">&lt;45</div>
+        <div class="insight-label">D&iacute;as en mercado</div>
+        <div class="insight-sub">Tiempo promedio de venta en zonas exclusivas</div>
+      </div>
+    </div>
+    <div style="margin-top:32px;padding:24px 32px;background:var(--ink2);border:1px solid var(--gl);border-radius:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-size:.8rem;font-weight:600;color:var(--wh);margin-bottom:4px">Zona con mayor demanda en 2026</div>
+        <div style="font-size:.72rem;color:var(--sv)">Fraijanes lidera la demanda por inversi&oacute;n con +35% de b&uacute;squedas respecto al a&ntilde;o anterior.</div>
+      </div>
+      <a href="/zonas/fraijanes.html" style="font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--or);white-space:nowrap">Ver Fraijanes &rarr;</a>
+    </div>
   </div>
 </section>
 
