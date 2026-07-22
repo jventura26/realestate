@@ -194,6 +194,7 @@ function adminHubPage() {
       if (b.status === 'aprobado') {
         html += '<select onchange="changePlan(&apos;' + b.id + '&apos;,this.value)" style="padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px">'
           + '<option value="free"' + (b.plan === 'free' ? ' selected' : '') + '>Free</option>'
+          + '<option value="basico"' + (b.plan === 'basico' ? ' selected' : '') + '>Básico</option>'
           + '<option value="pro"' + (b.plan === 'pro' ? ' selected' : '') + '>Pro</option>'
           + '<option value="premium"' + (b.plan === 'premium' ? ' selected' : '') + '>Premium</option>'
           + '</select>';

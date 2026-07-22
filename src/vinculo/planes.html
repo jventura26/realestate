@@ -434,5 +434,21 @@ function toggleFaq(el) {
   item.classList.toggle('open');
 }
 </script>
+<script>
+(function(){
+  var token = localStorage.getItem('broker_token');
+  if(!token) return;
+  // Asesor logged in - change plan buttons to go to dashboard upgrade
+  var links = document.querySelectorAll('a.plan-btn');
+  links.forEach(function(a){
+    a.href = '/dashboard.html#upgrade';
+    if(a.textContent.indexOf('Crear cuenta') > -1) a.textContent = 'Plan actual';
+    else if(a.textContent.indexOf('Comenzar') > -1 || a.textContent.indexOf('Solicitar') > -1) a.textContent = 'Solicitar plan';
+  });
+  // Also change the CTA final
+  var cta = document.querySelector('.register-section .form-btn');
+  if(cta){ cta.href = '/dashboard.html#upgrade'; cta.textContent = 'Ir a mi dashboard →'; }
+})();
+</script>
 </body>
 </html>

@@ -446,6 +446,7 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       loadMessages();
       loadAnalytics();
       loadReviews();
+      if(window.location.hash === '#upgrade') setTimeout(openUpgradeModal, 500);
     })
     .catch(function(e){ if(e!=='auth') console.error(e); });
   }
