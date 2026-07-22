@@ -843,6 +843,71 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 @media(max-width:768px){.footer-hub-top{grid-template-columns:1fr 1fr;gap:32px}.fh-brand{grid-column:1/-1}.fh-newsletter{grid-column:1/-1}}
 @media(max-width:480px){.footer-hub-top{grid-template-columns:1fr;gap:24px;padding:40px 5% 32px}.fh-nl-form{flex-direction:column}}
 
+
+/* ═══════ FASE 2 INMUHUB — Hero Tabs + Filtros + Guides + Insights ═══════ */
+.hub-hero-tabs{display:inline-flex;overflow:hidden;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);margin-bottom:24px}
+.hub-hero-tab{padding:10px 24px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit}
+.hub-hero-tab.active{background:var(--gold);color:#0a1628}
+.hub-hero-tab:hover:not(.active){color:rgba(255,255,255,.8)}
+.hub-filtros-overlay{position:fixed;inset:0;background:rgba(10,22,40,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center}
+.hub-filtros-overlay.active{display:flex}
+.hub-filtros-modal{background:white;border-radius:16px;max-width:680px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.25)}
+.hfm-header{display:flex;justify-content:space-between;align-items:center;padding:24px 32px 16px;border-bottom:1px solid var(--border)}
+.hfm-header h3{font-size:1.1rem;font-weight:700;color:var(--gray-900);margin:0}
+.hfm-close{background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:24px;transition:color .2s;padding:4px}
+.hfm-close:hover{color:var(--gray-900)}
+.hfm-body{padding:24px 32px}
+.hfm-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.hfm-group label{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px}
+.hfm-group select,.hfm-group input{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:inherit;font-size:14px;color:var(--gray-900);background:var(--gray-50);outline:none;transition:border-color .2s}
+.hfm-group select:focus,.hfm-group input:focus{border-color:var(--gold)}
+.hfm-amenities{margin-top:20px}
+.hfm-amenities label{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);margin-bottom:12px}
+.hfm-pills{display:flex;flex-wrap:wrap;gap:8px}
+.hfm-pill{padding:8px 16px;border-radius:100px;border:1.5px solid var(--border);background:white;cursor:pointer;font-size:13px;font-weight:500;color:var(--gray-600);transition:all .2s;font-family:inherit}
+.hfm-pill.selected{border-color:var(--gold);background:rgba(201,169,110,.08);color:#0a1628}
+.hfm-footer{padding:16px 32px 24px;display:flex;gap:12px;justify-content:flex-end}
+.hfm-btn-apply{background:var(--gold);color:#0a1628;border:none;border-radius:8px;padding:12px 32px;font-weight:700;font-size:14px;cursor:pointer;transition:opacity .2s;font-family:inherit}
+.hfm-btn-apply:hover{opacity:.85}
+.hfm-btn-clear{background:none;border:1.5px solid var(--border);border-radius:8px;padding:12px 24px;font-weight:600;font-size:14px;cursor:pointer;color:var(--gray-600);transition:all .2s;font-family:inherit}
+.hfm-btn-clear:hover{border-color:var(--gray-900);color:var(--gray-900)}
+/* Zone Guides */
+.hub-zones{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.hub-zone-card{position:relative;overflow:hidden;min-height:320px;border-radius:12px;text-decoration:none;color:white;display:flex;flex-direction:column;justify-content:flex-end}
+.hub-zone-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.hub-zone-card:hover .hub-zone-bg{transform:scale(1.06)}
+.hub-zone-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,22,40,.85) 0%,rgba(10,22,40,.2) 50%,transparent 100%)}
+.hub-zone-info{position:relative;z-index:2;padding:28px}
+.hub-zone-info h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:500;margin:0 0 6px;letter-spacing:-.02em}
+.hub-zone-info p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;margin:0 0 12px;max-width:280px}
+.hub-zone-stats{display:flex;gap:16px;font-size:12px;font-weight:600}
+.hub-zone-stats span{color:var(--gold)}
+/* Market Insights */
+.hub-insights-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.hub-insight-card{background:var(--gray-50);border:1.5px solid var(--border);padding:32px 24px;border-radius:12px;text-align:center;transition:all .3s}
+.hub-insight-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.06)}
+.hub-insight-val{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.4rem;font-weight:500;color:var(--gold);line-height:1;margin-bottom:8px}
+.hub-insight-label{font-size:13px;color:var(--gray-600);font-weight:500;line-height:1.5}
+/* Responsive */
+@media(max-width:640px){
+.hub-hero-tabs{width:100%;justify-content:center}
+.hub-hero-tab{flex:1;text-align:center;padding:10px 12px;font-size:.65rem}
+.hfm-grid{grid-template-columns:1fr}
+.hfm-header{padding:20px 20px 14px}
+.hfm-body{padding:20px}
+.hfm-footer{padding:14px 20px 20px}
+.hub-zones{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+.hub-insights-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+.hub-insights-grid{grid-template-columns:1fr}
+}
+@media(max-width:1024px){
+.hub-zones{grid-template-columns:repeat(2,1fr)}
+}
+
 </style>
 </head>
 <body>
