@@ -553,6 +553,13 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr}}
 /* ── MOBILE FIXES Fase 2 ─────────────────────────── */
 @media(max-width:640px){
+/* Hero @640px fixes */
+section[style*="min-height:93vh"]{min-height:auto!important}
+section[style*="min-height:93vh"] p[style*="margin-bottom:44px"]{margin-bottom:24px!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"]{flex-direction:column!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] > div{min-width:100%!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] select{width:100%!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] button{width:100%!important}
 .zone-guides{gap:12px!important}
 .zone-card{min-height:240px}
 .zone-card-info{padding:20px 16px}
@@ -568,6 +575,15 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 .fm-grid{grid-template-columns:1fr}
 }
 @media(max-width:480px){
+/* Hero mobile overrides */
+section[style*="min-height:93vh"]{min-height:auto!important;padding-bottom:20px!important}
+section[style*="min-height:93vh"] > div[style*="position:relative;z-index"]{padding:12px 0 8px!important}
+section[style*="min-height:93vh"] p[style*="margin-bottom:44px"]{margin-bottom:20px!important}
+section[style*="min-height:93vh"] h1{font-size:clamp(1.5rem,5.5vw,2rem)!important;margin-bottom:12px!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"]{flex-direction:column!important;padding:8px!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] > div{min-width:100%!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] select{width:100%!important;min-width:100%!important}
+section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] button{width:100%!important}
 .hero-tabs{display:flex!important;width:100%!important}
 .hero-tab{flex:1!important;width:auto!important;text-align:center;padding:8px 6px!important;font-size:.55rem!important}
 .zone-guides{gap:10px!important}
