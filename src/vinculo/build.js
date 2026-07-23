@@ -116,7 +116,7 @@ const props = allProps;
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 
-try { fs.rmSync(OUT, { recursive:true, force:true }); } catch(e) { console.log('  (rmSync skipped: ' + e.code + ')'); }
+fs.rmSync(OUT, { recursive:true, force:true });
 fs.mkdirSync(PROPS, { recursive:true });
 fs.mkdirSync(ZONAS, { recursive:true });
 

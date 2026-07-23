@@ -28,17 +28,17 @@ function indexPageNew(props, brokers) {
   ].map(([ic,nm,hr,ds])=>`<a href="${hr}" style="display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:#f8f9fb;border:1.5px solid #eef0f3;border-radius:12px;text-decoration:none;text-align:left;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='white';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='#eef0f3';this.style.background='#f8f9fb';this.style.transform='none';this.style.boxShadow='none'"><div style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;color:var(--gold)">${ic}</div><div style="font-size:15px;font-weight:700;color:#0a1628;margin-bottom:8px">${nm}</div><div style="font-size:13px;color:#64748b;line-height:1.6;flex:1">${ds}</div><div style="margin-top:16px;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.04em">Ir a herramienta &rarr;</div></a>`).join('');
 
   const body = `
-<section class="hero-section" style="min-height:92vh;position:relative;display:flex;flex-direction:column;align-items:center;background:#0a1628;overflow:hidden">
+<style>@media(max-width:640px){.stats-bar{position:static!important;backdrop-filter:none!important;background:rgba(255,255,255,.06)!important;}.hero-section{padding:8px 4%!important;min-height:auto!important;}.hero-inner{padding:8px 4% 6px!important;}.stats-bar>div{min-width:50%!important;padding:14px 8px!important;font-size:.7rem!important;}}</style><section class="hero-section" style="min-height:auto;position:relative;display:flex;flex-direction:column;align-items:center;background:#0a1628;overflow:hidden">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1800&q=60') center/cover no-repeat;opacity:.18"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,.98) 0%,rgba(10,22,40,.75) 60%,rgba(15,27,46,.9) 100%)"></div>
   <div style="position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none"></div>
-  <div class="hero-inner" style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:clamp(60px,8vw,100px) 4% clamp(40px,10vw,140px)">
+  <div class="hero-inner" style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:clamp(20px,8vw,100px) 6% clamp(16px,10vw,140px)">
     <div style="max-width:700px">
       <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:12px">
         <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block"></span>
         <span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Portal Premium Guatemala</span>
       </div>
-      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3rem,6vw,5rem);font-weight:300;line-height:1.05;color:white;margin-bottom:10px">
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3rem,6vw,5rem);font-weight:300;line-height:1.05;color:white;margin-bottom:24px">
         Encuentra la propiedad<br>
         <em style="font-style:italic;color:var(--gold)">que cambiara tu vida</em>
       </h1>
@@ -62,7 +62,7 @@ function indexPageNew(props, brokers) {
         <a href="/propiedades.html" id="hubHeroCTA" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s;flex:1;justify-content:center" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
         <button onclick="openHubFiltros()" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:14px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;font-family:inherit" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)';this.style.color='rgba(255,255,255,.8)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21V14"/><path d="M4 10V3"/><path d="M12 21V12"/><path d="M12 8V3"/><path d="M20 21V16"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg> Filtros</button>
       </div>
-      <div style="margin-bottom:10px">
+      <div style="margin-bottom:24px">
         <a href="/planes.html" style="font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:.04em;border-bottom:1px solid rgba(201,169,110,.3);padding-bottom:2px" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Eres asesor? Publica aqui &rarr;</a>
       </div>
       <div>

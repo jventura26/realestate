@@ -144,7 +144,7 @@ const props = allProps;
 console.log(`   ✔  ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 
-fs.rmSync(OUT, { recursive:true, force:true });
+try { fs.rmSync(OUT, { recursive:true, force:true }); } catch(e) { console.log('(rmSync skipped zona)'); }
 fs.mkdirSync(PROPS, { recursive:true });
 
 copyAssets();  console.log('   ✔  assets copiados');
