@@ -951,12 +951,14 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 .hero-section form input[type="text"]{width:auto!important;max-width:none!important;flex:1!important}
 .hero-section form button[type="submit"]{width:auto!important;max-width:none!important;flex:none!important}
 .hero-section{padding:24px 4%!important;min-height:auto!important}
+.hero-section > div[style*="z-index:2"]{padding:20px 4% 16px!important}
 .hero-section h1{font-size:22px!important;line-height:1.15!important;margin-bottom:12px!important}
 .hero-section p{font-size:12px!important;margin-bottom:24px!important}
 }
 @media(max-width:640px){
 .hero-section form input[type="text"]{width:auto!important;max-width:none!important;flex:1!important}
 .hero-section form button[type="submit"]{width:auto!important;max-width:none!important;flex:none!important}
+.hero-section > div[style*="z-index:2"]{padding:32px 4% 24px!important}
 }
 
 
