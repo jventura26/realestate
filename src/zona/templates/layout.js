@@ -551,6 +551,43 @@ footer{background:#050A14;padding:56px 6% 26px;border-top:1px solid var(--gl)}
 .insight-sub{font-size:.72rem;color:var(--mt);line-height:1.6}
 @media(max-width:768px){.insights-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.insights-grid{grid-template-columns:1fr}}
+/* ── MOBILE FIXES Fase 2 ─────────────────────────── */
+@media(max-width:640px){
+.zone-guides{gap:12px!important}
+.zone-card{min-height:240px}
+.zone-card-info{padding:20px 16px}
+.zone-card-name{font-size:1.2rem}
+.zone-card-sub{font-size:.62rem;margin-bottom:10px}
+.zone-card-stats{gap:10px}
+.zone-card-stat{font-size:.55rem}
+.insights-grid{gap:12px!important}
+.insight-card{padding:24px 16px}
+.insight-val{font-size:2rem}
+.insight-sub{font-size:.65rem}
+.filtros-modal{padding:28px 20px;width:95%}
+.fm-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+.hero-tabs{display:flex!important;width:100%!important}
+.hero-tab{flex:1!important;width:auto!important;text-align:center;padding:8px 6px!important;font-size:.55rem!important}
+.zone-guides{gap:10px!important}
+.zone-card{min-height:200px}
+.zone-card-info{padding:16px 14px}
+.zone-card-name{font-size:1.1rem}
+.zone-card-sub{font-size:.58rem;margin-bottom:8px;line-height:1.5}
+.zone-card-stats{gap:8px}
+.zone-card-stat{font-size:.5rem}
+.zone-card-arrow{display:none}
+.insights-grid{gap:10px!important}
+.insight-card{padding:20px 14px}
+.insight-val{font-size:1.6rem}
+.insight-label{font-size:.48rem}
+.insight-sub{font-size:.6rem}
+.filtros-modal{padding:20px 14px;width:96%}
+.filtros-modal h3{font-size:1.3rem;margin-bottom:16px}
+.fm-check{font-size:.65rem;padding:6px 10px}
+}
+
 
 </style>
 </head>

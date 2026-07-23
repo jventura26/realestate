@@ -895,6 +895,58 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 @media(max-width:1024px){
 .hub-zones{grid-template-columns:repeat(2,1fr)}
 }
+/* ── MOBILE FIXES Fase 2 ─────────────────────────── */
+@media(max-width:640px){
+.hub-hero-tabs{width:100%;display:flex}
+.hub-hero-tab{width:auto!important;max-width:none!important;flex:1;text-align:center;padding:10px 12px;font-size:.65rem}
+.hfm-pill{width:auto!important;max-width:none!important}
+.hfm-btn-apply,.hfm-btn-clear{width:auto!important;max-width:none!important}
+.hfm-close{width:auto!important;max-width:none!important;padding:4px!important}
+.hub-zone-card{min-height:260px}
+.hub-zone-info{padding:20px 16px}
+.hub-zone-info h3{font-size:1.3rem!important;margin-bottom:4px!important}
+.hub-zone-info p{font-size:12px;margin-bottom:8px}
+.hub-zone-stats{font-size:11px}
+.hub-insights-grid{gap:12px}
+.hub-insight-card{padding:24px 16px;border-radius:10px}
+.hub-insight-val{font-size:2rem}
+.hub-insight-label{font-size:12px}
+}
+@media(max-width:480px){
+.hub-hero-tabs{width:100%;display:flex!important}
+.hub-hero-tab{width:auto!important;max-width:none!important;flex:1;text-align:center;padding:8px 8px;font-size:.58rem}
+.hfm-pill{width:auto!important;max-width:none!important}
+.hfm-btn-apply,.hfm-btn-clear{width:auto!important;max-width:none!important}
+.hfm-close{width:auto!important;max-width:none!important;padding:4px!important}
+.hub-filtros-modal{width:95%;border-radius:12px}
+.hfm-header{padding:16px 16px 12px}
+.hfm-body{padding:16px}
+.hfm-footer{padding:12px 16px 16px;flex-direction:column}
+.hfm-footer button{width:100%}
+.hub-zone-card{min-height:220px}
+.hub-zone-info{padding:16px 14px}
+.hub-zone-info h3{font-size:1.2rem!important;margin-bottom:2px!important}
+.hub-zone-info p{font-size:11px;margin-bottom:6px;max-width:100%}
+.hub-zone-stats{font-size:10px;gap:8px}
+.hub-insight-card{padding:20px 12px}
+.hub-insight-val{font-size:1.8rem}
+.hub-insight-label{font-size:11px}
+.hub-insights-grid{gap:10px}
+}
+
+@media(max-width:480px){
+.hero-new form{flex-direction:row!important}
+.hero-new form input[type="text"]{width:auto!important;max-width:none!important;flex:1!important}
+.hero-new form button[type="submit"]{width:auto!important;max-width:none!important;flex:none!important}
+.hero-new{padding:24px 4%!important;min-height:auto!important}
+.hero-new h1{font-size:22px!important;line-height:1.15!important;margin-bottom:12px!important}
+.hero-new p{font-size:12px!important;margin-bottom:24px!important}
+}
+@media(max-width:640px){
+.hero-new form input[type="text"]{width:auto!important;max-width:none!important;flex:1!important}
+.hero-new form button[type="submit"]{width:auto!important;max-width:none!important;flex:none!important}
+}
+
 
 </style>
 </head>
