@@ -1,16 +1,4 @@
-const { escapeHtml } = require('../../shared/utils');
-
-const DOMAIN = 'https://inmuhub.com';
-
-function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
-const pageTitle = title
-? `${escapeHtml(title)} | INMUHUB`
-: 'Propiedades en Venta en Guatemala | INMUHUB — Portal Inmobiliario Premium';
-const metaDesc = escapeHtml(desc || 'Portal inmobiliario premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en Zona 10, Zona 14, Zona 15, Cayala, Fraijanes y Carretera a El Salvador. Precios actualizados.');
-const ogImg = ogImage || `${DOMAIN}/assets/og.jpg`;
-const canon = `${DOMAIN}${canonical || '/'}`;
-
-return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 
@@ -19,10 +7,10 @@ return `<!DOCTYPE html>
 <link rel="apple-touch-icon" href="/assets/favicon2.png">
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${pageTitle}</title>
-<meta name="description" content="${metaDesc}">
+<title>Asesores Inmobiliarios Verificados en Guatemala | INMUHUB</title>
+<meta name="description" content="0 asesores inmobiliarios verificados en Guatemala. Encuentra el asesor ideal para comprar, vender o invertir en propiedades premium.">
 <meta name="robots" content="index,follow">
-<link rel="canonical" href="${canon}">
+<link rel="canonical" href="https://inmuhub.com/asesores.html">
 <meta name="theme-color" content="#1a2a4e">
 <script type="application/ld+json">
 {
@@ -84,10 +72,10 @@ return `<!DOCTYPE html>
 }
 </script>
 <meta property="og:type" content="website">
-<meta property="og:title" content="${pageTitle}">
-<meta property="og:description" content="${metaDesc}">
-<meta property="og:url" content="${canon}">
-<meta property="og:image" content="${escapeHtml(ogImg)}">
+<meta property="og:title" content="Asesores Inmobiliarios Verificados en Guatemala | INMUHUB">
+<meta property="og:description" content="0 asesores inmobiliarios verificados en Guatemala. Encuentra el asesor ideal para comprar, vender o invertir en propiedades premium.">
+<meta property="og:url" content="https://inmuhub.com/asesores.html">
+<meta property="og:image" content="https://inmuhub.com/assets/og.jpg">
 <meta property="og:locale" content="es_GT">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1035,7 +1023,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <button class="hub-hamburger" id="hubHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 </div>
 </nav>
-${body}
+
+<section style="padding:80px 6% 60px;background:linear-gradient(135deg,#0a1628 0%,#0f1e38 50%,#0a1628 100%);position:relative;overflow:hidden;text-align:center">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.06) 0%,transparent 65%);pointer-events:none"></div>
+  <div style="position:relative;z-index:2;max-width:700px;margin:0 auto">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:24px">
+      <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block"></span>
+      <span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Asesores verificados</span>
+    </div>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.5rem,5vw,3.5rem);font-weight:300;color:white;margin:0 0 16px;line-height:1.1">
+      Asesores inmobiliarios<br><em style="font-style:italic;color:var(--gold)">de confianza</em>
+    </h1>
+    <p style="font-size:15px;color:rgba(255,255,255,.5);line-height:1.8;max-width:520px;margin:0 auto">0 asesores profesionales listos para ayudarte a encontrar tu propiedad ideal en Guatemala.</p>
+  </div>
+</section>
+
+<section style="padding:60px 6%;background:#f8f9fb">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:28px">
+      <div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:#94a3b8;font-size:16px">Pronto publicaremos nuestro directorio de asesores verificados.</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:80px 6%;background:white;text-align:center">
+  <div style="max-width:600px;margin:0 auto">
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:#0a1628;margin:0 0 16px">Eres asesor inmobiliario?</h2>
+    <p style="font-size:15px;color:#64748b;line-height:1.8;margin-bottom:32px">Publica tus propiedades en InmuHub y recibe leads directamente en tu WhatsApp. Sin comisiones. Sin intermediarios.</p>
+    <a href="/planes.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:15px 32px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver planes y precios &#8594;</a>
+  </div>
+</section>
+
 <footer class="footer-hub">
   <div class="footer-hub-top">
     <div class="fh-brand">
@@ -1092,7 +1110,7 @@ ${body}
     </div>
   </div>
 </footer>
-${scripts}
+
 <script src="/assets/vinculo-fase1.js" defer></script>
 <script>
 (function(){
@@ -1196,8 +1214,4 @@ function zpUpdateFavBtns(){var f=zpGetFavs();document.querySelectorAll('.zp-fav-
 document.addEventListener('DOMContentLoaded',zpUpdateFavBtns);
 </script>
 </body>
-</html>`;
-}
-
-module.exports = { layout };
-<!-- INMUHUB v2.0.16 - PIXEL ACTIVO -->
+</html>
