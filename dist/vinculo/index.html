@@ -169,14 +169,14 @@ nav.nav-scrolled{background:var(--white);border-bottom:1px solid var(--border);b
 @media(max-width:768px){
 .logo img { height: 44px !important; }
 .logo-tag { font-size: 11px !important; margin-top: 2px !important; }
-.nav-inner { align-items:flex-start !important;  min-height:auto !important; }
+.nav-inner { align-items:center !important; min-height:60px !important; }
 }
 
 @media(max-width:480px){
 .logo img { height: 40px !important; }
 .logo-tag { font-size: 10px !important; margin-top: 1px !important; }
 .logo-name { font-size: 14px !important; }
-.nav-inner { align-items:flex-start !important;  min-height:auto !important; }
+.nav-inner { align-items:center !important; min-height:56px !important; }
 div[style*="display:flex"][style*="gap:12px"] { gap: 6px !important; font-size: 12px !important; }
 }
 
@@ -787,7 +787,7 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 .hub-btn-outline:hover{border-color:#1a2a4e;background:#f9fafb}
 /* Mobile mega responsive */
 @media(max-width:768px){
-  .hub-hamburger{display:flex;margin-left:auto;flex-shrink:0}
+  .hub-hamburger{display:flex;order:-1;margin-right:auto;flex-shrink:0}
   .hub-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 12px 40px rgba(0,0,0,.1);flex-direction:column;gap:0;padding:8px 0;z-index:199;height:auto;align-items:stretch;max-height:calc(100vh - 80px);overflow-y:auto}
   .hub-nav.active{display:flex}
   .hub-nav > li{height:auto;width:100%}
@@ -796,7 +796,9 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
   .hub-dropdown{position:static;transform:none;opacity:1;visibility:visible;min-width:100%;border:none;border-radius:0;padding:0;box-shadow:none;background:var(--gray-50);display:none}
   .hub-nav > li.hub-open .hub-dropdown{display:block}
   .hub-dropdown li a{padding:12px 10%;font-size:13px;border-bottom:1px solid var(--border)}
-  .hub-auth{width:100%;padding:12px 6%;gap:8px;border-top:1px solid var(--border)}
+  .nav-inner>.hub-auth{display:none!important}
+  .hub-auth-mobile{padding:12px 6%;border-top:1px solid var(--border);width:100%}
+  .hub-auth-mobile .hub-auth{display:flex!important;width:100%;gap:8px}
   .hub-btn-gold,.hub-btn-outline{flex:1;text-align:center;font-size:14px}
 }
 
@@ -1390,9 +1392,18 @@ InmuHub conecta tus propiedades con compradores activos en Guatemala. Sin comisi
       if(!wasOpen) li.classList.add('hub-open');
     });
   });
+  // Move auth buttons into hamburger dropdown on mobile
+  var authArea = document.getElementById('hubAuthArea');
+  if(window.innerWidth<=768 && authArea && navLinks && !navLinks.contains(authArea)){
+    var mli=document.createElement('li');
+    mli.className='hub-auth-mobile';
+    mli.appendChild(authArea);
+    navLinks.appendChild(mli);
+  }
   // Hamburger toggle
   if(hamburger && navLinks){
-    hamburger.addEventListener('click', function(){
+    hamburger.addEventListener('click', function(e){
+      e.stopPropagation();
       navLinks.classList.toggle('active');
       hamburger.classList.toggle('active');
     });
