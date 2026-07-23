@@ -28,13 +28,13 @@ function indexPageNew(props, brokers) {
   ].map(([ic,nm,hr,ds])=>`<a href="${hr}" style="display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:#f8f9fb;border:1.5px solid #eef0f3;border-radius:12px;text-decoration:none;text-align:left;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='white';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='#eef0f3';this.style.background='#f8f9fb';this.style.transform='none';this.style.boxShadow='none'"><div style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;color:var(--gold)">${ic}</div><div style="font-size:15px;font-weight:700;color:#0a1628;margin-bottom:8px">${nm}</div><div style="font-size:13px;color:#64748b;line-height:1.6;flex:1">${ds}</div><div style="margin-top:16px;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.04em">Ir a herramienta &rarr;</div></a>`).join('');
 
   const body = `
-<style>@media(max-width:640px){.stats-bar{position:static!important;backdrop-filter:none!important;background:rgba(255,255,255,.06)!important;}.hero-section{padding-bottom:0!important;min-height:auto!important;}.stats-bar>div{min-width:50%!important;padding:14px 8px!important;font-size:.7rem!important;}}</style><section class="hero-section" style="min-height:auto;position:relative;display:flex;flex-direction:column;align-items:center;background:#0a1628;overflow:hidden">
+<style>@media(max-width:640px){.stats-bar{position:static!important;backdrop-filter:none!important;background:rgba(255,255,255,.06)!important;}.hero-section{padding:8px 4%!important;min-height:auto!important;}.hero-inner{padding:8px 4% 6px!important;}.stats-bar>div{min-width:50%!important;padding:14px 8px!important;font-size:.7rem!important;}}</style><section class="hero-section" style="min-height:auto;position:relative;display:flex;flex-direction:column;align-items:center;background:#0a1628;overflow:hidden">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1800&q=60') center/cover no-repeat;opacity:.18"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,.98) 0%,rgba(10,22,40,.75) 60%,rgba(15,27,46,.9) 100%)"></div>
   <div style="position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none"></div>
   <div class="hero-inner" style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:clamp(20px,8vw,100px) 6% clamp(16px,10vw,140px)">
     <div style="max-width:700px">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:28px">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:12px">
         <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block"></span>
         <span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Portal Premium Guatemala</span>
       </div>
@@ -42,10 +42,10 @@ function indexPageNew(props, brokers) {
         Encuentra la propiedad<br>
         <em style="font-style:italic;color:var(--gold)">que cambiara tu vida</em>
       </h1>
-      <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.8;max-width:520px;margin-bottom:44px;font-weight:300">
+      <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.8;max-width:520px;margin-bottom:20px;font-weight:300">
         ${props.length} propiedades verificadas en Guatemala. Casas, apartamentos, fincas e inversiones en las zonas mas exclusivas.
       </p>
-      <div style="max-width:560px;margin-bottom:40px">
+      <div style="max-width:560px;margin-bottom:16px">
         <form action="/propiedades.html" method="GET" style="display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;overflow:hidden;backdrop-filter:blur(10px)">
           <input type="text" name="q" placeholder="Buscar por zona, tipo o precio..." style="flex:1;background:transparent;border:none;padding:14px 20px;font-size:14px;color:white;outline:none;font-family:inherit" />
           <button type="submit" style="background:var(--gold);border:none;padding:14px 24px;cursor:pointer;display:flex;align-items:center;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">

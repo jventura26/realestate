@@ -605,6 +605,24 @@ section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] butto
 }
 
 
+
+/* HERO MOBILE FIX - CLASS SELECTORS */
+@media(max-width:768px){
+.hero-section{min-height:auto!important;display:block!important;padding:0 4%!important;height:auto!important}
+.hero-section .hero-inner{padding:16px 0 8px!important}
+.hero-section h1{font-size:clamp(1.5rem,5.5vw,2rem)!important;margin-bottom:10px!important}
+.hero-section p{margin-bottom:16px!important}
+.stats-bar{position:static!important;backdrop-filter:none!important;background:rgba(20,34,64,.85)!important}
+.stats-bar>div{padding:14px 16px!important;min-width:45%!important}
+}
+@media(max-width:480px){
+.hero-section{padding:0 3%!important}
+.hero-section .hero-inner{padding:6px 0 4px!important}
+.hero-section h1{font-size:clamp(1.3rem,5vw,1.7rem)!important;margin-bottom:6px!important}
+.hero-section p{margin-bottom:8px!important}
+.stats-bar>div{padding:10px 8px!important;min-width:48%!important}
+}
+
 </style>
 </head>
 <body>

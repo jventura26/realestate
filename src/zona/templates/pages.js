@@ -195,7 +195,7 @@ function indexPage(props) {
 
   const body = `
 <!-- HERO -->
-<section style="min-height:auto;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
+<section class="hero-section" style="min-height:auto;position:relative;display:flex;align-items:center;overflow:hidden;padding:0 6%;background:var(--ink)">
   <video autoplay muted loop playsinline preload="metadata" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect fill='%230D1B3E' width='1' height='1'/%3E%3C/svg%3E" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;background:var(--ink)">
     <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
   </video>
@@ -322,7 +322,7 @@ function indexPage(props) {
     </div>
   </div>
   </div>
-  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.85);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
+  <div class="stats-bar" style="position:absolute;bottom:0;left:0;right:0;background:rgba(20,34,64,.85);backdrop-filter:blur(16px);border-top:1px solid var(--gl);display:flex;justify-content:center;flex-wrap:wrap;z-index:2">
     ${(()=>{
       const vendidas = props.filter(p=>p.estado==='Vendida').length;
       const activas = props.filter(p=>!p.estado||p.estado==='Activa').length;

@@ -401,7 +401,7 @@ nav { padding: 0 3%; }
 .nav-inner > div:last-child { gap: 4px; font-size: 11px; }
 
 /* HERO */
-.hero-section { padding: 32px 3%!important; min-height: auto!important; }
+.hero-section { padding: 16px 3%!important; min-height: auto!important; }
 .hero-section h1 { font-size: 24px!important; line-height: 1.2!important; margin-bottom: 16px!important; }
 .hero-section p { font-size: 13px!important; }
 
@@ -950,17 +950,26 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 .hero-section form{flex-direction:row!important}
 .hero-section form input[type="text"]{width:auto!important;max-width:none!important;flex:1!important}
 .hero-section form button[type="submit"]{width:auto!important;max-width:none!important;flex:none!important}
-.hero-section{padding:24px 4%!important;min-height:auto!important}
-.hero-inner{padding:20px 4% 16px!important}
+.hero-section{padding:10px 4%!important;min-height:auto!important}
+.hero-inner{padding:10px 4% 8px!important}
 .hero-section h1{font-size:22px!important;line-height:1.15!important;margin-bottom:12px!important}
 .hero-section p{font-size:12px!important;margin-bottom:24px!important}
 }
 @media(max-width:640px){
 .hero-section form input[type="text"]{width:auto!important;max-width:none!important;flex:1!important}
 .hero-section form button[type="submit"]{width:auto!important;max-width:none!important;flex:none!important}
-.hero-inner{padding:32px 4% 24px!important}
+.hero-inner{padding:20px 4% 16px!important}
 }
 
+
+
+/* FINAL MOBILE HERO OVERRIDE - must be last to win over @640px */
+@media(max-width:480px){
+.hero-section{padding:8px 4%!important;min-height:auto!important}
+.hero-inner{padding:8px 4% 6px!important}
+.hero-section h1{font-size:20px!important;line-height:1.15!important;margin-bottom:8px!important}
+.hero-section p{font-size:12px!important;margin-bottom:16px!important}
+}
 
 </style>
 </head>
