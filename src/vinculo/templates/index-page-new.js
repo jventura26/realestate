@@ -28,11 +28,11 @@ function indexPageNew(props, brokers) {
   ].map(([ic,nm,hr,ds])=>`<a href="${hr}" style="display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:#f8f9fb;border:1.5px solid #eef0f3;border-radius:12px;text-decoration:none;text-align:left;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='white';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='#eef0f3';this.style.background='#f8f9fb';this.style.transform='none';this.style.boxShadow='none'"><div style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;color:var(--gold)">${ic}</div><div style="font-size:15px;font-weight:700;color:#0a1628;margin-bottom:8px">${nm}</div><div style="font-size:13px;color:#64748b;line-height:1.6;flex:1">${ds}</div><div style="margin-top:16px;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.04em">Ir a herramienta &rarr;</div></a>`).join('');
 
   const body = `
-<style>.stats-bar{position:relative!important;backdrop-filter:none!important;background:rgba(255,255,255,.06)!important}@media(min-width:769px){.hero-section{display:flex!important;flex-direction:column!important;align-items:center!important}.stats-bar{position:absolute!important;bottom:0!important;backdrop-filter:blur(20px)!important;background:rgba(255,255,255,.04)!important}}@media(max-width:768px){.hero-section{padding:8px 4%!important;min-height:auto!important;height:auto!important}.hero-inner{padding:12px 4% 8px!important}.hero-section h1{font-size:clamp(1.3rem,5vw,1.8rem)!important;margin-bottom:8px!important}.hero-section p{margin-bottom:10px!important;font-size:13px!important}.stats-bar>div{min-width:48%!important;padding:10px 8px!important}.hero-section .hub-hero-tabs{margin-bottom:6px!important}.hero-section form{margin-bottom:8px!important}}</style><section class="hero-section" style="min-height:auto;position:relative;background:#0a1628;overflow:hidden">
+<section class="hero-section" style="min-height:92vh;position:relative;display:flex;flex-direction:column;align-items:center;background:#0a1628;overflow:hidden">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1800&q=60') center/cover no-repeat;opacity:.18"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,.98) 0%,rgba(10,22,40,.75) 60%,rgba(15,27,46,.9) 100%)"></div>
   <div style="position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none"></div>
-  <div class="hero-inner" style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:clamp(12px,4vw,100px) 4% clamp(8px,4vw,140px)">
+  <div class="hero-inner" style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:clamp(60px,8vw,100px) 4% clamp(40px,10vw,140px)">
     <div style="max-width:700px">
       <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:12px">
         <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block"></span>
@@ -71,7 +71,7 @@ function indexPageNew(props, brokers) {
       </div>
     </div>
   </div>
-  <div class="stats-bar" style="left:0;right:0;width:100%;border-top:1px solid rgba(255,255,255,.08)">
+  <div class="stats-bar" style="position:absolute;bottom:0;left:0;right:0;width:100%;background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.08)">
     <div style="max-width:1200px;margin:0 auto;padding:0 6%;display:flex;flex-wrap:wrap">${statsBar}</div>
   </div>
 </section>
