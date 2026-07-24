@@ -12,6 +12,24 @@ const HOOK_INMU = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_ho
 
 // Meta Conversions API config
 var PIXEL_ID = '1668269500330907';
+// Multi-sitio: cada dominio puede tener su propio Pixel de Meta para
+// Conversions API (server-side). InmuHub usa temporalmente el mismo
+// Pixel que Zona INNmueble hasta que se cree uno propio en Meta Business
+// Manager. En cuanto exista, reemplazar el valor de 'inmuhub.com' abajo
+// y los eventos de ese dominio se separan automaticamente sin tocar
+// nada mas del worker.
+var PIXEL_IDS = {
+  'zona-innmueble.com': '1668269500330907',
+  'inmuhub.com': '1668269500330907' // TODO: Pixel exclusivo de InmuHub
+};
+function getPixelId(pageUrl) {
+  try {
+    var host = new URL(pageUrl).hostname.replace(/^www\./, '');
+    return PIXEL_IDS[host] || PIXEL_ID;
+  } catch (e) {
+    return PIXEL_ID;
+  }
+}
 var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby8sAQtzXYJHyRnO5sIHgyju-_dNdS6xyjjCJPQtjWghKcWZKc3xjqX6lUxRUP3Dniu/exec';
 var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
 var META_PAGE_ID = '1616853578595692';
@@ -432,7 +450,7 @@ export default {
         };
         // Fire and forget — don't block the response
         ctx.waitUntil(
-          fetch('https://graph.facebook.com/v21.0/' + PIXEL_ID + '/events?access_token=' + token, {
+          fetch('https://graph.facebook.com/v21.0/' + getPixelId(lead.page_url) + '/events?access_token=' + token, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(eventData)
@@ -871,7 +889,7 @@ export default {
           }]
         };
         ctx.waitUntil(
-          fetch('https://graph.facebook.com/v21.0/' + PIXEL_ID + '/events?access_token=' + token, {
+          fetch('https://graph.facebook.com/v21.0/' + getPixelId(body.page_url) + '/events?access_token=' + token, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(pvEvent)

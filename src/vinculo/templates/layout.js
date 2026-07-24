@@ -2,6 +2,18 @@ const { escapeHtml } = require('../../shared/utils');
 
 const DOMAIN = 'https://inmuhub.com';
 
+// Tracking config exclusivo de INMUHUB.
+// Estado actual: usa temporalmente los mismos IDs que Zona INNmueble
+// para no romper el tracking en vivo mientras se crean las cuentas nuevas.
+// En cuanto existan Pixel/GA4/GTM/WhatsApp propios de InmuHub, reemplazar
+// SOLO los valores de abajo. Ningun otro lugar del archivo necesita tocarse.
+const TRACKING = {
+  metaPixelId: '1668269500330907', // TODO: Pixel de Meta exclusivo de InmuHub
+  ga4Id: 'G-5KVQZYZ7B3',           // TODO: propiedad GA4 exclusiva de InmuHub
+  gtmId: 'GTM-KH4VCQBZ',           // TODO: contenedor GTM exclusivo de InmuHub
+  whatsapp: '+502-4554-2088'       // TODO: numero de WhatsApp Business exclusivo de InmuHub
+};
+
 function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
 const pageTitle = title
 ? `${escapeHtml(title)} | INMUHUB`
@@ -35,7 +47,7 @@ return `<!DOCTYPE html>
       "logo": "https://inmuhub.com/assets/logo-horizontal.png",
       "image": "https://inmuhub.com/assets/og.jpg",
       "description": "Portal inmobiliario premium en Guatemala. Conectamos compradores e inversionistas con propiedades verificadas.",
-      "telephone": "+502-4554-2088",
+      "telephone": "${TRACKING.whatsapp}",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Ciudad de Guatemala",
@@ -99,7 +111,7 @@ return `<!DOCTYPE html>
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KH4VCQBZ');</script>
+})(window,document,'script','dataLayer','${TRACKING.gtmId}');</script>
 <!-- End Google Tag Manager -->
 <!-- Meta Pixel Code -->
 <script>
@@ -111,16 +123,16 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1668269500330907');
+fbq('init', '${TRACKING.metaPixelId}');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1668269500330907&ev=PageView&noscript=1"/></noscript>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${TRACKING.metaPixelId}&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel Code -->
 <!-- GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5KVQZYZ7B3"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=${TRACKING.ga4Id}"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-gtag('js',new Date());gtag('config','G-5KVQZYZ7B3');
+gtag('js',new Date());gtag('config','${TRACKING.ga4Id}');
 </script>
 <!-- Conversion Helper -->
 <script>
@@ -990,7 +1002,7 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KH4VCQBZ"
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${TRACKING.gtmId}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <nav>
