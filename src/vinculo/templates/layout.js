@@ -8,10 +8,10 @@ const DOMAIN = 'https://inmuhub.com';
 // En cuanto existan Pixel/GA4/GTM/WhatsApp propios de InmuHub, reemplazar
 // SOLO los valores de abajo. Ningun otro lugar del archivo necesita tocarse.
 const TRACKING = {
-  metaPixelId: '1668269500330907', // TODO: Pixel de Meta exclusivo de InmuHub
-  ga4Id: 'G-5KVQZYZ7B3',           // TODO: propiedad GA4 exclusiva de InmuHub
-  gtmId: 'GTM-KH4VCQBZ',           // TODO: contenedor GTM exclusivo de InmuHub
-  whatsapp: '+502-4554-2088'       // TODO: numero de WhatsApp Business exclusivo de InmuHub
+  metaPixelId: '1003403445392993', // Pixel real de InmuHub (Meta Business Manager)
+  ga4Id: 'G-RHNJMRKXVF',           // Propiedad GA4 exclusiva de InmuHub
+  gtmId: 'GTM-M3Q9H334',           // Contenedor GTM exclusivo de InmuHub
+  whatsapp: '+502-4554-2088'       // TODO: pendiente - numero de WhatsApp Business exclusivo de InmuHub
 };
 
 function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {

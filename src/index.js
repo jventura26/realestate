@@ -20,7 +20,7 @@ var PIXEL_ID = '1668269500330907';
 // nada mas del worker.
 var PIXEL_IDS = {
   'zona-innmueble.com': '1668269500330907',
-  'inmuhub.com': '1668269500330907' // TODO: Pixel exclusivo de InmuHub
+  'inmuhub.com': '1003403445392993' // Pixel real de InmuHub (Meta Business Manager)
 };
 function getPixelId(pageUrl) {
   try {
