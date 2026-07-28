@@ -212,6 +212,12 @@ if(fs.existsSync(lpSrc)) {
   console.log('   ✔  lp.html (landing page Meta Ads)');
 }
 // ── Thank You page (conversion tracking) ───────────────────────────
+// -- Portafolio Selecto (pagina para compartir con agentes/clientes) --
+const portafolioSrc = path.join(__dirname, 'portafolio.html');
+if(fs.existsSync(portafolioSrc)) {
+  fs.copyFileSync(portafolioSrc, path.join(OUT, 'portafolio.html'));
+  console.log('   ✔  portafolio.html');
+}
 const graciasSrc = path.join(__dirname, 'gracias.html');
 if(fs.existsSync(graciasSrc)) {
   fs.copyFileSync(graciasSrc, path.join(OUT, 'gracias.html'));
