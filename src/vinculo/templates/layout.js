@@ -3,15 +3,15 @@ const { escapeHtml } = require('../../shared/utils');
 const DOMAIN = 'https://inmuhub.com';
 
 // Tracking config exclusivo de INMUHUB.
-// Estado actual: usa temporalmente los mismos IDs que Zona INNmueble
-// para no romper el tracking en vivo mientras se crean las cuentas nuevas.
-// En cuanto existan Pixel/GA4/GTM/WhatsApp propios de InmuHub, reemplazar
-// SOLO los valores de abajo. Ningun otro lugar del archivo necesita tocarse.
+// Pixel, GA4 y GTM ya son cuentas propias y exclusivas de InmuHub (verificado).
+// WhatsApp: InmuHub todavia no tiene numero propio. Se removio el numero de
+// Zona INNmueble que estaba puesto aqui por error - NO usar ese numero para
+// nada de InmuHub. Cuando exista un numero propio, agregarlo abajo.
 const TRACKING = {
   metaPixelId: '1003403445392993', // Pixel real de InmuHub (Meta Business Manager)
   ga4Id: 'G-RHNJMRKXVF',           // Propiedad GA4 exclusiva de InmuHub
   gtmId: 'GTM-M3Q9H334',           // Contenedor GTM exclusivo de InmuHub
-  whatsapp: '+502-4554-2088'       // TODO: pendiente - numero de WhatsApp Business exclusivo de InmuHub
+  whatsapp: ''                     // TODO: pendiente - numero de WhatsApp Business exclusivo de InmuHub
 };
 
 function layout({ title, desc, canonical, ogImage, body, scripts = '' }) {
@@ -47,7 +47,6 @@ return `<!DOCTYPE html>
       "logo": "https://inmuhub.com/assets/logo-horizontal.png",
       "image": "https://inmuhub.com/assets/og.jpg",
       "description": "Portal inmobiliario premium en Guatemala. Conectamos compradores e inversionistas con propiedades verificadas.",
-      "telephone": "${TRACKING.whatsapp}",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Ciudad de Guatemala",

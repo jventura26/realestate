@@ -5,11 +5,6 @@
  */
 (async function () {
   var API = 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/public/propiedades';
-  var WA_ZONA = '';
-  var WA_INMU = '';
-
-  var isZona = location.hostname.includes('zona-innmueble');
-  var WA = isZona ? WA_ZONA : WA_INMU;
 
   async function fetchProps() {
     var KEY = 'kv_props', TS = 'kv_props_ts';

@@ -82,7 +82,7 @@ const mortgageCalculator = () => {
 
 <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid #eee">
   <p style="font-size:14px;color:#555;margin-bottom:12px">¿Quieres saber qué banco te conviene según tu perfil crediticio?</p>
-  <a href="https://wa.me/50245542088?text=Hola%2C%20estoy%20usando%20la%20calculadora%20hipotecaria%20de%20InmuHub%20y%20quisiera%20orientaci%C3%B3n" target="_blank" style="display:inline-block;padding:12px 28px;background:#ff9500;color:#fff;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none">Hablar con un asesor InmuHub →</a>
+  <a href="/asesores.html" style="display:inline-block;padding:12px 28px;background:#ff9500;color:#fff;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none">Hablar con un asesor InmuHub →</a>
 </div>
 
 </div>
