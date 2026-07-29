@@ -1082,6 +1082,7 @@ ${body}
       <h5>Asesores</h5>
       <ul>
         <li><a href="/asesores.html">Directorio</a></li>
+        <li><a href="/codigo-confianza.html">C&oacute;digo de Confianza</a></li>
         <li><a href="/planes.html">Planes y precios</a></li>
         <li><a href="/registro-asesor.html">Registrarse</a></li>
         <li><a href="/dashboard.html">Mi Dashboard</a></li>
