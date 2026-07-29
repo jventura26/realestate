@@ -288,6 +288,11 @@ const { registroAsesorPage } = require('./templates/registro-asesor-page');
 write(path.join(OUT, 'registro-asesor.html'), registroAsesorPage());
 console.log(' registro-asesor.html');
 
+// Codigo de Confianza page
+const { codigoConfianzaPage } = require('./templates/codigo-confianza-page');
+write(path.join(OUT, 'codigo-confianza.html'), codigoConfianzaPage());
+console.log(' codigo-confianza.html');
+
 // Dashboard asesor page
 const { dashboardAsesorPage } = require('./templates/dashboard-asesor-page');
 write(path.join(OUT, 'dashboard.html'), dashboardAsesorPage());
