@@ -734,11 +734,13 @@ export default {
     if (method === 'GET' && path === '/api/public/brokers') {
       var raw = await env.DB.get('brokers');
       var data = raw ? JSON.parse(raw) : [];
-      var pub = data.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; }).map(function(b){
+      var approved = data.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; });
+      var pub = await Promise.all(approved.map(async function(b){
         var o = Object.assign({}, b);
         delete o.telefono; delete o.whatsapp_raw; delete o.email; delete o.password_hash; delete o.whatsapp;
+        o.responseSignal = await computeResponseSignal(b.id, env);
         return o;
-      });
+      }));
       return new Response(JSON.stringify(pub), {
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', ...cors(request) },
       });
@@ -965,6 +967,14 @@ export default {
       if (broker.estado === 'pendiente') return jsonRes({ error: 'Tu cuenta está pendiente de aprobación' }, 403);
       if (broker.estado === 'rechazado') return jsonRes({ error: 'Tu cuenta ha sido rechazada' }, 403);
       if (broker.activo === false && broker.estado !== 'aprobado') return jsonRes({ error: 'Tu cuenta no está activa' }, 403);
+      // ── Registrar login para senal de actividad real (Pulso InmuHub) ──
+      try {
+        var loginsRaw = await env.DB.get('broker_logins:' + broker.id);
+        var logins = loginsRaw ? JSON.parse(loginsRaw) : [];
+        logins.push(new Date().toISOString());
+        if (logins.length > 50) logins = logins.slice(-50);
+        await env.DB.put('broker_logins:' + broker.id, JSON.stringify(logins));
+      } catch (e) {}
       var token = generateToken();
       await env.DB.put('broker_session:' + token, broker.id, { expirationTtl: SESSION_TTL });
       return jsonRes({ ok: true, token: token, broker: { id: broker.id, nombre: broker.nombre, plan: broker.plan, estado: broker.estado } });
@@ -988,6 +998,45 @@ export default {
       var raw = await env.DB.get('brokers');
       var data = raw ? JSON.parse(raw) : [];
       return data.find(function(b){ return b.id === brokerId; }) || null;
+    }
+
+    // ── Helper: senal de actividad real basada en logins (Pulso InmuHub) ──
+    // No mide respuestas de WhatsApp (esas son directas y fuera de InmuHub por diseno,
+    // es la ventaja competitiva del modelo). Mide el tiempo entre que un lead se le
+    // asigna a un asesor y su siguiente login al dashboard, como proxy verificable de
+    // que tan activo esta en la plataforma. Requiere minimo 3 datos en 30 dias o no
+    // se muestra nada, para no mostrar una estadistica poco confiable con una sola muestra.
+    async function computeResponseSignal(brokerId, env) {
+      try {
+        var leadsRaw = await env.DB.get('leads');
+        var leads = leadsRaw ? JSON.parse(leadsRaw) : [];
+        var myLeads = leads.filter(function(l){ return l.assigned_broker === brokerId; });
+        var loginsRaw = await env.DB.get('broker_logins:' + brokerId);
+        var logins = (loginsRaw ? JSON.parse(loginsRaw) : []).map(function(t){ return new Date(t).getTime(); }).sort(function(a,b){ return a - b; });
+        if (!myLeads.length || !logins.length) return null;
+
+        var cutoff = Date.now() - (30 * 24 * 60 * 60 * 1000);
+        var gaps = [];
+        myLeads.forEach(function(l){
+          var assignedAt = new Date(l.assigned_at || l.createdAt || l.fecha).getTime();
+          if (!assignedAt || assignedAt < cutoff) return;
+          var nextLogin = logins.find(function(t){ return t >= assignedAt; });
+          if (nextLogin) gaps.push((nextLogin - assignedAt) / (1000 * 60 * 60));
+        });
+
+        if (gaps.length < 3) return null;
+
+        var avgHours = gaps.reduce(function(a, b){ return a + b; }, 0) / gaps.length;
+        var label;
+        if (avgHours < 1) label = 'Activo en menos de 1 hora';
+        else if (avgHours < 4) label = 'Activo en pocas horas';
+        else if (avgHours < 24) label = 'Activo el mismo dia';
+        else label = 'Activo en 1-2 dias';
+
+        return { label: label, avgHours: Math.round(avgHours * 10) / 10, sampleSize: gaps.length };
+      } catch (e) {
+        return null;
+      }
     }
 
     // ── GET /api/broker/me ── broker profile ──

@@ -73,7 +73,7 @@ function brokerProfilePage(broker, allProps) {
       <div class="broker-title-role">${escapeHtml(b.titulo || 'Asesor Inmobiliario')}</div>
       <div class="broker-meta">
         <div class="broker-meta-item"><strong>${brokerProps.length}</strong> propiedades activas</div>
-        <div class="broker-meta-item">${escapeHtml(b.response_time || 'Menos de 2 horas')}</div>
+        ${b.responseSignal ? '<div class="broker-meta-item">' + escapeHtml(b.responseSignal.label) + '</div>' : ''}
         ${stars ? '<div class="broker-meta-item">' + stars + '</div>' : ''}
       </div>
       <div class="broker-cta">
