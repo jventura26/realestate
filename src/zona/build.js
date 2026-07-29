@@ -168,6 +168,15 @@ if(fs.existsSync(src404)) {
   console.log('   ✔  404.html');
 }
 
+// _redirects (Cloudflare Pages) — reglas 301 de URLs viejas de Wix.
+// Sin este copyFileSync el archivo nunca llegaba a dist/, así que ninguna
+// regla se aplicaba nunca en producción (todas devolvían 404 en vez de 301).
+const redirectsSrc = path.join(__dirname, '_redirects');
+if (fs.existsSync(redirectsSrc)) {
+  fs.copyFileSync(redirectsSrc, path.join(OUT, '_redirects'));
+  console.log('   ✔  _redirects');
+}
+
 const aboutSrc = path.join(__dirname, 'about.html');
 const blogSrc = path.join(__dirname, 'blog.html');
 
