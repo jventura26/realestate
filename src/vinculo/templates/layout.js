@@ -1027,6 +1027,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li><a href="/herramientas/calculadora-hipotecaria.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>Calculadora Hipotecaria</a></li>
         <li><a href="/herramientas/simulador-inversion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Simulador de Inversi&oacute;n</a></li>
         <li><a href="/herramientas/guia-compra.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Gu&iacute;a de Compra</a></li>
+        <li><a href="/herramientas/datos-mercado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>Datos de Mercado</a></li>
       </ul>
     </li>
     <li><a href="/asesores.html" id="navAsesores">Asesores</a></li>
@@ -1074,6 +1075,7 @@ ${body}
         <li><a href="/herramientas/calculadora-hipotecaria.html">Calculadora</a></li>
         <li><a href="/herramientas/simulador-inversion.html">Simulador</a></li>
         <li><a href="/herramientas/guia-compra.html">Gu&iacute;a de Compra</a></li>
+        <li><a href="/herramientas/datos-mercado.html">Datos de Mercado</a></li>
         <li><a href="/blog/">Blog</a></li>
       </ul>
     </div>

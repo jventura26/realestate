@@ -248,6 +248,7 @@ const urls = [
   { loc:'/herramientas/calculadora-hipotecaria.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/guia-compra.html', priority:'0.85', changefreq:'monthly' },
+  { loc:'/herramientas/datos-mercado.html', priority:'0.85', changefreq:'weekly' },
   ...zonaUrls,
   { loc:'/blog/', priority:'0.9', changefreq:'weekly' },
   ...articles.map(a=>({ loc:"/blog/"+a.slug+".html", priority:'0.85', changefreq:'monthly' })),
@@ -281,8 +282,8 @@ console.log(' guia-compra.html');
 write(path.join(HERRAMIENTAS, 'simulador-inversion.html'), simuladorInversionPage());
 console.log(' simulador-inversion.html');
 
-write(path.join(HERRAMIENTAS, 'dashboard-inversionistas.html'), dashboardInversionistasPage());
-console.log(' dashboard-inversionistas.html');
+write(path.join(HERRAMIENTAS, 'datos-mercado.html'), dashboardInversionistasPage(props));
+console.log(' datos-mercado.html');
 
 // Registro asesor page
 const { registroAsesorPage } = require('./templates/registro-asesor-page');

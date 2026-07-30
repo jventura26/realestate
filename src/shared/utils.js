@@ -81,4 +81,21 @@ function computeReputationScore(b) {
   return null; // score bajo: no es un demerito publico, simplemente no se muestra badge
 }
 
-module.exports = { escapeHtml, generateSitemap, generateRobots, uniqueValues, getRelated, generateRedirects, computeReputationScore };
+// Convierte un precio de string (ej. "Q.1,700,000", "$ 585,000", "270,000") a un
+// numero en USD. Usa el simbolo REAL dentro del string (Q o $), no el campo `moneda`
+// del registro - se encontro al menos 1 propiedad donde moneda='Q' pero el string de
+// precio en realidad tenia simbolo '$' (dato mal cargado en el CSV origen). Confiar en
+// el simbolo visible evita una conversion de tipo de cambio incorrecta sobre un precio
+// que en realidad ya estaba en USD.
+var TIPO_CAMBIO_REFERENCIAL = 7.66; // mismo tipo de cambio referencial usado en la calculadora hipotecaria
+
+function parsePriceToUSD(precioStr) {
+  if (!precioStr) return null;
+  var s = String(precioStr).trim();
+  var esQuetzales = /^Q/i.test(s);
+  var num = parseFloat(s.replace(/[^0-9.]/g, ''));
+  if (!num || isNaN(num)) return null;
+  return esQuetzales ? num / TIPO_CAMBIO_REFERENCIAL : num;
+}
+
+module.exports = { escapeHtml, generateSitemap, generateRobots, uniqueValues, getRelated, generateRedirects, computeReputationScore, parsePriceToUSD };
