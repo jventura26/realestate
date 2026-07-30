@@ -14,9 +14,15 @@
 // - Cualquier llamada a la API (/api/...) se deja pasar directo a la red sin
 //   interceptar.
 
-const CACHE_VERSION = 'inmuhub-v1';
+const CACHE_VERSION = 'inmuhub-v2';
 const STATIC_CACHE = CACHE_VERSION + '-static';
-const OFFLINE_URL = '/offline.html';
+// Cloudflare Pages redirige TODO archivo .html a su URL "limpia" sin
+// extension (ej. /offline.html -> /offline con 308) - es el comportamiento
+// por defecto de Pages en todo el sitio, no algo particular de este archivo.
+// Los service workers no pueden guardar en cache una respuesta que vino de
+// una redireccion durante la instalacion (falla silenciosamente), asi que
+// aqui hay que usar la URL final ya redirigida, no la original con .html.
+const OFFLINE_URL = '/offline';
 
 const PRECACHE_ASSETS = [
   OFFLINE_URL,
@@ -26,9 +32,13 @@ const PRECACHE_ASSETS = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then((cache) => cache.addAll(PRECACHE_ASSETS))
-      .catch(() => {}) // si falla el precache no se rompe la instalacion
+    caches.open(STATIC_CACHE).then((cache) =>
+      // cache.add() individual en vez de cache.addAll(): si UN asset falla
+      // (ej. por quedar detras de una redireccion no prevista), los demas
+      // igual se guardan. addAll() es todo-o-nada y hubiera dejado el
+      // precache entero vacio por un solo fallo.
+      Promise.all(PRECACHE_ASSETS.map((url) => cache.add(url).catch(() => {})))
+    )
   );
   self.skipWaiting();
 });
