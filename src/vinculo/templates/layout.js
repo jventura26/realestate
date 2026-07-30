@@ -1008,7 +1008,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <nav>
 <div class="nav-inner">
-  <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0" aria-label="INMUHUB — Portal Inmobiliario Premium Guatemala">
+  <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0;position:relative;top:6px" aria-label="INMUHUB — Portal Inmobiliario Premium Guatemala">
     <span class="logo-name" style="color:#1a1a1a;font-weight:800;letter-spacing:.08em">INMU<span style="color:#F5820D">HUB</span></span>
   </a>
   <ul class="hub-nav" id="hubNav">
