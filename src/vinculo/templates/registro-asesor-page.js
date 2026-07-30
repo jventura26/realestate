@@ -4,19 +4,19 @@ function registroAsesorPage() {
   const body = `
 <style>
 .reg-hero{padding:80px 6% 60px;background:linear-gradient(135deg,#0a1628 0%,#0f1e38 50%,#0a1628 100%);position:relative;overflow:hidden;text-align:center}
-.reg-hero::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none}
+.reg-hero::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(245,130,13,.08) 0%,transparent 70%);pointer-events:none}
 .reg-form-section{padding:60px 6%;background:#f8f9fb}
 .reg-card{max-width:640px;margin:0 auto;background:white;border-radius:20px;padding:48px 40px;box-shadow:0 8px 40px rgba(0,0,0,.06);border:1.5px solid #eef0f3}
 .reg-field{margin-bottom:20px}
 .reg-field label{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:6px}
 .reg-field input,.reg-field textarea,.reg-field select{width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;background:#fafbfc;transition:all .3s;box-sizing:border-box}
-.reg-field input:focus,.reg-field textarea:focus,.reg-field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,169,110,.12);background:white}
+.reg-field input:focus,.reg-field textarea:focus,.reg-field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,130,13,.12);background:white}
 .reg-field textarea{resize:vertical;min-height:80px}
 .reg-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .reg-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .reg-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;background:white;user-select:none}
-.reg-chip.active{background:rgba(201,169,110,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
-.reg-chip:hover{border-color:#c9a96e}
+.reg-chip.active{background:rgba(245,130,13,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
+.reg-chip:hover{border-color:#f5820d}
 .reg-btn{display:block;width:100%;padding:16px;background:var(--gold);color:#0a1628;font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer;letter-spacing:.03em;transition:all .3s;margin-top:32px}
 .reg-btn:hover{opacity:.88}
 .reg-btn:disabled{opacity:.5;cursor:not-allowed}
@@ -33,7 +33,7 @@ function registroAsesorPage() {
 
 <div class="reg-hero">
   <div style="position:relative;z-index:2">
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:24px">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,130,13,.12);border:1px solid rgba(245,130,13,.3);border-radius:100px;padding:6px 16px;margin-bottom:24px">
       <span style="width:6px;height:6px;background:var(--gold);border-radius:50%"></span>
       <span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Registro de asesores</span>
     </div>

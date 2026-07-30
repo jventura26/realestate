@@ -17,7 +17,7 @@ function brokerProfilePage(broker, allProps) {
   }).join('');
 
   const espHTML = (b.especialidad || []).map(function(e) {
-    return '<span style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(201,169,110,.1);border:1.5px solid rgba(201,169,110,.3);border-radius:20px;font-size:13px;font-weight:500;color:#8B6914">' + escapeHtml(e) + '</span>';
+    return '<span style="display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:rgba(245,130,13,.1);border:1.5px solid rgba(245,130,13,.3);border-radius:20px;font-size:13px;font-weight:500;color:#8B6914">' + escapeHtml(e) + '</span>';
   }).join('');
 
   const stars = b.rating ? (function() {
@@ -34,7 +34,7 @@ function brokerProfilePage(broker, allProps) {
     : '';
 
   const reputationBadge = b.reputationScore
-    ? '<span style="display:inline-flex;align-items:center;gap:6px;background:' + (b.reputationScore.tier === 'elite' ? 'rgba(201,169,110,.15)' : '#EFF6FF') + ';border:1px solid ' + (b.reputationScore.tier === 'elite' ? 'rgba(201,169,110,.4)' : '#BFDBFE') + ';border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;color:' + (b.reputationScore.tier === 'elite' ? '#8B6914' : '#1D4ED8') + ';letter-spacing:.03em">' + escapeHtml(b.reputationScore.label) + '</span>'
+    ? '<span style="display:inline-flex;align-items:center;gap:6px;background:' + (b.reputationScore.tier === 'elite' ? 'rgba(245,130,13,.15)' : '#EFF6FF') + ';border:1px solid ' + (b.reputationScore.tier === 'elite' ? 'rgba(245,130,13,.4)' : '#BFDBFE') + ';border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;color:' + (b.reputationScore.tier === 'elite' ? '#8B6914' : '#1D4ED8') + ';letter-spacing:.03em">' + escapeHtml(b.reputationScore.label) + '</span>'
     : '';
 
   const waLink = b.whatsapp
@@ -44,10 +44,10 @@ function brokerProfilePage(broker, allProps) {
   let body = `
 <style>
 .broker-hero{padding:0 6%;background:linear-gradient(135deg,#0a1628 0%,#0f1e38 50%,#0a1628 100%);position:relative;overflow:hidden}
-.broker-hero::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none}
+.broker-hero::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(245,130,13,.08) 0%,transparent 70%);pointer-events:none}
 .broker-hero-inner{max-width:1200px;margin:0 auto;padding:80px 0 60px;display:flex;gap:48px;align-items:center;position:relative;z-index:2}
-.broker-avatar{width:180px;height:180px;border-radius:24px;object-fit:cover;border:3px solid rgba(201,169,110,.4);box-shadow:0 20px 50px rgba(0,0,0,.3);flex-shrink:0}
-.broker-avatar-placeholder{width:180px;height:180px;border-radius:24px;background:linear-gradient(135deg,#1a3a5c,#0a1628);border:3px solid rgba(201,169,110,.4);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:4rem;font-weight:300;color:var(--gold);flex-shrink:0}
+.broker-avatar{width:180px;height:180px;border-radius:24px;object-fit:cover;border:3px solid rgba(245,130,13,.4);box-shadow:0 20px 50px rgba(0,0,0,.3);flex-shrink:0}
+.broker-avatar-placeholder{width:180px;height:180px;border-radius:24px;background:linear-gradient(135deg,#1a3a5c,#0a1628);border:3px solid rgba(245,130,13,.4);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:4rem;font-weight:300;color:var(--gold);flex-shrink:0}
 .broker-info h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:white;margin:0 0 8px;line-height:1.1}
 .broker-title-role{font-size:14px;font-weight:500;color:rgba(255,255,255,.5);letter-spacing:.06em;margin-bottom:16px}
 .broker-meta{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px}
@@ -57,8 +57,8 @@ function brokerProfilePage(broker, allProps) {
 .broker-cta a{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;transition:all .3s}
 .broker-cta-wa{background:#25D366;color:white}
 .broker-cta-wa:hover{background:#1da851}
-.broker-cta-contact{background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.35)}
-.broker-cta-contact:hover{background:rgba(201,169,110,.25)}
+.broker-cta-contact{background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.35)}
+.broker-cta-contact:hover{background:rgba(245,130,13,.25)}
 @media(max-width:768px){
 .broker-hero-inner{flex-direction:column;text-align:center;padding:48px 0 40px}
 .broker-cta{justify-content:center}
@@ -166,15 +166,15 @@ function brokerCard(b) {
   const zonas = (b.zonas || []).slice(0,3).join(' · ');
   const stars = b.rating ? '<span style="color:#F59E0B;font-size:13px">&#9733;</span> <span style="font-size:13px;font-weight:700;color:#374151">' + b.rating.toFixed(1) + '</span>' : '';
   const repBadgeCard = b.reputationScore
-    ? '<div style="margin-bottom:12px"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.03em;' + (b.reputationScore.tier === 'elite' ? 'background:rgba(201,169,110,.15);color:#8B6914;border:1px solid rgba(201,169,110,.35)' : 'background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE') + '">' + escapeHtml(b.reputationScore.label) + '</span></div>'
+    ? '<div style="margin-bottom:12px"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.03em;' + (b.reputationScore.tier === 'elite' ? 'background:rgba(245,130,13,.15);color:#8B6914;border:1px solid rgba(245,130,13,.35)' : 'background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE') + '">' + escapeHtml(b.reputationScore.label) + '</span></div>'
     : '';
 
   return `<a href="/asesores/${escapeHtml(b.slug)}.html" style="display:flex;flex-direction:column;background:white;border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;border:1.5px solid #eef0f3;transition:all .35s;box-shadow:0 2px 8px rgba(0,0,0,.04)" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,.12)';this.style.borderColor='var(--gold)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(0,0,0,.04)';this.style.borderColor='#eef0f3'">
     <div style="position:relative;padding:32px 24px 24px;background:linear-gradient(135deg,#0a1628,#1a3a5c);text-align:center">
       ${verificado}${destacado}
       ${b.foto
-        ? '<img src="' + escapeHtml(b.foto) + '" alt="' + escapeHtml(b.nombre) + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(201,169,110,.4);margin:0 auto 16px;display:block">'
-        : '<div style="width:80px;height:80px;border-radius:50%;background:rgba(201,169,110,.15);border:3px solid rgba(201,169,110,.4);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,Georgia,serif;font-size:1.8rem;font-weight:300;color:var(--gold);margin:0 auto 16px">' + escapeHtml(initials) + '</div>'}
+        ? '<img src="' + escapeHtml(b.foto) + '" alt="' + escapeHtml(b.nombre) + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(245,130,13,.4);margin:0 auto 16px;display:block">'
+        : '<div style="width:80px;height:80px;border-radius:50%;background:rgba(245,130,13,.15);border:3px solid rgba(245,130,13,.4);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garamond,Georgia,serif;font-size:1.8rem;font-weight:300;color:var(--gold);margin:0 auto 16px">' + escapeHtml(initials) + '</div>'}
       <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;font-weight:400;color:white;margin-bottom:4px">${escapeHtml(b.nombre)}</div>
       <div style="font-size:12px;color:rgba(255,255,255,.5)">${escapeHtml(b.titulo || 'Asesor Inmobiliario')}</div>
     </div>
@@ -202,7 +202,7 @@ function brokersDirectoryPage(brokers) {
 <section style="padding:80px 6% 60px;background:linear-gradient(135deg,#0a1628 0%,#0f1e38 50%,#0a1628 100%);position:relative;overflow:hidden;text-align:center">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,.06) 0%,transparent 65%);pointer-events:none"></div>
   <div style="position:relative;z-index:2;max-width:700px;margin:0 auto">
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:24px">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,130,13,.12);border:1px solid rgba(245,130,13,.3);border-radius:100px;padding:6px 16px;margin-bottom:24px">
       <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block"></span>
       <span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Asesores verificados</span>
     </div>

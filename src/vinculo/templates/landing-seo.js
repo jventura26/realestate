@@ -11,7 +11,7 @@ function seoLandingPage(cfg) {
 
   var faqHTML = cfg.faqs ? '<div style="margin-top:48px"><h2 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:1.8rem;font-weight:300;color:#0a1628;margin:0 0 24px">Preguntas frecuentes</h2>' +
     cfg.faqs.map(function(f) {
-      return '<details style="border:1.5px solid #eef0f3;border-radius:12px;padding:20px 24px;margin-bottom:12px;cursor:pointer"><summary style="font-weight:700;font-size:15px;color:#0a1628;list-style:none;display:flex;justify-content:space-between;align-items:center">' + f.q + '<span style="color:#C9A96E;font-size:18px;transition:transform .2s">+</span></summary><p style="font-size:14px;color:#64748b;line-height:1.7;margin:12px 0 0">' + f.a + '</p></details>';
+      return '<details style="border:1.5px solid #eef0f3;border-radius:12px;padding:20px 24px;margin-bottom:12px;cursor:pointer"><summary style="font-weight:700;font-size:15px;color:#0a1628;list-style:none;display:flex;justify-content:space-between;align-items:center">' + f.q + '<span style="color:#F5820D;font-size:18px;transition:transform .2s">+</span></summary><p style="font-size:14px;color:#64748b;line-height:1.7;margin:12px 0 0">' + f.a + '</p></details>';
     }).join('') + '</div>' : '';
 
   var body = '<div style="max-width:900px;margin:0 auto;padding:48px 6%">' +
@@ -20,7 +20,7 @@ function seoLandingPage(cfg) {
     '<p style="font-size:16px;color:#64748b;line-height:1.7;margin-bottom:32px">' + cfg.intro + '</p>' +
     (cfg.image ? '<div style="margin-bottom:40px;border-radius:16px;overflow:hidden;aspect-ratio:16/9"><img src="' + cfg.image + '" alt="' + cfg.h1 + '" style="width:100%;height:100%;object-fit:cover" loading="lazy"></div>' : '') +
     '<div style="font-size:15px;color:#374151;line-height:1.8">' + cfg.content + '</div>' +
-    '<div style="background:rgba(201,169,110,.06);border:1.5px solid rgba(201,169,110,.2);border-radius:16px;padding:32px;margin-top:40px;text-align:center">' +
+    '<div style="background:rgba(245,130,13,.06);border:1.5px solid rgba(245,130,13,.2);border-radius:16px;padding:32px;margin-top:40px;text-align:center">' +
     '<h3 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:1.4rem;font-weight:300;color:#0a1628;margin:0 0 12px">' + (cfg.cta_title || 'Explora propiedades disponibles') + '</h3>' +
     '<p style="font-size:14px;color:#64748b;margin-bottom:20px">' + (cfg.cta_text || 'Propiedades verificadas con asesores certificados.') + '</p>' +
     '<a href="' + (cfg.cta_link || '/propiedades.html') + '" style="display:inline-block;background:#1a3a5c;color:white;padding:12px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none">' + (cfg.cta_label || 'Ver propiedades') + '</a>' +

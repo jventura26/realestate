@@ -113,22 +113,22 @@ function dashboardInversionistasPage(props) {
   <div style="max-width:1200px;margin:0 auto;padding:20px">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin:40px 0">
       <div style="background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-        <div style="font-size:32px;font-weight:700;color:#c9a96e">${stats.totalActivas}</div>
+        <div style="font-size:32px;font-weight:700;color:#f5820d">${stats.totalActivas}</div>
         <div style="color:#1a2a4e;font-weight:600;margin-top:8px">Propiedades activas</div>
         <div style="color:#666;font-size:12px">Publicadas actualmente en InmuHub</div>
       </div>
       <div style="background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-        <div style="font-size:32px;font-weight:700;color:#c9a96e">${stats.zonasCount}</div>
+        <div style="font-size:32px;font-weight:700;color:#f5820d">${stats.zonasCount}</div>
         <div style="color:#1a2a4e;font-weight:600;margin-top:8px">Zonas con inventario</div>
         <div style="color:#666;font-size:12px">Municipios/zonas con al menos 1 propiedad</div>
       </div>
       <div style="background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-        <div style="font-size:32px;font-weight:700;color:#c9a96e">${fmtUSD(stats.precioPromedioUSD)}</div>
+        <div style="font-size:32px;font-weight:700;color:#f5820d">${fmtUSD(stats.precioPromedioUSD)}</div>
         <div style="color:#1a2a4e;font-weight:600;margin-top:8px">Precio promedio</div>
         <div style="color:#666;font-size:12px">Sobre ${stats.totalConPrecio} propiedades con precio publicado</div>
       </div>
       <div style="background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-        <div style="font-size:32px;font-weight:700;color:#c9a96e">${fmtUSD(stats.valorTotalUSD)}</div>
+        <div style="font-size:32px;font-weight:700;color:#f5820d">${fmtUSD(stats.valorTotalUSD)}</div>
         <div style="color:#1a2a4e;font-weight:600;margin-top:8px">Valor total del inventario</div>
         <div style="color:#666;font-size:12px">Suma de precios de listado, no ventas cerradas</div>
       </div>
@@ -169,7 +169,7 @@ function dashboardInversionistasPage(props) {
       ventas cerradas, rentabilidad histórica ni proyecciones de mercado.
     </p>
 
-    <div style="background:linear-gradient(135deg,#c9a96e 0%,#a8874f 100%);color:#0a1628;padding:40px;border-radius:8px;text-align:center;margin:40px 0">
+    <div style="background:linear-gradient(135deg,#f5820d 0%,#a8874f 100%);color:#0a1628;padding:40px;border-radius:8px;text-align:center;margin:40px 0">
       <h2 style="margin-bottom:15px;font-weight:700">¿Buscas invertir en Guatemala?</h2>
       <p style="margin-bottom:25px;font-size:16px">Explora el inventario completo o habla con un asesor.</p>
       <a href="/propiedades.html" style="display:inline-block;background:#0a1628;color:#fff;padding:12px 30px;border-radius:6px;text-decoration:none;font-weight:700;margin-right:10px">Ver propiedades →</a>

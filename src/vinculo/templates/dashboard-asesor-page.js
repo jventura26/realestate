@@ -9,7 +9,7 @@ function dashboardAsesorPage() {
 .dash-field{margin-bottom:16px}
 .dash-field label{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:6px}
 .dash-field input,.dash-field textarea,.dash-field select{width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;background:#fafbfc;transition:all .3s;box-sizing:border-box}
-.dash-field input:focus,.dash-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,169,110,.12);background:white}
+.dash-field input:focus,.dash-field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,130,13,.12);background:white}
 .dash-btn{display:block;width:100%;padding:14px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:all .3s}
 .dash-btn:hover{opacity:.88}
 .dash-btn:disabled{opacity:.5;cursor:not-allowed}
@@ -29,7 +29,7 @@ function dashboardAsesorPage() {
 .dash-stat-label{font-size:12px;color:#94a3b8;margin-top:4px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .dash-plan-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .dash-plan-free{background:#f1f5f9;color:#64748b}
-.dash-plan-pro{background:rgba(201,169,110,.12);color:#8B6914}
+.dash-plan-pro{background:rgba(245,130,13,.12);color:#8B6914}
 .dash-plan-premium{background:#0a1628;color:var(--gold)}
 .dash-section{margin-bottom:40px}
 .dash-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
@@ -59,8 +59,8 @@ function dashboardAsesorPage() {
 .dash-modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:24px;cursor:pointer;color:#94a3b8}
 .reg-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .reg-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:13px;cursor:pointer;transition:all .2s;background:white;user-select:none}
-.reg-chip.active{background:rgba(201,169,110,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
-.reg-chip:hover{border-color:#c9a96e}
+.reg-chip.active{background:rgba(245,130,13,.12);border-color:var(--gold);color:#8B6914;font-weight:600}
+.reg-chip:hover{border-color:#f5820d}
 @keyframes fadeInToast{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 /* MOBILE FIXES */
 @media(max-width:640px){
@@ -376,8 +376,8 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
 
   function showWelcome(nombre){
     var toast=document.createElement('div');
-    toast.style.cssText='position:fixed;top:24px;right:24px;z-index:9999;background:#0a1628;color:white;padding:20px 28px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.25);font-size:14px;line-height:1.5;animation:fadeInToast .4s ease;max-width:340px;border:1px solid rgba(201,169,110,.3)';
-    toast.innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C9A96E;margin-bottom:6px">Bienvenido</div><div style="font-weight:600">Hola, '+(nombre||'Asesor')+'</div><div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">Tu dashboard est&aacute; listo.</div>';
+    toast.style.cssText='position:fixed;top:24px;right:24px;z-index:9999;background:#0a1628;color:white;padding:20px 28px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.25);font-size:14px;line-height:1.5;animation:fadeInToast .4s ease;max-width:340px;border:1px solid rgba(245,130,13,.3)';
+    toast.innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F5820D;margin-bottom:6px">Bienvenido</div><div style="font-weight:600">Hola, '+(nombre||'Asesor')+'</div><div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">Tu dashboard est&aacute; listo.</div>';
     document.body.appendChild(toast);
     setTimeout(function(){toast.style.transition='opacity .5s';toast.style.opacity='0';setTimeout(function(){toast.remove();},500);},3500);
   }
@@ -499,12 +499,12 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
       else{ badge.style.display='none'; }
       msgs.slice(0,20).forEach(function(m){
         var card = document.createElement('div');
-        card.style.cssText='background:white;border-radius:12px;padding:20px;border:1.5px solid '+(m.leido?'#eef0f3':'#C9A96E')+';transition:all .2s';
+        card.style.cssText='background:white;border-radius:12px;padding:20px;border:1.5px solid '+(m.leido?'#eef0f3':'#F5820D')+';transition:all .2s';
         card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">' +
           '<div><div style="font-weight:700;font-size:14px;color:#0a1628">'+escH(m.nombre)+'</div>' +
           '<div style="font-size:12px;color:#94a3b8">'+escH(m.email)+(m.telefono?' &middot; '+escH(m.telefono):'')+'</div></div>' +
           '<div style="text-align:right"><div style="font-size:11px;color:#94a3b8">'+new Date(m.created_at).toLocaleDateString('es-GT')+'</div>' +
-          (!m.leido?'<span style="display:inline-block;background:#C9A96E;color:white;font-size:9px;padding:2px 8px;border-radius:10px;margin-top:4px;font-weight:700">NUEVO</span>':'') +
+          (!m.leido?'<span style="display:inline-block;background:#F5820D;color:white;font-size:9px;padding:2px 8px;border-radius:10px;margin-top:4px;font-weight:700">NUEVO</span>':'') +
           '</div></div>' +
           (m.propiedad_titulo?'<div style="font-size:12px;color:#64748b;margin-bottom:8px">'+escH(m.propiedad_titulo)+'</div>':'') +
           '<div style="font-size:13px;color:#374151;line-height:1.6;background:#f8f9fb;padding:12px 16px;border-radius:8px">'+escH(m.mensaje)+'</div>' +
@@ -747,7 +747,7 @@ div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important
         + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q349</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'
         + '<button class="dash-btn" style="margin-top:12px" onclick="requestUpgrade(&apos;pro&apos;)">Solicitar Pro</button></div>';
     }
-    html += '<div style="border:1.5px solid var(--gold);border-radius:12px;padding:20px;background:rgba(201,169,110,.04)">'
+    html += '<div style="border:1.5px solid var(--gold);border-radius:12px;padding:20px;background:rgba(245,130,13,.04)">'
       + '<div style="display:flex;justify-content:space-between;align-items:center">'
       + '<div><strong>Plan Premium</strong><br><span style="font-size:13px;color:#94a3b8">Propiedades ilimitadas • Destacado • Soporte prioritario</span></div>'
       + '<div style="text-align:right"><span style="font-size:20px;font-weight:800;color:var(--gold)">Q699</span><span style="font-size:12px;color:#94a3b8">/mes</span></div></div>'

@@ -9,14 +9,14 @@ function adminHubPage() {
   .ah-field{margin-bottom:16px}
   .ah-field label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;margin-bottom:6px;text-transform:uppercase}
   .ah-field input{width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:#fafbfc;box-sizing:border-box}
-  .ah-btn{display:inline-block;padding:12px 28px;background:var(--gold,#c9a96e);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px}
+  .ah-btn{display:inline-block;padding:12px 28px;background:var(--gold,#f5820d);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px}
   .ah-btn:hover{opacity:.9}
   .ah-btn-sm{padding:6px 14px;font-size:12px;border-radius:6px}
   .ah-btn-danger{background:#ef4444}
   .ah-btn-green{background:#10b981}
   .ah-tabs{display:flex;gap:0;border-bottom:2px solid #eef0f3;margin-bottom:24px}
   .ah-tab{padding:12px 24px;font-size:13px;font-weight:700;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;letter-spacing:.5px;text-transform:uppercase}
-  .ah-tab.active{color:var(--gold,#c9a96e);border-bottom-color:var(--gold,#c9a96e)}
+  .ah-tab.active{color:var(--gold,#f5820d);border-bottom-color:var(--gold,#f5820d)}
   .ah-tab:hover{color:#0a1628}
   .ah-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px}
   .ah-stat{background:white;border-radius:12px;padding:24px;border:1.5px solid #eef0f3;text-align:center}

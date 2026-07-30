@@ -5,7 +5,7 @@ function blogIndexPage(articles) {
     return '<a href="/blog/' + a.slug + '.html" style="background:white;border-radius:16px;overflow:hidden;border:1.5px solid #eef0f3;text-decoration:none;color:inherit;transition:all .3s" onmouseover="this.style.transform=\'translateY(-4px)\';this.style.boxShadow=\'0 12px 30px rgba(0,0,0,.08)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'">' +
       '<div style="aspect-ratio:16/9;overflow:hidden;background:#f1f5f9"><img src="' + (a.image || '') + '" alt="' + a.title + '" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>' +
       '<div style="padding:24px">' +
-      '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#C9A96E;margin-bottom:8px">' + a.category + '</div>' +
+      '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F5820D;margin-bottom:8px">' + a.category + '</div>' +
       '<h2 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin:0 0 10px;line-height:1.4">' + a.title + '</h2>' +
       '<p style="font-size:13px;color:#64748b;line-height:1.6;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">' + a.excerpt + '</p>' +
       '<div style="margin-top:14px;font-size:12px;color:#94a3b8">' + a.date + ' &middot; ' + a.readTime + ' min lectura</div>' +
@@ -30,7 +30,7 @@ function blogIndexPage(articles) {
 
 function blogArticlePage(article) {
   var toc = article.sections ? article.sections.map(function(s, i) {
-    return '<a href="#s' + i + '" style="display:block;padding:8px 0;font-size:13px;color:#64748b;text-decoration:none;border-left:2px solid #eef0f3;padding-left:16px;transition:all .2s" onmouseover="this.style.color=\'#C9A96E\';this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.color=\'#64748b\';this.style.borderColor=\'#eef0f3\'">' + s.heading + '</a>';
+    return '<a href="#s' + i + '" style="display:block;padding:8px 0;font-size:13px;color:#64748b;text-decoration:none;border-left:2px solid #eef0f3;padding-left:16px;transition:all .2s" onmouseover="this.style.color=\'#F5820D\';this.style.borderColor=\'#F5820D\'" onmouseout="this.style.color=\'#64748b\';this.style.borderColor=\'#eef0f3\'">' + s.heading + '</a>';
   }).join('') : '';
 
   var content = article.sections ? article.sections.map(function(s, i) {
@@ -55,10 +55,10 @@ function blogArticlePage(article) {
   var relatedHTML = '';
   if (article.related && article.related.length) {
     relatedHTML = '<div style="border-top:1px solid #eef0f3;padding-top:40px;margin-top:48px">' +
-      '<h3 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C9A96E;margin-bottom:20px">Articulos relacionados</h3>' +
+      '<h3 style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#F5820D;margin-bottom:20px">Articulos relacionados</h3>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">' +
       article.related.map(function(r) {
-        return '<a href="/blog/' + r.slug + '.html" style="padding:20px;border:1.5px solid #eef0f3;border-radius:12px;text-decoration:none;color:inherit;transition:all .2s" onmouseover="this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.borderColor=\'#eef0f3\'">' +
+        return '<a href="/blog/' + r.slug + '.html" style="padding:20px;border:1.5px solid #eef0f3;border-radius:12px;text-decoration:none;color:inherit;transition:all .2s" onmouseover="this.style.borderColor=\'#F5820D\'" onmouseout="this.style.borderColor=\'#eef0f3\'">' +
           '<div style="font-size:14px;font-weight:700;color:#0a1628;margin-bottom:6px">' + r.title + '</div>' +
           '<div style="font-size:12px;color:#64748b">' + r.excerpt.substring(0, 100) + '...</div></a>';
       }).join('') + '</div></div>';
@@ -66,13 +66,13 @@ function blogArticlePage(article) {
 
   var body = '<div style="max-width:900px;margin:0 auto;padding:48px 6%">' +
     '<nav style="font-size:12px;color:#94a3b8;margin-bottom:24px"><a href="/" style="color:#94a3b8;text-decoration:none">Inicio</a> / <a href="/blog/" style="color:#94a3b8;text-decoration:none">Blog</a> / <span style="color:#64748b">' + article.title.substring(0, 50) + '</span></nav>' +
-    '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#C9A96E;margin-bottom:12px">' + article.category + '</div>' +
+    '<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F5820D;margin-bottom:12px">' + article.category + '</div>' +
     '<h1 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:2.2rem;font-weight:300;color:#0a1628;margin:0 0 16px;line-height:1.3">' + article.title + '</h1>' +
     '<div style="font-size:13px;color:#94a3b8;margin-bottom:32px">' + article.date + ' &middot; ' + article.readTime + ' min lectura</div>' +
     (article.image ? '<div style="margin-bottom:40px;border-radius:16px;overflow:hidden;aspect-ratio:16/9"><img src="' + article.image + '" alt="' + article.title + '" style="width:100%;height:100%;object-fit:cover"></div>' : '') +
     (toc ? '<div style="background:#f8f9fb;border-radius:12px;padding:24px 28px;margin-bottom:40px"><div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:12px">En este articulo</div>' + toc + '</div>' : '') +
     content +
-    '<div style="background:rgba(201,169,110,.06);border:1.5px solid rgba(201,169,110,.2);border-radius:16px;padding:32px;margin-top:48px;text-align:center">' +
+    '<div style="background:rgba(245,130,13,.06);border:1.5px solid rgba(245,130,13,.2);border-radius:16px;padding:32px;margin-top:48px;text-align:center">' +
     '<h3 style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:1.4rem;font-weight:300;color:#0a1628;margin:0 0 12px">Encuentra tu propiedad ideal</h3>' +
     '<p style="font-size:14px;color:#64748b;margin-bottom:20px">Explora nuestro catalogo de propiedades verificadas en Guatemala.</p>' +
     '<a href="/propiedades.html" style="display:inline-block;background:#1a3a5c;color:white;padding:12px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none">Ver propiedades</a>' +
@@ -139,9 +139,9 @@ var articles = [
     readTime: 15,
     image: 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=1200&q=80',
     sections: [
-      { heading: 'Paso 1: Define tu presupuesto real', content: '<p>Antes de buscar propiedades, calcula tu capacidad de compra considerando no solo el precio de la propiedad sino tambien: gastos de escrituracion (aproximadamente 1-2% del valor), impuestos de transferencia, honorarios legales, y costos de mudanza y adecuacion.</p><p>Si planeas financiar, la cuota mensual no debe superar el 30% de tus ingresos netos mensuales. Usa nuestra <a href="/herramientas/calculadora-hipotecaria.html" style="color:#C9A96E;font-weight:600">calculadora hipotecaria</a> para estimar tu cuota.</p>' },
+      { heading: 'Paso 1: Define tu presupuesto real', content: '<p>Antes de buscar propiedades, calcula tu capacidad de compra considerando no solo el precio de la propiedad sino tambien: gastos de escrituracion (aproximadamente 1-2% del valor), impuestos de transferencia, honorarios legales, y costos de mudanza y adecuacion.</p><p>Si planeas financiar, la cuota mensual no debe superar el 30% de tus ingresos netos mensuales. Usa nuestra <a href="/herramientas/calculadora-hipotecaria.html" style="color:#F5820D;font-weight:600">calculadora hipotecaria</a> para estimar tu cuota.</p>' },
       { heading: 'Paso 2: Elige la zona ideal', content: '<p>Cada zona tiene personalidad propia. Considera: distancia al trabajo, colegios para tus hijos, nivel de seguridad, acceso a comercios y servicios medicos, y potencial de plusvalia.</p><p>Visita las zonas en diferentes horarios para tener una perspectiva real del trafico, ruido y ambiente.</p>' },
-      { heading: 'Paso 3: Busca con un asesor certificado', content: '<p>Un buen asesor inmobiliario no solo te muestra propiedades — te orienta sobre precios justos, historial del inmueble, potencial de la zona y negociacion. En <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a> encuentras asesores verificados especializados por zona.</p>' },
+      { heading: 'Paso 3: Busca con un asesor certificado', content: '<p>Un buen asesor inmobiliario no solo te muestra propiedades — te orienta sobre precios justos, historial del inmueble, potencial de la zona y negociacion. En <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a> encuentras asesores verificados especializados por zona.</p>' },
       { heading: 'Paso 4: Verifica la documentacion legal', content: '<p>Antes de hacer cualquier oferta, solicita y verifica: certificacion del Registro General de la Propiedad, solvencia de IUSI, planos registrados, licencia de construccion (si aplica), y que no existan demandas o gravamenes pendientes.</p>' },
       { heading: 'Paso 5: Negocia y firma promesa de venta', content: '<p>Una vez que encuentres la propiedad ideal, negocia el precio y condiciones. La promesa de compraventa es un documento legal que protege ambas partes y establece plazos, precio final y condiciones de pago.</p>' },
       { heading: 'Paso 6: Financiamiento y tramites bancarios', content: '<p>Si necesitas credito hipotecario, compara tasas en al menos 3 bancos. Los bancos en Guatemala ofrecen plazos de 15 a 25 anos con tasas que varian entre 7% y 11% anual. Prepara: constancia de ingresos, estados de cuenta, DPI, NIT y referencia crediticia.</p>' },
@@ -194,7 +194,7 @@ var articles = [
       { heading: 'Comparativa de tasas por banco', content: '<p><strong>Bancos comerciales grandes:</strong> Tasas entre 7.5% y 9.5% anual en quetzales. Plazos de hasta 25 anos con enganches desde el 10%. Mas competitivos para montos superiores a Q1 millon.</p><p><strong>Bancos medianos:</strong> Tasas entre 8% y 10.5%. Mas flexibles en requisitos de ingreso.</p><p><strong>FHA:</strong> Programa gubernamental con tasas preferenciales desde 6.5% para vivienda de interes social.</p><p><strong>Cooperativas:</strong> Tasas entre 7% y 9% para asociados. Requieren membresia y ahorro previo.</p>' },
       { heading: 'Requisitos generales', content: '<p>La mayoria de instituciones solicitan: DPI vigente, NIT, constancia de ingresos de los ultimos 6 meses, estados de cuenta bancarios, referencias crediticias, avaluo de la propiedad, y certificacion del Registro de la Propiedad.</p><p><strong>Ingreso minimo:</strong> La cuota mensual no debe superar el 30-35% de tu ingreso neto. Para un credito de Q1 millon a 20 anos al 8%, la cuota ronda los Q8,400, necesitando ingresos de al menos Q24,000.</p>' },
       { heading: 'Costos adicionales del credito', content: '<p>Mas alla de la cuota mensual: gastos de escrituracion (1-2% del valor), seguro de vida sobre saldo deudor, seguro contra incendio y terremoto, gastos de avaluo (Q2,000-Q5,000), y comision de apertura (0.5-1%). Estos costos pueden sumar entre Q30,000 y Q80,000.</p>' },
-      { heading: 'Consejos para obtener la mejor tasa', content: '<p>Negocia activamente — las tasas publicadas son negociables. Presenta cotizaciones de otros bancos. Mantiene un historial crediticio limpio al menos 12 meses antes. Considera un enganche mayor del 20% para mejores condiciones.</p><p>Un asesor inmobiliario en <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a> puede orientarte sobre las mejores opciones de financiamiento.</p>' }
+      { heading: 'Consejos para obtener la mejor tasa', content: '<p>Negocia activamente — las tasas publicadas son negociables. Presenta cotizaciones de otros bancos. Mantiene un historial crediticio limpio al menos 12 meses antes. Considera un enganche mayor del 20% para mejores condiciones.</p><p>Un asesor inmobiliario en <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a> puede orientarte sobre las mejores opciones de financiamiento.</p>' }
     ]
   },
   {
@@ -211,7 +211,7 @@ var articles = [
       { heading: 'Tipos de vivienda y precios', content: '<p><strong>Apartamentos tipo loft:</strong> Desde $130,000. Ideales para profesionales jovenes.</p><p><strong>Apartamentos familiares (2-3 hab):</strong> Desde $220,000 hasta $450,000.</p><p><strong>Casas en condominio:</strong> Desde $350,000 hasta $800,000+.</p><p><strong>Penthouses:</strong> Desde $500,000 con vistas panoramicas y terrazas amplias.</p>' },
       { heading: 'Estilo de vida', content: '<p>Vivir en Cayala significa caminar al supermercado, al banco, al gimnasio y a los mejores restaurantes. Los ninos juegan en plazas seguras. Los fines de semana hay eventos culturales, mercados artesanales y conciertos al aire libre. La comunidad es activa y conectada.</p>' },
       { heading: 'Plusvalia y potencial de inversion', content: '<p>Cayala ha demostrado una plusvalia consistente del 8-12% anual. La demanda supera la oferta, especialmente en unidades de 2-3 habitaciones. Como inversion para renta, los apartamentos amueblados generan rendimientos del 6-8% anual.</p>' },
-      { heading: 'Conectividad y ubicacion', content: '<p>Ubicada en Zona 16, con acceso directo al Boulevard Vista Hermosa y Calzada La Paz. A 15 minutos de Zona 10 y 20 minutos del aeropuerto.</p><p>Explora opciones disponibles en Cayala en <a href="/" style="color:#C9A96E;font-weight:600">INMUHUB</a>.</p>' }
+      { heading: 'Conectividad y ubicacion', content: '<p>Ubicada en Zona 16, con acceso directo al Boulevard Vista Hermosa y Calzada La Paz. A 15 minutos de Zona 10 y 20 minutos del aeropuerto.</p><p>Explora opciones disponibles en Cayala en <a href="/" style="color:#F5820D;font-weight:600">INMUHUB</a>.</p>' }
     ]
   },
   {
@@ -227,7 +227,7 @@ var articles = [
       { heading: 'Que es la plusvalia', content: '<p>La plusvalia es el incremento de valor que experimenta una propiedad con el tiempo. En Guatemala, la plusvalia promedio en zonas premium ha sido del 8-15% anual en la ultima decada, superando la inflacion (4-5%) y los rendimientos financieros tradicionales (5-7%).</p>' },
       { heading: 'Factores que impulsan la plusvalia', content: '<p><strong>Infraestructura:</strong> Nuevas carreteras y transporte aumentan el valor de zonas conectadas.</p><p><strong>Desarrollo comercial:</strong> Centros comerciales, hospitales y colegios de prestigio elevan los precios circundantes.</p><p><strong>Seguridad:</strong> Zonas con vigilancia privada y condominios cerrados mantienen su valor.</p><p><strong>Escasez de terreno:</strong> En zonas consolidadas la limitada disponibilidad impulsa precios al alza.</p>' },
       { heading: 'Zonas con mayor plusvalia', content: '<p><strong>Cayala:</strong> 10-12% anual. <strong>Zona 14:</strong> 8-10% anual. <strong>Fraijanes:</strong> 12-18% anual. <strong>Carretera a El Salvador:</strong> 10-15% anual.</p>' },
-      { heading: 'Estrategias para maximizar plusvalia', content: '<p>Compra en preventa con descuentos del 10-20%. Invierte en zonas de expansion antes del boom. Mejora cocina y banos que recuperan 70-90% en el valor de reventa.</p><p>Un asesor de <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a> puede ayudarte a identificar oportunidades con mayor potencial.</p>' }
+      { heading: 'Estrategias para maximizar plusvalia', content: '<p>Compra en preventa con descuentos del 10-20%. Invierte en zonas de expansion antes del boom. Mejora cocina y banos que recuperan 70-90% en el valor de reventa.</p><p>Un asesor de <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a> puede ayudarte a identificar oportunidades con mayor potencial.</p>' }
     ]
   },
   {
@@ -244,7 +244,7 @@ var articles = [
       { heading: 'Impuesto de transferencia', content: '<p>Al comprar o vender se genera un impuesto del 3% sobre la base imponible (el valor mas alto entre precio declarado, valor fiscal en DICABI, o avaluo bancario). Generalmente lo paga el comprador.</p>' },
       { heading: 'ISR por renta de inmuebles', content: '<p><strong>Regimen simplificado:</strong> 5% sobre ingresos brutos de renta.</p><p><strong>Regimen sobre utilidades:</strong> 25% sobre renta neta (ingresos menos gastos deducibles). Conviene cuando los gastos son significativos.</p>' },
       { heading: 'Costos de escrituracion', content: '<p>Honorarios del notario (0.5-1%), timbres notariales y fiscales, inscripcion en el Registro de la Propiedad. Total: 1.5-3% del valor de la propiedad.</p>' },
-      { heading: 'Deducciones y beneficios fiscales', content: '<p>La vivienda propia esta exenta del ISR por ganancia de capital si es tu residencia habitual por al menos 2 anos. Los intereses hipotecarios son deducibles del ISR anual. Las mejoras al inmueble pueden sumarse al costo de adquisicion.</p><p>Consulta con un asesor inmobiliario de <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a> para optimizar tu situacion fiscal.</p>' }
+      { heading: 'Deducciones y beneficios fiscales', content: '<p>La vivienda propia esta exenta del ISR por ganancia de capital si es tu residencia habitual por al menos 2 anos. Los intereses hipotecarios son deducibles del ISR anual. Las mejoras al inmueble pueden sumarse al costo de adquisicion.</p><p>Consulta con un asesor inmobiliario de <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a> para optimizar tu situacion fiscal.</p>' }
     ]
   },
   {
@@ -261,7 +261,7 @@ var articles = [
       { heading: 'Escenario compra', content: '<p><strong>Enganche (20%):</strong> $50,000. <strong>Credito:</strong> $200,000 a 20 anos al 8.5%. <strong>Cuota mensual:</strong> ~$1,740. <strong>Costos adicionales:</strong> Mantenimiento $200, seguro $80, IUSI $40. <strong>Total mensual:</strong> $2,060.</p><p>En 20 anos habras pagado ~$497,000 pero seras dueno de un activo que con plusvalia del 8% anual valdria ~$1,165,000.</p>' },
       { heading: 'Escenario renta', content: '<p><strong>Renta mensual:</strong> $1,200 con incremento anual del 5-8%. Sin costos de mantenimiento mayor. Sin inversion inicial grande.</p><p>En 20 anos habras pagado ~$480,000 en renta sin generar patrimonio.</p>' },
       { heading: 'Cuando conviene comprar', content: '<p>Cuando planeas quedarte al menos 5 anos, tienes el enganche sin comprometer tu fondo de emergencia, la cuota no supera el 30% de tus ingresos, y la plusvalia supera la tasa del credito.</p>' },
-      { heading: 'Cuando conviene rentar', content: '<p>Cuando no estas seguro de quedarte mas de 3 anos, prefieres flexibilidad, puedes invertir la diferencia en instrumentos con mayor rendimiento, o el mercado esta sobrevalorado.</p><p>Encuentra opciones en <a href="/" style="color:#C9A96E;font-weight:600">INMUHUB</a>.</p>' }
+      { heading: 'Cuando conviene rentar', content: '<p>Cuando no estas seguro de quedarte mas de 3 anos, prefieres flexibilidad, puedes invertir la diferencia en instrumentos con mayor rendimiento, o el mercado esta sobrevalorado.</p><p>Encuentra opciones en <a href="/" style="color:#F5820D;font-weight:600">INMUHUB</a>.</p>' }
     ]
   },
   {
@@ -277,7 +277,7 @@ var articles = [
       { heading: 'Por que elegir un condominio cerrado', content: '<p>Los condominios cerrados son la opcion predominante en zonas premium de Guatemala. Acceso controlado, vigilancia 24/7, camaras y rondas perimetrales ofrecen tranquilidad dificil de conseguir en viviendas independientes.</p><p>Ademas ofrecen amenidades: piscinas, gimnasios, areas de juego, salones sociales, coworking y areas verdes mantenidas.</p>' },
       { heading: 'Costos de mantenimiento', content: '<p>La cuota cubre: seguridad (40-50%), areas comunes (20-25%), servicios basicos (15-20%), fondo de reserva (10-15%).</p><p><strong>Rangos:</strong> Zona 10: Q1,500-Q4,000/mes. Zona 14: Q2,000-Q6,000/mes. Cayala: Q2,500-Q5,000/mes. Zona 15: Q1,200-Q3,500/mes.</p>' },
       { heading: 'Aspectos legales de la copropiedad', content: '<p>Al comprar en condominio adquieres una finca filial con derechos sobre tu unidad y participacion en areas comunes. Revisa: reglamento de copropiedad, estatutos de administracion, actas de asambleas recientes y estado financiero del condominio.</p>' },
-      { heading: 'Como evaluar un condominio', content: '<p>Visita en diferentes horarios. Habla con residentes. Revisa mantenimiento de areas comunes. Pregunta por proyectos planificados. Verifica la empresa de seguridad.</p><p>Los asesores de <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a> conocen la reputacion de los principales condominios en cada zona.</p>' }
+      { heading: 'Como evaluar un condominio', content: '<p>Visita en diferentes horarios. Habla con residentes. Revisa mantenimiento de areas comunes. Pregunta por proyectos planificados. Verifica la empresa de seguridad.</p><p>Los asesores de <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a> conocen la reputacion de los principales condominios en cada zona.</p>' }
     ]
   },
   {
@@ -293,7 +293,7 @@ var articles = [
       { heading: 'Por que invertir en terrenos', content: '<p>La compra de terrenos es una de las formas mas efectivas de generar patrimonio. En Guatemala, donde la expansion urbana avanza rapidamente, terrenos bien ubicados pueden multiplicar su valor en pocos anos. No hay depreciacion de construccion ni mantenimiento costoso.</p>' },
       { heading: 'Verificaciones legales indispensables', content: '<p><strong>Certificacion del Registro de la Propiedad</strong> para confirmar propietario y ausencia de gravamenes. <strong>Medida topografica</strong> por ingeniero colegiado. <strong>Zonificacion municipal</strong> que permita el uso planificado. Verifica acceso a agua, electricidad, drenajes y servidumbres de paso.</p>' },
       { heading: 'Precios por zona', content: '<p><strong>Zona 14:</strong> $300-$600/v2, escasos. <strong>Cayala:</strong> $250-$500/v2, limitados. <strong>Fraijanes:</strong> $50-$180/v2, mayor disponibilidad. <strong>Carretera a El Salvador:</strong> $40-$150/v2. <strong>Fincas rurales:</strong> $5-$30/v2.</p>' },
-      { heading: 'Lotificaciones: oportunidad o riesgo', content: '<p>Verifica siempre: licencia municipal aprobada, servicios basicos garantizados en contrato, cronograma de urbanizacion, y que el desarrollador tenga historial comprobable.</p><p>Busca asesorias profesionales en <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a> antes de invertir en lotificaciones.</p>' }
+      { heading: 'Lotificaciones: oportunidad o riesgo', content: '<p>Verifica siempre: licencia municipal aprobada, servicios basicos garantizados en contrato, cronograma de urbanizacion, y que el desarrollador tenga historial comprobable.</p><p>Busca asesorias profesionales en <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a> antes de invertir en lotificaciones.</p>' }
     ]
   },
   {
@@ -309,7 +309,7 @@ var articles = [
       { heading: 'La seguridad como factor principal', content: '<p>En Guatemala, la seguridad es el factor numero uno al elegir donde vivir. Las zonas residenciales premium han desarrollado ecosistemas de seguridad privada con niveles de proteccion comparables a los mejores vecindarios de cualquier ciudad latinoamericana.</p>' },
       { heading: 'Tipos de seguridad residencial', content: '<p><strong>Condominios cerrados:</strong> Control de acceso, CCTV, rondas perimetrales y personal 24/7.</p><p><strong>Colonias con acceso controlado:</strong> Calles privadas con garitas. Menor costo pero menor control.</p><p><strong>Vigilancia municipal reforzada:</strong> Zonas como Cayala cuentan con vigilancia publica adicional.</p>' },
       { heading: 'Ranking de zonas por seguridad', content: '<p><strong>Cayala:</strong> Seguridad integral del masterplan — posiblemente el lugar mas seguro de Guatemala.</p><p><strong>Zona 14 (condominios):</strong> Excelente seguridad interna con vigilancia de zona.</p><p><strong>Zona 15:</strong> Condominios con alta seguridad en entorno de baja densidad.</p><p><strong>Zona 16:</strong> Menor densidad reduce riesgos. Protocolos estrictos.</p><p><strong>Fraijanes:</strong> Desarrollos recientes con tecnologia moderna.</p>' },
-      { heading: 'Que evaluar antes de mudarte', content: '<p>Pregunta: empresa de seguridad y antiguedad, agentes por turno, monitoreo con camaras, protocolo de emergencia, requisitos de identificacion para visitantes.</p><p>Encuentra propiedades en las zonas mas seguras en <a href="/" style="color:#C9A96E;font-weight:600">INMUHUB</a>.</p>' }
+      { heading: 'Que evaluar antes de mudarte', content: '<p>Pregunta: empresa de seguridad y antiguedad, agentes por turno, monitoreo con camaras, protocolo de emergencia, requisitos de identificacion para visitantes.</p><p>Encuentra propiedades en las zonas mas seguras en <a href="/" style="color:#F5820D;font-weight:600">INMUHUB</a>.</p>' }
     ]
   },
   {
@@ -326,7 +326,7 @@ var articles = [
       { heading: 'Cuanto necesitas ahorrar', content: '<p>Para un apartamento de Q800,000: Enganche (20%): Q160,000. Escrituracion: Q16,000-Q24,000. Mudanza: Q15,000-Q30,000. Contingencia: Q20,000. <strong>Total: Q215,000-Q235,000.</strong></p><p>Ahorrando Q5,000/mes necesitas ~4 anos. Con Q8,000/mes, 2.5 anos.</p>' },
       { heading: 'Mejores zonas para primer apartamento', content: '<p><strong>Zona 10:</strong> Q600,000-Q1.2M. Vida urbana activa.</p><p><strong>Zona 15:</strong> Q500,000-Q900,000. Mejor relacion precio-espacio.</p><p><strong>Carretera a El Salvador (km 9-15):</strong> Q400,000-Q700,000. Precios accesibles con alta plusvalia.</p>' },
       { heading: 'Errores del comprador primerizo', content: '<p><strong>Comprar por emocion:</strong> Visita al menos 5-8 opciones. <strong>Ignorar costos ocultos:</strong> Mantenimiento, IUSI, seguros suman Q2,000-Q4,000 extra. <strong>No negociar:</strong> Todo es negociable. <strong>No verificar la constructora:</strong> Investiga proyectos anteriores.</p>' },
-      { heading: 'Pasos concretos', content: '<p>1. Define tu presupuesto real. 2. Explora zonas en diferentes horarios. 3. Conecta con un asesor en <a href="/asesores.html" style="color:#C9A96E;font-weight:600">INMUHUB</a>. 4. Precalifica en al menos 2 bancos. 5. Agenda visitas dentro de tu rango.</p>' }
+      { heading: 'Pasos concretos', content: '<p>1. Define tu presupuesto real. 2. Explora zonas en diferentes horarios. 3. Conecta con un asesor en <a href="/asesores.html" style="color:#F5820D;font-weight:600">INMUHUB</a>. 4. Precalifica en al menos 2 bancos. 5. Agenda visitas dentro de tu rango.</p>' }
     ]
   },
   {
@@ -343,7 +343,7 @@ var articles = [
       { heading: 'Zonas emergentes', content: '<p><strong>Corredor Pacifico (km 15-25 CES):</strong> Mayor concentracion de nuevos desarrollos mixtos.</p><p><strong>San Cristobal - Mixco:</strong> Vivienda vertical accesible para jovenes profesionales (Q500,000-Q800,000).</p><p><strong>Fraijanes norte:</strong> Expansion natural de Zona 16 con mejor relacion precio-espacio.</p>' },
       { heading: 'Tendencias en diseno', content: '<p><strong>Sostenibilidad:</strong> Certificaciones LEED y disenos bioclimaticos como estandar premium.</p><p><strong>Espacios flexibles:</strong> Home office integrado con buena iluminacion y acustica.</p><p><strong>Amenidades wellness:</strong> Areas de meditacion, senderos, huertos y espacios pet-friendly.</p>' },
       { heading: 'Proyecciones de precios', content: '<p>Zonas consolidadas (Z10, Z14, Cayala): crecimiento 6-10%. Zonas de expansion: 10-15%. Apartamentos pequenos con mayor demanda. Terrenos rurales cercanos apreciandose 12-20%.</p>' },
-      { heading: 'Oportunidades 2026', content: '<p>Preventas en zonas de expansion (descuentos 10-15%), apartamentos 1-2 hab para renta ejecutiva, y terrenos en corredores con infraestructura planificada.</p><p>Mantente actualizado en <a href="/" style="color:#C9A96E;font-weight:600">INMUHUB</a>.</p>' }
+      { heading: 'Oportunidades 2026', content: '<p>Preventas en zonas de expansion (descuentos 10-15%), apartamentos 1-2 hab para renta ejecutiva, y terrenos en corredores con infraestructura planificada.</p><p>Mantente actualizado en <a href="/" style="color:#F5820D;font-weight:600">INMUHUB</a>.</p>' }
     ]
   }
 ];

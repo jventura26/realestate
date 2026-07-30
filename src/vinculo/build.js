@@ -218,7 +218,7 @@ var mapaBody = '<div style="max-width:1400px;margin:0 auto;padding:24px 6%">' +
   'L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"OSM",maxZoom:18}).addTo(map);' +
   'var props=' + JSON.stringify(propsWithCoords.map(function(p){return{lat:p.lat,lng:p.lng,t:p.title||p.titulo||'',p:p.priceFormatted||'',s:p.slug,img:p.mainImageThumb||''}})) + ';' +
   'props.forEach(function(p){' +
-  'var popup=\'<div style="min-width:200px"><a href="/propiedades/\'+p.s+\'.html" style="text-decoration:none;color:inherit"><img src="\'+p.img+\'" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px"><div style="font-weight:700;color:#C9A96E;margin-bottom:4px">\'+p.p+\'</div><div style="font-size:13px;font-weight:600;color:#111">\'+p.t+\'</div></a></div>\';' +
+  'var popup=\'<div style="min-width:200px"><a href="/propiedades/\'+p.s+\'.html" style="text-decoration:none;color:inherit"><img src="\'+p.img+\'" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px"><div style="font-weight:700;color:#F5820D;margin-bottom:4px">\'+p.p+\'</div><div style="font-size:13px;font-weight:600;color:#111">\'+p.t+\'</div></a></div>\';' +
   'L.marker([p.lat,p.lng]).addTo(map).bindPopup(popup);' +
   '});' +
   '});' +
