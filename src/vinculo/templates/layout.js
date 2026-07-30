@@ -989,7 +989,12 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 .hero-inner{padding:20px 4% 12px!important}
 .hero-section h1{font-size:clamp(1.4rem,5.5vw,2rem)!important;margin-bottom:10px!important}
 .hero-section p{font-size:13px!important;margin-bottom:14px!important}
-.stats-bar{position:static!important;backdrop-filter:none!important;background:rgba(20,35,58,.85)!important;border-top:1px solid rgba(245,130,13,.25)!important}
+/* position:relative (no static) + z-index alto: el stats-bar debe quedar EN
+   el flujo normal (evita el overlap con los chips de zonas) pero tambien
+   necesita su propio stacking context, porque los divs decorativos del hero
+   (fondo, degradado, glow) son position:absolute y sin esto pintan ENCIMA
+   de un stats-bar no-posicionado, lavando el color dorado de los numeros. */
+.stats-bar{position:relative!important;z-index:3!important;backdrop-filter:none!important;background:rgba(20,35,58,.85)!important;border-top:1px solid rgba(245,130,13,.25)!important}
 .stats-bar>div{padding:14px 8px!important}
 .stats-bar>div>div{min-width:45%!important}
 .stats-bar .stat-num{font-size:1.5rem!important}
