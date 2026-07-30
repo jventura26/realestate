@@ -828,8 +828,8 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 /* ═══════ PREMIUM FOOTER INMUHUB ═══════ */
 .footer-hub{background:linear-gradient(180deg,#0a1628 0%,#050a14 100%);border-top:1px solid rgba(201,169,110,.1);padding:0;color:white}
 .footer-hub-top{max-width:1200px;margin:0 auto;padding:64px 6% 48px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1.3fr;gap:40px}
-.fh-brand .fh-logo{font-size:24px;font-weight:900;letter-spacing:-.5px;margin-bottom:12px}
-.fh-brand .fh-logo span{color:#C9A96E}
+.fh-brand .fh-logo{font-size:24px;font-weight:800;letter-spacing:.08em;margin-bottom:12px;color:#fff}
+.fh-brand .fh-logo span{color:#F5820D}
 .fh-brand .fh-tagline{font-size:13px;color:rgba(255,255,255,.5);line-height:1.8;max-width:260px;margin-bottom:20px}
 .fh-brand .fh-social{display:flex;gap:12px}
 .fh-brand .fh-social a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;transition:all .25s}
@@ -1008,8 +1008,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <nav>
 <div class="nav-inner">
-  <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
-    <img src="/assets/logo-horizontal.png" alt="INMUHUB — Portal Inmobiliario Premium Guatemala" style="height:50px;width:auto;" loading="lazy">
+  <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0" aria-label="INMUHUB — Portal Inmobiliario Premium Guatemala">
+    <span class="logo-name" style="color:#1a1a1a;font-weight:800;letter-spacing:.08em">INMU<span style="color:#F5820D">HUB</span></span>
   </a>
   <ul class="hub-nav" id="hubNav">
     <li data-hub="comprar">
