@@ -114,6 +114,15 @@ function copyAssets() {
     fs.copyFileSync(zonaFaviconSrc, zonaFaviconDst);
   }
 
+  // Copiar iconos PWA (manifest + apple-touch-icon) desde src/zona/assets
+  const pwaIcons = ['icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
+  pwaIcons.forEach((name) => {
+    const srcPath = path.join(__dirname, 'assets', name);
+    if (fs.existsSync(srcPath)) {
+      fs.copyFileSync(srcPath, path.join(dstDir, name));
+    }
+  });
+
   // Copiar images/ si existe
   const imagesDir = path.join(__dirname, 'assets/images');
   const dstImagesDir = path.join(dstDir, 'images');
@@ -176,6 +185,15 @@ if (fs.existsSync(redirectsSrc)) {
   fs.copyFileSync(redirectsSrc, path.join(OUT, '_redirects'));
   console.log('   ✔  _redirects');
 }
+
+// PWA: manifest.json, sw.js, offline.html
+['manifest.json', 'sw.js', 'offline.html'].forEach((name) => {
+  const srcPath = path.join(__dirname, name);
+  if (fs.existsSync(srcPath)) {
+    fs.copyFileSync(srcPath, path.join(OUT, name));
+    console.log(`   ✔  ${name}`);
+  }
+});
 
 const aboutSrc = path.join(__dirname, 'about.html');
 const blogSrc = path.join(__dirname, 'blog.html');

@@ -1,5 +1,5 @@
 const { layout, WA }       = require('./layout');
-const { escapeHtml, uniqueValues, getRelated } = require('../../shared/utils');
+const { escapeHtml, uniqueValues, getRelated, ikTransform } = require('../../shared/utils');
 
 const DOMAIN = 'https://zona-innmueble.com';
 
@@ -34,7 +34,7 @@ function renderDescBloquesZona(bloques, esc) {
 }
 
 // ── Card ─────────────────────────────────────────────────────────────
-function card(p) {
+function card(p, idx) {
   const cfg = p.privConfig || {};
   const esExclusiva = p.esExclusiva || cfg.exclusiva || false;
   const isNewListing = (() => {
@@ -45,8 +45,13 @@ function card(p) {
     return daysSince >= 0 && daysSince <= 7;
   })();
   const imgs = (p.gallery && p.gallery.length > 0 && !(esExclusiva||cfg.fotos)) ? p.gallery : [p.mainImageThumb || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'];
-  const img = imgs[0];
+  const img = ikTransform(imgs[0], { w: 600, q: 70 });
   const hasGallery = imgs.length > 1;
+  // Las primeras tarjetas de una grilla suelen estar sobre el pliegue (LCP) -
+  // cargarlas lazy retrasa la imagen mas grande de la pagina. El resto si se
+  // beneficia de lazy-load real para no gastar ancho de banda de mas.
+  const isPriority = typeof idx === 'number' && idx < 4;
+  const imgLoadAttrs = isPriority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
   const badgeClass = (p.cinta||'').toLowerCase() === 'renta' ? 'renta' : '';
   const badge = p.cinta || '';
   const meta = [];
@@ -56,7 +61,7 @@ function card(p) {
     if (ca(p.areaConst)) meta.push(ca(p.areaConst));
   }
   const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
-  const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(u)));
+  const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(ikTransform(u,{w:600,q:70}))));
   const priceLabel = (esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(p.priceFormatted);
 
   // Flechas del carrusel solo si hay galeria
@@ -78,7 +83,7 @@ function card(p) {
     data-habs="${p.habitaciones||0}"
     data-fecha="${escapeHtml(String(p.fechaPublicacion||p.createdAt||''))}"
     data-area="${parseFloat(p.areaConst)||parseFloat(p.area)||0}">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''))}" loading="lazy" width="600" height="750" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''))}" ${imgLoadAttrs} width="600" height="750" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
     <div class="pc-ov"></div>
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
     ${exclusivaBadge}
@@ -349,7 +354,7 @@ function indexPage(props) {
     </div>
     <a href="/propiedades.html" style="font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--or);transition:all .3s" onmouseover="this.style.color='var(--or2)'" onmouseout="this.style.color='var(--or)'">Ver todas &rarr;</a>
   </div>
-  <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
+  <div class="prop-grid">${featured.map((p,i)=>card(p,i)).join('')}</div>
   <div style="text-align:center;padding:44px 6%">
     <a href="/propiedades.html" class="btn-or">Ver cat&aacute;logo completo</a>
   </div>
@@ -710,6 +715,25 @@ function catalogPage(props) {
     }
     cnt.textContent=n+' propiedad'+(n!==1?'es':'');
     document.getElementById('nr').style.display=n===0?'block':'none';
+    syncUrl();
+  }
+  // Sincroniza los filtros activos con la URL (parametros cortos, sin
+  // datos personales - solo estado de filtros) para poder compartir un
+  // link de busqueda ya filtrado.
+  var FIELDS={fq:'q',ft:'tipo',fc2:'ciudad',fc3:'estado',fh:'habs',fsort:'orden'};
+  function syncUrl(){
+    var params=new URLSearchParams();
+    Object.keys(FIELDS).forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&el.value)params.set(FIELDS[id],el.value);
+    });
+    var mn=document.getElementById('fp-min').value;
+    var mx=document.getElementById('fp-max').value;
+    if(mn)params.set('pmin',mn);
+    if(mx)params.set('pmax',mx);
+    var qs=params.toString();
+    var url=location.pathname+(qs?'?'+qs:'');
+    history.replaceState(null,'',url);
   }
   window.updatePriceBtn=function(){
     var mn=document.getElementById('fp-min').value;
@@ -729,8 +753,21 @@ function catalogPage(props) {
   });
   document.getElementById('cl2').addEventListener('click',()=>{['fq','ft','fc2','fc3','fh','fsort'].forEach(id=>document.getElementById(id).value='');document.getElementById('fp-min').value='';document.getElementById('fp-max').value='';updatePriceBtn();run();});
   const p=new URLSearchParams(location.search);
-  if(p.get('tipo'))  document.getElementById('ft').value=p.get('tipo');
-  if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');
+  var REVERSE={q:'fq',tipo:'ft',ciudad:'fc2',estado:'fc3',habs:'fh',orden:'fsort'};
+  Object.keys(REVERSE).forEach(function(param){
+    if(p.get(param))document.getElementById(REVERSE[param]).value=p.get(param);
+  });
+  if(p.get('pmin'))document.getElementById('fp-min').value=p.get('pmin');
+  if(p.get('pmax'))document.getElementById('fp-max').value=p.get('pmax');
+  updatePriceBtn();
+  var shareBtn=document.getElementById('shareSearch');
+  if(shareBtn)shareBtn.addEventListener('click',function(){
+    navigator.clipboard.writeText(location.href).then(function(){
+      var orig=shareBtn.textContent;
+      shareBtn.textContent='Link copiado';
+      setTimeout(function(){shareBtn.textContent=orig;},2000);
+    });
+  });
   run();cnt.textContent='${props.length} propiedades';
 })();</script>`;
 
@@ -764,10 +801,11 @@ function catalogPage(props) {
   <input type="hidden" id="fp" value="">
   <select id="fh"><option value="">Habitaciones</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select>
   <button id="cl2">Limpiar</button>
+  <button id="shareSearch" type="button" style="padding:9px 14px;background:var(--ink2);border:1px solid var(--gl);border-radius:6px;color:var(--sv);font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap">&#8679; Compartir búsqueda</button>
   <span class="f-count" id="fc">${props.length} propiedades</span>
 </div>
 <div id="g" class="prop-grid" style="background:var(--ink);min-height:400px">
-  ${props.map(p=>card(p)).join('')}
+  ${props.map((p,i)=>card(p,i)).join('')}
   <div id="nr" class="no-res" style="display:none">
     <p>Sin resultados</p>
     <small>Intenta otros filtros o </small>
@@ -790,7 +828,8 @@ function detailPage(prop, all) {
     return daysSince >= 0 && daysSince <= 7;
   })();
   const related  = getRelated(prop, all);
-  const img      = prop.mainImage || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=70';
+  const imgRaw   = prop.mainImage || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=70';
+  const img      = ikTransform(imgRaw, { w: 1400, q: 78 }); // foto principal - candidata a LCP
   const propUrl  = `${DOMAIN}/propiedades/${prop.slug}.html`;
 
   // WhatsApp messages
@@ -845,7 +884,7 @@ function detailPage(prop, all) {
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
 
   const relHtml = related.length
-    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">También te puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver más →</a></div><div class="prop-grid">${related.map(r=>card(r)).join('')}</div></div>` : '';
+    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">También te puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver más →</a></div><div class="prop-grid">${related.map((r,i)=>card(r,i)).join('')}</div></div>` : '';
 
   // JSON-LD structured data
   const cleanDesc = (esExclusiva||cfg.descripcion) ? '' : (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
@@ -1084,7 +1123,7 @@ function detailPage(prop, all) {
 </div>
 
 <div class="dv3-hero">
-  <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer">
+  <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer" loading="eager" fetchpriority="high">
   <div class="dv3-hero-overlay"></div>
   <div class="dv3-hero-content">
     <div class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</div>
@@ -1097,9 +1136,9 @@ function detailPage(prop, all) {
   </div>
 </div>
 
-${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
+${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){var srcSm=ikTransform(src,{w:700,q:72});if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcSm)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(srcSm)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
 
-${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(src)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
+${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){var srcMob=ikTransform(src,{w:900,q:72});return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcMob)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"'+(i===0?' fetchpriority="high"':'')+'></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
 
 <div class="dv3-wrap">
   <div class="dv3-main">
@@ -1272,7 +1311,8 @@ ${relHtml}
 </div>
 
 <script>
-var _dv3Gal=${JSON.stringify((esExclusiva||cfg.fotos) ? [gal[0]].filter(Boolean) : gal)};
+var _dv3Gal=${JSON.stringify(((esExclusiva||cfg.fotos) ? [gal[0]].filter(Boolean) : gal).map(u=>ikTransform(u,{w:1600,q:80})))};
+var _dv3GalThumb=${JSON.stringify(((esExclusiva||cfg.fotos) ? [gal[0]].filter(Boolean) : gal).map(u=>ikTransform(u,{w:160,q:60})))};
 var _dv3Idx=0;
 function dv3LightOpen(i){
   _dv3Idx=i||0;
@@ -1296,7 +1336,7 @@ function dv3LightRender(){
   img.src=_dv3Gal[_dv3Idx]||'';
   if(ctr)ctr.textContent=(_dv3Idx+1)+' / '+_dv3Gal.length;
   if(strip){
-    strip.innerHTML=_dv3Gal.map(function(src,i){
+    strip.innerHTML=_dv3GalThumb.map(function(src,i){
       return '<img src="'+src+'" class="'+(i===_dv3Idx?'on':'')+'" onclick="dv3LightSet('+i+')" loading="lazy">';
     }).join('');
     var active=strip.querySelectorAll('img')[_dv3Idx];
@@ -1762,7 +1802,7 @@ ${info.lifestyle && info.lifestyle.length ? `
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--wh);margin-bottom:32px;line-height:1.2">
       Propiedades en <em style="color:var(--or);font-style:italic">${escapeHtml(info.titulo.split('—')[0].trim())}</em>
     </h2>
-    ${propsEnZona.length ? `<div class="prop-grid">${propsEnZona.map(p=>card(p)).join('')}</div>
+    ${propsEnZona.length ? `<div class="prop-grid">${propsEnZona.map((p,i)=>card(p,i)).join('')}</div>
     <div style="text-align:center;padding:44px 0 0">
       <a href="/propiedades.html" class="btn-or">Ver catálogo completo</a>
     </div>` : `
@@ -1991,7 +2031,7 @@ function tipoPage(tipo, props, allProps) {
     <div style="max-width:1200px;margin:0 auto">
       <div class="ey" style="margin-bottom:14px">Disponibles ahora</div>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;color:var(--wh);margin-bottom:32px;line-height:1.2">${escapeHtml(tipo)} en <em style="color:var(--or);font-style:italic">Guatemala</em></h2>
-      ${propsDelTipo.length ? '<div class="prop-grid">'+propsDelTipo.map(function(p){ return card(p); }).join('')+'</div>' : '<p style="color:var(--sv);text-align:center;padding:40px 0">No hay propiedades de este tipo disponibles en este momento.</p>'}
+      ${propsDelTipo.length ? '<div class="prop-grid">'+propsDelTipo.map(function(p,i){ return card(p,i); }).join('')+'</div>' : '<p style="color:var(--sv);text-align:center;padding:40px 0">No hay propiedades de este tipo disponibles en este momento.</p>'}
     </div>
   </section>
 

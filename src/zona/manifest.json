@@ -1,0 +1,20 @@
+{
+  "name": "Zona INNmueble — Inmobiliaria Premium Guatemala",
+  "short_name": "Zona INNmueble",
+  "description": "Casas, fincas, apartamentos y terrenos premium en venta en Guatemala. Propiedades verificadas con asesoría personalizada.",
+  "start_url": "/?source=pwa",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0D1B3E",
+  "theme_color": "#0D1B3E",
+  "orientation": "portrait-primary",
+  "lang": "es-GT",
+  "categories": ["business", "shopping", "lifestyle"],
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
