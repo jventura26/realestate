@@ -1,6 +1,43 @@
 const { layout } = require('./layout');
 const { card } = require('./card');
-const { escapeHtml, uniqueValues } = require('../../shared/utils');
+const { escapeHtml, uniqueValues, parsePriceToUSD } = require('../../shared/utils');
+
+// "Publicado hace X" a partir de fechaPublicacion o createdAt - sin inventar
+// una fecha si no existe ninguna de las dos.
+function diasPublicadoLabel(prop) {
+  const raw = prop.fechaPublicacion || prop.createdAt;
+  if (!raw) return '';
+  const then = new Date(raw).getTime();
+  if (!then || isNaN(then)) return '';
+  const dias = Math.floor((Date.now() - then) / (1000 * 60 * 60 * 24));
+  if (dias < 0) return '';
+  if (dias === 0) return 'Publicado hoy';
+  if (dias === 1) return 'Publicado hace 1 día';
+  if (dias < 30) return 'Publicado hace ' + dias + ' días';
+  const meses = Math.floor(dias / 30);
+  if (meses === 1) return 'Publicado hace 1 mes';
+  if (meses < 12) return 'Publicado hace ' + meses + ' meses';
+  const anios = Math.floor(meses / 12);
+  return 'Publicado hace ' + anios + (anios === 1 ? ' año' : ' años');
+}
+
+// Compara el precio de esta propiedad contra el promedio real de su zona,
+// usando el resto del inventario activo (allProps). Requiere al menos 3
+// propiedades comparables en la misma zona o no se muestra nada - un
+// promedio de 1-2 datos no es una comparacion confiable.
+function comparableZonaLabel(prop, allProps) {
+  if (!prop.municipio || !Array.isArray(allProps)) return null;
+  const propUSD = parsePriceToUSD(prop.precio);
+  if (!propUSD || propUSD <= 0) return null;
+  const otros = allProps
+    .filter(function(p){ return p.municipio === prop.municipio && p.slug !== prop.slug; })
+    .map(function(p){ return parsePriceToUSD(p.precio); })
+    .filter(function(v){ return v && v > 0; });
+  if (otros.length < 3) return null;
+  const avg = otros.reduce(function(a,b){ return a+b; }, 0) / otros.length;
+  const diffPct = Math.round(((propUSD - avg) / avg) * 100);
+  return { avg: avg, diffPct: diffPct, sampleSize: otros.length, zona: prop.municipio };
+}
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
   const grupos = {
@@ -684,6 +721,25 @@ function detailPage(prop, allProps) {
   // Plano
   const planoHTML = prop.plano ? `<a href="${esc(prop.plano)}" target="_blank" class="zp-plano-btn"><i class="ti ti-file-description"></i> Ver plano / PDF</a>` : '';
 
+  // Antiguedad del listado (transparencia, sin inventar fecha si no existe)
+  const diasPubStr = diasPublicadoLabel(prop);
+
+  // Comparable real vs promedio de la zona
+  const comparable = comparableZonaLabel(prop, allProps);
+  const comparableHTML = comparable ? (function(){
+    const fmtC = function(n){ return '$ ' + Math.round(n).toLocaleString('en-US'); };
+    const abs = Math.abs(comparable.diffPct);
+    let texto;
+    if (abs < 3) {
+      texto = 'En línea con el promedio de ' + esc(comparable.zona) + ' (' + fmtC(comparable.avg) + ')';
+    } else if (comparable.diffPct < 0) {
+      texto = abs + '% por debajo del promedio de ' + esc(comparable.zona) + ' (' + fmtC(comparable.avg) + ')';
+    } else {
+      texto = abs + '% por encima del promedio de ' + esc(comparable.zona) + ' (' + fmtC(comparable.avg) + ')';
+    }
+    return '<div style="display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:#64748b;margin-top:6px"><i class="ti ti-chart-bar" style="font-size:14px"></i>' + texto + '</div>';
+  })() : '';
+
   // Gallery lightbox thumbnails
   const lightboxHTML = `<div class="zp-lb" id="zpLb" onclick="this.style.display='none'">
     <button class="zp-lb-close" onclick="document.getElementById('zpLb').style.display='none'">×</button>
@@ -862,7 +918,10 @@ ${mobGalHTML}${galHTML}
 
     <nav class="zp-breadcrumb" style="font-size:12px;color:#94a3b8;margin-bottom:12px;display:flex;align-items:center;gap:4px;flex-wrap:wrap"><a href="/" style="color:#94a3b8;text-decoration:none">Inicio</a><span style="color:#cbd5e1"> / </span><a href="/propiedades.html" style="color:#94a3b8;text-decoration:none">Propiedades</a><span style="color:#cbd5e1"> / </span><span style="color:#64748b">${esc((prop.titulo||'Propiedad').substring(0,50))}</span></nav>
     <div class="zp-loc"><i class="ti ti-map-pin"></i>${locStr||esc(prop.zona||'Guatemala')}</div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#94a3b8;margin-top:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="zpViewCount">0</span> vistas</div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;color:#94a3b8;margin-top:6px">
+      <span style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="zpViewCount">0</span> vistas</span>
+      ${diasPubStr ? '<span style="display:flex;align-items:center;gap:6px"><i class="ti ti-calendar" style="font-size:14px"></i>' + esc(diasPubStr) + '</span>' : ''}
+    </div>
     <script>(function(){var k="zpViews_${prop.slug}";var c=parseInt(localStorage.getItem(k)||"0")+1;localStorage.setItem(k,String(c));document.getElementById("zpViewCount").textContent=c;})()</script>
     <script>(function(){var bid='${prop.broker_id||""}';if(bid)fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'property_view',broker_id:bid})}).catch(function(){});})()</script>
 
@@ -871,7 +930,7 @@ ${mobGalHTML}${galHTML}
 
     <h1 class="zp-title">${esc(prop.titulo||'Propiedad')}</h1>
 
-    ${precioStr ? `<div class="zp-price">${dp.main}</div>${dp.sub ? '<div style="font-size:.85rem;color:#64748b;margin-bottom:2px">'+dp.sub+'</div>' : ''}<div class="zp-price-sub">${esc(operStr)}</div>` : ''}
+    ${precioStr ? `<div class="zp-price">${dp.main}</div>${dp.sub ? '<div style="font-size:.85rem;color:#64748b;margin-bottom:2px">'+dp.sub+'</div>' : ''}<div class="zp-price-sub">${esc(operStr)}</div>${comparableHTML}` : ''}
 
     ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
 
