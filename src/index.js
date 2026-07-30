@@ -737,7 +737,7 @@ export default {
       var approved = data.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; });
       var pub = await Promise.all(approved.map(async function(b){
         var o = Object.assign({}, b);
-        delete o.telefono; delete o.whatsapp_raw; delete o.email; delete o.password_hash; delete o.whatsapp;
+        delete o.telefono; delete o.whatsapp_raw; delete o.email; delete o.password_hash; delete o.whatsapp; delete o.response_time;
         o.responseSignal = await computeResponseSignal(b.id, env);
         return o;
       }));
@@ -786,7 +786,6 @@ export default {
         propiedades_count: 0,
         rating: body.rating || 0,
         reviews_count: 0,
-        response_time: body.response_time || 'Menos de 2 horas',
         created_at: new Date().toISOString(),
       };
       data.push(broker);
@@ -945,7 +944,6 @@ export default {
         propiedades_count: 0,
         rating: 0,
         reviews_count: 0,
-        response_time: 'Menos de 2 horas',
         created_at: new Date().toISOString(),
       };
       data.push(broker);
