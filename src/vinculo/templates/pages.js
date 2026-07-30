@@ -1,6 +1,6 @@
 const { layout } = require('./layout');
 const { card } = require('./card');
-const { escapeHtml, uniqueValues, parsePriceToUSD } = require('../../shared/utils');
+const { escapeHtml, uniqueValues, parsePriceToUSD, ikTransform } = require('../../shared/utils');
 
 // "Publicado hace X" a partir de fechaPublicacion o createdAt - sin inventar
 // una fecha si no existe ninguna de las dos.
@@ -256,7 +256,7 @@ function applyHubFiltros(){
       </div>
       <a href="/propiedades.html" style="font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:.04em" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ver todas &rarr;</a>
     </div>
-    <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
+    <div class="prop-grid">${featured.map((p,i)=>card(p,i)).join('')}</div>
   </div>
 </section>
 
@@ -438,7 +438,7 @@ const body = `
 <button id="shareSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i class="ti ti-link" aria-hidden="true"></i> Compartir búsqueda</button>
 <span class="f-count" id="fc">${props.length} propiedades</span>
 </div>
-<div class="prop-grid" id="g">${props.map(p=>card(p)).join('')}</div>
+<div class="prop-grid" id="g">${props.map((p,i)=>card(p,i)).join('')}</div>
 <div class="no-res" id="nr" style="display:none"><p>No se encontraron propiedades</p><small>Intenta ajustar los filtros</small></div>
 ${filterJS}`;
 return layout({ title: 'Propiedades en Venta en Guatemala — Casas, Apartamentos, Fincas', desc: 'Catalogo de ' + props.length + ' propiedades en venta en Guatemala. Casas, apartamentos, fincas y terrenos en Zona 10, Zona 14, Cayala, Fraijanes. Precios verificados y actualizados.', canonical: '/propiedades.html', body });
@@ -510,7 +510,7 @@ var body = '<div style="background:var(--gray-900);padding:48px 6%;color:var(--w
 tipos.map(function(t){ return '<span style="background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">' + escapeHtml(t) + '</span>'; }).join('') +
 (rangoPrecios ? '<span style="background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">' + rangoPrecios + '</span>' : '') +
 '</div></div>' +
-'<div class="prop-grid" style="padding:32px 6%">' + props.map(function(p){ return card(p); }).join('') + '</div>' +
+'<div class="prop-grid" style="padding:32px 6%">' + props.map(function(p,i){ return card(p,i); }).join('') + '</div>' +
 faqHTML +
 '<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">' +
 '<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles en Guatemala</p>' +
@@ -576,20 +576,27 @@ function detailPage(prop, allProps) {
   const g4 = imgs[3]||'';
   const g5 = imgs[4]||'';
   const totalPhotos = imgs.length;
+  const heroImgUrl = ikTransform(g1, { w: 1400, q: 78 }); // misma URL para <link rel=preload> y el <img> real, para no descargar la foto 2 veces
 
+  // En movil solo se ve .zp-mob-gal (la .zp-gal de escritorio esta display:none),
+  // asi que la primera foto de esta galeria ES el candidato a LCP en movil - antes
+  // se marcaba loading="lazy" incluso en la foto visible de entrada, retrasando
+  // la imagen mas grande de la pagina. Ahora solo la primera es eager/priority,
+  // igual que ya se hacia correctamente en la galeria de escritorio (g1).
+  const heroImgUrlMobile = ikTransform(imgs[0]||mainImg, { w: 900, q: 72 }); // misma URL usada en el <link rel=preload> movil
   const mobGalHTML = imgs.length ? `<div class="zp-mob-gal">
-    <div class="zp-mob-track" id="zpMobTrack">${imgs.map((src,i)=>`<div class="zp-mob-slide"><img src="${esc(src)}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala') + (i>0?' - foto '+(i+1):''))}" loading="lazy"></div>`).join('')}</div>
+    <div class="zp-mob-track" id="zpMobTrack">${imgs.map((src,i)=>`<div class="zp-mob-slide"><img src="${esc(i===0?heroImgUrlMobile:ikTransform(src,{w:900,q:72}))}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala') + (i>0?' - foto '+(i+1):''))}" ${i===0?'loading="eager" fetchpriority="high"':'loading="lazy"'}></div>`).join('')}</div>
     <div class="zp-mob-counter" id="zpMobCounter">1 / ${imgs.length}</div>
     <div class="zp-mob-dots">${imgs.map((_,i)=>`<div class="zp-mob-dot${i===0?' active':''}" id="zpDot${i}"></div>`).join('')}</div>
   </div>` : '';
 
   const galHTML = `<div class="zp-gal">
-    <div class="zp-gal-main"><img src="${esc(g1)}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala'))}" loading="eager"></div>
+    <div class="zp-gal-main"><img src="${esc(heroImgUrl)}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala'))}" loading="eager" fetchpriority="high"></div>
     <div class="zp-gal-grid">
-      ${g2?`<div class="zp-gal-cell"><img src="${esc(g2)}" alt="" loading="lazy"></div>`:''}
-      ${g3?`<div class="zp-gal-cell"><img src="${esc(g3)}" alt="" loading="lazy"></div>`:''}
-      ${g4?`<div class="zp-gal-cell"><img src="${esc(g4)}" alt="" loading="lazy"></div>`:''}
-      ${g5?`<div class="zp-gal-cell zp-gal-last"><img src="${esc(g5)}" alt="" loading="lazy"><button class="zp-gal-all" onclick="zpOpenGallery()">${totalPhotos > 5 ? '+ ' + (totalPhotos-5) + ' fotos' : 'Ver todas'}</button></div>`:''}
+      ${g2?`<div class="zp-gal-cell"><img src="${esc(ikTransform(g2,{w:700,q:72}))}" alt="" loading="lazy"></div>`:''}
+      ${g3?`<div class="zp-gal-cell"><img src="${esc(ikTransform(g3,{w:700,q:72}))}" alt="" loading="lazy"></div>`:''}
+      ${g4?`<div class="zp-gal-cell"><img src="${esc(ikTransform(g4,{w:700,q:72}))}" alt="" loading="lazy"></div>`:''}
+      ${g5?`<div class="zp-gal-cell zp-gal-last"><img src="${esc(ikTransform(g5,{w:700,q:72}))}" alt="" loading="lazy"><button class="zp-gal-all" onclick="zpOpenGallery()">${totalPhotos > 5 ? '+ ' + (totalPhotos-5) + ' fotos' : 'Ver todas'}</button></div>`:''}
     </div>
   </div>`;
 
@@ -781,12 +788,14 @@ function detailPage(prop, allProps) {
   })() : '';
 
   // Gallery lightbox thumbnails
+  const imgsLbFull = imgs.map(src => ikTransform(src,{w:1600,q:80})); // imagen grande al abrir el lightbox
+  const imgsLbThumb = imgs.map(src => ikTransform(src,{w:160,q:60})); // tira de miniaturas
   const lightboxHTML = `<div class="zp-lb" id="zpLb" onclick="this.style.display='none'">
     <button class="zp-lb-close" onclick="document.getElementById('zpLb').style.display='none'">×</button>
-    <div class="zp-lb-strip">${imgs.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
+    <div class="zp-lb-strip">${imgsLbThumb.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
     <button class="zp-lb-nav zp-lb-prev" onclick="event.stopPropagation();zpLbPrev()" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&lsaquo;</button>
     <button class="zp-lb-nav zp-lb-next" onclick="event.stopPropagation();zpLbNext()" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&rsaquo;</button>
-    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgs[0])}" alt=""></div>
+    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgsLbFull[0])}" alt=""></div>
   </div>`;
 
   return `<!DOCTYPE html>
@@ -805,7 +814,13 @@ function detailPage(prop, allProps) {
 <meta property="og:locale" content="es_GT">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css"></noscript>
+<!-- Precarga de la foto principal (candidato a LCP) - una version para escritorio y
+     otra para movil, alineadas con el breakpoint real de 700px usado en el CSS de
+     esta pagina (.zp-gal se oculta y .zp-mob-gal se muestra en max-width:700px) -->
+<link rel="preload" as="image" href="${esc(heroImgUrl)}" media="(min-width:701px)" fetchpriority="high">
+<link rel="preload" as="image" href="${esc(heroImgUrlMobile)}" media="(max-width:700px)" fetchpriority="high">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#1a1a1a;font-size:15px;line-height:1.6}
@@ -1022,7 +1037,7 @@ ${mobGalHTML}${galHTML}
       }).slice(0,3);
       if(!similar.length) return '';
       return '<div class="zp-section"><h2 class="zp-section-title">Propiedades similares</h2><div class="zp-similar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'+similar.map(function(s){
-        var img = s.mainImageThumb||'';
+        var img = ikTransform(s.mainImageThumb||'', {w:500,q:68});
         var price = s.priceFormatted||'Consultar';
         return '<a href="/propiedades/'+esc(s.slug)+'.html" style="background:#fff;border:1.5px solid #eef0f3;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:all .3s" onmouseover="this.style.transform=\'translateY(-4px)\';this.style.boxShadow=\'0 12px 30px rgba(0,0,0,.1)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'"><div style="aspect-ratio:4/3;overflow:hidden"><img src="'+esc(img)+'" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div><div style="padding:14px 16px"><div style="font-size:.95rem;font-weight:700;color:#F5820D;margin-bottom:4px">'+esc(price)+'</div><div style="font-size:.82rem;font-weight:600;color:#111;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">'+esc(s.title||s.titulo||'')+'</div><div style="font-size:.72rem;color:#64748b">'+esc(s.locationFull||s.zona||'')+'</div></div></a>';
       }).join('')+'</div></div>';
@@ -1088,7 +1103,7 @@ function zpLbPrev(){zpLbIdx=(zpLbIdx-1+zpLbImgs.length)%zpLbImgs.length;zpLbShow
 function zpLbNext(){zpLbIdx=(zpLbIdx+1)%zpLbImgs.length;zpLbShow(zpLbIdx);}
 document.addEventListener("keydown",function(e){var lb=document.getElementById("zpLb");if(!lb||lb.style.display==="none")return;if(e.key==="ArrowLeft")zpLbPrev();if(e.key==="ArrowRight")zpLbNext();if(e.key==="Escape"){lb.classList.remove("open");lb.style.display="none";}});
 function zpOpenGallery(){zpLbImgs=${JSON.stringify(imgs)}; var lb=document.getElementById('zpLb'); lb.classList.add('open'); lb.style.display='flex'; }
-function zpLbShow(i){zpLbIdx=i; var imgs=${JSON.stringify(imgs)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
+function zpLbShow(i){zpLbIdx=i; var imgs=${JSON.stringify(imgsLbFull)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
 function zpToggleDesc(){ var m=document.getElementById('zpDescMore'); var open=m.style.display!=='none'; m.style.display=open?'none':'block'; document.getElementById('zpDescLbl').innerHTML=open?'Ver descripción completa <i class=\"ti ti-chevron-down\"></i>':'Ver menos <i class=\"ti ti-chevron-up\"></i>'; }
 document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(img,i){ img.addEventListener('click',function(){ zpOpenGallery(); zpLbShow(i); }); });
 (function(){
@@ -1180,7 +1195,7 @@ var body = '<div style="background:var(--gray-900);padding:48px 6%;color:var(--w
   zonasUniq.map(function(z){ var zSlug = slugZona(z); return '<a href="/zonas/' + zSlug + '.html" style="background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;text-decoration:none">' + escapeHtml(z) + '</a>'; }).join('') +
   '</div>' : '') +
 '</div>' +
-'<div class="prop-grid" style="padding:32px 6%">' + propsDelTipo.map(function(p){ return card(p); }).join('') + '</div>' +
+'<div class="prop-grid" style="padding:32px 6%">' + propsDelTipo.map(function(p,i){ return card(p,i); }).join('') + '</div>' +
 '<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">' +
 '<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles</p>' +
 '<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>' +

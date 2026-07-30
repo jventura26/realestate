@@ -9,7 +9,7 @@ function brokerProfilePage(broker, allProps) {
     return p.broker_id === b.id;
   });
   const propsHTML = brokerProps.length > 0
-    ? '<div class="prop-grid">' + brokerProps.map(function(p){ return card(p); }).join('') + '</div>'
+    ? '<div class="prop-grid">' + brokerProps.map(function(p,i){ return card(p,i); }).join('') + '</div>'
     : '<div style="text-align:center;padding:60px 20px;color:#94a3b8;font-size:15px">Este asesor aún no tiene propiedades publicadas.</div>';
 
   const zonasHTML = (b.zonas || []).map(function(z) {

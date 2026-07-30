@@ -1,5 +1,5 @@
 function ca(a){if(!a)return "";var s=String(a).trim().replace(/^'+/,"");if(!s||s==="0"||s==="-"||/^0\s*(v²|m²)?$/.test(s))return "";return s;}
-const { escapeHtml } = require('../../shared/utils');
+const { escapeHtml, ikTransform } = require('../../shared/utils');
 
 const ICON_BED  = '<svg width="14" height="12" viewBox="0 0 16 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="5.5" rx="1.5"/><path d="M1 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><rect x="4" y="4" width="3" height="2" rx=".5"/></svg>';
 const ICON_BATH = '<svg width="13" height="12" viewBox="0 0 15 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 8h12v1.5a3.5 3.5 0 0 1-3.5 3H4A3.5 3.5 0 0 1 .5 9v-.5z"/><path d="M1.5 8V4A2.5 2.5 0 0 1 6.5 4"/></svg>';
@@ -25,8 +25,14 @@ function dualPrice(p) {
   }
 }
 
-function card(p) {
-  const img = p.mainImageThumb || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=70';
+function card(p, idx) {
+  const rawImg = p.mainImageThumb || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=70';
+  const img = ikTransform(rawImg, { w: 600, q: 70 });
+  // Las primeras tarjetas de una grilla suelen estar sobre el pliegue (LCP) -
+  // cargarlas lazy retrasa la imagen mas grande de la pagina. El resto si se
+  // beneficia de lazy-load real para no gastar ancho de banda de mas.
+  const isPriority = typeof idx === 'number' && idx < 4;
+  const imgLoadAttrs = isPriority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
   const tipoBadge = p.tipo ? `<span class="card-tipo">${escapeHtml(p.tipo)}</span>` : '';
   const cinta = (p.cinta || '').trim();
   const cintaSlug = cinta.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-');
@@ -56,7 +62,7 @@ function card(p) {
   onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,.12)';this.style.borderColor='var(--gold)';this.querySelector('.card-img-wrap img').style.transform='scale(1.06)'"
   onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(0,0,0,.04)';this.style.borderColor='#eef0f3';this.querySelector('.card-img-wrap img').style.transform='scale(1)'">
   <div class="card-img-wrap" style="overflow:hidden;position:relative;aspect-ratio:4/3">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${altText}" loading="lazy" width="600" height="375" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${altText}" ${imgLoadAttrs} width="600" height="375" style="width:100%;height:100%;object-fit:cover;transition:transform .5s ease">
     <div class="card-badges" style="position:absolute;top:12px;left:12px;display:flex;gap:6px">${tipoBadge}${cintaBadge}</div>${destBadge}${nuevoBadge}
     ${p.gallery && p.gallery.length > 1 ? `<div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:white;font-size:11px;font-weight:600;padding:4px 8px;border-radius:5px;backdrop-filter:blur(4px)">📷 ${p.gallery.length}</div>` : ''}
     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.4) 0%,transparent 50%)"></div>

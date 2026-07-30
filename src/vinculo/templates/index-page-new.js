@@ -161,7 +161,7 @@ function applyHubFiltros(){
       </div>
       <a href="/propiedades.html" style="font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:.04em" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ver todas &rarr;</a>
     </div>
-    <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
+    <div class="prop-grid">${featured.map((p,i)=>card(p,i)).join('')}</div>
   </div>
 </section>
 

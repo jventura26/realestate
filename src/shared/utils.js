@@ -98,4 +98,23 @@ function parsePriceToUSD(precioStr) {
   return esQuetzales ? num / TIPO_CAMBIO_REFERENCIAL : num;
 }
 
-module.exports = { escapeHtml, generateSitemap, generateRobots, uniqueValues, getRelated, generateRedirects, computeReputationScore, parsePriceToUSD };
+// Aplica parametros de transformacion de ImageKit (host real donde viven las
+// fotos de propiedades: ik.imagekit.io) para servir imagenes redimensionadas,
+// comprimidas y en formato moderno (webp/avif automatico via f-auto) en vez
+// de la foto original de camara (a menudo 2-5MB) sin importar donde se use
+// el thumbnail. No hace nada si la URL no es de ImageKit (ej. placeholders de
+// unsplash u otro host) - evita romper imagenes que no soportan esta sintaxis.
+function ikTransform(url, opts) {
+  if (!url || typeof url !== 'string') return url;
+  if (!/ik\.imagekit\.io/.test(url)) return url;
+  if (/[?&]tr=/.test(url)) return url; // ya trae transformacion, no duplicar
+  var o = opts || {};
+  var q = o.q || 75;
+  var f = o.f || 'auto';
+  var parts = ['q-' + q, 'f-' + f];
+  if (o.w) parts.push('w-' + o.w);
+  var tr = 'tr=' + parts.join(',');
+  return url + (url.indexOf('?') > -1 ? '&' : '?') + tr;
+}
+
+module.exports = { escapeHtml, generateSitemap, generateRobots, uniqueValues, getRelated, generateRedirects, computeReputationScore, parsePriceToUSD, ikTransform };
