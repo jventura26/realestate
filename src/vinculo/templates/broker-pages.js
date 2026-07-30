@@ -33,6 +33,10 @@ function brokerProfilePage(broker, allProps) {
     ? '<span style="display:inline-flex;align-items:center;gap:6px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;color:#065F46;letter-spacing:.03em"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Verificado</span>'
     : '';
 
+  const reputationBadge = b.reputationScore
+    ? '<span style="display:inline-flex;align-items:center;gap:6px;background:' + (b.reputationScore.tier === 'elite' ? 'rgba(201,169,110,.15)' : '#EFF6FF') + ';border:1px solid ' + (b.reputationScore.tier === 'elite' ? 'rgba(201,169,110,.4)' : '#BFDBFE') + ';border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;color:' + (b.reputationScore.tier === 'elite' ? '#8B6914' : '#1D4ED8') + ';letter-spacing:.03em">' + escapeHtml(b.reputationScore.label) + '</span>'
+    : '';
+
   const waLink = b.whatsapp
     ? 'https://wa.me/' + String(b.whatsapp).replace(/[^0-9]/g,'') + '?text=' + encodeURIComponent('Hola ' + b.nombre + ', vi tu perfil en InmuHub y me interesa consultar sobre propiedades.')
     : '';
@@ -68,7 +72,7 @@ function brokerProfilePage(broker, allProps) {
       ? '<img class="broker-avatar" src="' + escapeHtml(b.foto) + '" alt="' + escapeHtml(b.nombre) + '">'
       : '<div class="broker-avatar-placeholder">' + escapeHtml((b.nombre||'A').charAt(0)) + '</div>'}
     <div class="broker-info">
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">${verificadoBadge}</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">${verificadoBadge}${reputationBadge}</div>
       <h1>${escapeHtml(b.nombre)}</h1>
       <div class="broker-title-role">${escapeHtml(b.titulo || 'Asesor Inmobiliario')}</div>
       <div class="broker-meta">
@@ -161,6 +165,9 @@ function brokerCard(b) {
     : '';
   const zonas = (b.zonas || []).slice(0,3).join(' · ');
   const stars = b.rating ? '<span style="color:#F59E0B;font-size:13px">&#9733;</span> <span style="font-size:13px;font-weight:700;color:#374151">' + b.rating.toFixed(1) + '</span>' : '';
+  const repBadgeCard = b.reputationScore
+    ? '<div style="margin-bottom:12px"><span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.03em;' + (b.reputationScore.tier === 'elite' ? 'background:rgba(201,169,110,.15);color:#8B6914;border:1px solid rgba(201,169,110,.35)' : 'background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE') + '">' + escapeHtml(b.reputationScore.label) + '</span></div>'
+    : '';
 
   return `<a href="/asesores/${escapeHtml(b.slug)}.html" style="display:flex;flex-direction:column;background:white;border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;border:1.5px solid #eef0f3;transition:all .35s;box-shadow:0 2px 8px rgba(0,0,0,.04)" onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 50px rgba(0,0,0,.12)';this.style.borderColor='var(--gold)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(0,0,0,.04)';this.style.borderColor='#eef0f3'">
     <div style="position:relative;padding:32px 24px 24px;background:linear-gradient(135deg,#0a1628,#1a3a5c);text-align:center">
@@ -176,6 +183,7 @@ function brokerCard(b) {
         <div style="font-size:13px;color:#64748b"><strong style="color:#0a1628">${b.propiedades_count || 0}</strong> propiedades</div>
         <div>${stars}</div>
       </div>
+      ${repBadgeCard}
       ${zonas ? '<div style="font-size:12px;color:#94a3b8;margin-bottom:12px">' + escapeHtml(zonas) + '</div>' : ''}
       <div style="margin-top:auto;font-size:12px;font-weight:600;color:var(--gold);letter-spacing:.04em">Ver perfil &#8594;</div>
     </div>

@@ -65,7 +65,7 @@ function normalizeKV(kvProps) {
 
 const path = require('path');
 const { parseProperties } = require('../shared/parse-csv');
-const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
+const { generateSitemap, generateRobots, generateRedirects, computeReputationScore } = require('../shared/utils');
 const { catalogPage, detailPage, zonaPage, tipoPage } = require('./templates/pages');
 const { layout } = require('./templates/layout');
 const { indexPageNew: indexPage } = require('./templates/index-page-new');
@@ -116,7 +116,7 @@ const props = allProps;
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 
-fs.rmSync(OUT, { recursive:true, force:true });
+try { fs.rmSync(OUT, { recursive:true, force:true }); } catch(e) { console.log('  (rmSync skipped: ' + e.code + ')'); }
 fs.mkdirSync(PROPS, { recursive:true });
 fs.mkdirSync(ZONAS, { recursive:true });
 
@@ -154,6 +154,7 @@ fs.mkdirSync(ASESORES, { recursive: true });
 // Calcular propiedades_count ANTES de generar directorio y perfiles
 brokers.forEach(function(b) {
   b.propiedades_count = props.filter(function(p){ return p.broker_id === b.id; }).length;
+  b.reputationScore = computeReputationScore(b);
 });
 var activeBrokers = brokers.filter(function(b){ return b.activo !== false && b.estado === 'aprobado'; });
 write(path.join(OUT, 'asesores.html'), brokersDirectoryPage(activeBrokers));
