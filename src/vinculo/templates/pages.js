@@ -795,7 +795,7 @@ function detailPage(prop, allProps) {
     <div class="zp-lb-strip">${imgsLbThumb.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
     <button class="zp-lb-nav zp-lb-prev" onclick="event.stopPropagation();zpLbPrev()" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&lsaquo;</button>
     <button class="zp-lb-nav zp-lb-next" onclick="event.stopPropagation();zpLbNext()" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&rsaquo;</button>
-    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgsLbFull[0])}" alt=""></div>
+    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgsLbFull[0])}" alt="" loading="lazy"></div>
   </div>`;
 
   return `<!DOCTYPE html>
