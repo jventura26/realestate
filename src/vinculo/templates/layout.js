@@ -28,14 +28,18 @@ return `<!DOCTYPE html>
 
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="/assets/favicon2.png">
-<link rel="apple-touch-icon" href="/assets/favicon2.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${pageTitle}</title>
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
-<meta name="theme-color" content="#1a2a4e">
+<meta name="theme-color" content="#0a1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="InmuHub">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1212,6 +1216,9 @@ function zpSetFavs(a){localStorage.setItem('zpFavs',JSON.stringify(a))}
 function zpToggleFav(slug){var f=zpGetFavs();var i=f.indexOf(slug);if(i===-1){f.push(slug)}else{f.splice(i,1)}zpSetFavs(f);zpUpdateFavBtns();}
 function zpUpdateFavBtns(){var f=zpGetFavs();document.querySelectorAll('.zp-fav-btn').forEach(function(b){var s=b.id.replace('fav-','');var active=f.indexOf(s)!==-1;b.querySelector('svg').setAttribute('fill',active?'#ef4444':'none');});}
 document.addEventListener('DOMContentLoaded',zpUpdateFavBtns);
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
 </body>
 </html>`;

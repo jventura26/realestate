@@ -335,4 +335,20 @@ if (fs.existsSync(planesSrc)) {
   console.log(' planes.html copiado');
 }
 
+// PWA: manifest.json, service worker y pagina offline deben servirse desde la
+// raiz del sitio (scope "/") para que el service worker controle todo el
+// dominio. Se copian aqui explicitamente (no via post-build.js) porque
+// post-build.js solo corre como parte de "npm run build" completo, y el
+// comando real de build de Cloudflare Pages usa "npm run build:vinculo" solo
+// - los archivos standalone dashboard.html/login.html/publicar.html quedaron
+// huerfanos por depender de ese paso que no corre en produccion, y no
+// queremos repetir ese mismo error con la PWA.
+['manifest.json', 'sw.js', 'offline.html'].forEach(function(file) {
+  var pwaSrc = path.join(__dirname, file);
+  if (fs.existsSync(pwaSrc)) {
+    fs.copyFileSync(pwaSrc, path.join(OUT, file));
+    console.log(' ' + file + ' copiado (PWA)');
+  }
+});
+
 }).catch(e => { console.error('Build error:', e); process.exit(1); });

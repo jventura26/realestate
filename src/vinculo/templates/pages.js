@@ -806,6 +806,13 @@ function detailPage(prop, allProps) {
 <title>${esc(prop.titulo||'Propiedad')} | INMUHUB.COM</title>
 <meta name="description" content="${esc((cleanDesc||prop.titulo||'Propiedad en Guatemala').substring(0,160))}">
 <link rel="canonical" href="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
+<link rel="icon" type="image/png" href="/assets/favicon2.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="InmuHub">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(prop.titulo||'Propiedad')} | INMUHUB.COM">
 <meta property="og:description" content="${esc((cleanDesc||prop.titulo||'').substring(0,160))}">
@@ -1138,6 +1145,9 @@ function zpSendMsg(){
     else{res.style.display='block';res.style.color='#991b1b';res.textContent=d.error||'Error al enviar';btn.disabled=false;btn.textContent='Enviar mensaje';}
   }).catch(function(){res.style.display='block';res.style.color='#991b1b';res.textContent='Error de conexión';btn.disabled=false;btn.textContent='Enviar mensaje';});
 }
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
 </body></html>`;
 }

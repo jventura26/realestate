@@ -23,7 +23,7 @@ Object.entries(publicMappings).forEach(([srcFile, dstFile]) => {
 });
 
 // Assets desde src/vinculo/assets (logo horizontal, favicon, etc)
-const vinculoAssets = ['logo-horizontal.png', 'favicon2.png', 'logo-mark-light-full.png', 'logo-mark-light-compact.png'];
+const vinculoAssets = ['logo-horizontal.png', 'favicon2.png', 'logo-mark-light-full.png', 'logo-mark-light-compact.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
 vinculoAssets.forEach(file => {
   const src = path.join('src/vinculo/assets', file);
   const dst = path.join(dstDir, file);
