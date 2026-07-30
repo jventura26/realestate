@@ -380,7 +380,46 @@ const tipos = uniqueValues(props, 'tipo');
 
 const ciudades = uniqueValues(props, 'municipio');
 const cintas = uniqueValues(props, 'cinta');
-const filterJS = `<script>(function(){const grid=document.getElementById('g'),count=document.getElementById('fc');const cards=[...grid.querySelectorAll('.property-card')];function run(){const q=document.getElementById('fq').value.toLowerCase();const ti=document.getElementById('ft').value,ci=document.getElementById('fc2').value,ci2=document.getElementById('fc3').value,pr=document.getElementById('fp').value,hb=document.getElementById('fh').value;let n=0;cards.forEach(c=>{const ok=(!q||c.textContent.toLowerCase().includes(q))&&(!ti||c.dataset.tipo===ti)&&(!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&(!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&(!pr||(()=>{const p=parseFloat(c.dataset.precio),parts=pr.split('-').map(Number);return p>=parts[0]&&(!parts[1]||p<=parts[1]);})());c.style.display=ok?'':'none';if(ok)n++;});count.textContent=n+' propiedad'+(n!==1?'es':'');document.getElementById('nr').style.display=n===0?'block':'none';}['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).addEventListener('input',run));document.getElementById('fq').addEventListener('change',run);document.getElementById('cl').addEventListener('click',()=>{['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).value='');run();});const p=new URLSearchParams(location.search);if(p.get('tipo'))document.getElementById('ft').value=p.get('tipo');if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');run();count.textContent='${props.length} propiedades';})();<\/script>`;
+const filterJS = `<script>(function(){
+const grid=document.getElementById('g'),count=document.getElementById('fc');
+const cards=[...grid.querySelectorAll('.property-card')];
+const FIELDS={fq:'q',ft:'tipo',fc2:'ciudad',fc3:'estado',fp:'precio',fh:'habs'};
+function syncUrl(){
+  const params=new URLSearchParams();
+  Object.keys(FIELDS).forEach(id=>{const v=document.getElementById(id).value;if(v)params.set(FIELDS[id],v);});
+  const qs=params.toString();
+  const clean=location.pathname+(qs?'?'+qs:'');
+  history.replaceState(null,'',clean);
+}
+function run(){
+  const q=document.getElementById('fq').value.toLowerCase();
+  const ti=document.getElementById('ft').value,ci=document.getElementById('fc2').value,ci2=document.getElementById('fc3').value,pr=document.getElementById('fp').value,hb=document.getElementById('fh').value;
+  let n=0;
+  cards.forEach(c=>{
+    const ok=(!q||c.textContent.toLowerCase().includes(q))&&(!ti||c.dataset.tipo===ti)&&(!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&(!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&(!pr||(()=>{const p=parseFloat(c.dataset.precio),parts=pr.split('-').map(Number);return p>=parts[0]&&(!parts[1]||p<=parts[1]);})());
+    c.style.display=ok?'':'none';
+    if(ok)n++;
+  });
+  count.textContent=n+' propiedad'+(n!==1?'es':'');
+  document.getElementById('nr').style.display=n===0?'block':'none';
+  syncUrl();
+}
+['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).addEventListener('input',run));
+document.getElementById('fq').addEventListener('change',run);
+document.getElementById('cl').addEventListener('click',()=>{['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).value='');run();});
+const shareBtn=document.getElementById('shareSearch');
+if(shareBtn)shareBtn.addEventListener('click',()=>{
+  navigator.clipboard.writeText(location.href).then(()=>{
+    const orig=shareBtn.textContent;
+    shareBtn.textContent='Link copiado';
+    setTimeout(()=>{shareBtn.textContent=orig;},1800);
+  });
+});
+const p=new URLSearchParams(location.search);
+const REVERSE={q:'fq',tipo:'ft',ciudad:'fc2',estado:'fc3',precio:'fp',habs:'fh'};
+Object.keys(REVERSE).forEach(k=>{if(p.get(k))document.getElementById(REVERSE[k]).value=p.get(k);});
+run();
+})();<\/script>`;
 const tiposOptions=tipos.map(t=>`<option>${escapeHtml(t)}</option>`).join('');
 const ciudadesOptions=ciudades.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
 const cintasOptions=cintas.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
@@ -396,6 +435,7 @@ const body = `
 <select id="fp"><option value="">Precio</option><option value="0-100000">Hasta $100K</option><option value="100000-300000">$100K-$300K</option><option value="300000-600000">$300K-$600K</option><option value="600000-1000000">$600K-$1M</option><option value="1000000-9999999">Mas de $1M</option></select>
 <select id="fh"><option value="">Habitaciones</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select>
 <button id="cl">Limpiar filtros</button>
+<button id="shareSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i class="ti ti-link" aria-hidden="true"></i> Compartir búsqueda</button>
 <span class="f-count" id="fc">${props.length} propiedades</span>
 </div>
 <div class="prop-grid" id="g">${props.map(p=>card(p)).join('')}</div>
