@@ -110,13 +110,14 @@ return `<!DOCTYPE html>
 <link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css"></noscript>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${TRACKING.gtmId}');</script>
-<!-- End Google Tag Manager -->
+<!-- Google Tag Manager: removido (jul 2026) - el contenedor GTM-M3Q9H334 esta
+     vacio (0 etiquetas, verificado directamente en tagmanager.google.com), asi
+     que cargaba ~70KB+ de JS y tiempo de CPU en cada pagina sin disparar nada.
+     GA4 sigue funcionando normal via el gtag.js directo de abajo, que es el
+     que realmente envia los datos. Si se vuelve a necesitar GTM (ej. para
+     configurar Meta CAPI server-side u otro tag), TRACKING.gtmId ya esta
+     definido arriba - solo hay que reinsertar este bloque y el <noscript>
+     del iframe que estaba justo despues de <body>. -->
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -1007,10 +1008,6 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${TRACKING.gtmId}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 <nav>
 <div class="nav-inner">
   <a href="/" class="logo" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0;position:relative;top:6px" aria-label="INMUHUB — Portal Inmobiliario Premium Guatemala">
