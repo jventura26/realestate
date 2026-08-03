@@ -1192,7 +1192,15 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     </div>
 
     <div class="dv3-tab-panel" id="dv3-media">
-      ${(prop.videoTour||prop.videoUrl) ? '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div><div class="dv3-video-wrap"><iframe src="'+(prop.videoTour||prop.videoUrl).replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div></div>' : ''}
+      ${(function(){
+        var vUrl = prop.videoTour || prop.videoUrl;
+        if (!vUrl) return '';
+        var esArchivoDirecto = /\.(mp4|webm|mov)(\?|$)/i.test(vUrl);
+        var reproductor = esArchivoDirecto
+          ? '<div class="dv3-video-wrap"><video controls playsinline preload="metadata" poster="'+escapeHtml(prop.mainImage||'')+'" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;background:#000"><source src="'+escapeHtml(vUrl)+'"></video></div>'
+          : '<div class="dv3-video-wrap"><iframe src="'+vUrl.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/')+'" allowfullscreen loading="lazy"></iframe></div>';
+        return '<div style="margin-bottom:24px"><div class="dv3-ref-l" style="margin-bottom:12px">Video tour</div>'+reproductor+'</div>';
+      })()}
       ${prop.plano ? '<div><div class="dv3-ref-l" style="margin-bottom:12px">Plano de planta</div><img class="dv3-plano" src="'+escapeHtml(prop.plano)+'" alt="Plano '+escapeHtml(prop.title)+'" loading="lazy"></div>' : ''}
     </div>
 
