@@ -2,8 +2,8 @@
  * Zona-INNmueble Admin Worker
  */
 
-const ADMIN_USER_DEFAULT = 'admin';
-const ADMIN_PASS_DEFAULT = 'admin1203';
+// Credenciales del admin: SOLO via Cloudflare secrets (wrangler secret put ADMIN_USER / ADMIN_PASS).
+// Sin fallback hardcodeado -- si no estan configuradas, el login simplemente fallara (fail-safe).
 const SESSION_TTL = 60 * 60 * 8;
 const LOGIN_MAX_ATTEMPTS = 5;
 const LOGIN_LOCKOUT_SECONDS = 60 * 15;
@@ -31,9 +31,11 @@ function getPixelId(pageUrl) {
   }
 }
 var NOTIFY_WEBHOOK = 'https://script.google.com/macros/s/AKfycby8sAQtzXYJHyRnO5sIHgyju-_dNdS6xyjjCJPQtjWghKcWZKc3xjqX6lUxRUP3Dniu/exec';
-var META_CAPI_TOKEN = 'EAAJqIg1BUn0BR4xyyEPPk7LYPBwj3XofzQq6fcq3JUmsNaYMTYwmDycjyZAinUl9NDjlB8ZBymE0vHqcqZCevHtZAoaEhCwHhm3i5ZBrAJ5z3ayUujBFEcpmLdcXZCw9qL1kSp6eilAvQ3ZB0x5ZBVHhVcTLIZCaZBeb2nqjNrV9D1WAi0wqEwQuU0g6aT5KuPVsA14QZDZD';
+// Tokens de Meta (CAPI y Page): SOLO via Cloudflare secrets
+// (wrangler secret put META_CAPI_TOKEN / META_PAGE_TOKEN). Sin fallback hardcodeado.
+var META_CAPI_TOKEN = '';
 var META_PAGE_ID = '1616853578595692';
-var META_PAGE_TOKEN = 'EAAaB8PdEbm0BR9apOesnvDsqcNnrfBpHYkzi9U0W5ByPBYVvQBZB1wodErfhbpAyg85H8etiONqRLTjUuKnCgYfYNIXdRe5VBs2WXc72XIZAhWSDRUlGp2b1HPIazf7EuZCWxkOZBhvnOrOIZA076u78HkCeSJWMI4DaTPzUZAzq4PomzJqQnWvzU2oLZCgZCRfuM0u8MWWtxZBofFH0NPq9tdAd51SjjZB4sIAYsD';
+var META_PAGE_TOKEN = '';
 
 async function hashSHA256(value) {
   var encoder = new TextEncoder();
@@ -254,8 +256,11 @@ export default {
         attempts.count = 0;
       }
 
-      const adminUser = env.ADMIN_USER || ADMIN_USER_DEFAULT;
-      const adminPass = env.ADMIN_PASS || ADMIN_PASS_DEFAULT;
+      const adminUser = env.ADMIN_USER;
+      const adminPass = env.ADMIN_PASS;
+      if (!adminUser || !adminPass) {
+        return jsonRes({ error: 'Admin no configurado: falta ADMIN_USER/ADMIN_PASS en el Worker' }, 500);
+      }
 
       if (user !== adminUser || pass !== adminPass) {
         attempts.count = (attempts.count || 0) + 1;
@@ -297,7 +302,7 @@ export default {
     if (method === 'GET' && path === '/api/me') {
       const authed = await requireAuth(request, env);
       if (!authed) return jsonRes({ error: 'No autenticado' }, 401);
-      return jsonRes({ ok: true, user: env.ADMIN_USER || ADMIN_USER_DEFAULT });
+      return jsonRes({ ok: true, user: env.ADMIN_USER || 'admin' });
     }
 
     // ── GET /api/propiedades (admin) ─────────────────────────────
