@@ -37,6 +37,56 @@ var META_CAPI_TOKEN = '';
 var META_PAGE_ID = '1616853578595692';
 var META_PAGE_TOKEN = '';
 
+// ── Lead Scoring: formula compartida ──────────────────────────
+// La usa tanto el formulario del sitio (con presupuesto/zona/tipo reales)
+// como los leads de Meta Lead Ads via findPropertyByName, para que TODOS
+// los leads se puntuen con la misma logica en vez de que Meta Ads reciba
+// siempre un WARM/30 plano sin importar que propiedad pregunto.
+function computeLeadScore(fields) {
+  var score = 0;
+  var pres = (fields.presupuesto || '').toString().toLowerCase();
+  if (pres.indexOf('500') >= 0 || pres.indexOf('millon') >= 0 || pres.indexOf('1,000') >= 0) score += 40;
+  else if (pres.indexOf('300') >= 0 || pres.indexOf('400') >= 0) score += 30;
+  else if (pres.indexOf('200') >= 0 || pres.indexOf('150') >= 0) score += 20;
+  else if (pres.indexOf('100') >= 0) score += 10;
+  var zona = (fields.zona || '').toString().toLowerCase();
+  if (zona.indexOf('14') >= 0 || zona.indexOf('15') >= 0 || zona.indexOf('cayal') >= 0) score += 25;
+  else if (zona.indexOf('10') >= 0 || zona.indexOf('16') >= 0) score += 20;
+  else if (zona.indexOf('fraijanes') >= 0 || zona.indexOf('salvador') >= 0) score += 15;
+  else if (zona) score += 5;
+  var tipo = (fields.tipo || '').toString().toLowerCase();
+  if (tipo.indexOf('finca') >= 0 || tipo.indexOf('luxury') >= 0 || tipo.indexOf('penthouse') >= 0) score += 20;
+  else if (tipo.indexOf('casa') >= 0 || tipo.indexOf('residencia') >= 0) score += 15;
+  else if (tipo.indexOf('apartamento') >= 0 || tipo.indexOf('apto') >= 0) score += 10;
+  else if (tipo.indexOf('terreno') >= 0 || tipo.indexOf('lote') >= 0) score += 10;
+  if (fields.email && fields.email.indexOf('@') >= 0) score += 10;
+  if (fields.telefono) score += 5;
+  var tier = score >= 60 ? 'HOT' : score >= 35 ? 'WARM' : 'COLD';
+  return { score: score, tier: tier };
+}
+
+// Busca una propiedad por titulo (usado para puntuar leads de Meta Lead Ads,
+// que solo traen el nombre del formulario, no presupuesto/zona/tipo reales).
+async function findPropertyByName(env, name) {
+  if (!name) return null;
+  try {
+    var raw = await env.DB.get('propiedades');
+    var data = raw ? JSON.parse(raw) : [];
+    return matchPropByNameIn(data, name);
+  } catch (e) { return null; }
+}
+function matchPropByNameIn(propList, name) {
+  if (!name) return null;
+  var target = name.toLowerCase().trim();
+  var exact = propList.find(function(p){ return (p.titulo||'').toLowerCase().trim() === target; });
+  if (exact) return exact;
+  var partial = propList.find(function(p){
+    var t = (p.titulo||'').toLowerCase();
+    return t && (target.indexOf(t) >= 0 || t.indexOf(target) >= 0);
+  });
+  return partial || null;
+}
+
 async function hashSHA256(value) {
   var encoder = new TextEncoder();
   var data = encoder.encode(value);
@@ -439,28 +489,17 @@ export default {
       var data = raw ? JSON.parse(raw) : [];
       var lead = { ...body, id: String(Date.now()), createdAt: new Date().toISOString(), fecha: new Date().toISOString() };
 
-      // ── Lead Scoring Automático ────────────────────────────
-      var score = 0;
-      var pres = (lead.presupuesto || '').toLowerCase();
-      if (pres.indexOf('500') >= 0 || pres.indexOf('millon') >= 0 || pres.indexOf('1,000') >= 0) score += 40;
-      else if (pres.indexOf('300') >= 0 || pres.indexOf('400') >= 0) score += 30;
-      else if (pres.indexOf('200') >= 0 || pres.indexOf('150') >= 0) score += 20;
-      else if (pres.indexOf('100') >= 0) score += 10;
-      var zona = (lead.zona_interes || lead.zona || '').toLowerCase();
-      if (zona.indexOf('14') >= 0 || zona.indexOf('15') >= 0 || zona.indexOf('cayal') >= 0) score += 25;
-      else if (zona.indexOf('10') >= 0 || zona.indexOf('16') >= 0) score += 20;
-      else if (zona.indexOf('fraijanes') >= 0 || zona.indexOf('salvador') >= 0) score += 15;
-      else if (zona) score += 5;
-      var tipo = (lead.tipo_propiedad || lead.tipo || '').toLowerCase();
-      if (tipo.indexOf('finca') >= 0 || tipo.indexOf('luxury') >= 0 || tipo.indexOf('penthouse') >= 0) score += 20;
-      else if (tipo.indexOf('casa') >= 0 || tipo.indexOf('residencia') >= 0) score += 15;
-      else if (tipo.indexOf('apartamento') >= 0 || tipo.indexOf('apto') >= 0) score += 10;
-      else if (tipo.indexOf('terreno') >= 0 || tipo.indexOf('lote') >= 0) score += 10;
-      if (lead.email && lead.email.indexOf('@') >= 0) score += 10;
-      if (lead.telefono || lead.phone) score += 5;
-      lead.lead_score = score;
-      lead.lead_tier = score >= 60 ? 'HOT' : score >= 35 ? 'WARM' : 'COLD';
-      lead.stage = lead.lead_tier === 'HOT' ? 'Nuevo' : 'Nuevo';
+      // ── Lead Scoring Automático (formula compartida: computeLeadScore) ──
+      var scoring = computeLeadScore({
+        presupuesto: lead.presupuesto,
+        zona: lead.zona_interes || lead.zona,
+        tipo: lead.tipo_propiedad || lead.tipo,
+        email: lead.email,
+        telefono: lead.telefono || lead.phone
+      });
+      lead.lead_score = scoring.score;
+      lead.lead_tier = scoring.tier;
+      lead.stage = 'Nuevo';
 
       data.push(lead);
       await env.DB.put('leads', JSON.stringify(data));
@@ -598,6 +637,10 @@ export default {
             } catch(graphErr) { /* continue with empty fields */ }
           }
 
+          var matchedProp = await findPropertyByName(env, formName);
+          var mlScoring = matchedProp
+            ? computeLeadScore({ presupuesto: matchedProp.precio, zona: matchedProp.zona, tipo: matchedProp.tipo, email: email, telefono: telefono })
+            : { score: 30, tier: 'WARM' }; // sin match de propiedad: score neutral por defecto
           var lead = {
             id: String(Date.now()) + '_' + Math.random().toString(36).slice(2,6),
             nombre: nombre,
@@ -612,8 +655,8 @@ export default {
             createdAt: new Date().toISOString(),
             stage: 'Nuevo',
             fase: 'NUEVO LEAD',
-            lead_score: 30,
-            lead_tier: 'WARM'
+            lead_score: mlScoring.score,
+            lead_tier: mlScoring.tier
           };
 
           // Save to KV
@@ -667,6 +710,8 @@ export default {
       if (formsData.error) return jsonRes({ error: 'Error Graph API: ' + formsData.error.message }, 400);
 
       var forms = formsData.data || [];
+      var propRawSM = await env.DB.get('propiedades');
+      var propListSM = propRawSM ? JSON.parse(propRawSM) : [];
       var raw = await env.DB.get('leads');
       var existingLeads = raw ? JSON.parse(raw) : [];
       var existingIds = {};
@@ -700,6 +745,10 @@ export default {
             else if (fn === 'phone_number' || fn === 'telefono' || fn === 'número_de_teléfono' || fn === 'whatsapp') telefono = fv;
           }
 
+          var matchedPropSM = matchPropByNameIn(propListSM, formName);
+          var smScoring = matchedPropSM
+            ? computeLeadScore({ presupuesto: matchedPropSM.precio, zona: matchedPropSM.zona, tipo: matchedPropSM.tipo, email: email, telefono: telefono })
+            : { score: 30, tier: 'WARM' }; // sin match de propiedad: score neutral por defecto
           var lead = {
             id: String(Date.now()) + '_' + Math.random().toString(36).slice(2,6),
             nombre: nombre,
@@ -714,8 +763,8 @@ export default {
             createdAt: new Date().toISOString(),
             stage: 'Nuevo',
             fase: 'NUEVO LEAD',
-            lead_score: 30,
-            lead_tier: 'WARM'
+            lead_score: smScoring.score,
+            lead_tier: smScoring.tier
           };
           existingLeads.push(lead);
           existingIds[ml.id] = true;

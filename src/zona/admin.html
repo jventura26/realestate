@@ -1738,7 +1738,13 @@ function renderLeads(mc) {
   const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'];
   const counters = {};
   stages.forEach(s => counters[s] = leads.filter(l=>(l.stage||'Nuevo')===s).length);
-  const filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  let filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  // Ordenar por lead_score desc (los HOT primero) para que el asesor sepa a quien llamar primero
+  filtered = filtered.slice().sort(function(a,b){
+    var d = (b.lead_score||0) - (a.lead_score||0);
+    if (d !== 0) return d;
+    return new Date(b.fecha||0) - new Date(a.fecha||0);
+  });
 
   mc.innerHTML = `
     <div class="leads-toolbar" style="flex-wrap:wrap;gap:10px">
@@ -1769,6 +1775,13 @@ function filterLeads() {
       (l.tipo||'').toLowerCase().includes(q)
     );
   }
+  // Ordenar por lead_score desc (los HOT primero)
+  filtered = filtered.slice().sort(function(a,b){
+    var d = (b.lead_score||0) - (a.lead_score||0);
+    if (d !== 0) return d;
+    return new Date(b.fecha||0) - new Date(a.fecha||0);
+  });
+
   const grid = mc.querySelector('.lead-grid');
   const empty = mc.querySelector('.empty-state');
   if (grid) {
