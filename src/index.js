@@ -182,6 +182,59 @@ export default {
       });
     }
 
+    // ── GET /api/meta-feed.csv — feed automatico para el catalogo de
+    // Meta (Facebook/Instagram/WhatsApp usan el mismo catalogo). Meta lo
+    // vuelve a leer el solo cada cierto tiempo (scheduled fetch), asi que
+    // cualquier propiedad nueva o editada en el admin llega sola al
+    // catalogo sin que nadie tenga que subirla a mano.
+    if (method === 'GET' && path === '/api/meta-feed.csv') {
+      const raw = await env.DB.get('propiedades');
+      const data = raw ? JSON.parse(raw) : [];
+
+      function csvEscape(v) {
+        const s = (v === undefined || v === null) ? '' : String(v);
+        if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+      function parsePriceGTQorUSD(p) {
+        const raw = p.precio || '';
+        const stripped = raw
+          .replace(/^\s*Q\.?\s*/i, '')
+          .replace(/^\s*GTQ\s*/i, '')
+          .replace(/^\s*\$\s*/, '')
+          .replace(/^\s*USD\s*/i, '');
+        const num = parseFloat(stripped.replace(/,/g, '').replace(/[^0-9.]/g, ''));
+        let currency = 'GTQ';
+        if (p.moneda === 'USD' || raw.includes('$') || raw.toUpperCase().includes('USD')) currency = 'USD';
+        return { amount: isNaN(num) ? 0 : num, currency };
+      }
+
+      const rows = data
+        .filter(p => (!p.estado || p.estado === 'Activa') && (!p.sitios || p.sitios.includes('zona')))
+        .map(p => {
+          const { amount, currency } = parsePriceGTQorUSD(p);
+          const img = p.imagen || (p.gallery && p.gallery[0]) || '';
+          return [
+            csvEscape(p.slug || ''),
+            csvEscape(p.titulo || ''),
+            csvEscape(p.descripcion || p.descCorta || p.hook || (p.titulo || '')),
+            csvEscape('in stock'),
+            csvEscape('used'),
+            csvEscape(amount ? amount.toFixed(2) + ' ' + currency : ''),
+            csvEscape('https://zona-innmueble.com/propiedades/' + (p.slug || '')),
+            csvEscape(img),
+            csvEscape('Zona INNmueble'),
+          ].join(',');
+        });
+
+      const header = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand'].join(',');
+      const csv = [header, ...rows].join('\n') + '\n';
+
+      return new Response(csv, {
+        headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'public, max-age=1800', ...cors(request) },
+      });
+    }
+
     // ── POST /api/login ──────────────────────────────────────────
     if (method === 'POST' && path === '/api/login') {
       let body;
