@@ -725,7 +725,7 @@ body.dark .share-link-box { background: var(--dm-bg); }
   <div class="login-card">
     <div class="login-logo"><span>Zona</span>-INNmueble</div>
     <div class="login-sub">Premium Real Estate · Panel de administración</div>
-    <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
+    <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="Usuario" autocomplete="username"></div>
     <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password"></div>
     <button id="loginBtn" onclick="doLogin()">Ingresar al panel</button>
     <div id="loginErr">Usuario o contraseña incorrectos.</div>
@@ -752,7 +752,7 @@ body.dark .share-link-box { background: var(--dm-bg); }
         <div class="sb-item" id="nav-brokers" onclick="showPage('brokers')"><i class="ti ti-user-star"></i> Asesores</div>
         <div class="sb-section">Sitios</div>
         <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Zona INNmueble</div>
-        <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> IncmuHub</div>
+        <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> InmuHub</div>
       </div>
       <div class="sb-bottom">
         <div class="sb-user">
@@ -1958,6 +1958,8 @@ function renderCRM(mc) {
     + '<div class="ld-body" id="ldBody"></div></div></div>';
 }
 
+// Limpieza de seguridad: purgar cualquier token de Meta guardado en sesiones anteriores
+try{ localStorage.removeItem('zi_meta_page_token'); }catch(e){}
 function syncMetaQuick(btn){
   btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i> Sincronizando...';
   fetch(API+'/api/leads/sync-meta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({})})
@@ -1974,7 +1976,7 @@ function syncMetaQuick(btn){
     .catch(function(e){btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-meta"></i> Sync Meta Leads';alert('Error: '+e.message);});
 }
 function openSyncMeta(){
-  var saved = localStorage.getItem('zi_meta_page_token')||'';
+  var saved = '';
   var html = '<div style="padding:24px;max-width:480px;margin:40px auto;background:var(--wh);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15)">'
     + '<h3 style="margin:0 0 8px">Sincronizar leads de Meta</h3>'
     + '<p style="font-size:13px;color:var(--text3);margin:0 0 16px">Pega tu Page Access Token de Graph Explorer para importar leads de formularios instantáneos.</p>'
@@ -1995,7 +1997,6 @@ function openSyncMeta(){
 function syncMetaLeads(){
   var token = document.getElementById('metaTokenInput').value.trim();
   if(!token){document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Pega un token válido</span>';return;}
-  localStorage.setItem('zi_meta_page_token',token);
   var btn = document.getElementById('syncMetaBtn');
   btn.disabled=true;btn.textContent='Sincronizando...';
   document.getElementById('syncMetaResult').innerHTML='<span style="color:var(--text3)">Conectando con Meta Graph API...</span>';
