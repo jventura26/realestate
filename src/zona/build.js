@@ -135,6 +135,18 @@ function copyAssets() {
   if (fs.existsSync(fase1Src)) {
     fs.copyFileSync(fase1Src, path.join(dstDir, 'zona-fase1.js'));
   }
+
+  // Reel de fincas (categoria /tipos/finca.html) + foto premium extraida del video
+  const fincaPremiumSrc = path.join(__dirname, 'assets/finca-premium.jpg');
+  if (fs.existsSync(fincaPremiumSrc)) {
+    fs.copyFileSync(fincaPremiumSrc, path.join(dstDir, 'finca-premium.jpg'));
+  }
+  const fincaReelSrc = path.join(__dirname, 'assets/videos/finca-reel.mp4');
+  if (fs.existsSync(fincaReelSrc)) {
+    const dstVideosDir = path.join(dstDir, 'videos');
+    fs.mkdirSync(dstVideosDir, { recursive: true });
+    fs.copyFileSync(fincaReelSrc, path.join(dstVideosDir, 'finca-reel.mp4'));
+  }
 }
 
 console.log('\n⚡  Building Zona INNmueble…\n');

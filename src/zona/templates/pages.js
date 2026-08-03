@@ -2027,6 +2027,36 @@ function tipoPage(tipo, props, allProps) {
     </div>
   </section>
 
+  ${tipoSlug === 'finca' ? `
+  <section style="padding:64px 6% 72px;background:var(--ink);border-top:1px solid var(--bd)">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center">
+      <div>
+        <div class="ey" style="margin-bottom:14px">En video</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:300;color:var(--wh);margin-bottom:18px;line-height:1.2">Guatemala <em style="color:var(--or);font-style:italic">desde el aire</em></h2>
+        <p style="font-size:.85rem;color:var(--sv);line-height:1.9;font-weight:300;max-width:420px">Volcanes, tierra cultivada y silencio. Un vistazo aereo a lo que significa tener una finca en Guatemala — antes de visitarla en persona.</p>
+      </div>
+      <div class="finca-reel-wrap" onclick="playFincaReel(this)" style="position:relative;max-width:340px;width:100%;margin:0 auto;border-radius:18px;overflow:hidden;aspect-ratio:9/16;background:#000;cursor:pointer;box-shadow:0 24px 60px rgba(0,0,0,.45)">
+        <video class="finca-reel-video" poster="/assets/finca-premium.jpg" preload="none" playsinline muted style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="/assets/videos/finca-reel.mp4" type="video/mp4">
+        </video>
+        <div class="finca-reel-play" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.25),transparent 40%)">
+          <div style="width:64px;height:64px;border-radius:50%;background:rgba(245,130,13,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(0,0,0,.5)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#0D1B3E" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+  function playFincaReel(wrap){
+    var v = wrap.querySelector('video');
+    var p = wrap.querySelector('.finca-reel-play');
+    v.muted = false; v.controls = true;
+    v.play().catch(function(){ v.muted = true; v.play(); });
+    if (p) p.style.display = 'none';
+  }
+  </script>` : ''}
+
   <section style="padding:64px 6%;background:var(--ink2);border-top:1px solid var(--bd)">
     <div style="max-width:1200px;margin:0 auto">
       <div class="ey" style="margin-bottom:14px">Disponibles ahora</div>
