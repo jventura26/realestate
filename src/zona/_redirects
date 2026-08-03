@@ -66,5 +66,21 @@
 /propiedades-1/   /propiedades.html   301!
 /propiedades-1    /propiedades.html   301!
 
+# URLs viejas detectadas como 404 en Google Search Console (slugs con guion
+# de una version anterior del sitio, antes de limpiar los slugs a formato
+# sin separador). Google las sigue rastreando y da error 404 real -- esto
+# bloquea la indexacion de esas fichas. Verificado contra el catalogo/KV en vivo.
+/propiedades/hacienda-nueva    /propiedades/haciendanueva    301!
+/propiedades/hacienda-nueva/   /propiedades/haciendanueva    301!
+/propiedades/asuncion-mita    /propiedades/asuncionmita    301!
+/propiedades/asuncion-mita/   /propiedades/asuncionmita    301!
+/propiedades/asuncion-mita.html    /propiedades/asuncionmita    301!
+/propiedades/casa-en-venta-en-asuncion-mita-jutiapa.html    /propiedades/asuncionmita    301!
+/propiedades/casa-en-venta-en-asunci-n-mita-jutiapa.html    /propiedades/asuncionmita    301!
+/propiedades/arrazola-2-carretera-a-el-salvador.html    /propiedades/arrazola2    301!
+/propiedades/san-cristobal-casa-en-venta-b-7.html    /propiedades/sancristobal-b7    301!
+/propiedades/residencia-exclusiva-en-el-socorro-kilometro-12-7-caes.html    /propiedades/socorro    301!
+/propiedades/zona15.html    /propiedades/zona15vh3    301!
+
 # SPA fallback
 /*   /index.html   200
