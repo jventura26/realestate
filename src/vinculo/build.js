@@ -83,19 +83,7 @@ function copyAssets() {
 }
 
 console.log('\n Building INMUHUB.COM\n');
-((() => {
-  try {
-    const jp = path.join(__dirname, '../../data/propiedades.json');
-    if (fs.existsSync(jp)) {
-      const local = JSON.parse(fs.readFileSync(jp, 'utf8'));
-      if (Array.isArray(local) && local.length > 0) {
-        console.log(' Cargando ' + local.length + ' propiedades desde JSON local');
-        return Promise.resolve(local);
-      }
-    }
-  } catch(e) { console.log(' JSON local no disponible, usando API...'); }
-  return fetchKV();
-})()).then(kvData => {
+fetchKV().then(kvData => {
 let allProps = kvData ? normalizeKV(kvData) : parseProperties(CSV);
 // Filter: only props assigned to InmuHub + Activa
 allProps = allProps.filter(p => {
