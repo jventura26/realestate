@@ -1,6 +1,43 @@
 const { layout } = require('./layout');
 const { card } = require('./card');
-const { escapeHtml, uniqueValues } = require('../../shared/utils');
+const { escapeHtml, uniqueValues, parsePriceToUSD, ikTransform } = require('../../shared/utils');
+
+// "Publicado hace X" a partir de fechaPublicacion o createdAt - sin inventar
+// una fecha si no existe ninguna de las dos.
+function diasPublicadoLabel(prop) {
+  const raw = prop.fechaPublicacion || prop.createdAt;
+  if (!raw) return '';
+  const then = new Date(raw).getTime();
+  if (!then || isNaN(then)) return '';
+  const dias = Math.floor((Date.now() - then) / (1000 * 60 * 60 * 24));
+  if (dias < 0) return '';
+  if (dias === 0) return 'Publicado hoy';
+  if (dias === 1) return 'Publicado hace 1 día';
+  if (dias < 30) return 'Publicado hace ' + dias + ' días';
+  const meses = Math.floor(dias / 30);
+  if (meses === 1) return 'Publicado hace 1 mes';
+  if (meses < 12) return 'Publicado hace ' + meses + ' meses';
+  const anios = Math.floor(meses / 12);
+  return 'Publicado hace ' + anios + (anios === 1 ? ' año' : ' años');
+}
+
+// Compara el precio de esta propiedad contra el promedio real de su zona,
+// usando el resto del inventario activo (allProps). Requiere al menos 3
+// propiedades comparables en la misma zona o no se muestra nada - un
+// promedio de 1-2 datos no es una comparacion confiable.
+function comparableZonaLabel(prop, allProps) {
+  if (!prop.municipio || !Array.isArray(allProps)) return null;
+  const propUSD = parsePriceToUSD(prop.precio);
+  if (!propUSD || propUSD <= 0) return null;
+  const otros = allProps
+    .filter(function(p){ return p.municipio === prop.municipio && p.slug !== prop.slug; })
+    .map(function(p){ return parsePriceToUSD(p.precio); })
+    .filter(function(v){ return v && v > 0; });
+  if (otros.length < 3) return null;
+  const avg = otros.reduce(function(a,b){ return a+b; }, 0) / otros.length;
+  const diffPct = Math.round(((propUSD - avg) / avg) * 100);
+  return { avg: avg, diffPct: diffPct, sampleSize: otros.length, zona: prop.municipio };
+}
 function renderCaracteristicas(chars) {
   if (!chars || !chars.length) return '';
   const grupos = {
@@ -38,6 +75,29 @@ function renderDesc(desc) {
   const html = lines.map(l => '<p style="font-size:.84rem;line-height:1.7;margin-bottom:8px;color:#374151">' + escapeHtml(l) + '</p>').join('');
   return '<div class="description">' + label + html + '</div>';
 }
+function renderDescBloques(bloques) {
+  if (!bloques || !Array.isArray(bloques) || bloques.length === 0) return '';
+  return bloques.map(b => {
+    const c = (b.content || '').trim();
+    if (!c) return '';
+    if (b.type === 'destacado') {
+      return '<div style="margin-bottom:20px;padding:16px 20px;border-left:3px solid var(--gold,#F5820D);background:rgba(245,130,13,.06);border-radius:0 8px 8px 0">'
+        + '<div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold,#F5820D);margin-bottom:6px">Destacado</div>'
+        + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;line-height:1.8;font-style:italic;color:#334155">' + escapeHtml(c) + '</div></div>';
+    }
+    if (b.type === 'lista') {
+      const items = c.split('\n').map(l => l.trim()).filter(l => l);
+      if (items.length === 0) return '';
+      return '<ul style="margin:0 0 20px;padding:0 0 0 8px;list-style:none;display:flex;flex-direction:column;gap:8px">'
+        + items.map(item => '<li style="display:flex;align-items:flex-start;gap:10px;line-height:1.6;color:#334155">'
+          + '<span style="color:var(--gold,#F5820D);font-size:1rem;flex-shrink:0;margin-top:2px">\u2713</span>'
+          + '<span>' + escapeHtml(item) + '</span></li>').join('')
+        + '</ul>';
+    }
+    return '<p style="margin:0 0 16px;line-height:1.8;color:#334155">' + escapeHtml(c) + '</p>';
+  }).join('');
+}
+
 
 
 function indexPage(props) {
@@ -46,7 +106,7 @@ const zonas = [...new Set(props.map(p=>p.municipio).filter(Boolean))].slice(0,6)
 const zonasHTML = zonas.map(z => {
   const slug = z.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const count = props.filter(p=>p.municipio===z).length;
-  return `<a href="/zonas/${slug}.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(201,169,110,.25);border-radius:100px;padding:8px 18px;font-size:13px;font-weight:500;color:rgba(255,255,255,.8);transition:all .3s;text-decoration:none" onmouseover="this.style.background='rgba(201,169,110,.15)';this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.background='rgba(255,255,255,.08)';this.style.borderColor='rgba(201,169,110,.25)';this.style.color='rgba(255,255,255,.8)'">\u{1F4CD} ${z} <span style="opacity:.6;font-size:11px">(${count})</span></a>`;
+  return `<a href="/zonas/${slug}.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(245,130,13,.25);border-radius:100px;padding:8px 18px;font-size:13px;font-weight:500;color:rgba(255,255,255,.8);transition:all .3s;text-decoration:none" onmouseover="this.style.background='rgba(245,130,13,.15)';this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.background='rgba(255,255,255,.08)';this.style.borderColor='rgba(245,130,13,.25)';this.style.color='rgba(255,255,255,.8)'">\u{1F4CD} ${z} <span style="opacity:.6;font-size:11px">(${count})</span></a>`;
 }).join('');
 
 const statsBar = [
@@ -67,10 +127,10 @@ const body = `
 <section style="min-height:92vh;position:relative;display:flex;align-items:center;background:#0a1628;overflow:hidden">
   <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1800&q=60') center/cover no-repeat;opacity:.18"></div>
   <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,.98) 0%,rgba(10,22,40,.75) 60%,rgba(15,27,46,.9) 100%)"></div>
-  <div style="position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none"></div>
+  <div style="position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(245,130,13,.08) 0%,transparent 70%);pointer-events:none"></div>
   <div style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:100px 6% 100px">
     <div style="max-width:700px">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:100px;padding:6px 16px;margin-bottom:28px">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,130,13,.12);border:1px solid rgba(245,130,13,.3);border-radius:100px;padding:6px 16px;margin-bottom:28px">
         <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block"></span>
         <span style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Portal Premium Guatemala</span>
       </div>
@@ -81,9 +141,14 @@ const body = `
       <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.8;max-width:520px;margin-bottom:44px;font-weight:300">
         ${props.length} propiedades verificadas en Guatemala. Casas, apartamentos, fincas e inversiones en las zonas mas exclusivas.
       </p>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px">
-        <a href="/propiedades.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
-        <a href="/propiedades.html" style="display:inline-block;background:#1a2a4e;color:white;padding:12px 32px;border-radius:6px;font-weight:600;text-decoration:none">Ver propiedades →</a>
+      <div class="hub-hero-tabs">
+        <button class="hub-hero-tab active" onclick="setHubMode('comprar')">Comprar</button>
+        <button class="hub-hero-tab" onclick="setHubMode('alquilar')">Alquilar</button>
+        <button class="hub-hero-tab" onclick="setHubMode('invertir')">Invertir</button>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;max-width:520px">
+        <a href="/propiedades.html" id="hubHeroCTA" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a1628;font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 28px;border-radius:8px;text-decoration:none;transition:all .3s;flex:1;justify-content:center" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades &rarr;</a>
+        <button onclick="openHubFiltros()" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:14px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;font-family:inherit" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)';this.style.color='rgba(255,255,255,.8)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21V14"/><path d="M4 10V3"/><path d="M12 21V12"/><path d="M12 8V3"/><path d="M20 21V16"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg> Filtros</button>
       </div>
       <div>
         <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px">Zonas destacadas</div>
@@ -95,8 +160,93 @@ const body = `
     <div style="max-width:1200px;margin:0 auto;padding:0 6%;display:flex;flex-wrap:wrap">${statsBar}</div>
   </div>
 </section>
+<script>
+var hubMode='comprar';
+function setHubMode(m){
+  hubMode=m;
+  document.querySelectorAll('.hub-hero-tab').forEach(function(t){t.classList.remove('active')});
+  event.target.classList.add('active');
+  var cta=document.getElementById('hubHeroCTA');
+  if(m==='comprar'){cta.textContent='Ver propiedades \u2192';cta.href='/propiedades.html';}
+  else if(m==='alquilar'){cta.textContent='Ver alquileres \u2192';cta.href='/propiedades.html?tipo=Alquiler';}
+  else{cta.textContent='Ver inversiones \u2192';cta.href='/propiedades.html?tipo=Inversion';}
+}
+function openHubFiltros(){document.getElementById('hubFiltrosOverlay').classList.add('active');document.body.style.overflow='hidden';}
+function closeHubFiltros(){document.getElementById('hubFiltrosOverlay').classList.remove('active');document.body.style.overflow='';}
+function applyHubFiltros(){
+  var z=document.getElementById('hfZona').value;
+  var t=document.getElementById('hfTipo').value;
+  var pmin=document.getElementById('hfPmin').value;
+  var pmax=document.getElementById('hfPmax').value;
+  var h=document.getElementById('hfHabs').value;
+  var params=[];
+  if(t)params.push('tipo='+encodeURIComponent(t));
+  if(z)params.push('ciudad='+encodeURIComponent(z));
+  if(pmin)params.push('pmin='+pmin);
+  if(pmax)params.push('pmax='+pmax);
+  if(h)params.push('habs='+h);
+  window.location.href='/propiedades.html'+(params.length?'?'+params.join('&'):'');
+}
+</script>
+<div class="hub-filtros-overlay" id="hubFiltrosOverlay" onclick="if(event.target===this)closeHubFiltros()">
+  <div class="hub-filtros-modal">
+    <div class="hfm-header">
+      <h3>Filtros avanzados</h3>
+      <button class="hfm-close" onclick="closeHubFiltros()">&times;</button>
+    </div>
+    <div class="hfm-body">
+      <div class="hfm-grid">
+        <div class="hfm-group">
+          <label>Zona</label>
+          <select id="hfZona">
+            <option value="">Todas las zonas</option>
+            <option>Zona 10</option><option>Zona 14</option><option>Zona 15</option><option>Zona 16</option>
+            <option>Cayala</option><option>Fraijanes</option><option>Mixco</option><option>Villa Canales</option>
+            <option>San Jose Pinula</option>
+          </select>
+        </div>
+        <div class="hfm-group">
+          <label>Tipo</label>
+          <select id="hfTipo">
+            <option value="">Todos los tipos</option>
+            <option>Casa</option><option>Apartamento</option><option>Finca</option><option>Terreno</option><option>Local</option>
+          </select>
+        </div>
+        <div class="hfm-group">
+          <label>Precio minimo</label>
+          <input type="number" id="hfPmin" placeholder="Q 0" step="10000">
+        </div>
+        <div class="hfm-group">
+          <label>Precio maximo</label>
+          <input type="number" id="hfPmax" placeholder="Sin limite" step="10000">
+        </div>
+        <div class="hfm-group">
+          <label>Habitaciones</label>
+          <select id="hfHabs">
+            <option value="">Cualquiera</option>
+            <option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option>
+          </select>
+        </div>
+      </div>
+      <div class="hfm-amenities">
+        <label>Amenidades</label>
+        <div class="hfm-pills">
+          <button class="hfm-pill" onclick="this.classList.toggle('selected')">Piscina</button>
+          <button class="hfm-pill" onclick="this.classList.toggle('selected')">Jardin</button>
+          <button class="hfm-pill" onclick="this.classList.toggle('selected')">Seguridad 24/7</button>
+          <button class="hfm-pill" onclick="this.classList.toggle('selected')">Vista</button>
+          <button class="hfm-pill" onclick="this.classList.toggle('selected')">Parqueo</button>
+        </div>
+      </div>
+    </div>
+    <div class="hfm-footer">
+      <button class="hfm-btn-clear" onclick="document.querySelectorAll('.hfm-group select,.hfm-group input').forEach(function(e){e.value=''});document.querySelectorAll('.hfm-pill').forEach(function(p){p.classList.remove('selected')})">Limpiar</button>
+      <button class="hfm-btn-apply" onclick="applyHubFiltros()">Aplicar filtros</button>
+    </div>
+  </div>
+</div>
 
-<section style="padding:72px 6%;background:white;border-bottom:1px solid #eef0f3"><div style="max-width:1200px;margin:0 auto"><div style="text-align:center;margin-bottom:48px"><div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Por que elegirnos</div><h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:#0a1628;margin:0">La diferencia que <em style="font-style:italic">realmente importa</em></h2></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px"><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#0a1628,#1a2a4e);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Propiedades verificadas</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Cada propiedad pasa por verificacion rigurosa. Papeleria en orden y precios reales.</p></div><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#c9a96e,#e6c06a);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1 1 1 0 0 1-1 1h0a1 1 0 0 1-1-1z"/><path d="M14 14a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1 1 1 0 0 1-1 1h0a1 1 0 0 1-1-1z"/><path d="M8 14a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1 1 1 0 0 1-1 1h0a1 1 0 0 1-1-1z"/><path d="M18 11.5V9a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2"/><path d="M6 11.5V9a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1"/><path d="M3.5 11h.01"/><path d="M20.5 11h.01"/><path d="M6 11.5a6.5 6.5 0 0 0 12 0"/></svg></div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Asesoria personalizada</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Un asesor dedicado desde la busqueda hasta el cierre. Tu inversion, nuestra prioridad.</p></div><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#25d366,#1da851);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Respuesta en 1 hora</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Contestamos por WhatsApp en menos de 60 minutos. Las mejores oportunidades no esperan.</p></div></div></div></section>
+<section style="padding:72px 6%;background:white;border-bottom:1px solid #eef0f3"><div style="max-width:1200px;margin:0 auto"><div style="text-align:center;margin-bottom:48px"><div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Por que elegirnos</div><h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;color:#0a1628;margin:0">La diferencia que <em style="font-style:italic">realmente importa</em></h2></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px"><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#0a1628,#1a2a4e);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Propiedades verificadas</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Cada propiedad pasa por verificacion rigurosa. Papeleria en orden y precios reales.</p></div><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#f5820d,#e6c06a);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1 1 1 0 0 1-1 1h0a1 1 0 0 1-1-1z"/><path d="M14 14a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1 1 1 0 0 1-1 1h0a1 1 0 0 1-1-1z"/><path d="M8 14a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1 1 1 0 0 1-1 1h0a1 1 0 0 1-1-1z"/><path d="M18 11.5V9a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2"/><path d="M6 11.5V9a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1"/><path d="M3.5 11h.01"/><path d="M20.5 11h.01"/><path d="M6 11.5a6.5 6.5 0 0 0 12 0"/></svg></div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Asesoria personalizada</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Un asesor dedicado desde la busqueda hasta el cierre. Tu inversion, nuestra prioridad.</p></div><div style="text-align:center;padding:36px 24px;border:1.5px solid #eef0f3;border-radius:12px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#eef0f3';this.style.transform='none'"><div style="width:64px;height:64px;background:linear-gradient(135deg,#25d366,#1da851);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3 style="font-size:1.1rem;font-weight:700;color:#0a1628;margin-bottom:12px">Respuesta en 1 hora</h3><p style="font-size:.85rem;color:#64748b;line-height:1.7;margin:0">Contestamos por WhatsApp en menos de 60 minutos. Las mejores oportunidades no esperan.</p></div></div></div></section>
 <section style="padding:80px 6%;background:#f8f9fb">
   <div style="max-width:1200px;margin:0 auto">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px">
@@ -106,7 +256,109 @@ const body = `
       </div>
       <a href="/propiedades.html" style="font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:.04em" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ver todas &rarr;</a>
     </div>
-    <div class="prop-grid">${featured.map(p=>card(p)).join('')}</div>
+    <div class="prop-grid">${featured.map((p,i)=>card(p,i)).join('')}</div>
+  </div>
+</section>
+
+<section style="padding:80px 6%;background:#0a1628;overflow:hidden">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Zonas premium</div>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:white;line-height:1.1;margin:0">Explora por <em style="font-style:italic">ubicacion</em></h2>
+    </div>
+    <div class="hub-zones">
+      <a href="/zonas/zona-10.html" class="hub-zone-card">
+        <div class="hub-zone-bg" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=60')"></div>
+        <div class="hub-zone-ov"></div>
+        <div class="hub-zone-info">
+          <h3>Zona 10</h3>
+          <p>Centro financiero y diplomatico. Hoteles, embajadas y alta plusvalia.</p>
+          <div class="hub-zone-stats"><span>Desde Q2.5M</span> &bull; Corporativo</div>
+        </div>
+      </a>
+      <a href="/zonas/zona-14.html" class="hub-zone-card">
+        <div class="hub-zone-bg" style="background-image:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=60')"></div>
+        <div class="hub-zone-ov"></div>
+        <div class="hub-zone-info">
+          <h3>Zona 14</h3>
+          <p>Exclusividad residencial. Clubs privados, colegios premium y tranquilidad.</p>
+          <div class="hub-zone-stats"><span>Desde Q3.2M</span> &bull; Residencial</div>
+        </div>
+      </a>
+      <a href="/zonas/zona-15.html" class="hub-zone-card">
+        <div class="hub-zone-bg" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=60')"></div>
+        <div class="hub-zone-ov"></div>
+        <div class="hub-zone-info">
+          <h3>Zona 15</h3>
+          <p>Modernidad y naturaleza. Desarrollos contemporaneos con amenidades.</p>
+          <div class="hub-zone-stats"><span>Desde Q1.8M</span> &bull; Familiar</div>
+        </div>
+      </a>
+      <a href="/zonas/zona-16.html" class="hub-zone-card">
+        <div class="hub-zone-bg" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=60')"></div>
+        <div class="hub-zone-ov"></div>
+        <div class="hub-zone-info">
+          <h3>Zona 16</h3>
+          <p>Privacidad y terrenos amplios. Baja densidad con vistas panoramicas.</p>
+          <div class="hub-zone-stats"><span>Desde Q2.8M</span> &bull; Exclusivo</div>
+        </div>
+      </a>
+      <a href="/zonas/fraijanes.html" class="hub-zone-card">
+        <div class="hub-zone-bg" style="background-image:url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=60')"></div>
+        <div class="hub-zone-ov"></div>
+        <div class="hub-zone-info">
+          <h3>Fraijanes</h3>
+          <p>Mayor crecimiento 2026. Fincas, residencias y alta plusvalia.</p>
+          <div class="hub-zone-stats"><span>Desde Q950K</span> &bull; Inversion</div>
+        </div>
+      </a>
+      <a href="/zonas/cayala.html" class="hub-zone-card">
+        <div class="hub-zone-bg" style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=60')"></div>
+        <div class="hub-zone-ov"></div>
+        <div class="hub-zone-info">
+          <h3>Cayala</h3>
+          <p>Ciudad planificada. Arquitectura europea, seguridad y comunidad activa.</p>
+          <div class="hub-zone-stats"><span>Desde Q2.2M</span> &bull; Lifestyle</div>
+        </div>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="/propiedades.html" style="display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-size:13px;font-weight:700;letter-spacing:.04em;text-decoration:none;border:1px solid rgba(245,130,13,.3);padding:12px 28px;border-radius:8px;transition:all .3s" onmouseover="this.style.background='rgba(245,130,13,.1)'" onmouseout="this.style.background='none'">Explorar todas las zonas &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section style="padding:80px 6%;background:var(--gray-50);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Datos del mercado</div>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:#0a1628;line-height:1.1;margin:0">Market <em style="font-style:italic">Insights</em></h2>
+    </div>
+    <div class="hub-insights-grid">
+      <div class="hub-insight-card">
+        <div class="hub-insight-val">+12%</div>
+        <div class="hub-insight-label">Plusvalia promedio anual en zonas premium</div>
+      </div>
+      <div class="hub-insight-card">
+        <div class="hub-insight-val">Q18K</div>
+        <div class="hub-insight-label">Precio promedio por metro cuadrado</div>
+      </div>
+      <div class="hub-insight-card">
+        <div class="hub-insight-val">6.8%</div>
+        <div class="hub-insight-label">Cap rate promedio en inversion</div>
+      </div>
+      <div class="hub-insight-card">
+        <div class="hub-insight-val">&lt;45</div>
+        <div class="hub-insight-label">Dias promedio en mercado</div>
+      </div>
+    </div>
+    <div style="margin-top:32px;background:linear-gradient(135deg,#0a1628,#1a2a4e);border-radius:12px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Zona con mayor demanda en 2026</div>
+        <div style="font-size:1.3rem;font-weight:300;color:white;font-family:'Cormorant Garamond',Georgia,serif">Fraijanes &mdash; crecimiento sostenido y alta rentabilidad</div>
+      </div>
+      <a href="/zonas/fraijanes.html" style="font-size:13px;font-weight:700;color:#0a1628;background:var(--gold);padding:10px 24px;border-radius:8px;text-decoration:none;transition:opacity .2s;white-space:nowrap" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver propiedades</a>
+    </div>
   </div>
 </section>
 
@@ -125,9 +377,49 @@ return layout({ title: null, desc: `Casas, apartamentos, fincas y terrenos en Gu
 
 function catalogPage(props) {
 const tipos = uniqueValues(props, 'tipo');
+
 const ciudades = uniqueValues(props, 'municipio');
 const cintas = uniqueValues(props, 'cinta');
-const filterJS = `<script>(function(){const grid=document.getElementById('g'),count=document.getElementById('fc');const cards=[...grid.querySelectorAll('.property-card')];function run(){const q=document.getElementById('fq').value.toLowerCase();const ti=document.getElementById('ft').value,ci=document.getElementById('fc2').value,ci2=document.getElementById('fc3').value,pr=document.getElementById('fp').value,hb=document.getElementById('fh').value;let n=0;cards.forEach(c=>{const ok=(!q||c.textContent.toLowerCase().includes(q))&&(!ti||c.dataset.tipo===ti)&&(!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&(!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&(!pr||(()=>{const p=parseFloat(c.dataset.precio),parts=pr.split('-').map(Number);return p>=parts[0]&&(!parts[1]||p<=parts[1]);})());c.style.display=ok?'':'none';if(ok)n++;});count.textContent=n+' propiedad'+(n!==1?'es':'');document.getElementById('nr').style.display=n===0?'block':'none';}['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).addEventListener('input',run));document.getElementById('fq').addEventListener('change',run);document.getElementById('cl').addEventListener('click',()=>{['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).value='');run();});const p=new URLSearchParams(location.search);if(p.get('tipo'))document.getElementById('ft').value=p.get('tipo');if(p.get('ciudad'))document.getElementById('fc2').value=p.get('ciudad');run();count.textContent='${props.length} propiedades';})();<\/script>`;
+const filterJS = `<script>(function(){
+const grid=document.getElementById('g'),count=document.getElementById('fc');
+const cards=[...grid.querySelectorAll('.property-card')];
+const FIELDS={fq:'q',ft:'tipo',fc2:'ciudad',fc3:'estado',fp:'precio',fh:'habs'};
+function syncUrl(){
+  const params=new URLSearchParams();
+  Object.keys(FIELDS).forEach(id=>{const v=document.getElementById(id).value;if(v)params.set(FIELDS[id],v);});
+  const qs=params.toString();
+  const clean=location.pathname+(qs?'?'+qs:'');
+  history.replaceState(null,'',clean);
+}
+function run(){
+  const q=document.getElementById('fq').value.toLowerCase();
+  const ti=document.getElementById('ft').value,ci=document.getElementById('fc2').value,ci2=document.getElementById('fc3').value,pr=document.getElementById('fp').value,hb=document.getElementById('fh').value;
+  let n=0;
+  cards.forEach(c=>{
+    const ok=(!q||c.textContent.toLowerCase().includes(q))&&(!ti||c.dataset.tipo===ti)&&(!ci||c.dataset.ciudad===ci)&&(!ci2||c.dataset.cinta===ci2)&&(!hb||parseInt(c.dataset.habs)>=parseInt(hb))&&(!pr||(()=>{const p=parseFloat(c.dataset.precio),parts=pr.split('-').map(Number);return p>=parts[0]&&(!parts[1]||p<=parts[1]);})());
+    c.style.display=ok?'':'none';
+    if(ok)n++;
+  });
+  count.textContent=n+' propiedad'+(n!==1?'es':'');
+  document.getElementById('nr').style.display=n===0?'block':'none';
+  syncUrl();
+}
+['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).addEventListener('input',run));
+document.getElementById('fq').addEventListener('change',run);
+document.getElementById('cl').addEventListener('click',()=>{['fq','ft','fc2','fc3','fp','fh'].forEach(id=>document.getElementById(id).value='');run();});
+const shareBtn=document.getElementById('shareSearch');
+if(shareBtn)shareBtn.addEventListener('click',()=>{
+  navigator.clipboard.writeText(location.href).then(()=>{
+    const orig=shareBtn.textContent;
+    shareBtn.textContent='Link copiado';
+    setTimeout(()=>{shareBtn.textContent=orig;},1800);
+  });
+});
+const p=new URLSearchParams(location.search);
+const REVERSE={q:'fq',tipo:'ft',ciudad:'fc2',estado:'fc3',precio:'fp',habs:'fh'};
+Object.keys(REVERSE).forEach(k=>{if(p.get(k))document.getElementById(REVERSE[k]).value=p.get(k);});
+run();
+})();<\/script>`;
 const tiposOptions=tipos.map(t=>`<option>${escapeHtml(t)}</option>`).join('');
 const ciudadesOptions=ciudades.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
 const cintasOptions=cintas.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
@@ -143,40 +435,135 @@ const body = `
 <select id="fp"><option value="">Precio</option><option value="0-100000">Hasta $100K</option><option value="100000-300000">$100K-$300K</option><option value="300000-600000">$300K-$600K</option><option value="600000-1000000">$600K-$1M</option><option value="1000000-9999999">Mas de $1M</option></select>
 <select id="fh"><option value="">Habitaciones</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select>
 <button id="cl">Limpiar filtros</button>
+<button id="shareSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i class="ti ti-link" aria-hidden="true"></i> Compartir búsqueda</button>
 <span class="f-count" id="fc">${props.length} propiedades</span>
 </div>
-<div class="prop-grid" id="g">${props.map(p=>card(p)).join('')}</div>
+<div class="prop-grid" id="g">${props.map((p,i)=>card(p,i)).join('')}</div>
 <div class="no-res" id="nr" style="display:none"><p>No se encontraron propiedades</p><small>Intenta ajustar los filtros</small></div>
 ${filterJS}`;
-return layout({ title: 'Propiedades en Guatemala', desc: 'Catalogo completo de casas, apartamentos, fincas y terrenos en Guatemala. Filtra por zona, tipo y precio. INMUHUB.COM', canonical: '/propiedades.html', body });
+return layout({ title: 'Propiedades en Venta en Guatemala — Casas, Apartamentos, Fincas', desc: 'Catalogo de ' + props.length + ' propiedades en venta en Guatemala. Casas, apartamentos, fincas y terrenos en Zona 10, Zona 14, Cayala, Fraijanes. Precios verificados y actualizados.', canonical: '/propiedades.html', body });
 }
 
 function zonaPage(props, zona) {
-const tipos = uniqueValues(props, 'tipo');
-const slug = zona.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const body = `
-<div style="background:var(--gray-900);padding:48px 6%;color:var(--white)">
-<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px"><a href="/" style="color:rgba(255,255,255,.5)">Inicio</a> / <a href="/propiedades.html" style="color:rgba(255,255,255,.5)">Propiedades</a> / ${escapeHtml(zona)}</div>
-<h1 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px">Propiedades en <span style="color:var(--gold)">${escapeHtml(zona)}</span></h1>
-<p style="color:rgba(255,255,255,.65);font-size:16px">${props.length} propiedad${props.length!==1?'es':''} disponible${props.length!==1?'s':''} en ${escapeHtml(zona)}, Guatemala</p>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">
-${tipos.map(t=>`<span style="background:rgba(201,169,110,.15);color:var(--gold);border:1px solid rgba(201,169,110,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">${escapeHtml(t)}</span>`).join('')}
-</div>
-</div>
-<div class="prop-grid" style="padding:32px 6%">${props.map(p=>card(p)).join('')}</div>
-<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">
-<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles en Guatemala</p>
-<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>
-</div>`;
+var tipos = uniqueValues(props, 'tipo');
+var slug = zona.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+var precios = props.map(function(p){ return p.priceNumeric; }).filter(function(n){ return n > 0; });
+var precioMin = precios.length ? Math.min.apply(null, precios) : 0;
+var precioMax = precios.length ? Math.max.apply(null, precios) : 0;
+var rangoPrecios = precioMin && precioMax ? '$' + precioMin.toLocaleString('en-US') + ' - $' + precioMax.toLocaleString('en-US') : '';
+
+var ZONA_CONTENT = {
+  'zona-10': { desc: 'Zona 10 es el epicentro financiero y diplomatico de Ciudad de Guatemala. Alberga hoteles cinco estrellas, restaurantes de autor, centros comerciales exclusivos y embajadas. Las propiedades aqui combinan ubicacion estrategica con prestigio y alta plusvalia.', faqs: [
+    { q: 'Que tipos de propiedades hay en Zona 10?', a: 'En Zona 10 encontraras principalmente apartamentos de lujo, oficinas corporativas y residencias exclusivas. Los precios varian segun el edificio y las amenidades.' },
+    { q: 'Es buena inversion comprar en Zona 10?', a: 'Si, Zona 10 es una de las areas con mayor plusvalia en Guatemala. La demanda es constante por su ubicacion central, conectividad y oferta comercial.' },
+    { q: 'Cual es el rango de precios en Zona 10?', a: rangoPrecios ? 'Actualmente las propiedades van desde ' + rangoPrecios + '.' : 'Los precios varian segun tipo y tamano. Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'zona-14': { desc: 'Zona 14 es sinonimo de exclusividad residencial en Guatemala. Con amplias avenidas arboladas, clubs privados, colegios de prestigio y la cercan\u00eda al aeropuerto internacional, es la eleccion natural para familias que buscan calidad de vida premium y seguridad.', faqs: [
+    { q: 'Que hace especial a Zona 14 para vivir?', a: 'Zona 14 ofrece un entorno residencial tranquilo con acceso rapido a centros comerciales, hospitales y colegios de primer nivel. Su plusvalia historica es una de las mas altas del pais.' },
+    { q: 'Que tipos de propiedades hay en Zona 14?', a: 'Predominan las casas amplias en condominios cerrados y apartamentos de lujo. Tambien hay opciones de terrenos y oficinas.' },
+    { q: 'Cual es el rango de precios en Zona 14?', a: rangoPrecios ? 'Las propiedades actualmente van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'zona-15': { desc: 'Zona 15 combina naturaleza y modernidad. Con desarrollos residenciales contemporaneos, areas verdes extensas y acceso directo a centros educativos y comerciales, es ideal para familias jovenes y profesionales que buscan un equilibrio entre ciudad y tranquilidad.', faqs: [
+    { q: 'Que ventajas tiene vivir en Zona 15?', a: 'Zona 15 destaca por sus areas verdes, condominios modernos con amenidades completas y excelente conectividad vial hacia zonas 10 y 14.' },
+    { q: 'Cual es el rango de precios en Zona 15?', a: rangoPrecios ? 'Las propiedades van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'zona-16': { desc: 'Zona 16 ofrece un estilo de vida residencial exclusivo con amplios terrenos, vistas panoramicas y proyectos de baja densidad. Ideal para quienes buscan privacidad, naturaleza y propiedades de gran tamano sin alejarse de la ciudad.', faqs: [
+    { q: 'Que tipo de propiedades se encuentran en Zona 16?', a: 'Zona 16 se caracteriza por casas amplias en condominios de baja densidad, terrenos para construccion y desarrollos exclusivos rodeados de naturaleza.' },
+    { q: 'Cual es el rango de precios en Zona 16?', a: rangoPrecios ? 'Actualmente las propiedades van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]},
+  'cayala': { desc: 'Cayala es el desarrollo urbanistico mas innovador de Guatemala. Su concepto de ciudad dentro de la ciudad integra residencias, comercios, restaurantes, oficinas y espacios publicos en un entorno peatonal seguro y sofisticado. Alta demanda y plusvalia creciente.', faqs: [
+    { q: 'Que hace unica a Cayala?', a: 'Cayala es una ciudad planificada con arquitectura europea, calles peatonales, seguridad 24/7 y una comunidad activa. Combina residencia, trabajo y entretenimiento en un solo lugar.' },
+    { q: 'Cual es el rango de precios en Cayala?', a: rangoPrecios ? 'Las propiedades van desde ' + rangoPrecios + '.' : 'Los precios varian segun tipo. Consulta las propiedades disponibles.' }
+  ]},
+  'fraijanes': { desc: 'Fraijanes se ha consolidado como destino premium para quienes buscan residencias amplias, fincas y terrenos de inversion a minutos de la capital. Su clima templado, entorno natural y desarrollos modernos atraen a familias y inversionistas.', faqs: [
+    { q: 'Es buena inversion comprar en Fraijanes?', a: 'Si, Fraijanes ha experimentado un crecimiento sostenido en plusvalia gracias a nuevos desarrollos residenciales, mejora de infraestructura vial y alta demanda.' },
+    { q: 'Que tipos de propiedades hay en Fraijanes?', a: 'Encontraras casas en condominio, fincas, terrenos para desarrollo y residencias de campo. Es ideal para quienes buscan espacio y naturaleza.' },
+    { q: 'Cual es el rango de precios en Fraijanes?', a: rangoPrecios ? 'Las propiedades van desde ' + rangoPrecios + '.' : 'Consulta las propiedades disponibles para precios actualizados.' }
+  ]}
+};
+
+var zoneKey = slug;
+var zoneContent = ZONA_CONTENT[zoneKey] || { desc: 'Descubre las propiedades disponibles en ' + zona + ', Guatemala. Residencias, apartamentos, fincas y terrenos verificados con precios actualizados.', faqs: [] };
+
+var faqHTML = '';
+if (zoneContent.faqs && zoneContent.faqs.length) {
+  faqHTML = '<div style="padding:40px 6%;background:var(--gray-50);border-top:1px solid var(--border)">' +
+    '<div style="max-width:800px;margin:0 auto">' +
+    '<h2 style="font-size:22px;font-weight:700;margin-bottom:24px;color:var(--gray-900)">Preguntas frecuentes sobre ' + escapeHtml(zona) + '</h2>' +
+    zoneContent.faqs.map(function(faq, i) {
+      return '<details style="border-bottom:1px solid var(--border);padding:16px 0"' + (i===0?' open':'') + '>' +
+        '<summary style="cursor:pointer;font-size:15px;font-weight:600;color:var(--gray-900);list-style:none;display:flex;justify-content:space-between;align-items:center">' +
+        '<span>' + escapeHtml(faq.q) + '</span>' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>' +
+        '</summary>' +
+        '<p style="font-size:14px;color:var(--gray-600);line-height:1.7;margin-top:12px">' + escapeHtml(faq.a) + '</p>' +
+        '</details>';
+    }).join('') +
+    '</div></div>';
+}
+
+var body = '<div style="background:var(--gray-900);padding:48px 6%;color:var(--white)">' +
+'<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px"><a href="/" style="color:rgba(255,255,255,.5)">Inicio</a> / <a href="/propiedades.html" style="color:rgba(255,255,255,.5)">Propiedades</a> / ' + escapeHtml(zona) + '</div>' +
+'<h1 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px">Propiedades en Venta en <span style="color:var(--gold)">' + escapeHtml(zona) + '</span></h1>' +
+'<p style="color:rgba(255,255,255,.65);font-size:16px;line-height:1.7;max-width:700px">' + escapeHtml(zoneContent.desc) + '</p>' +
+'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">' +
+tipos.map(function(t){ return '<span style="background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">' + escapeHtml(t) + '</span>'; }).join('') +
+(rangoPrecios ? '<span style="background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600">' + rangoPrecios + '</span>' : '') +
+'</div></div>' +
+'<div class="prop-grid" style="padding:32px 6%">' + props.map(function(p,i){ return card(p,i); }).join('') + '</div>' +
+faqHTML +
+'<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">' +
+'<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles en Guatemala</p>' +
+'<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>' +
+'</div>';
+
+var schemaBreadcrumb = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
+    { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
+    { '@type':'ListItem', 'position':3, 'name': 'Propiedades en ' + zona }
+  ]
+});
+
+var schemaFaq = (zoneContent.faqs && zoneContent.faqs.length) ? JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': zoneContent.faqs.map(function(faq) {
+    return { '@type': 'Question', 'name': faq.q, 'acceptedAnswer': { '@type': 'Answer', 'text': faq.a } };
+  })
+}) : null;
+
+var scripts = '<script type="application/ld+json">' + schemaBreadcrumb + '<\/script>';
+if (schemaFaq) scripts += '<script type="application/ld+json">' + schemaFaq + '<\/script>';
+
 return layout({
-  title: `Propiedades en ${zona}, Guatemala`,
-  desc: `${props.length} propiedades en ${zona} Guatemala. Casas, apartamentos y mas en venta y renta. Precios verificados en INMUHUB.COM`,
-  canonical: `/zonas/${slug}.html`,
-  body
+  title: 'Propiedades en Venta en ' + zona + ', Guatemala \u2014 Casas y Apartamentos',
+  desc: props.length + ' propiedades en venta en ' + zona + ', Guatemala. ' + tipos.join(', ') + ' con precios verificados.' + (rangoPrecios ? ' Desde ' + rangoPrecios + '.' : ''),
+  canonical: '/zonas/' + slug + '.html',
+  body: body,
+  scripts: scripts
 });
 }
 
-function detailPage(prop) {
+
+function dualPriceDetail(prop, esc) {
+  var raw = prop.priceFormatted || prop.precio || '';
+  if (!raw) return { main:'', sub:'', sidebar:'', sidebarSub:'' };
+  var num = parseFloat(String(prop.priceNumeric || 0));
+  var m = (prop.moneda || '').toUpperCase();
+  var isQ = m.includes('Q') || m.includes('GTQ') || raw.includes('Q');
+  var alt = '';
+  var approx = String.fromCharCode(8776);
+  if (num > 0) {
+    if (isQ) { alt = approx + ' ' + '$' + Math.round(num/7.60).toLocaleString('en-US') + ' USD'; }
+    else { alt = approx + ' Q' + Math.round(num*7.80).toLocaleString('en-US'); }
+  }
+  return { main:esc(raw), sub:alt, sidebar:esc(raw), sidebarSub:alt };
+}
+
+function detailPage(prop, allProps) {
   const esc = s => escapeHtml ? escapeHtml(String(s||'')) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const gallery = (prop.gallery||[]).slice(0,10);
   const mainImg = prop.mainImageThumb||prop.mainImage||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80';
@@ -189,20 +576,27 @@ function detailPage(prop) {
   const g4 = imgs[3]||'';
   const g5 = imgs[4]||'';
   const totalPhotos = imgs.length;
+  const heroImgUrl = ikTransform(g1, { w: 1400, q: 78 }); // misma URL para <link rel=preload> y el <img> real, para no descargar la foto 2 veces
 
+  // En movil solo se ve .zp-mob-gal (la .zp-gal de escritorio esta display:none),
+  // asi que la primera foto de esta galeria ES el candidato a LCP en movil - antes
+  // se marcaba loading="lazy" incluso en la foto visible de entrada, retrasando
+  // la imagen mas grande de la pagina. Ahora solo la primera es eager/priority,
+  // igual que ya se hacia correctamente en la galeria de escritorio (g1).
+  const heroImgUrlMobile = ikTransform(imgs[0]||mainImg, { w: 900, q: 72 }); // misma URL usada en el <link rel=preload> movil
   const mobGalHTML = imgs.length ? `<div class="zp-mob-gal">
-    <div class="zp-mob-track" id="zpMobTrack">${imgs.map(src=>`<div class="zp-mob-slide"><img src="${esc(src)}" alt="" loading="lazy"></div>`).join('')}</div>
+    <div class="zp-mob-track" id="zpMobTrack">${imgs.map((src,i)=>`<div class="zp-mob-slide"><img src="${esc(i===0?heroImgUrlMobile:ikTransform(src,{w:900,q:72}))}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala') + (i>0?' - foto '+(i+1):''))}" ${i===0?'loading="eager" fetchpriority="high"':'loading="lazy"'}></div>`).join('')}</div>
     <div class="zp-mob-counter" id="zpMobCounter">1 / ${imgs.length}</div>
     <div class="zp-mob-dots">${imgs.map((_,i)=>`<div class="zp-mob-dot${i===0?' active':''}" id="zpDot${i}"></div>`).join('')}</div>
   </div>` : '';
 
   const galHTML = `<div class="zp-gal">
-    <div class="zp-gal-main"><img src="${esc(g1)}" alt="" loading="eager"></div>
+    <div class="zp-gal-main"><img src="${esc(heroImgUrl)}" alt="${esc((prop.tipo||'Propiedad') + ' en ' + (prop.municipio||'Guatemala'))}" loading="eager" fetchpriority="high"></div>
     <div class="zp-gal-grid">
-      ${g2?`<div class="zp-gal-cell"><img src="${esc(g2)}" alt="" loading="lazy"></div>`:''}
-      ${g3?`<div class="zp-gal-cell"><img src="${esc(g3)}" alt="" loading="lazy"></div>`:''}
-      ${g4?`<div class="zp-gal-cell"><img src="${esc(g4)}" alt="" loading="lazy"></div>`:''}
-      ${g5?`<div class="zp-gal-cell zp-gal-last"><img src="${esc(g5)}" alt="" loading="lazy"><button class="zp-gal-all" onclick="zpOpenGallery()">${totalPhotos > 5 ? '+ ' + (totalPhotos-5) + ' fotos' : 'Ver todas'}</button></div>`:''}
+      ${g2?`<div class="zp-gal-cell"><img src="${esc(ikTransform(g2,{w:700,q:72}))}" alt="" loading="lazy"></div>`:''}
+      ${g3?`<div class="zp-gal-cell"><img src="${esc(ikTransform(g3,{w:700,q:72}))}" alt="" loading="lazy"></div>`:''}
+      ${g4?`<div class="zp-gal-cell"><img src="${esc(ikTransform(g4,{w:700,q:72}))}" alt="" loading="lazy"></div>`:''}
+      ${g5?`<div class="zp-gal-cell zp-gal-last"><img src="${esc(ikTransform(g5,{w:700,q:72}))}" alt="" loading="lazy"><button class="zp-gal-all" onclick="zpOpenGallery()">${totalPhotos > 5 ? '+ ' + (totalPhotos-5) + ' fotos' : 'Ver todas'}</button></div>`:''}
     </div>
   </div>`;
 
@@ -210,6 +604,7 @@ function detailPage(prop) {
   const precio = prop.priceFormatted || (prop.precio ? Number(prop.precio).toLocaleString('en-US') : '');
   const moneda = prop.moneda||'USD';
   const precioStr = precio ? moneda + ' ' + precio : '';
+  const dp = dualPriceDetail(prop, esc);
   const operStr = prop.operacion||'';
 
   // Quick specs
@@ -320,7 +715,7 @@ function detailPage(prop) {
   // Map & video
   const hasMap = prop.lat && prop.lng;
   const mapHTML = hasMap ? `<div class="zp-map"><iframe src="https://maps.google.com/maps?q=${prop.lat},${prop.lng}&z=16&output=embed" width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
-  const videoHTML = prop.videoTour ? `<div class="zp-video-wrap"><iframe src="${esc(prop.videoTour)}" allow="autoplay; fullscreen" allowfullscreen width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
+  const videoHTML = (prop.videoTour || prop.videoUrl) ? `<div class="zp-video-wrap"><iframe src="${esc(prop.videoTour || prop.videoUrl)}" allow="autoplay; fullscreen" allowfullscreen width="100%" height="340" style="border:0;border-radius:12px" loading="lazy"></iframe></div>` : '';
 
   // Location breadcrumb
   const locParts = [prop.zona, prop.municipio, prop.ubicacionGeneral||prop.departamento].filter(Boolean);
@@ -373,11 +768,34 @@ function detailPage(prop) {
   // Plano
   const planoHTML = prop.plano ? `<a href="${esc(prop.plano)}" target="_blank" class="zp-plano-btn"><i class="ti ti-file-description"></i> Ver plano / PDF</a>` : '';
 
+  // Antiguedad del listado (transparencia, sin inventar fecha si no existe)
+  const diasPubStr = diasPublicadoLabel(prop);
+
+  // Comparable real vs promedio de la zona
+  const comparable = comparableZonaLabel(prop, allProps);
+  const comparableHTML = comparable ? (function(){
+    const fmtC = function(n){ return '$ ' + Math.round(n).toLocaleString('en-US'); };
+    const abs = Math.abs(comparable.diffPct);
+    let texto;
+    if (abs < 3) {
+      texto = 'En línea con el promedio de ' + esc(comparable.zona) + ' (' + fmtC(comparable.avg) + ')';
+    } else if (comparable.diffPct < 0) {
+      texto = abs + '% por debajo del promedio de ' + esc(comparable.zona) + ' (' + fmtC(comparable.avg) + ')';
+    } else {
+      texto = abs + '% por encima del promedio de ' + esc(comparable.zona) + ' (' + fmtC(comparable.avg) + ')';
+    }
+    return '<div style="display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:#64748b;margin-top:6px"><i class="ti ti-chart-bar" style="font-size:14px"></i>' + texto + '</div>';
+  })() : '';
+
   // Gallery lightbox thumbnails
+  const imgsLbFull = imgs.map(src => ikTransform(src,{w:1600,q:80})); // imagen grande al abrir el lightbox
+  const imgsLbThumb = imgs.map(src => ikTransform(src,{w:160,q:60})); // tira de miniaturas
   const lightboxHTML = `<div class="zp-lb" id="zpLb" onclick="this.style.display='none'">
     <button class="zp-lb-close" onclick="document.getElementById('zpLb').style.display='none'">×</button>
-    <div class="zp-lb-strip">${imgs.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
-    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgs[0])}" alt=""></div>
+    <div class="zp-lb-strip">${imgsLbThumb.map((src,i)=>`<img src="${esc(src)}" class="zp-lb-thumb" onclick="event.stopPropagation();zpLbShow(${i})" loading="lazy">`).join('')}</div>
+    <button class="zp-lb-nav zp-lb-prev" onclick="event.stopPropagation();zpLbPrev()" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&lsaquo;</button>
+    <button class="zp-lb-nav zp-lb-next" onclick="event.stopPropagation();zpLbNext()" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center">&rsaquo;</button>
+    <div class="zp-lb-main"><img id="zpLbImg" src="${esc(imgsLbFull[0])}" alt="" loading="lazy"></div>
   </div>`;
 
   return `<!DOCTYPE html>
@@ -388,6 +806,13 @@ function detailPage(prop) {
 <title>${esc(prop.titulo||'Propiedad')} | INMUHUB.COM</title>
 <meta name="description" content="${esc((cleanDesc||prop.titulo||'Propiedad en Guatemala').substring(0,160))}">
 <link rel="canonical" href="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
+<link rel="icon" type="image/png" href="/assets/favicon2.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="InmuHub">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(prop.titulo||'Propiedad')} | INMUHUB.COM">
 <meta property="og:description" content="${esc((cleanDesc||prop.titulo||'').substring(0,160))}">
@@ -396,7 +821,13 @@ function detailPage(prop) {
 <meta property="og:locale" content="es_GT">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://ik.imagekit.io" crossorigin>
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.27.0/dist/tabler-icons.min.css"></noscript>
+<!-- Precarga de la foto principal (candidato a LCP) - una version para escritorio y
+     otra para movil, alineadas con el breakpoint real de 700px usado en el CSS de
+     esta pagina (.zp-gal se oculta y .zp-mob-gal se muestra en max-width:700px) -->
+<link rel="preload" as="image" href="${esc(heroImgUrl)}" media="(min-width:701px)" fetchpriority="high">
+<link rel="preload" as="image" href="${esc(heroImgUrlMobile)}" media="(max-width:700px)" fetchpriority="high">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#1a1a1a;font-size:15px;line-height:1.6}
@@ -547,19 +978,36 @@ ${mobGalHTML}${galHTML}
   <!-- MAIN -->
   <div class="zp-main">
 
+    <nav class="zp-breadcrumb" style="font-size:12px;color:#94a3b8;margin-bottom:12px;display:flex;align-items:center;gap:4px;flex-wrap:wrap"><a href="/" style="color:#94a3b8;text-decoration:none">Inicio</a><span style="color:#cbd5e1"> / </span><a href="/propiedades.html" style="color:#94a3b8;text-decoration:none">Propiedades</a><span style="color:#cbd5e1"> / </span><span style="color:#64748b">${esc((prop.titulo||'Propiedad').substring(0,50))}</span></nav>
     <div class="zp-loc"><i class="ti ti-map-pin"></i>${locStr||esc(prop.zona||'Guatemala')}</div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;color:#94a3b8;margin-top:6px">
+      <span style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="zpViewCount">0</span> vistas</span>
+      ${diasPubStr ? '<span style="display:flex;align-items:center;gap:6px"><i class="ti ti-calendar" style="font-size:14px"></i>' + esc(diasPubStr) + '</span>' : ''}
+    </div>
+    <script>(function(){var k="zpViews_${prop.slug}";var c=parseInt(localStorage.getItem(k)||"0")+1;localStorage.setItem(k,String(c));document.getElementById("zpViewCount").textContent=c;})()</script>
+    <script>(function(){var bid='${prop.broker_id||""}';if(bid)fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'property_view',broker_id:bid})}).catch(function(){});})()</script>
+
 
     <div class="zp-badges">${cintaHTML}${exclHTML}</div>
 
     <h1 class="zp-title">${esc(prop.titulo||'Propiedad')}</h1>
 
-    ${precioStr ? `<div class="zp-price">${esc(precioStr)}</div><div class="zp-price-sub">${esc(operStr)}</div>` : ''}
+    ${precioStr ? `<div class="zp-price">${dp.main}</div>${dp.sub ? '<div style="font-size:.85rem;color:#64748b;margin-bottom:2px">'+dp.sub+'</div>' : ''}<div class="zp-price-sub">${esc(operStr)}</div>${comparableHTML}` : ''}
 
     ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
+
+    ${prop.priceNumeric > 0 ? '<a href="/herramientas/calculadora-hipotecaria.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f0f4fa;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none;margin-bottom:24px"><i class="ti ti-calculator" style="font-size:18px"></i> Calcular cuota hipotecaria</a>' : ''}
+
+    ${(prop.hook && prop.hook.trim()) ? `<div class="zp-section"><div style="padding:16px 20px;border-left:3px solid var(--gold,#F5820D);background:rgba(245,130,13,.06);border-radius:0 8px 8px 0"><div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;line-height:1.8;font-style:italic;color:#334155">&ldquo;${esc(prop.hook)}&rdquo;</div></div></div>` : ''}
 
     ${descHTML ? `<div class="zp-section">
       <h2 class="zp-section-title">Descripción</h2>
       <div class="zp-desc">${descHTML}</div>
+    </div>` : ''}
+
+    ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0) ? `<div class="zp-section">
+      ${!descHTML ? '<h2 class="zp-section-title">Descripci\u00f3n</h2>' : ''}
+      <div class="zp-desc">${renderDescBloques(prop.descBloques)}</div>
     </div>` : ''}
 
     ${caractHTML ? `<div class="zp-section">
@@ -581,27 +1029,73 @@ ${mobGalHTML}${galHTML}
       <h2 class="zp-section-title">Ubicación</h2>
       ${prop.ubicacionGeneral ? `<p style="color:#555;margin-bottom:14px;font-size:14px">${esc(prop.ubicacionGeneral)}</p>` : ''}
       ${mapHTML}
+      ${(prop.lat && prop.lng) || prop.googleMapsUrl ? '<a href="' + (prop.googleMapsUrl || 'https://www.google.com/maps?q='+prop.lat+','+prop.lng) + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 18px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none"><i class="ti ti-external-link" style="font-size:16px"></i> Abrir en Google Maps</a>' : ''}
     </div>` : ''}
+
+
+    ${(function(){
+      if(!allProps||!allProps.length) return '';
+      var similar = allProps.filter(function(s){
+        return s.slug !== prop.slug && (s.tipo === prop.tipo || s.municipio === prop.municipio);
+      }).sort(function(a,b){
+        var scoreA = (a.tipo===prop.tipo?2:0) + (a.municipio===prop.municipio?1:0);
+        var scoreB = (b.tipo===prop.tipo?2:0) + (b.municipio===prop.municipio?1:0);
+        return scoreB - scoreA;
+      }).slice(0,3);
+      if(!similar.length) return '';
+      return '<div class="zp-section"><h2 class="zp-section-title">Propiedades similares</h2><div class="zp-similar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'+similar.map(function(s){
+        var img = ikTransform(s.mainImageThumb||'', {w:500,q:68});
+        var price = s.priceFormatted||'Consultar';
+        return '<a href="/propiedades/'+esc(s.slug)+'.html" style="background:#fff;border:1.5px solid #eef0f3;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:all .3s" onmouseover="this.style.transform=\'translateY(-4px)\';this.style.boxShadow=\'0 12px 30px rgba(0,0,0,.1)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'"><div style="aspect-ratio:4/3;overflow:hidden"><img src="'+esc(img)+'" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div><div style="padding:14px 16px"><div style="font-size:.95rem;font-weight:700;color:#F5820D;margin-bottom:4px">'+esc(price)+'</div><div style="font-size:.82rem;font-weight:600;color:#111;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">'+esc(s.title||s.titulo||'')+'</div><div style="font-size:.72rem;color:#64748b">'+esc(s.locationFull||s.zona||'')+'</div></div></a>';
+      }).join('')+'</div></div>';
+    })()}
 
   </div>
 
   <!-- SIDEBAR -->
   <div class="zp-side">
     <div class="zp-card">
-      ${precioStr ? `<div class="zp-card-price">${esc(precioStr)}</div><div class="zp-card-op">${esc(operStr)}</div>` : ''}
+      ${precioStr ? `<div class="zp-card-price">${dp.sidebar}</div>${dp.sidebarSub ? '<div style="font-size:.8rem;color:#94a3b8;margin-bottom:2px">'+dp.sidebarSub+'</div>' : ''}<div class="zp-card-op">${esc(operStr)}</div>` : ''}
 
       <div class="zp-avail"><span class="dot"></span>Disponible</div>
 
-      <button class="zp-share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Enlace copiado'))">
-        <i class="ti ti-share"></i> Copiar enlace
+      <div class="zp-share-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <a href="https://wa.me/?text=${encodeURIComponent(prop.titulo+'\n'+propUrl)}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid #25D366;border-radius:10px;font-size:13px;font-weight:600;color:#25D366;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#25D366';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#25D366'"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(propUrl)}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid #1877F2;border-radius:10px;font-size:13px;font-weight:600;color:#1877F2;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#1877F2';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#1877F2'"><i class="ti ti-brand-facebook"></i> Facebook</a>
+      </div>
+      <button class="zp-share-btn" onclick="navigator.clipboard.writeText(location.href).then(function(){var b=event.target.closest('.zp-share-btn');b.innerHTML='<i class=\'ti ti-check\'></i> Copiado';setTimeout(function(){b.innerHTML='<i class=\'ti ti-link\'></i> Copiar enlace'},2000)})">
+        <i class="ti ti-link"></i> Copiar enlace
       </button>
+
+      ${prop.pdfUrl ? '<a href="' + esc(prop.pdfUrl) + '" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-weight:600;color:#444;text-decoration:none;margin-top:8px"><i class="ti ti-file-download"></i> Descargar brochure</a>' : ''}
 
       <hr class="zp-divider">
 
       ${prop.codigo ? `<div class="zp-code">Código <span>${esc(prop.codigo)}</span></div>` : ''}
 
+      ${(prop.iusi || prop.cuotaMantenimiento) ? `<div style="border-top:1px solid #eef0f3;padding-top:14px;margin-top:14px">
+        ${prop.iusi ? `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:.78rem;color:#64748b">IUSI</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.iusi)}</span></div>` : ''}
+        ${prop.cuotaMantenimiento ? `<div style="display:flex;justify-content:space-between"><span style="font-size:.78rem;color:#64748b">Mantenimiento</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.cuotaMantenimiento)}</span></div>` : ''}
+      </div>` : ''}
+
+      ${(prop.iusi || prop.cuotaMantenimiento) ? `<div style="border-top:1px solid #eef0f3;padding-top:14px;margin-top:14px">
+        ${prop.iusi ? `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:.78rem;color:#64748b">IUSI</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.iusi)}</span></div>` : ''}
+        ${prop.cuotaMantenimiento ? `<div style="display:flex;justify-content:space-between"><span style="font-size:.78rem;color:#64748b">Mantenimiento</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.cuotaMantenimiento)}</span></div>` : ''}
+      </div>` : ''}
+
       ${planoHTML}
 
+
+      <hr class="zp-divider">
+      <div class="zp-contact-form" id="zpContactForm">
+        <h3 style="font-size:14px;font-weight:700;color:#0a1628;margin-bottom:14px;display:flex;align-items:center;gap:8px"><i class="ti ti-mail" style="color:#F5820D"></i> Contactar al asesor</h3>
+        <div style="margin-bottom:10px"><input type="text" id="zpCName" placeholder="Tu nombre" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+        <div style="margin-bottom:10px"><input type="email" id="zpCEmail" placeholder="Tu email" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+        <div style="margin-bottom:10px"><input type="tel" id="zpCPhone" placeholder="Tu teléfono (opcional)" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+        <div style="margin-bottom:12px"><textarea id="zpCMsg" rows="3" placeholder="Me interesa esta propiedad..." style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box"></textarea></div>
+        <button onclick="zpSendMsg()" id="zpCBtn" style="width:100%;padding:12px;background:#1a3a5c;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s">Enviar mensaje</button>
+        <div id="zpCResult" style="margin-top:10px;font-size:13px;display:none"></div>
+      </div>
       <p class="zp-meta">inmuhub.com — Real Estate Guatemala</p>
     </div>
   </div>
@@ -611,8 +1105,12 @@ ${mobGalHTML}${galHTML}
 ${lightboxHTML}
 
 <script>
-function zpOpenGallery(){ var lb=document.getElementById('zpLb'); lb.classList.add('open'); lb.style.display='flex'; }
-function zpLbShow(i){ var imgs=${JSON.stringify(imgs)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
+var zpLbIdx=0;var zpLbImgs=[];
+function zpLbPrev(){zpLbIdx=(zpLbIdx-1+zpLbImgs.length)%zpLbImgs.length;zpLbShow(zpLbIdx);}
+function zpLbNext(){zpLbIdx=(zpLbIdx+1)%zpLbImgs.length;zpLbShow(zpLbIdx);}
+document.addEventListener("keydown",function(e){var lb=document.getElementById("zpLb");if(!lb||lb.style.display==="none")return;if(e.key==="ArrowLeft")zpLbPrev();if(e.key==="ArrowRight")zpLbNext();if(e.key==="Escape"){lb.classList.remove("open");lb.style.display="none";}});
+function zpOpenGallery(){zpLbImgs=${JSON.stringify(imgs)}; var lb=document.getElementById('zpLb'); lb.classList.add('open'); lb.style.display='flex'; }
+function zpLbShow(i){zpLbIdx=i; var imgs=${JSON.stringify(imgsLbFull)}; document.getElementById('zpLbImg').src=imgs[i]; document.querySelectorAll('.zp-lb-thumb').forEach(function(t,j){t.classList.toggle('active',i===j);}); }
 function zpToggleDesc(){ var m=document.getElementById('zpDescMore'); var open=m.style.display!=='none'; m.style.display=open?'none':'block'; document.getElementById('zpDescLbl').innerHTML=open?'Ver descripción completa <i class=\"ti ti-chevron-down\"></i>':'Ver menos <i class=\"ti ti-chevron-up\"></i>'; }
 document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(img,i){ img.addEventListener('click',function(){ zpOpenGallery(); zpLbShow(i); }); });
 (function(){
@@ -629,6 +1127,28 @@ document.querySelectorAll('.zp-gal-main img,.zp-gal-cell img').forEach(function(
 </script>
 <script type="application/ld+json">${schemaListing}</script>
 <script type="application/ld+json">${schemaBreadcrumb}</script>
+<script>
+function zpSendMsg(){
+  var btn=document.getElementById('zpCBtn');
+  var res=document.getElementById('zpCResult');
+  var name=document.getElementById('zpCName').value.trim();
+  var email=document.getElementById('zpCEmail').value.trim();
+  var phone=document.getElementById('zpCPhone').value.trim();
+  var msg=document.getElementById('zpCMsg').value.trim();
+  if(!name||!email||!msg){res.style.display='block';res.style.color='#991b1b';res.textContent='Completa nombre, email y mensaje';return;}
+  btn.disabled=true;btn.textContent='Enviando...';
+  fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/messages',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({broker_id:'${esc(prop.broker_id||"")}',propiedad_id:'${esc(prop.slug||prop.id||"")}',propiedad_titulo:'${esc(prop.titulo||"")}',nombre:name,email:email,telefono:phone,mensaje:msg})
+  }).then(function(r){return r.json()}).then(function(d){
+    if(d.ok){res.style.display='block';res.style.color='#166534';res.textContent='Mensaje enviado. El asesor te contactará pronto.';btn.textContent='Enviado';document.getElementById('zpCName').value='';document.getElementById('zpCEmail').value='';document.getElementById('zpCMsg').value='';document.getElementById('zpCPhone').value='';}
+    else{res.style.display='block';res.style.color='#991b1b';res.textContent=d.error||'Error al enviar';btn.disabled=false;btn.textContent='Enviar mensaje';}
+  }).catch(function(){res.style.display='block';res.style.color='#991b1b';res.textContent='Error de conexión';btn.disabled=false;btn.textContent='Enviar mensaje';});
+}
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
+</script>
 </body></html>`;
 }
 function mortgageCalcPage(props) {
@@ -663,7 +1183,54 @@ function guiaCompraPage(props) {
   });
 }
 
-module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage };
+function slugZona(z){z=String(z||'');return z.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
+
+function tipoPage(tipo, props) {
+var tipoSlug = tipo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+var propsDelTipo = props.filter(function(p){ return (p.tipo||'').toLowerCase() === tipo.toLowerCase(); });
+var precios = propsDelTipo.map(function(p){ return p.priceNumeric; }).filter(function(n){ return n > 0; });
+var precioMin = precios.length ? Math.min.apply(null, precios) : 0;
+var precioMax = precios.length ? Math.max.apply(null, precios) : 0;
+var rangoPrecios = precioMin && precioMax ? '$' + precioMin.toLocaleString('en-US') + ' - $' + precioMax.toLocaleString('en-US') : '';
+var zonasDelTipo = [].concat(new Set(propsDelTipo.map(function(p){ return p.municipio; }).filter(Boolean)));
+// deduplicate
+var zonasUniq = [];
+zonasDelTipo.forEach(function(z){ if(zonasUniq.indexOf(z)===-1) zonasUniq.push(z); });
+
+var body = '<div style="background:var(--gray-900);padding:48px 6%;color:var(--white)">' +
+'<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:12px"><a href="/" style="color:rgba(255,255,255,.5)">Inicio</a> / <a href="/propiedades.html" style="color:rgba(255,255,255,.5)">Propiedades</a> / ' + escapeHtml(tipo) + '</div>' +
+'<h1 style="font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px">' + escapeHtml(tipo) + ' en Venta en <span style="color:var(--gold)">Guatemala</span></h1>' +
+'<p style="color:rgba(255,255,255,.65);font-size:16px;max-width:600px;line-height:1.7">' + propsDelTipo.length + ' ' + tipo.toLowerCase() + (propsDelTipo.length!==1?'s':'') + ' disponible' + (propsDelTipo.length!==1?'s':'') + ' con precios verificados.' + (rangoPrecios ? ' Desde ' + rangoPrecios + '.' : '') + '</p>' +
+(zonasUniq.length ? '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:20px">' +
+  zonasUniq.map(function(z){ var zSlug = slugZona(z); return '<a href="/zonas/' + zSlug + '.html" style="background:rgba(245,130,13,.15);color:var(--gold);border:1px solid rgba(245,130,13,.3);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;text-decoration:none">' + escapeHtml(z) + '</a>'; }).join('') +
+  '</div>' : '') +
+'</div>' +
+'<div class="prop-grid" style="padding:32px 6%">' + propsDelTipo.map(function(p,i){ return card(p,i); }).join('') + '</div>' +
+'<div style="padding:40px 6%;background:var(--gray-50);text-align:center;border-top:1px solid var(--border)">' +
+'<p style="color:var(--gray-600);margin-bottom:16px">Ver todas las propiedades disponibles</p>' +
+'<a href="/propiedades.html" style="background:var(--blue);color:var(--white);padding:10px 28px;border-radius:6px;font-weight:600;display:inline-block">Ver catalogo completo</a>' +
+'</div>';
+
+var schemaBreadcrumb = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type':'ListItem', 'position':1, 'name':'Inicio', 'item':'https://inmuhub.com/' },
+    { '@type':'ListItem', 'position':2, 'name':'Propiedades', 'item':'https://inmuhub.com/propiedades.html' },
+    { '@type':'ListItem', 'position':3, 'name': tipo + ' en Guatemala' }
+  ]
+});
+
+return layout({
+  title: tipo + ' en Venta en Guatemala — Precios Verificados',
+  desc: propsDelTipo.length + ' ' + tipo.toLowerCase() + (propsDelTipo.length!==1?'s':'') + ' en venta en Guatemala. ' + (rangoPrecios ? 'Desde ' + rangoPrecios + '. ' : '') + 'Precios verificados y actualizados en INMUHUB.',
+  canonical: '/tipos/' + tipoSlug + '.html',
+  body: body,
+  scripts: '<script type="application/ld+json">' + schemaBreadcrumb + '<\/script>'
+});
+}
+
+module.exports = { indexPage, catalogPage, zonaPage, detailPage, mortgageCalcPage, investmentSimulatorPage, guiaCompraPage, tipoPage };
 
 // Función helper para generar calculadora inline
 function generateCalculator(prop) {

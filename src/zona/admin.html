@@ -175,6 +175,28 @@ tr:hover td{background:#FAFBFF}
 .pipe-card-footer{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .pipe-card-date{font-size:10px;color:var(--text3)}
 .pipe-empty{text-align:center;color:var(--text3);font-size:12px;padding:20px 10px;border:1.5px dashed var(--border2);border-radius:8px}
+.pipe-card{cursor:pointer}
+/* LEAD DETAIL MODAL */
+.ld-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:600;overflow-y:auto;padding:20px}
+.ld-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.ld-panel{background:var(--wh);width:100%;max-width:580px;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);margin-top:40px}
+.ld-header{background:var(--navy);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.ld-header h3{color:var(--wh);font-size:15px;font-weight:700;margin:0}
+.ld-header button{background:none;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer}
+.ld-body{padding:20px}
+.ld-row{display:flex;gap:12px;margin-bottom:14px}
+.ld-field{flex:1}
+.ld-field label{display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.ld-field .ld-val{font-size:13px;color:var(--navy);font-weight:500}
+.ld-field select,.ld-field input,.ld-field textarea{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;background:var(--bg);outline:none}
+.ld-field select:focus,.ld-field input:focus,.ld-field textarea:focus{border-color:var(--or)}
+.ld-notes{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+.ld-notes h4{font-size:13px;font-weight:700;color:var(--navy);margin:0 0 10px}
+.ld-note-item{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--or)}
+.ld-note-item .ld-note-date{font-size:10px;color:var(--text3);margin-bottom:3px}
+.ld-note-item .ld-note-text{font-size:12px;color:var(--text1)}
+.ld-actions{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.ld-actions .btn{flex:1}
 
 /* LEADS */
 .leads-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
@@ -408,6 +430,292 @@ body.dark .desc-block{border-color:var(--dm-border)}
 body.dark .desc-block textarea{background:var(--dm-card);border-color:var(--dm-border);color:var(--dm-text)}
 body.dark .dest-toggle{border-color:var(--dm-border);color:var(--dm-text)}
 body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-text3)}
+
+/* ══════ MODERNIZATION + PREMIUM v5 ══════ */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+
+.content { scroll-behavior: smooth; padding: 28px 32px !important; }
+.stats-grid { gap: 18px !important; margin-bottom: 26px !important; }
+.dash-grid { gap: 22px !important; }
+
+.stat-card { border: none !important; border-radius: 14px !important; padding: 22px 24px !important; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important; transition: transform .2s, box-shadow .2s !important; }
+.stat-card:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(0,0,0,.1) !important; }
+.stat-card::before { height: 4px !important; border-radius: 14px 14px 0 0 !important; }
+.stat-val { font-family: 'Cormorant Garamond', Georgia, serif !important; font-weight: 500 !important; font-size: 32px !important; letter-spacing: -0.02em; }
+.stat-label { font-size: 10px !important; letter-spacing: .1em !important; color: var(--text3) !important; }
+
+.page-header-title, .topbar-title { font-family: 'Cormorant Garamond', Georgia, serif !important; font-weight: 500 !important; font-size: 22px !important; }
+
+td { padding: 14px 16px !important; }
+.prop-img { width: 72px !important; height: 54px !important; border-radius: 8px !important; }
+.prop-img-placeholder { width: 72px !important; height: 54px !important; border-radius: 8px !important; }
+tr:hover td { background: #F8FAFF !important; }
+body.dark tr:hover td { background: rgba(255,255,255,.04) !important; }
+
+.chart-card, .recent-card, .table-wrap { border: none !important; border-radius: 14px !important; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04) !important; }
+.lead-card { border: none !important; border-radius: 14px !important; box-shadow: 0 1px 3px rgba(0,0,0,.06) !important; }
+.lead-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.1) !important; }
+
+.sb-item { border-radius: 0 8px 8px 0; margin-right: 8px; transition: all .2s !important; }
+.sb-item.active { border-right: none !important; border-left: 3px solid var(--or) !important; }
+.icon-btn { border-radius: 8px !important; transition: all .2s !important; }
+.badge { border-radius: 6px !important; font-size: 10px !important; letter-spacing: .04em; }
+.completeness-bar { height: 6px !important; border-radius: 4px !important; }
+
+#loginPage { background: linear-gradient(135deg, #0D1B3E 0%, #1A3060 50%, #0D1B3E 100%) !important; }
+.login-card { border-radius: 18px !important; box-shadow: 0 32px 80px rgba(0,0,0,.5) !important; padding: 48px 44px !important; }
+.login-logo { font-family: 'Cormorant Garamond', Georgia, serif !important; font-size: 26px !important; font-weight: 500 !important; letter-spacing: .15em !important; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.stat-card { animation: fadeInUp .4s ease both; }
+.stat-card:nth-child(1) { animation-delay: .05s; }
+.stat-card:nth-child(2) { animation-delay: .1s; }
+.stat-card:nth-child(3) { animation-delay: .15s; }
+.stat-card:nth-child(4) { animation-delay: .2s; }
+.chart-card, .recent-card, .table-wrap { animation: fadeInUp .4s ease .25s both; }
+
+.modal-overlay.open { animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-panel { animation: slideUp .3s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.site-badges { display: flex; gap: 4px; margin-top: 3px; }
+.site-dot { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; letter-spacing: .04em; }
+.site-dot.zi { background: #0D1B3E; color: #fff; }
+.site-dot.ih { background: #C9A96E; color: #1a1a1a; }
+
+.stats-breakdown { display: flex; gap: 12px; margin-bottom: 22px; padding: 14px 18px; background: var(--wh); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); animation: fadeInUp .4s ease .1s both; }
+body.dark .stats-breakdown { background: var(--dm-card); }
+.breakdown-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+.breakdown-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.breakdown-val { font-weight: 700; color: var(--navy); }
+body.dark .breakdown-val { color: var(--dm-text); }
+
+.lead-source { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 4px; }
+.lead-source.src-zona { background: #EEF0F6; color: #0D1B3E; }
+.lead-source.src-inmu { background: #FFF8ED; color: #92400E; }
+.lead-source.src-unknown { background: #F1F5F9; color: #64748B; }
+
+.topbar { height: 62px !important; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* Wizard */
+.wizard-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; background: var(--bg); position: sticky; top: 0; z-index: 5; }
+body.dark .wizard-tabs { background: var(--dm-bg); border-color: var(--dm-border); }
+.wizard-tab { padding: 12px 16px; font-size: 11px; font-weight: 600; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.wizard-tab:hover { color: var(--text2); }
+.wizard-tab.active { color: var(--or); border-bottom-color: var(--or); }
+.wizard-tab .tab-num { width: 20px; height: 20px; border-radius: 50%; background: var(--border); color: var(--text3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+.wizard-tab.active .tab-num { background: var(--or); color: #fff; }
+.wizard-step { display: none; }
+.wizard-step.active { display: block; }
+.completeness-strip { padding: 8px 24px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; position: sticky; top: 44px; z-index: 4; }
+body.dark .completeness-strip { background: var(--dm-bg); border-color: var(--dm-border); }
+.completeness-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.completeness-fill { height: 100%; background: linear-gradient(90deg, var(--or), var(--green)); border-radius: 3px; transition: width .4s ease; }
+.completeness-pct { font-size: 11px; font-weight: 700; color: var(--or); min-width: 36px; text-align: right; }
+.completeness-hint { font-size: 10px; color: var(--text3); }
+
+/* Live preview */
+.live-preview { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--wh); }
+body.dark .live-preview { background: var(--dm-card); border-color: var(--dm-border); }
+.lp-img { width: 100%; height: 120px; background: var(--bg); object-fit: cover; }
+.lp-body { padding: 12px; }
+.lp-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--or); margin-bottom: 4px; }
+.lp-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 16px; font-weight: 500; color: var(--navy); margin-bottom: 2px; min-height: 20px; }
+body.dark .lp-title { color: var(--dm-text); }
+.lp-loc { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+.lp-price { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; font-weight: 600; color: var(--navy); }
+body.dark .lp-price { color: var(--dm-text); }
+.lp-specs { display: flex; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.lp-spec { font-size: 10px; color: var(--text3); display: flex; align-items: center; gap: 3px; }
+
+/* Quick paste gallery */
+.gal-quickpaste { width: 100%; min-height: 60px; padding: 8px; border: 1.5px dashed var(--border2); border-radius: 8px; font-size: 11px; font-family: inherit; resize: vertical; background: none; color: var(--text); margin-top: 6px; }
+body.dark .gal-quickpaste { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+
+/* Search overlay */
+.search-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; display: none; align-items: flex-start; justify-content: center; padding-top: 15vh; backdrop-filter: blur(4px); }
+.search-overlay.open { display: flex; animation: fadeIn .15s ease; }
+.search-box { width: 560px; max-width: 90vw; background: var(--wh); border-radius: 16px; box-shadow: 0 32px 80px rgba(0,0,0,.3); overflow: hidden; }
+body.dark .search-box { background: var(--dm-card); }
+.search-input-wrap { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+body.dark .search-input-wrap { border-color: var(--dm-border); }
+.search-input-wrap i { font-size: 20px; color: var(--text3); }
+.search-input { flex: 1; border: none; outline: none; font-size: 15px; background: none; color: var(--text); font-family: inherit; }
+body.dark .search-input { color: var(--dm-text); }
+.search-results { max-height: 340px; overflow-y: auto; padding: 8px; }
+.search-result { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background .1s; }
+.search-result:hover, .search-result.active { background: var(--bg); }
+body.dark .search-result:hover, body.dark .search-result.active { background: var(--dm-bg); }
+.sr-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.sr-icon.prop { background: #EEF0F6; color: var(--navy); }
+.sr-icon.lead { background: #FFF7ED; color: var(--or); }
+.sr-text { flex: 1; min-width: 0; }
+.sr-title { font-size: 13px; font-weight: 600; color: var(--text); }
+body.dark .sr-title { color: var(--dm-text); }
+.sr-sub { font-size: 11px; color: var(--text3); }
+.search-empty { text-align: center; padding: 24px; color: var(--text3); font-size: 13px; }
+.search-footer { padding: 8px 16px; border-top: 1px solid var(--border); display: flex; gap: 16px; font-size: 10px; color: var(--text3); }
+body.dark .search-footer { border-color: var(--dm-border); }
+.search-kbd { font-size: 10px; padding: 2px 6px; border: 1px solid var(--border2); border-radius: 4px; color: var(--text3); font-family: monospace; }
+.topbar-search { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border2); border-radius: 8px; color: var(--text3); font-size: 12px; cursor: pointer; transition: all .15s; background: none; margin-right: auto; }
+.topbar-search:hover { border-color: var(--or); color: var(--or); }
+
+/* Notification pulse */
+.sb-badge.pulse { animation: badgePulse 2s infinite; }
+@keyframes badgePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); box-shadow: 0 0 8px rgba(245,130,13,.5); } }
+
+/* Leads chart */
+.leads-chart-wrap { padding: 18px; }
+.leads-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+.leads-bar { flex: 1; background: var(--or); border-radius: 4px 4px 0 0; min-height: 2px; transition: height .4s ease; position: relative; }
+.leads-bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text3); white-space: nowrap; }
+.leads-bar-val { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--navy); }
+body.dark .leads-bar-val { color: var(--dm-text); }
+
+/* Funnel */
+.funnel-wrap { padding: 14px 18px; }
+.funnel-step { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.funnel-bar-track { flex: 1; height: 22px; background: var(--bg); border-radius: 6px; overflow: hidden; }
+body.dark .funnel-bar-track { background: var(--dm-bg); }
+.funnel-bar-fill { height: 100%; border-radius: 6px; transition: width .6s ease; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 700; color: #fff; min-width: 24px; }
+.funnel-label { font-size: 11px; color: var(--text2); width: 80px; flex-shrink: 0; }
+.funnel-count { font-size: 11px; font-weight: 700; color: var(--navy); width: 28px; text-align: right; flex-shrink: 0; }
+body.dark .funnel-count { color: var(--dm-text); }
+
+/* Timeline */
+.timeline-card { padding: 0; }
+.timeline-header { padding: 14px 18px; font-size: 13px; font-weight: 700; color: var(--navy); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+body.dark .timeline-header { color: var(--dm-text); border-color: var(--dm-border); }
+.timeline-feed { max-height: 260px; overflow-y: auto; padding: 8px 0; }
+.tl-item { display: flex; gap: 10px; padding: 8px 18px; font-size: 12px; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.tl-dot.lead { background: var(--or); }
+.tl-dot.sale { background: var(--green); }
+.tl-dot.new { background: var(--blue); }
+.tl-text { color: var(--text); line-height: 1.4; }
+body.dark .tl-text { color: var(--dm-text); }
+.tl-text strong { font-weight: 600; }
+.tl-time { color: var(--text3); font-size: 10px; margin-top: 2px; }
+
+/* Quality score */
+.quality-score { display: inline-flex; align-items: center; gap: 4px; }
+.qs-ring { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; }
+.qs-ring.high { background: var(--green); }
+.qs-ring.mid { background: var(--yellow); }
+.qs-ring.low { background: var(--red); }
+
+/* Quick status */
+.quick-status { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; border: 1px solid var(--border2); cursor: pointer; background: none; color: var(--text); appearance: none; -webkit-appearance: none; }
+body.dark .quick-status { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+
+/* Dark mode transitions */
+body, .sidebar, .topbar, .content, .stat-card, .chart-card, .recent-card, .table-wrap, .lead-card, .modal-panel { transition: background .3s, color .3s, border-color .3s; }
+
+@media(max-width:900px) {
+  .wizard-tabs { overflow-x: auto; padding: 0 12px; }
+  .wizard-tab { padding: 10px 10px; font-size: 10px; }
+  .wizard-tab span.tab-label { display: none; }
+  .stats-breakdown { flex-wrap: wrap; gap: 8px; }
+}
+
+
+
+/* ══════ FEATURES v6 — WORLD-CLASS ══════ */
+
+/* WhatsApp Templates */
+.wa-templates { margin-top: 12px; }
+.wa-tmpl { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; cursor: pointer; transition: all .15s; font-size: 11px; }
+.wa-tmpl:hover { border-color: #25D366; background: #F0FFF4; }
+body.dark .wa-tmpl:hover { background: rgba(37,211,102,.1); }
+.wa-tmpl-icon { color: #25D366; font-size: 16px; flex-shrink: 0; }
+.wa-tmpl-text { flex: 1; color: var(--text2); line-height: 1.4; }
+body.dark .wa-tmpl-text { color: var(--dm-text2); }
+.wa-tmpl-copy { font-size: 10px; color: var(--text3); font-weight: 600; padding: 2px 8px; border: 1px solid var(--border2); border-radius: 4px; }
+.wa-tmpl-copy:hover { background: var(--or); color: #fff; border-color: var(--or); }
+
+/* Lead Score */
+.lead-score { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+.ls-bar { width: 48px; height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.ls-fill { height: 100%; border-radius: 3px; }
+.ls-fill.hot { background: #ef4444; }
+.ls-fill.warm { background: #f59e0b; }
+.ls-fill.cold { background: #94a3b8; }
+.ls-val { font-size: 10px; font-weight: 700; }
+.ls-val.hot { color: #ef4444; }
+.ls-val.warm { color: #f59e0b; }
+.ls-val.cold { color: #94a3b8; }
+.ls-label { font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 3px; }
+.ls-label.hot { background: #FEE2E2; color: #991B1B; }
+.ls-label.warm { background: #FEF3C7; color: #92400E; }
+.ls-label.cold { background: #F1F5F9; color: #64748B; }
+
+/* Speed to Lead */
+.stl-metric { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+.stl-fast { background: #DCFCE7; color: #166534; }
+.stl-medium { background: #FEF3C7; color: #92400E; }
+.stl-slow { background: #FEE2E2; color: #991B1B; }
+
+/* Follow-up calendar */
+.followup-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.followup-date { font-size: 10px; padding: 3px 8px; border: 1px solid var(--border2); border-radius: 6px; background: none; color: var(--text); font-family: inherit; }
+body.dark .followup-date { background: var(--dm-card); border-color: var(--dm-border); color: var(--dm-text); }
+.followup-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+.followup-overdue { background: #FEE2E2; color: #991B1B; }
+.followup-today { background: #DBEAFE; color: #1E40AF; }
+.followup-upcoming { background: #F1F5F9; color: #64748B; }
+
+/* ROI Calculator */
+.roi-section { margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+body.dark .roi-section { background: var(--dm-bg); border-color: var(--dm-border); }
+.roi-title { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+body.dark .roi-title { color: var(--dm-text); }
+.roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.roi-result { margin-top: 10px; padding: 10px; background: var(--wh); border-radius: 8px; text-align: center; }
+body.dark .roi-result { background: var(--dm-card); }
+.roi-big { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; color: var(--green); }
+.roi-label { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+/* Comparables */
+.comp-section { margin-top: 12px; }
+.comp-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+body.dark .comp-row { border-color: var(--dm-border); }
+.comp-row:last-child { border-bottom: none; }
+.comp-name { flex: 1; color: var(--text); }
+body.dark .comp-name { color: var(--dm-text); }
+.comp-price { font-weight: 700; color: var(--navy); }
+body.dark .comp-price { color: var(--dm-text); }
+.comp-diff { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+.comp-diff.lower { background: #DCFCE7; color: #166534; }
+.comp-diff.higher { background: #FEE2E2; color: #991B1B; }
+
+/* Activity log */
+.activity-log { max-height: 200px; overflow-y: auto; }
+.al-item { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+body.dark .al-item { border-color: var(--dm-border); }
+.al-time { color: var(--text3); white-space: nowrap; width: 60px; flex-shrink: 0; }
+.al-text { color: var(--text); flex: 1; }
+body.dark .al-text { color: var(--dm-text); }
+
+/* Multi-language toggle */
+.lang-toggle { display: flex; gap: 0; border: 1px solid var(--border2); border-radius: 6px; overflow: hidden; }
+.lang-btn { padding: 4px 12px; font-size: 10px; font-weight: 600; cursor: pointer; background: none; border: none; color: var(--text3); transition: all .15s; }
+.lang-btn.active { background: var(--navy); color: #fff; }
+
+/* Ficha interactiva share */
+.share-link-box { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 8px; background: var(--bg); border-radius: 8px; }
+body.dark .share-link-box { background: var(--dm-bg); }
+.share-link-url { flex: 1; font-size: 11px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-link-copy { font-size: 10px; padding: 4px 10px; border: 1px solid var(--or); border-radius: 6px; color: var(--or); background: none; cursor: pointer; font-weight: 600; }
+.share-link-copy:hover { background: var(--or); color: #fff; }
+
+/* Property views counter */
+.prop-views { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text3); margin-top: 2px; }
+@keyframes spin{to{transform:rotate(360deg)}}
+
 </style>
 </head>
 <body>
@@ -416,8 +724,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
 <div id="loginPage">
   <div class="login-card">
     <div class="login-logo"><span>Zona</span>-INNmueble</div>
-    <div class="login-sub">Panel de administración v3</div>
-    <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
+    <div class="login-sub">Premium Real Estate · Panel de administración</div>
+    <div class="login-field"><label>Usuario</label><input type="text" id="loginUser" placeholder="Usuario" autocomplete="username"></div>
     <div class="login-field"><label>Contraseña</label><input type="password" id="loginPass" autocomplete="current-password"></div>
     <button id="loginBtn" onclick="doLogin()">Ingresar al panel</button>
     <div id="loginErr">Usuario o contraseña incorrectos.</div>
@@ -440,9 +748,11 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
         <div class="sb-section">Clientes</div>
         <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge" id="leadsCount">0</span></div>
         <div class="sb-item" id="nav-crm" onclick="showPage('crm')"><i class="ti ti-layout-kanban"></i> Pipeline CRM</div>
+        <div class="sb-section">InmuHub</div>
+        <div class="sb-item" id="nav-brokers" onclick="showPage('brokers')"><i class="ti ti-user-star"></i> Asesores</div>
         <div class="sb-section">Sitios</div>
         <div class="sb-item" onclick="window.open('https://zona-innmueble.com','_blank')"><i class="ti ti-world"></i> Zona INNmueble</div>
-        <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> IncmuHub</div>
+        <div class="sb-item" onclick="window.open('https://inmuhub.com','_blank')"><i class="ti ti-building-skyscraper"></i> InmuHub</div>
       </div>
       <div class="sb-bottom">
         <div class="sb-user">
@@ -457,6 +767,7 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
     <div class="main">
       <div class="topbar">
         <button class="mob-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>\n        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <button class="topbar-search" onclick="openSearch()" title="Buscar (Ctrl+K)"><i class="ti ti-search"></i> Buscar... <span class="search-kbd">Ctrl+K</span></button>
         <button class="btn btn-ghost btn-sm" id="darkToggle" onclick="toggleDark()" title="Modo oscuro"><i class="ti ti-moon"></i></button>\n        <button class="btn btn-ghost btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Actualizar</button>
         <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
         <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
@@ -474,10 +785,23 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
       <div class="modal-topbar-title" id="modalTitle">Nueva propiedad</div>
       <button class="btn btn-navy btn-sm" onclick="saveProp()" style="background:var(--or);border-color:var(--or)"><i class="ti ti-device-floppy"></i> Guardar</button>
     </div>
+    <div class="wizard-tabs" id="wizardTabs">
+      <div class="wizard-tab active" data-step="1" onclick="wizardGo(1)"><div class="tab-num"><span>1</span></div> <span class="tab-label">Básica</span></div>
+      <div class="wizard-tab" data-step="2" onclick="wizardGo(2)"><div class="tab-num"><span>2</span></div> <span class="tab-label">Medidas</span></div>
+      <div class="wizard-tab" data-step="3" onclick="wizardGo(3)"><div class="tab-num"><span>3</span></div> <span class="tab-label">Descripción</span></div>
+      <div class="wizard-tab" data-step="4" onclick="wizardGo(4)"><div class="tab-num"><span>4</span></div> <span class="tab-label">Características</span></div>
+      <div class="wizard-tab" data-step="5" onclick="wizardGo(5)"><div class="tab-num"><span>5</span></div> <span class="tab-label">Privacidad</span></div>
+    </div>
+    <div class="completeness-strip">
+      <div class="completeness-track"><div class="completeness-fill" id="wizardFill" style="width:0%"></div></div>
+      <div class="completeness-pct" id="wizardPct">0%</div>
+      <div class="completeness-hint" id="wizardHint">Completa los campos básicos</div>
+    </div>
     <div class="modal-body">
       <div class="form-grid">
         <div class="form-left">
 
+          <div class="wizard-step active" data-step="1">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-info-circle"></i> Información básica</div>
             <div class="fg"><label>Título *</label><input type="text" id="fTitulo" placeholder="Ej: Casa en Kanajuyú · Zona 16"></div>
@@ -511,6 +835,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             <input type="hidden" id="fCinta" value="">
           </div>
 
+          </div>
+          <div class="wizard-step" data-step="2">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-ruler"></i> Medidas y espacios</div>
             <div class="fg-row c4">
@@ -543,6 +869,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             </div>
           </div>
 
+          </div>
+          <div class="wizard-step" data-step="3">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-file-text"></i> Descripción</div>
             <div class="fg"><label>Descripción completa</label><textarea id="fDescripcion" style="min-height:90px" placeholder="Descripción detallada para el sitio web..."></textarea></div>
@@ -561,6 +889,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             <div style="margin-top:6px;font-size:10px;color:var(--text3)">Opcional: agrega bloques para una descripción más estructurada en el sitio.</div>
           </div>
 
+          </div>
+          <div class="wizard-step" data-step="4">
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-checklist"></i> Características</div>
 
@@ -674,6 +1004,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             </div>
           </div>
 
+          </div>
+          <div class="wizard-step" data-step="5">
           <div class="share-box">
             <div class="share-box-title"><i class="ti ti-share"></i> Ficha compartible — WhatsApp / Redes</div>
             <div class="fg"><label>URL del PDF</label><input type="url" id="fPdfUrl" placeholder="https://drive.google.com/..."></div>
@@ -723,6 +1055,7 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
           </div>
 
         </div>
+          </div>
 
         <div class="form-right">
 
@@ -736,6 +1069,11 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             <div class="side-card-title"><i class="ti ti-photos"></i> Galería</div>
             <div class="gal-wrap" id="galWrap"></div>
             <button type="button" onclick="addGalImg()" style="margin-top:8px;width:100%;padding:7px;border:1.5px dashed var(--border2);border-radius:6px;background:none;font-size:12px;color:var(--text3);cursor:pointer">+ Agregar imagen</button>
+            <details style="margin-top:8px">
+              <summary style="font-size:11px;color:var(--or);cursor:pointer;font-weight:600">Pegar múltiples URLs</summary>
+              <textarea class="gal-quickpaste" id="galQuickPaste" placeholder="Una URL por línea..."></textarea>
+              <button type="button" onclick="applyQuickPaste()" style="margin-top:6px;padding:5px 14px;border:1px solid var(--or);border-radius:6px;background:none;font-size:11px;color:var(--or);cursor:pointer;font-weight:600">Aplicar URLs</button>
+            </details>
           </div>
 
           <div class="side-card">
@@ -752,6 +1090,26 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             </div>
             <input type="hidden" id="fEstado" value="Activa">
             <label class="dest-toggle"><input type="checkbox" id="fDestacada"><span class="star"><i class="ti ti-star-filled"></i></span><div><div style="font-size:12px;font-weight:600">Propiedad Destacada</div><div style="font-size:10px;color:var(--text3)">Aparece primero en los listados</div></div></label>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-eye"></i> Preview en vivo</div>
+            <div class="live-preview" id="livePreview">
+              <img class="lp-img" id="lpImg" src="" style="display:none">
+              <div class="lp-img" id="lpImgPlaceholder"></div>
+              <div class="lp-body">
+                <div class="lp-badge" id="lpBadge"></div>
+                <div class="lp-title" id="lpTitle">Título de la propiedad</div>
+                <div class="lp-loc" id="lpLoc"></div>
+                <div class="lp-price" id="lpPrice"></div>
+                <div class="lp-specs">
+                  <div class="lp-spec" id="lpHab"><i class="ti ti-bed" style="font-size:13px"></i> <span>-</span></div>
+                  <div class="lp-spec" id="lpBan"><i class="ti ti-bath" style="font-size:13px"></i> <span>-</span></div>
+                  <div class="lp-spec" id="lpArea"><i class="ti ti-ruler" style="font-size:13px"></i> <span>-</span></div>
+                  <div class="lp-spec" id="lpParq"><i class="ti ti-car" style="font-size:13px"></i> <span>-</span></div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="side-card">
@@ -780,6 +1138,8 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
               <div class="fg"><label>Longitud</label><input type="text" id="fLng" placeholder="-90.5069"></div>
             </div>
             <div class="fg" style="margin-top:8px"><label>Google Maps URL</label><input type="url" id="fGoogleMaps" placeholder="https://maps.google.com/..."></div>
+<div class="fg"><label>IUSI (mensual)</label><input id="fIusi" placeholder="Ej: Q150"></div>
+<div class="fg"><label>Cuota mantenimiento</label><input id="fCuotaMant" placeholder="Ej: Q500/mes"></div>
           </div>
 
           <div class="side-card">
@@ -788,12 +1148,54 @@ body.dark .desc-block-add button{border-color:var(--dm-border);color:var(--dm-te
             <div style="margin-top:6px;padding:6px 8px;background:#ECFDF5;border-radius:4px;font-size:10px;color:#065F46;line-height:1.4"><strong>Nota:</strong> Solo aplica en zona-innmueble.com. InmuHub nunca muestra WhatsApp ni contactos.</div>
           </div>
 
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-user-star"></i> Asesor asignado</div>
+            <div class="fg">
+              <select id="fBrokerId" style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;background:#fff">
+                <option value="">Sin asesor</option>
+              </select>
+            </div>
+            <div style="margin-top:6px;padding:6px 8px;background:#EFF6FF;border-radius:4px;font-size:10px;color:#1E40AF;line-height:1.4"><strong>Nota:</strong> El asesor aparecerá en la página de la propiedad y en su perfil público.</div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-trending-up"></i> Inversion & Comparables</div>
+            <div id="roiCalcWrap"></div>
+            <div id="compWrap"></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-language"></i> Idioma</div>
+            <div id="langToggleWrap"></div>
+          </div>
+
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-ghost" onclick="saveDraft()" style="color:var(--yellow);border-color:var(--yellow)"><i class="ti ti-file-text"></i> Borrador</button>
       <button class="btn btn-navy" onclick="saveProp()"><i class="ti ti-device-floppy"></i> Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- GLOBAL SEARCH -->
+<div class="search-overlay" id="searchOverlay" onclick="if(event.target===this)closeSearch()">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <i class="ti ti-search"></i>
+      <input class="search-input" id="searchInput" placeholder="Buscar propiedades, leads..." autocomplete="off" oninput="doGlobalSearch(this.value)">
+      <span class="search-kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-empty">Escribe para buscar...</div>
+    </div>
+    <div class="search-footer">
+      <span><kbd>↑↓</kbd> Navegar</span>
+      <span><kbd>Enter</kbd> Abrir</span>
+      <span><kbd>Esc</kbd> Cerrar</span>
     </div>
   </div>
 </div>
@@ -887,13 +1289,13 @@ async function loadLeads() {
 
 // ── NAVIGATION ───────────────────────────────────────────────
 function showPage(page) {
-  ['dashboard','propiedades','leads','nueva','crm'].forEach(p => {
+  ['dashboard','propiedades','leads','nueva','crm','brokers'].forEach(p => {
     const n = document.getElementById('nav-' + p);
     if (n) n.classList.remove('active');
   });
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
-  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads', crm:'Pipeline CRM'};
+  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads', crm:'Pipeline CRM', brokers:'Asesores'};
   document.getElementById('pageTitle').textContent = titles[page] || page;
   const mc = document.getElementById('mainContent');
   if (!mc) return;
@@ -901,6 +1303,7 @@ function showPage(page) {
   if (page === 'propiedades') renderPropiedades(mc);
   if (page === 'leads')       renderLeads(mc);
   if (page === 'crm')         renderCRM(mc);
+  if (page === 'brokers')     renderBrokers(mc);
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────
@@ -909,8 +1312,13 @@ function renderDashboard(mc) {
   const vendidas = props.filter(p => p.estado === 'Vendida').length;
   const pausadas = props.filter(p => p.estado === 'Pausada').length;
   const totalLeads = leads.length;
-  const sinContactar = leads.filter(l => !l.stage || l.stage === 'Nuevo').length;
+  const sinContactar = leads.filter(l => mapFaseToStage(l)==='Nuevo').length;
   const portfolioVal = computePortfolioValue();
+  const enZona = props.filter(p => !p.sitios || p.sitios.includes('zona')).length;
+  const enInmu = props.filter(p => !p.sitios || p.sitios.includes('inmu')).length;
+  const enAmbos = props.filter(p => (!p.sitios || p.sitios.includes('zona')) && (!p.sitios || p.sitios.includes('inmu'))).length;
+  const soloZona = enZona - enAmbos;
+  const soloInmu = enInmu - enAmbos;
 
   const typeCount = {};
   props.forEach(p => { const t = p.tipo || 'Otro'; typeCount[t] = (typeCount[t]||0)+1; });
@@ -945,6 +1353,14 @@ function renderDashboard(mc) {
         <div class="stat-val" style="font-size:${portfolioVal.length>6?'18px':'26px'}">${portfolioVal}</div>
         <div class="stat-sub">Valor estimado activas</div>
       </div>
+    </div>
+
+    <div class="stats-breakdown">
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#0D1B3E"></div> Zona INNmueble: <span class="breakdown-val">${enZona} props</span></div>
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#C9A96E"></div> InmuHub: <span class="breakdown-val">${enInmu} props</span></div>
+      <div class="breakdown-item" style="margin-left:auto"><div class="breakdown-dot" style="background:var(--green)"></div> En ambos: <span class="breakdown-val">${enAmbos}</span></div>
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#3B82F6"></div> Solo ZI: <span class="breakdown-val">${soloZona}</span></div>
+      <div class="breakdown-item"><div class="breakdown-dot" style="background:#f59e0b"></div> Solo IH: <span class="breakdown-val">${soloInmu}</span></div>
     </div>
 
     <div class="dash-grid">
@@ -996,7 +1412,129 @@ function renderDashboard(mc) {
               <div class="rl-time">${formatDate(l.fecha)}</div>
             </div>`).join('')}
       </div>
+    </div>
+
+    <div class="dash-grid" style="margin-top:22px">
+      <div>
+        <div class="chart-card" style="margin-bottom:18px">
+          <div class="chart-title">Leads por semana <span style="font-size:11px;font-weight:500;color:var(--text3)">Últimas 8 semanas</span></div>
+          <div class="leads-chart-wrap"><div class="leads-bar-chart">${buildLeadsChart()}</div></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Pipeline CRM</div>
+          <div class="funnel-wrap">${buildFunnel()}</div>
+        </div>
+      </div>
+      <div>
+        <div class="chart-card" style="margin-bottom:18px">
+          <div class="chart-title">Leads por fuente</div>
+          <div style="padding:8px 0">${buildSourceChart()}</div>
+        </div>
+        <div class="chart-card timeline-card">
+          <div class="timeline-header"><span>Actividad reciente</span><i class="ti ti-activity" style="color:var(--text3)"></i></div>
+          <div class="timeline-feed">${buildTimeline()}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-top:22px">
+      <div class="chart-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span><i class="ti ti-brand-meta" style="color:#1877F2;margin-right:6px"></i>Meta Ads — Últimos 30 días</span>
+        <button class="btn btn-ghost btn-sm" onclick="refreshMetaAds(this)"><i class="ti ti-refresh"></i> Actualizar</button>
+      </div>
+      <div id="metaAdsData" style="padding:8px 0">
+        <div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">
+          <i class="ti ti-loader" style="font-size:20px;display:block;margin-bottom:8px;animation:spin 1s linear infinite"></i>
+          Cargando datos de Meta Ads...
+        </div>
+      </div>
     </div>`;
+
+  loadMetaAdsData();
+  checkNewLeads();
+}
+
+function loadMetaAdsData() {
+  var container = document.getElementById('metaAdsData');
+  if (!container) return;
+  // Use cached data if available and fresh (<30 min)
+  var cached = localStorage.getItem('zi_meta_ads_cache');
+  var cacheTime = parseInt(localStorage.getItem('zi_meta_ads_cache_time')||'0');
+  if (cached && (Date.now() - cacheTime) < 1800000) {
+    renderMetaAdsWidget(JSON.parse(cached));
+    return;
+  }
+  // Show static fallback - data will be updated when user clicks Refresh or via MCP
+  container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">'
+    + '<i class="ti ti-brand-meta" style="font-size:24px;color:#1877F2;display:block;margin-bottom:8px"></i>'
+    + 'Haz clic en "Actualizar" para cargar datos en vivo de Meta Ads.</div>';
+}
+
+function refreshMetaAds(btn) {
+  if (btn) { btn.disabled=true; btn.innerHTML='<i class="ti ti-loader"></i> Cargando...'; }
+  var container = document.getElementById('metaAdsData');
+  if (container) container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px"><i class="ti ti-loader" style="animation:spin 1s linear infinite"></i> Conectando con Meta Ads API...</div>';
+  // This will be populated via the MCP connector from Cowork
+  // For now show the last known data or prompt to use Cowork
+  fetch(API+'/api/meta-ads-stats',{credentials:'include'})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if (btn) { btn.disabled=false; btn.innerHTML='<i class="ti ti-refresh"></i> Actualizar'; }
+      if (d.error) { container.innerHTML='<div style="text-align:center;padding:16px;color:#991B1B;font-size:12px">'+d.error+'</div>'; return; }
+      localStorage.setItem('zi_meta_ads_cache', JSON.stringify(d));
+      localStorage.setItem('zi_meta_ads_cache_time', String(Date.now()));
+      renderMetaAdsWidget(d);
+    })
+    .catch(function(e){
+      if (btn) { btn.disabled=false; btn.innerHTML='<i class="ti ti-refresh"></i> Actualizar'; }
+      if (container) container.innerHTML='<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">No se pudo conectar. Los datos de Meta Ads se actualizan desde Cowork.</div>';
+    });
+}
+
+function renderMetaAdsWidget(data) {
+  var container = document.getElementById('metaAdsData');
+  if (!container || !data) return;
+  var a = data.account || {};
+  var campaigns = data.campaigns || [];
+
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px">'
+    + metaStatCard('Gasto total', a.amount_spent||'—', 'ti-currency-dollar', '#F5820D')
+    + metaStatCard('Leads', a.lead||'—', 'ti-users', '#15803d')
+    + metaStatCard('CPL', a.cost_per_lead||'—', 'ti-target', '#1E40AF')
+    + metaStatCard('CTR', a.ctr||'—', 'ti-click', '#7C3AED')
+    + metaStatCard('CPC', a.cpc||'—', 'ti-pointer', '#D97706')
+    + metaStatCard('Alcance', a.reach||'—', 'ti-eye', '#0D1B3E')
+    + '</div>';
+
+  if (campaigns.length > 0) {
+    html += '<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">Campañas</div>';
+    html += '<div style="overflow-x:auto"><table style="width:100%;font-size:11px;border-collapse:collapse">'
+      + '<tr style="background:var(--bg);font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">'
+      + '<td style="padding:6px 8px">Campaña</td><td style="padding:6px 8px">Estado</td>'
+      + '<td style="padding:6px 8px">Gasto</td><td style="padding:6px 8px">Leads</td>'
+      + '<td style="padding:6px 8px">CPL</td><td style="padding:6px 8px">CTR</td></tr>';
+    campaigns.forEach(function(c){
+      var statusColor = c.status==='ACTIVE'?'#15803d':'#6B7280';
+      var statusLabel = c.status==='ACTIVE'?'Activa':'Pausada';
+      html += '<tr style="border-bottom:1px solid var(--border)">'
+        + '<td style="padding:8px;font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(c.name||'')+'">'+esc(c.name||'—')+'</td>'
+        + '<td style="padding:8px"><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:'+(c.status==='ACTIVE'?'#DCFCE7':'#F3F4F6')+';color:'+statusColor+';font-weight:600">'+statusLabel+'</span></td>'
+        + '<td style="padding:8px">'+esc(c.amount_spent||'—')+'</td>'
+        + '<td style="padding:8px;font-weight:700;color:#15803d">'+esc(c.lead||'0')+'</td>'
+        + '<td style="padding:8px">'+esc(c.cost_per_lead||'—')+'</td>'
+        + '<td style="padding:8px">'+esc(c.ctr||'—')+'</td></tr>';
+    });
+    html += '</table></div>';
+  }
+  html += '<div style="font-size:10px;color:var(--text3);margin-top:8px;text-align:right">Actualizado: '+new Date().toLocaleString('es-GT')+'</div>';
+  container.innerHTML = html;
+}
+
+function metaStatCard(label, value, icon, color) {
+  return '<div style="background:var(--bg);border-radius:8px;padding:10px 12px;text-align:center">'
+    + '<i class="ti '+icon+'" style="font-size:16px;color:'+color+';display:block;margin-bottom:4px"></i>'
+    + '<div style="font-size:15px;font-weight:800;color:var(--navy)">'+esc(String(value))+'</div>'
+    + '<div style="font-size:10px;color:var(--text3);margin-top:2px">'+label+'</div></div>';
 }
 
 // ── PROPIEDADES PAGE ─────────────────────────────────────────
@@ -1013,6 +1551,12 @@ function renderPropiedades(mc) {
           <select class="filter-select" id="filterTipo" onchange="filterTable()">
             <option value="">Todos los tipos</option>
             <option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option>
+          </select>
+          <select class="filter-select" id="filterSitio" onchange="filterTable()">
+            <option value="">Todos los sitios</option>
+            <option value="zona">Zona INNmueble</option>
+            <option value="inmu">InmuHub</option>
+            <option value="ambos">En ambos</option>
           </select>
         </div>
         <div style="display:flex;gap:8px">
@@ -1061,6 +1605,10 @@ function filterTable() {
   );
   if (est)  filtered = filtered.filter(p => (p.estado||'Activa') === est);
   if (tipo) filtered = filtered.filter(p => p.tipo === tipo);
+  const sitio = document.getElementById('filterSitio')?.value || '';
+  if (sitio === 'zona') filtered = filtered.filter(p => !p.sitios || p.sitios.includes('zona'));
+  if (sitio === 'inmu') filtered = filtered.filter(p => !p.sitios || p.sitios.includes('inmu'));
+  if (sitio === 'ambos') filtered = filtered.filter(p => (!p.sitios || p.sitios.includes('zona')) && (!p.sitios || p.sitios.includes('inmu')));
   const tb = document.getElementById('tableBody');
   if (tb) tb.innerHTML = buildTable(filtered, true);
   const tc = document.getElementById('tableCount');
@@ -1139,10 +1687,15 @@ function buildTable(data, sortable) {
       <td>
         ${p.destacada?'<span class="star-cell"><i class="ti ti-star-filled"></i></span> ':''}<div class="prop-name">${esc(p.titulo||'')}</div>
         <div class="prop-loc">${esc(p.municipio||p.zona||'')}</div>
+        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}</div>
       </td>
       <td>${esc(p.tipo||'—')}</td>
       <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>
-      <td><span class="badge ${bc}">${esc(est)}</span></td>
+      <td><select class="quick-status" onchange="quickChangeStatus('${id}',this.value)" title="Cambiar estado">
+          <option value="Activa"${est==='Activa'?' selected':''}>Activa</option>
+          <option value="Vendida"${est==='Vendida'?' selected':''}>Vendida</option>
+          <option value="Pausada"${est==='Pausada'?' selected':''}>Pausada</option>
+        </select></td>
       <td>
         <div class="completeness-wrap" title="${pct}% completa">
           <div class="completeness-bar"><div class="completeness-fill" style="width:${pct}%;background:${pctColor}"></div></div>
@@ -1150,9 +1703,16 @@ function buildTable(data, sortable) {
         </div>
       </td>
       <td>
+        ${qualityBadge(p)}
+      </td>
+      <td>
         <div class="actions-cell">
           <div class="icon-btn" title="Editar" onclick="openModal('${id}')"><i class="ti ti-edit"></i></div>
-          <div class="icon-btn" title="Ver en sitio" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
+          <div class="icon-btn" title="Ver en Zona INNmueble" onclick="window.open('https://zona-innmueble.com/propiedades/${p.slug||p.id}.html','_blank')"><i class="ti ti-external-link"></i></div>
+          <div class="icon-btn" title="Ver en InmuHub" onclick="window.open('https://inmuhub.com/propiedades/${p.slug||p.id}.html','_blank')" style="border-color:#C9A96E"><i class="ti ti-building-skyscraper" style="color:#C9A96E"></i></div>
+          <div class="icon-btn" title="Landing Page para Ads" onclick="copyLP('${p.slug||p.id}')" style="border-color:#F5820D"><i class="ti ti-ad-2" style="color:#F5820D"></i></div>
+          <div class="icon-btn" title="Ficha interactiva" onclick="generateFichaInteractiva('${id}')" style="color:#3B82F6"><i class="ti ti-device-mobile"></i></div>
+          <div class="icon-btn" title="Exportar PDF" onclick="exportPropPDF('${id}')" style="color:#DC2626"><i class="ti ti-file-type-pdf"></i></div>
           <div class="icon-btn" title="Duplicar" onclick="duplicateProp('${id}')"><i class="ti ti-copy"></i></div>\n          <div class="icon-btn danger" title="Eliminar" onclick="deleteProp('${id}','${esc(p.titulo||'')}')"><i class="ti ti-trash"></i></div>
         </div>
       </td>
@@ -1166,6 +1726,7 @@ function buildTable(data, sortable) {
       <th>Precio</th>
       <th>Estado</th>
       <th>Completitud</th>
+      <th>Calidad</th>
       <th>Acciones</th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -1177,7 +1738,13 @@ function renderLeads(mc) {
   const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'];
   const counters = {};
   stages.forEach(s => counters[s] = leads.filter(l=>(l.stage||'Nuevo')===s).length);
-  const filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  let filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  // Ordenar por lead_score desc (los HOT primero) para que el asesor sepa a quien llamar primero
+  filtered = filtered.slice().sort(function(a,b){
+    var d = (b.lead_score||0) - (a.lead_score||0);
+    if (d !== 0) return d;
+    return new Date(b.fecha||0) - new Date(a.fecha||0);
+  });
 
   mc.innerHTML = `
     <div class="leads-toolbar" style="flex-wrap:wrap;gap:10px">
@@ -1208,6 +1775,13 @@ function filterLeads() {
       (l.tipo||'').toLowerCase().includes(q)
     );
   }
+  // Ordenar por lead_score desc (los HOT primero)
+  filtered = filtered.slice().sort(function(a,b){
+    var d = (b.lead_score||0) - (a.lead_score||0);
+    if (d !== 0) return d;
+    return new Date(b.fecha||0) - new Date(a.fecha||0);
+  });
+
   const grid = mc.querySelector('.lead-grid');
   const empty = mc.querySelector('.empty-state');
   if (grid) {
@@ -1223,26 +1797,57 @@ function setLeadFilter(f) {
   if (mc) renderLeads(mc);
 }
 
+function getLeadPhone(l) {
+  var p = l.telefono || l.phone || '';
+  return p.replace(/[^0-9+]/g, '');
+}
+function getLeadName(l) { return l.nombre || l.name || 'Sin nombre'; }
+function getLeadSource(l) {
+  if (l.fuente) return l.fuente;
+  if ((l.source||'').includes('zona')) return 'Zona INNmueble';
+  if ((l.source||'').includes('inmu')) return 'InmuHub';
+  return 'Sin origen';
+}
+function buildWaLink(l) {
+  var ph = getLeadPhone(l);
+  if (!ph) return '';
+  var cleanPh = ph.replace(/\D/g, '');
+  if (cleanPh.length <= 8) cleanPh = '502' + cleanPh;
+  var nombre = (getLeadName(l)).split(' ')[0];
+  var msg = 'Hola ' + nombre + ', soy Jorge de Zona-INNmueble. Tengo opciones de propiedades que podrían interesarte. ¿Te las comparto?';
+  return 'https://wa.me/' + cleanPh + '?text=' + encodeURIComponent(msg);
+}
 function buildLeadCard(l) {
   const stage = l.stage || 'Nuevo';
   const stageClass = {'Nuevo':'ls-nuevo','Contactado':'ls-contactado','Calificado':'ls-calificado','Negociación':'ls-calificado','Cerrado':'ls-cerrado','Perdido':'ls-perdido'}[stage]||'ls-nuevo';
   const lid = esc(l.id||l._id||'');
+  const ph = getLeadPhone(l);
+  const nombre = getLeadName(l);
+  const fuente = getLeadSource(l);
+  const pres = l.presupuesto || '';
+  const fase = l.fase || '';
+  const email = l.email || '';
+  const waLink = buildWaLink(l);
   return `<div class="lead-card">
     <div class="lead-card-top">
       <div>
-        <div class="lead-name">${esc(l.nombre||'Sin nombre')}</div>
+        <div class="lead-name">${esc(nombre)}</div>
         <span class="badge ${stageClass}" style="margin-top:5px;display:inline-flex">${stage}</span>
+        ${l.lead_tier?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;background:${l.lead_tier==='HOT'?'#FEE2E2':l.lead_tier==='WARM'?'#FEF9C3':'#F3F4F6'};color:${l.lead_tier==='HOT'?'#991B1B':l.lead_tier==='WARM'?'#854D0E':'#6B7280'}">${l.lead_tier==='HOT'?'🔥':''}${l.lead_tier} ${l.lead_score||''}</span>`:''}
+        ${fase?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;background:#EFF6FF;color:#1E40AF;border-radius:4px">${esc(fase)}</span>`:''}
       </div>
       <div class="lead-time">${formatDate(l.fecha)}</div>
     </div>
-    ${l.telefono?`<div class="lead-detail"><i class="ti ti-phone"></i>${esc(l.telefono)}</div>`:''}
+    ${ph?`<div class="lead-detail"><i class="ti ti-phone"></i>${esc(ph)}</div>`:''}
+    ${email?`<div class="lead-detail"><i class="ti ti-mail"></i>${esc(email)}</div>`:''}
+    ${pres&&pres!=='SIN PRESUPUESTO'?`<div class="lead-detail"><i class="ti ti-currency-dollar"></i><strong>${esc(pres)}</strong></div>`:''}
     ${l.propiedad?`<div class="lead-detail"><i class="ti ti-building"></i>${esc(l.propiedad)}</div>`:''}
-    ${l.tipo?`<div class="lead-detail"><i class="ti ti-tag"></i>${esc(l.tipo)}</div>`:''}
+    <div class="lead-source" style="font-size:10px"><i class="ti ti-world" style="font-size:11px"></i> ${esc(fuente)}</div>
     <div class="lead-card-actions">
       <select class="lead-stage-select" onchange="updateLeadStage('${lid}',this.value)">
         ${['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'].map(s=>`<option value="${s}"${stage===s?' selected':''}>${s}</option>`).join('')}
       </select>
-      ${l.telefono?`<a class="wa-btn" href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank" title="Contactar por WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>`:''}
+      ${waLink?`<a class="wa-btn" href="${waLink}" target="_blank" title="WhatsApp con mensaje"><i class="ti ti-brand-whatsapp"></i></a>`:''}
     </div>
   </div>`;
 }
@@ -1261,58 +1866,658 @@ async function updateLeadStage(id, stage) {
 }
 
 // ── CRM PIPELINE ─────────────────────────────────────────────
-function renderCRM(mc) {
-  const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado'];
-  const stageColors = {'Nuevo':'#1E40AF','Contactado':'#9A3412','Calificado':'#92400E','Negociación':'#166534','Cerrado':'#15803d'};
+const pipeStages = ['Nuevo','Contactado','Interesado','Visita','Cierre','Perdido'];
+const pipeStageColors = {'Nuevo':'#1E40AF','Contactado':'#D97706','Interesado':'#9A3412','Visita':'#7C3AED','Cierre':'#15803d','Perdido':'#991B1B'};
 
-  const cols = stages.map(stage => {
-    const sl = leads.filter(l=>(l.stage||'Nuevo')===stage);
-    return `<div class="pipe-col">
-      <div class="pipe-col-header">
-        <span style="color:${stageColors[stage]}">${stage}</span>
-        <span class="pipe-count ${sl.length>0?'has-leads':''}">${sl.length}</span>
-      </div>
-      ${sl.length===0
-        ? '<div class="pipe-empty">Sin leads</div>'
-        : sl.map(l=>`
-          <div class="pipe-card">
-            <div class="pipe-card-name">${esc(l.nombre||'Sin nombre')}</div>
-            <div class="pipe-card-prop">${esc(l.propiedad||'—')}</div>
-            <div class="pipe-card-footer">
-              <span class="pipe-card-date">${formatDate(l.fecha)}</span>
-              ${l.telefono?`<a href="https://wa.me/502${l.telefono.replace(/\D/g,'')}" target="_blank" style="color:#25D366;font-size:18px;line-height:1"><i class="ti ti-brand-whatsapp"></i></a>`:''}
-            </div>
-          </div>`).join('')}
-    </div>`;
+function mapFaseToStage(l) {
+  if (l.stage && pipeStages.includes(l.stage)) return l.stage;
+  var f = (l.fase||l.stage||'').toUpperCase();
+  if (!f || f==='NUEVO LEAD' || f==='CLIENTES NUEVO FORM') return 'Nuevo';
+  if (f==='CONTACTADO') return 'Contactado';
+  if (f==='CALIENTE' || f==='INTERESADO') return 'Interesado';
+  if (f.startsWith('COMPRA') || f==='VISITA') return 'Visita';
+  if (f==='CERRADO' || f==='CIERRE') return 'Cierre';
+  if (f==='CLIENTES FRIOS' || f==='PERDIDO') return 'Perdido';
+  if (f==='PROPIETARIO QUIERE VENDER' || f==='PROPIETARIOS QUE YA ENVIARON FOTOS') return 'Interesado';
+  if (f==='ASESORES') return 'Contactado';
+  return 'Nuevo';
+}
+
+function daysSince(dateStr) {
+  if (!dateStr) return 999;
+  var d = new Date(dateStr);
+  if (isNaN(d)) return 999;
+  return Math.floor((Date.now() - d.getTime()) / 86400000);
+}
+function getUrgencyBadge(l) {
+  var stg = mapFaseToStage(l);
+  if (stg === 'Cierre' || stg === 'Perdido') return '';
+  var lastContact = l.contacted_at || l.fecha;
+  var days = daysSince(lastContact);
+  var followup = l.followup_date;
+  var badge = '';
+  if (days >= 7) badge = '<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#991B1B;font-weight:700">⚠ '+days+'d sin contacto</span>';
+  else if (days >= 3) badge = '<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#FEF9C3;color:#854D0E;font-weight:700">'+days+'d sin contacto</span>';
+  if (followup) {
+    var fd = daysSince(followup);
+    if (fd >= 0 && fd <= 1) badge += ' <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#DBEAFE;color:#1E40AF;font-weight:700">📅 Hoy</span>';
+    else if (fd > 1) badge += ' <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#FEE2E2;color:#991B1B;font-weight:700">📅 Vencido</span>';
+  }
+  return badge ? '<div style="margin:3px 0">'+badge+'</div>' : '';
+}
+function renderCRM(mc) {
+  // Count urgent leads
+  var urgentLeads = leads.filter(function(l){
+    var stg = mapFaseToStage(l);
+    if (stg==='Cierre'||stg==='Perdido') return false;
+    return daysSince(l.contacted_at||l.fecha) >= 7;
+  });
+  var overdueFollowups = leads.filter(function(l){
+    return l.followup_date && daysSince(l.followup_date) > 1 && mapFaseToStage(l)!=='Cierre' && mapFaseToStage(l)!=='Perdido';
+  });
+
+  var cols = pipeStages.map(function(stage){
+    var sl = leads.filter(function(l){return mapFaseToStage(l)===stage;});
+    var maxShow = 15;
+    var cards = '';
+    if (sl.length===0) {
+      cards = '<div class="pipe-empty">Sin leads</div>';
+    } else {
+      // Sort: newest first by date
+      sl.sort(function(a,b){ return new Date(b.fecha||0) - new Date(a.fecha||0); });
+      sl.slice(0,maxShow).forEach(function(l){
+        var nm = getLeadName(l);
+        var pres = l.presupuesto||'';
+        var lid = l.id||l._id||l.fecha;
+        cards += '<div class="pipe-card" onclick="openLeadDetail(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')">'
+          + '<div class="pipe-card-name">'+esc(nm)+'</div>'
+          + '<div class="pipe-card-prop">'+esc(l.propiedad||l.tipo_propiedad||'—')+'</div>'
+          + (pres&&pres!=='SIN PRESUPUESTO'?'<div style="font-size:10px;color:#166534;font-weight:600;margin:2px 0">'+esc(pres)+'</div>':'')
+          + getUrgencyBadge(l)
+          + '<div class="pipe-card-footer"><span class="pipe-card-date">'+formatDate(l.fecha)+'</span></div>'
+          + '</div>';
+      });
+      if (sl.length>maxShow) {
+        cards += '<div style="text-align:center;padding:8px;font-size:11px;color:var(--text3)">+'+(sl.length-maxShow)+' más</div>';
+      }
+    }
+    return '<div class="pipe-col">'
+      + '<div class="pipe-col-header"><span style="color:'+pipeStageColors[stage]+'">'+stage+'</span>'
+      + '<span class="pipe-count '+(sl.length>0?'has-leads':'')+'">'+sl.length+'</span></div>'
+      + cards+'</div>';
   }).join('');
 
-  mc.innerHTML = `
-    <div class="page-header">
-      <div>
-        <div class="page-header-title">Pipeline CRM</div>
-        <div class="page-header-sub">${leads.length} leads en total</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" onclick="showPage('leads')"><i class="ti ti-list"></i> Vista lista</button>
-        <button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>
-      </div>
-    </div>
-    <div class="pipeline-wrap">${cols}</div>`;
+  var alertBanner = '';
+  if (urgentLeads.length > 0 || overdueFollowups.length > 0) {
+    var msgs = [];
+    if (urgentLeads.length > 0) msgs.push('<i class="ti ti-alert-triangle"></i> <strong>'+urgentLeads.length+'</strong> lead'+(urgentLeads.length>1?'s':'')+' sin contactar en 7+ días');
+    if (overdueFollowups.length > 0) msgs.push('<i class="ti ti-calendar-event"></i> <strong>'+overdueFollowups.length+'</strong> seguimiento'+(overdueFollowups.length>1?'s':'')+' vencido'+(overdueFollowups.length>1?'s':''));
+    alertBanner = '<div style="background:linear-gradient(135deg,#FEF2F2,#FFF7ED);border:1px solid #FECACA;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:#991B1B">'+msgs.join(' <span style="color:#D97706">·</span> ')+'</div>';
+  }
+
+  mc.innerHTML = '<div class="page-header"><div>'
+    + '<div class="page-header-title">Pipeline CRM</div>'
+    + '<div class="page-header-sub">'+leads.length+' leads en total</div></div>'
+    + '<div style="display:flex;gap:8px">'
+    + '<button class="btn btn-ghost btn-sm" onclick="syncMetaQuick(this)"><i class="ti ti-brand-meta"></i> Sync Meta Leads</button>'
+    + '<button class="btn btn-ghost btn-sm" onclick="showPage(\'leads\')"><i class="ti ti-list"></i> Vista lista</button>'
+    + '<button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>'
+    + '</div></div>'
+    + alertBanner
+    + '<div class="pipeline-wrap">'+cols+'</div>'
+    + '<div class="ld-overlay" id="ldOverlay">'
+    + '<div class="ld-panel"><div class="ld-header"><h3 id="ldTitle">Lead</h3>'
+    + '<button onclick="closeLd()">&times;</button></div>'
+    + '<div class="ld-body" id="ldBody"></div></div></div>';
+}
+
+// Limpieza de seguridad: purgar cualquier token de Meta guardado en sesiones anteriores
+try{ localStorage.removeItem('zi_meta_page_token'); }catch(e){}
+function syncMetaQuick(btn){
+  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i> Sincronizando...';
+  fetch(API+'/api/leads/sync-meta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-meta"></i> Sync Meta Leads';
+      if(d.error){
+        if(d.error.indexOf('token')>-1||d.error.indexOf('Token')>-1){openSyncMeta();return;}
+        alert('Error: '+d.error);return;
+      }
+      if(d.new_leads>0){alert('✓ '+d.new_leads+' leads nuevos importados');setTimeout(function(){location.reload();},500);}
+      else{alert('Sin leads nuevos ('+d.total_forms+' formularios revisados)');}
+    })
+    .catch(function(e){btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-meta"></i> Sync Meta Leads';alert('Error: '+e.message);});
+}
+function openSyncMeta(){
+  var saved = '';
+  var html = '<div style="padding:24px;max-width:480px;margin:40px auto;background:var(--wh);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15)">'
+    + '<h3 style="margin:0 0 8px">Sincronizar leads de Meta</h3>'
+    + '<p style="font-size:13px;color:var(--text3);margin:0 0 16px">Pega tu Page Access Token de Graph Explorer para importar leads de formularios instantáneos.</p>'
+    + '<textarea id="metaTokenInput" rows="3" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:12px;resize:vertical" placeholder="Pega tu Page Access Token aquí...">'+saved+'</textarea>'
+    + '<div style="display:flex;gap:8px;margin-top:12px">'
+    + '<button class="btn btn-primary btn-sm" onclick="syncMetaLeads()" id="syncMetaBtn">Sincronizar</button>'
+    + '<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'syncMetaOverlay\').remove()">Cancelar</button>'
+    + '</div>'
+    + '<div id="syncMetaResult" style="margin-top:12px;font-size:13px"></div>'
+    + '</div>';
+  var ov = document.createElement('div');
+  ov.id = 'syncMetaOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;overflow-y:auto';
+  ov.innerHTML = html;
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+function syncMetaLeads(){
+  var token = document.getElementById('metaTokenInput').value.trim();
+  if(!token){document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Pega un token válido</span>';return;}
+  var btn = document.getElementById('syncMetaBtn');
+  btn.disabled=true;btn.textContent='Sincronizando...';
+  document.getElementById('syncMetaResult').innerHTML='<span style="color:var(--text3)">Conectando con Meta Graph API...</span>';
+  fetch(API+'/api/leads/sync-meta',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({page_token:token})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      btn.disabled=false;btn.textContent='Sincronizar';
+      if(d.error){document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Error: '+d.error+'</span>';return;}
+      document.getElementById('syncMetaResult').innerHTML='<span style="color:#166534">✓ '+d.new_leads+' leads nuevos importados ('+d.total_forms+' formularios)</span>';
+      if(d.new_leads>0){setTimeout(function(){location.reload();},1500);}
+    })
+    .catch(function(e){btn.disabled=false;btn.textContent='Sincronizar';document.getElementById('syncMetaResult').innerHTML='<span style="color:#dc2626">Error: '+e.message+'</span>';});
+}
+function closeLd(){ document.getElementById('ldOverlay').classList.remove('open'); }
+
+function openLeadDetail(lid) {
+  var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+  if (!l) return;
+  var nm = getLeadName(l);
+  var ph = getLeadPhone(l);
+  var waL = buildWaLink(l);
+  var stg = mapFaseToStage(l);
+  var notes = l.notes_history || [];
+
+  document.getElementById('ldTitle').textContent = nm;
+  var opts = pipeStages.map(function(s){return '<option value="'+s+'"'+(s===stg?' selected':'')+'>'+s+'</option>';}).join('');
+  var notesHtml = '';
+  if (notes.length>0) {
+    notes.slice().reverse().forEach(function(n){
+      notesHtml += '<div class="ld-note-item"><div class="ld-note-date">'+(n.date||'')+' '+(n.author||'')+'</div><div class="ld-note-text">'+esc(n.text||n)+'</div></div>';
+    });
+  } else {
+    notesHtml = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:10px">Sin notas aún</div>';
+  }
+
+  document.getElementById('ldBody').innerHTML = '<div class="ld-row">'
+    + '<div class="ld-field"><label>Etapa</label><select id="ldStage">'+opts+'</select></div>'
+    + '<div class="ld-field"><label>Fecha seguimiento</label><input type="date" id="ldFollowup" value="'+(l.followup_date||'')+'"></div></div>'
+    + '<div class="ld-row"><div class="ld-field"><label>Propiedad</label><div class="ld-val">'+esc(l.propiedad||l.tipo_propiedad||'—')+'</div></div>'
+    + '<div class="ld-field"><label>Presupuesto</label><div class="ld-val">'+esc(l.presupuesto||'—')+'</div></div></div>'
+    + '<div class="ld-row"><div class="ld-field"><label>Email</label><div class="ld-val">'+esc(l.email||'—')+'</div></div>'
+    + '<div class="ld-field"><label>Fuente</label><div class="ld-val">'+esc(l.fuente||l.source||'—')+'</div></div></div>'
+    + (waL?'<div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">'
+      + '<a class="wa-btn" href="'+waL+'" target="_blank"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>'
+      + '<button class="btn btn-ghost btn-sm" onclick="showWaTemplates(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-template"></i> Secuencias</button>'
+      + '</div>':'')
+    + '<div class="ld-notes"><h4><i class="ti ti-notes" style="margin-right:4px"></i> Notas y seguimiento</h4>'+notesHtml+'</div>'
+    + '<div style="margin-top:12px"><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Agregar nota</label>'
+    + '<textarea id="ldNewNote" rows="2" placeholder="Escribe una nota..." style="width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;background:var(--bg);outline:none;resize:vertical"></textarea></div>'
+    + '<div class="ld-actions" style="justify-content:space-between"><div><button class="btn btn-ghost" style="color:#dc2626;border-color:#FECACA" onclick="deleteLead(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-trash"></i> Eliminar</button></div>'
+    + '<div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="closeLd()">Cancelar</button>'
+    + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="saveLeadDetail(\''+esc(String(lid).replace(/'/g,"\\'"))+'\')"><i class="ti ti-check"></i> Guardar</button></div></div>';
+
+  document.getElementById('ldOverlay').classList.add('open');
+}
+
+async function saveLeadDetail(lid) {
+  var stage = document.getElementById('ldStage').value;
+  var followup = document.getElementById('ldFollowup').value;
+  var note = (document.getElementById('ldNewNote').value||'').trim();
+
+  try {
+    // Update stage & followup
+    await fetch(API + '/api/leads/update', {
+      method:'PUT', credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:lid, stage:stage, followup_date:followup, contacted_at: new Date().toISOString()})
+    });
+
+    // Add note if any
+    if (note) {
+      await fetch(API + '/api/leads/note', {
+        method:'POST', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:lid, text:note})
+      });
+    }
+
+    // Update local
+    var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+    if (l) {
+      l.stage = stage;
+      l.followup_date = followup;
+      if (note) {
+        if (!l.notes_history) l.notes_history = [];
+        l.notes_history.push({text:note, date:new Date().toISOString().slice(0,10), author:'Admin'});
+      }
+    }
+
+    closeLd();
+    showToast('Lead actualizado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderCRM(mc);
+  } catch(e) {
+    showToast('Error al guardar','error');
+    console.error(e);
+  }
+}
+
+// ── DELETE LEAD ─────────────────────────────────────────────
+async function deleteLead(lid) {
+  var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+  var nm = l ? getLeadName(l) : lid;
+  if (!confirm('¿Eliminar el lead "'+nm+'"?\n\nEsta acción no se puede deshacer.')) return;
+  try {
+    var r = await fetch(API+'/api/leads/delete',{method:'DELETE',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:lid})});
+    var d = await r.json();
+    if (d.error) { showToast('Error: '+d.error,'error'); return; }
+    leads = leads.filter(function(x){return (x.id||x._id||x.fecha)!=lid;});
+    closeLd();
+    showToast('Lead eliminado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderCRM(mc);
+  } catch(e) { showToast('Error al eliminar','error'); console.error(e); }
+}
+
+// ── BROKERS MANAGEMENT ──────────────────────────────────────
+var brokersList = [];
+
+async function loadBrokers() {
+  try {
+    var r = await fetch(API+'/api/brokers',{credentials:'include'});
+    var d = await r.json();
+    brokersList = Array.isArray(d) ? d : [];
+  } catch(e) { brokersList = []; }
+}
+
+function renderBrokers(mc) {
+  loadBrokers().then(function() { renderBrokersUI(mc); });
+  mc.innerHTML = '<div style="text-align:center;padding:60px"><div class="spinner"></div><p style="color:#64748b;margin-top:16px">Cargando asesores...</p></div>';
+}
+
+function renderBrokersUI(mc) {
+  var activos = brokersList.filter(function(b){return b.activo!==false;}).length;
+  var verificados = brokersList.filter(function(b){return b.verificado;}).length;
+  var pendientes = brokersList.filter(function(b){return b.estado==='pendiente';}).length;
+
+  var brokerFilter = window._brokerFilter || 'todos';
+  var filtered = brokersList;
+  if (brokerFilter === 'pendientes') filtered = brokersList.filter(function(b){return b.estado==='pendiente';});
+  else if (brokerFilter === 'aprobados') filtered = brokersList.filter(function(b){return b.estado==='aprobado';});
+  else if (brokerFilter === 'sinestado') filtered = brokersList.filter(function(b){return !b.estado;});
+
+  var sinEstado = brokersList.filter(function(b){return !b.estado;}).length;
+
+  mc.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">'
+    + '<div style="display:flex;gap:16px">'
+    + (pendientes?'<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'pendientes\')"><div style="font-size:22px;font-weight:700;color:#dc2626">'+pendientes+'</div><div style="font-size:11px;color:#64748b">Pendientes</div></div>':'')
+    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'aprobados\')"><div style="font-size:22px;font-weight:700;color:#16a34a">'+activos+'</div><div style="font-size:11px;color:#64748b">Aprobados</div></div>'
+    + (sinEstado?'<div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'sinestado\')"><div style="font-size:22px;font-weight:700;color:#a16207">'+sinEstado+'</div><div style="font-size:11px;color:#64748b">Sin estado</div></div>':'')
+    + '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 20px;cursor:pointer" onclick="filterBrokers(\'todos\')"><div style="font-size:22px;font-weight:700;color:#334155">'+brokersList.length+'</div><div style="font-size:11px;color:#64748b">Total</div></div>'
+    + '</div>'
+    + '<button class="btn" style="background:var(--navy);color:var(--wh)" onclick="openBrokerForm()"><i class="ti ti-plus"></i> Nuevo asesor</button>'
+    + '</div>'
+    + (sinEstado ? '<div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#92400e"><strong>⚠ '+sinEstado+' asesor(es) sin estado asignado.</strong> Fueron creados antes del sistema de aprobación. <button onclick="approveAllLegacy()" style="background:#16a34a;color:white;border:none;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px">Aprobar todos</button></div>' : '')
+    + '<div id="brokersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">'
+    + filtered.map(function(b) {
+        var initials = (b.nombre||'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+        var zones = (b.zonas||[]).slice(0,3).join(', ');
+        var propCount = (props||[]).filter(function(p){return p.broker_id===b.id;}).length;
+        var isPending = b.estado==='pendiente';
+        var noEstado = !b.estado;
+        return '<div style="background:white;border:1.5px solid '+(isPending?'#fde68a':noEstado?'#fde047':'#eef0f3')+';border-radius:12px;padding:20px;transition:all .2s">'
+          + '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;cursor:pointer" onclick="openBrokerForm(\''+b.id+'\')">'
+          + '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0a1628,#1a2a4e);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#C9A96E;overflow:hidden;flex-shrink:0">'+(b.foto?'<img src="'+b.foto+'" style="width:100%;height:100%;object-fit:cover"/>':initials)+'</div>'
+          + '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:#0a1628;font-size:15px">'+b.nombre+'</span>'+(b.verificado?'<span style="color:#C9A96E" title="Verificado">&#10003;</span>':'')+'</div>'
+          + '<div style="font-size:12px;color:#64748b">'+(b.titulo||'Asesor')+' &middot; '+(b.email||'')+'</div></div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;'+(isPending?'background:#fef3c7;color:#92400e':noEstado?'background:#fef9c3;color:#a16207':b.estado==='aprobado'?'background:#f0fdf4;color:#16a34a':'background:#fef2f2;color:#dc2626')+'">'+(isPending?'Pendiente':noEstado?'Sin estado':b.estado==='aprobado'?'Aprobado':'Rechazado')+'</span>'
+          + '<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#f1f5f9;color:#475569">'+(b.plan||'free').toUpperCase()+'</span>'
+          + (b.destacado?'<span style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;background:#fefce8;color:#ca8a04">Destacado</span>':'')
+          + '</div></div>'
+          + '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+          + (zones?'<span style="font-size:11px;color:#94a3b8"><i class="ti ti-map-pin" style="font-size:12px"></i> '+zones+'</span>':'')
+          + '<span style="font-size:11px;color:#94a3b8">'+propCount+' props</span>'
+          + '<span style="margin-left:auto;display:flex;gap:6px">'
+          + (isPending||noEstado ? '<button onclick="event.stopPropagation();quickApprove(\''+b.id+'\')" style="background:#16a34a;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer" title="Aprobar"><i class="ti ti-check"></i> Aprobar</button>' : '')
+          + (isPending||noEstado ? '<button onclick="event.stopPropagation();quickReject(\''+b.id+'\')" style="background:#dc2626;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer" title="Rechazar"><i class="ti ti-x"></i> Rechazar</button>' : '')
+          + '<button onclick="event.stopPropagation();openBrokerForm(\''+b.id+'\')" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#475569;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer"><i class="ti ti-pencil"></i></button>'
+          + '</span></div></div>';
+      }).join('')
+    + '</div>';
+}
+
+function openBrokerForm(id) {
+  var b = id ? brokersList.find(function(x){return x.id===id;}) : null;
+  var isEdit = !!b;
+
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.id = 'brokerOverlay';
+  overlay.onclick = function(e){if(e.target===overlay)overlay.remove();};
+
+  var form = '<div style="background:white;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;padding:32px">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><h3 style="margin:0;font-size:18px;font-weight:700;color:#0a1628">'+(isEdit?'Editar':'Nuevo')+' asesor</h3><button onclick="document.getElementById(\'brokerOverlay\').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8">&times;</button></div>'
+    + '<div style="display:grid;gap:16px">'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Nombre completo *</label><input id="bf_nombre" value="'+(b?b.nombre:'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Juan Pérez"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Título / Cargo</label><input id="bf_titulo" value="'+(b?b.titulo||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Asesor Senior"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Bio</label><textarea id="bf_bio" rows="3" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;resize:vertical" placeholder="Experiencia y especialización...">'+(b?b.bio||'':'')+'</textarea></div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Teléfono</label><input id="bf_tel" value="'+(b?b.telefono||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="+502 5555-1234"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">WhatsApp</label><input id="bf_wa" value="'+(b?b.whatsapp||b.whatsapp_raw||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="50255551234"/></div>'
+    + '</div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Email</label><input id="bf_email" value="'+(b?b.email||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="juan@email.com"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Foto URL</label><input id="bf_foto" value="'+(b?b.foto||'':'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="https://..."/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Zonas (separar con comas)</label><input id="bf_zonas" value="'+(b?(b.zonas||[]).join(', '):'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Zona 14, Zona 15, Cayalá"/></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Especialidad (separar con comas)</label><input id="bf_esp" value="'+(b?(b.especialidad||[]).join(', '):'')+'" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="Casas, Apartamentos, Inversión"/></div>'
+    + '<div style="display:flex;gap:20px;align-items:center">'
+    + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_verificado" '+(b&&b.verificado?'checked':'')+'/> Verificado</label>'
+    + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_destacado" '+(b&&b.destacado?'checked':'')+'/> Destacado</label>'
+    + '<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer"><input type="checkbox" id="bf_activo" '+(b&&b.activo===false?'':'checked')+'/> Activo</label>'
+    + '</div>'
+    + (isEdit ? '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px">'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Estado</label><select id="bf_estado" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="pendiente"'+(b&&b.estado==='pendiente'?' selected':'')+'>Pendiente</option><option value="aprobado"'+(b&&(b.estado==='aprobado'||!b.estado)?' selected':'')+'>Aprobado</option><option value="rechazado"'+(b&&b.estado==='rechazado'?' selected':'')+'>Rechazado</option></select></div>'
+    + '<div><label style="font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px">Plan</label><select id="bf_plan" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="free"'+(b&&(b.plan||'free')==='free'?' selected':'')+'>Free (2 props)</option><option value="pro"'+(b&&b.plan==='pro'?' selected':'')+'>Pro (5 props)</option><option value="premium"'+(b&&b.plan==='premium'?' selected':'')+'>Premium (ilimitado)</option></select></div>'
+    + '</div>' : '')
+    + '</div>'
+    + (isEdit ? '<div id="brokerPropsSection" style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#0a1628"><i class="ti ti-home"></i> Propiedades asignadas</span><button onclick="openAssignPropModal(\''+b.id+'\')" style="background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer"><i class="ti ti-plus"></i> Asignar</button></div><div id="brokerPropsList" style="font-size:12px;color:#64748b">Cargando...</div></div>' : '')
+    + '<div style="display:flex;justify-content:space-between;margin-top:24px">'
+    + (isEdit?'<button onclick="deleteBroker(\''+b.id+'\')" style="background:none;border:1.5px solid #FECACA;color:#dc2626;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer"><i class="ti ti-trash"></i> Eliminar</button>':'<div></div>')
+    + '<div style="display:flex;gap:8px"><button onclick="document.getElementById(\'brokerOverlay\').remove()" class="btn btn-ghost">Cancelar</button>'
+    + '<button onclick="saveBroker('+(isEdit?"'"+b.id+"'":"null")+')" class="btn" style="background:var(--navy);color:var(--wh)"><i class="ti ti-check"></i> '+(isEdit?'Guardar':'Crear')+'</button></div>'
+    + '</div></div>';
+
+  overlay.innerHTML = form;
+  document.body.appendChild(overlay);
+  if (isEdit) loadBrokerProps(b.id);
+}
+
+function loadBrokerProps(brokerId) {
+  var container = document.getElementById('brokerPropsList');
+  if (!container) return;
+  var assigned = (props||[]).filter(function(p){return p.broker_id===brokerId;});
+  if (assigned.length === 0) {
+    container.innerHTML = '<div style="color:#94a3b8;font-style:italic;padding:8px 0">Sin propiedades asignadas</div>';
+    return;
+  }
+  container.innerHTML = assigned.map(function(p){
+    var pid = encodeURIComponent(p.id||p.slug);
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#f8fafc;border-radius:6px;margin-bottom:6px">'
+      + '<div style="flex:1;min-width:0"><div style="font-weight:600;color:#0a1628;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(p.titulo||'Sin título')+'</div>'
+      + '<div style="font-size:11px;color:#94a3b8">'+(p.zona||'')+(p.precio?' · '+p.precio:'')+'</div></div>'
+      + '<button onclick="unassignProp(\''+pid+'\',\''+brokerId+'\')" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:14px;padding:4px" title="Quitar asignación"><i class="ti ti-x"></i></button>'
+      + '</div>';
+  }).join('');
+}
+
+async function unassignProp(propId, brokerId) {
+  var decoded = decodeURIComponent(propId);
+  var p = props.find(function(x){return (x.id||x.slug)===decoded || encodeURIComponent(x.id||x.slug)===propId;});
+  if (!p) return;
+  p.broker_id = '';
+  try {
+    await fetch(API+'/api/propiedades',{
+      method:'PUT',credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:p.id||p.slug,broker_id:''})
+    });
+    showToast('Propiedad desasignada','success');
+    loadBrokerProps(brokerId);
+  } catch(e){showToast('Error al desasignar','error');}
+}
+
+function openAssignPropModal(brokerId) {
+  var unassigned = (props||[]).filter(function(p){return !p.broker_id || p.broker_id===brokerId;});
+  var assigned = (props||[]).filter(function(p){return p.broker_id===brokerId;});
+  var assignedIds = assigned.map(function(p){return p.id||p.slug;});
+
+  var modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.id = 'assignPropOverlay';
+  modal.onclick = function(e){if(e.target===modal)modal.remove();};
+
+  var items = unassigned.map(function(p){
+    var pid = p.id||p.slug;
+    var checked = assignedIds.indexOf(pid)>=0;
+    return '<label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;border:1px solid #e2e8f0;transition:all .2s" onmouseover="this.style.borderColor=\'#C9A96E\'" onmouseout="this.style.borderColor=\'#e2e8f0\'">'
+      + '<input type="checkbox" value="'+encodeURIComponent(pid)+'" '+(checked?'checked':'')+' style="width:16px;height:16px"/>'
+      + '<div style="flex:1;min-width:0"><div style="font-weight:600;color:#0a1628;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(p.titulo||'Sin título')+'</div>'
+      + '<div style="font-size:11px;color:#94a3b8">'+(p.zona||'')+(p.precio?' · '+p.precio:'')+'</div></div></label>';
+  }).join('');
+
+  modal.innerHTML = '<div style="background:white;border-radius:16px;max-width:480px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">'
+    + '<div style="padding:20px 24px;border-bottom:1px solid #e2e8f0"><h3 style="margin:0;font-size:16px;font-weight:700;color:#0a1628">Asignar propiedades</h3><p style="margin:4px 0 0;font-size:12px;color:#64748b">Selecciona las propiedades para este asesor</p></div>'
+    + '<div style="padding:16px 24px;overflow-y:auto;display:grid;gap:8px">'+items+'</div>'
+    + '<div style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:8px">'
+    + '<button onclick="document.getElementById(\'assignPropOverlay\').remove()" class="btn btn-ghost">Cancelar</button>'
+    + '<button onclick="saveAssignments(\''+brokerId+'\')" class="btn" style="background:var(--navy);color:var(--wh)"><i class="ti ti-check"></i> Guardar</button>'
+    + '</div></div>';
+
+  document.body.appendChild(modal);
+}
+
+async function saveAssignments(brokerId) {
+  var checkboxes = document.querySelectorAll('#assignPropOverlay input[type=checkbox]');
+  var promises = [];
+  checkboxes.forEach(function(cb){
+    var pid = decodeURIComponent(cb.value);
+    var p = props.find(function(x){return (x.id||x.slug)===pid;});
+    if (!p) return;
+    var newBrokerId = cb.checked ? brokerId : '';
+    if (p.broker_id !== newBrokerId) {
+      p.broker_id = newBrokerId;
+      promises.push(fetch(API+'/api/propiedades',{
+        method:'PUT',credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:p.id||p.slug,broker_id:newBrokerId})
+      }));
+    }
+  });
+  if (promises.length > 0) {
+    try {
+      await Promise.all(promises);
+      showToast(promises.length+' propiedad(es) actualizada(s)','success');
+    } catch(e){showToast('Error al guardar','error');}
+  }
+  document.getElementById('assignPropOverlay').remove();
+  loadBrokerProps(brokerId);
+}
+
+async function saveBroker(id) {
+  var nombre = document.getElementById('bf_nombre').value.trim();
+  if (!nombre) { showToast('Nombre requerido','error'); return; }
+
+  var slug = nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  var zonas = document.getElementById('bf_zonas').value.split(',').map(function(z){return z.trim();}).filter(Boolean);
+  var esp = document.getElementById('bf_esp').value.split(',').map(function(e){return e.trim();}).filter(Boolean);
+
+  var data = {
+    nombre: nombre,
+    slug: slug,
+    titulo: document.getElementById('bf_titulo').value.trim(),
+    bio: document.getElementById('bf_bio').value.trim(),
+    telefono: document.getElementById('bf_tel').value.trim(),
+    whatsapp_raw: document.getElementById('bf_wa').value.trim(),
+    email: document.getElementById('bf_email').value.trim(),
+    foto: document.getElementById('bf_foto').value.trim(),
+    zonas: zonas,
+    especialidad: esp,
+    verificado: document.getElementById('bf_verificado').checked,
+    destacado: document.getElementById('bf_destacado').checked,
+    activo: document.getElementById('bf_activo').checked
+  };
+
+  if (id) {
+    data.id = id;
+    var estadoEl = document.getElementById('bf_estado');
+    var planEl = document.getElementById('bf_plan');
+    if (estadoEl) data.estado = estadoEl.value;
+    if (planEl) data.plan = planEl.value;
+    // Auto-activar cuando se aprueba
+    if (data.estado === 'aprobado') data.activo = true;
+  }
+
+  try {
+    var r = await fetch(API+'/api/brokers',{
+      method: id ? 'PUT' : 'POST',
+      credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    var d = await r.json();
+    if (d.error) { showToast('Error: '+d.error,'error'); return; }
+    showToast(id?'Asesor actualizado':'Asesor creado','success');
+    document.getElementById('brokerOverlay').remove();
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error al guardar','error'); console.error(e); }
+}
+
+async function deleteBroker(id) {
+  if (!confirm('¿Eliminar este asesor? Esta acción no se puede deshacer.')) return;
+  try {
+    var r = await fetch(API+'/api/brokers',{
+      method:'DELETE',
+      credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id:id})
+    });
+    var d = await r.json();
+    if (d.error) { showToast('Error: '+d.error,'error'); return; }
+    showToast('Asesor eliminado','success');
+    document.getElementById('brokerOverlay').remove();
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error al eliminar','error'); console.error(e); }
+}
+
+// ── QUICK BROKER ACTIONS ──────────────────────────────────────
+function filterBrokers(f) {
+  window._brokerFilter = f;
+  var mc = document.getElementById('mainContent');
+  if (mc) renderBrokersUI(mc);
+}
+
+async function quickApprove(id) {
+  try {
+    await fetch(API+'/api/brokers',{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,estado:'aprobado',activo:true})});
+    showToast('Asesor aprobado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error','error'); }
+}
+
+async function quickReject(id) {
+  if (!confirm('¿Rechazar este asesor?')) return;
+  try {
+    await fetch(API+'/api/brokers',{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,estado:'rechazado',activo:false})});
+    showToast('Asesor rechazado','success');
+    var mc = document.getElementById('mainContent');
+    if (mc) renderBrokers(mc);
+  } catch(e) { showToast('Error','error'); }
+}
+
+async function approveAllLegacy() {
+  if (!confirm('¿Aprobar todos los asesores sin estado asignado?')) return;
+  var legacy = brokersList.filter(function(b){return !b.estado;});
+  for (var i=0; i<legacy.length; i++) {
+    try {
+      await fetch(API+'/api/brokers',{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:legacy[i].id,estado:'aprobado',activo:true})});
+    } catch(e) {}
+  }
+  showToast(legacy.length+' asesor(es) aprobados','success');
+  var mc = document.getElementById('mainContent');
+  if (mc) renderBrokers(mc);
+}
+
+// ── WHATSAPP SEQUENCES ──────────────────────────────────────
+function showWaTemplates(lid) {
+  var l = leads.find(function(x){return (x.id||x._id||x.fecha)==lid;});
+  if (!l) return;
+  var ph = getLeadPhone(l);
+  if (!ph) return;
+  var cleanPh = ph.replace(/\D/g, '');
+  if (cleanPh.length <= 8) cleanPh = '502' + cleanPh;
+  var nombre = (getLeadName(l)).split(' ')[0];
+  var prop = l.propiedad || l.tipo_propiedad || 'propiedad';
+
+  var templates = [
+    { icon:'ti-message-circle', label:'Bienvenida', color:'#15803d',
+      msg:'Hola '+nombre+', gracias por tu interés en '+prop+'. Soy Jorge de Zona-INNmueble, asesor inmobiliario especializado en propiedades premium en Guatemala. ¿Te gustaría que te comparta más detalles sobre esta propiedad?' },
+    { icon:'ti-building', label:'Propiedades similares', color:'#1E40AF',
+      msg:'Hola '+nombre+', además de '+prop+', tenemos otras opciones que podrían interesarte en zonas premium de Guatemala. ¿Te gustaría que te envíe un catálogo personalizado con propiedades similares?' },
+    { icon:'ti-clock', label:'Seguimiento 3 días', color:'#D97706',
+      msg:'Hola '+nombre+', hace unos días conversamos sobre '+prop+'. ¿Tuviste oportunidad de revisar la información? Quedo atento a cualquier consulta que tengas.' },
+    { icon:'ti-map-pin', label:'Invitación a visita', color:'#7C3AED',
+      msg:'Hola '+nombre+', me gustaría invitarte a conocer '+prop+' en persona. ¿Qué día y horario te funcionaría mejor para una visita privada? Te aseguro que vale la pena.' },
+    { icon:'ti-star', label:'Exclusividad', color:'#991B1B',
+      msg:'Hola '+nombre+', quería compartirte que '+prop+' ha generado bastante interés. Si estás considerando esta opción, con gusto te reservo un espacio para conocerla antes que otros interesados. ¿Te parece?' },
+    { icon:'ti-heart', label:'Post-visita', color:'#9A3412',
+      msg:'Hola '+nombre+', fue un gusto mostrarte '+prop+'. ¿Qué te pareció? Si tienes alguna consulta adicional o quieres revisar números, estoy a la orden.' }
+  ];
+
+  var html = '<div style="padding:20px;max-width:520px;margin:40px auto;background:var(--wh);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15)">'
+    + '<h3 style="margin:0 0 4px;font-size:16px">Secuencias de WhatsApp</h3>'
+    + '<p style="font-size:12px;color:var(--text3);margin:0 0 16px">Elige un mensaje para enviar a <strong>'+esc(getLeadName(l))+'</strong></p>';
+  templates.forEach(function(t){
+    var waUrl = 'https://wa.me/'+cleanPh+'?text='+encodeURIComponent(t.msg);
+    html += '<a href="'+waUrl+'" target="_blank" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border);margin-bottom:8px;transition:all .15s"'
+      + ' onmouseover="this.style.background=\'#F0FDF4\';this.style.borderColor=\'#86EFAC\'"'
+      + ' onmouseout="this.style.background=\'transparent\';this.style.borderColor=\'var(--border)\'">'
+      + '<i class="ti '+t.icon+'" style="font-size:20px;color:'+t.color+'"></i>'
+      + '<div><div style="font-weight:600;font-size:13px">'+t.label+'</div>'
+      + '<div style="font-size:11px;color:var(--text3);line-height:1.3;margin-top:2px">'+esc(t.msg.substring(0,80))+'...</div></div></a>';
+  });
+  html += '<div style="text-align:right;margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'waSeqOverlay\').remove()">Cerrar</button></div></div>';
+
+  var ov = document.createElement('div');
+  ov.id = 'waSeqOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:800;overflow-y:auto';
+  ov.innerHTML = html;
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
 }
 
 // ── MODAL ────────────────────────────────────────────────────
 function openModal(id) {
   editingId = null; galUrls = []; currentStatus = 'Activa'; currentCinta = '';
   clearForm();
+  var selectedBrokerId = '';
   if (id) {
     const decoded = decodeURIComponent(id);
     const p = props.find(x=>(x.id||x.slug)===decoded || encodeURIComponent(x.id||x.slug)===id);
-    if (p) { editingId = p.id||p.slug; document.getElementById('modalTitle').textContent='Editar propiedad'; loadForm(p); }
+    if (p) { editingId = p.id||p.slug; selectedBrokerId = p.broker_id||''; document.getElementById('modalTitle').textContent='Editar propiedad'; loadForm(p); }
   } else {
     document.getElementById('modalTitle').textContent = 'Nueva propiedad';
   }
+  populateBrokerSelect(selectedBrokerId);
   formDirty = false;
   document.getElementById('modalOverlay').classList.add('open');
+}
+
+async function populateBrokerSelect(selectedId) {
+  var sel = document.getElementById('fBrokerId');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Sin asesor</option>';
+  try {
+    var r = await fetch(API+'/api/brokers',{credentials:'include'});
+    var list = await r.json();
+    if (!Array.isArray(list)) return;
+    list.filter(function(b){return b.activo!==false;}).forEach(function(b){
+      var opt = document.createElement('option');
+      opt.value = b.id;
+      opt.textContent = b.nombre + (b.verificado?' ✓':'');
+      sel.appendChild(opt);
+    });
+    if (selectedId) sel.value = selectedId;
+  } catch(e){}
 }
 
 let formDirty = false;
@@ -1338,6 +2543,7 @@ function clearForm() {
    'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen','fVideoUrl','fGoogleMaps','fWhatsappProp'
   ].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados','fDepartamento'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('fBrokerId').value='';
   document.getElementById('fTipo').value='Casa';
   document.getElementById('fOperacion').value='Venta';
   document.getElementById('fMoneda').value='Q';
@@ -1373,6 +2579,7 @@ function loadForm(p) {
   sel('fTipo',p.tipo); sel('fOperacion',p.operacion); sel('fTipoListing',p.tipoListing); sel('fDepartamento',p.departamento);
   sel('fMoneda',p.moneda);
   set('fVideoUrl',p.videoUrl); set('fGoogleMaps',p.googleMapsUrl); set('fWhatsappProp',p.whatsappProp);
+  sel('fBrokerId',p.broker_id);
   document.getElementById('fDestacada').checked=!!p.destacada;
   descBloques=p.descBloques||[]; renderDescBlocks();
   document.getElementById('fPrivada').checked=!!p.privada;
@@ -1455,7 +2662,7 @@ async function saveProp() {
     imagen:g('fImagen'),gallery:galUrls,
     estado:currentStatus,cinta:currentCinta,caracteristicas:chars,sitios,
     moneda:g('fMoneda'),destacada:document.getElementById('fDestacada').checked,
-    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),
+    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),slug:g('fSlug'),broker_id:g('fBrokerId'),
     descBloques:getDescBloques(),
     privConfig: {
       hidePrecio: document.getElementById('pcHidePrecio')?.checked || false,
@@ -1634,6 +2841,830 @@ document.querySelectorAll('.char-item').forEach(item=>{
   item.addEventListener('change',()=>item.classList.toggle('checked',item.querySelector('input').checked));
 });
 
+
+// ══════ PREMIUM FEATURES v5 ══════
+
+// ── GLOBAL SEARCH ────────────────────────────────────────────
+var searchResultIndex = -1;
+function openSearch() {
+  var ov = document.getElementById('searchOverlay');
+  ov.classList.add('open');
+  var inp = document.getElementById('searchInput');
+  inp.value = '';
+  inp.focus();
+  document.getElementById('searchResults').innerHTML = '<div class="search-empty">Escribe para buscar...</div>';
+  searchResultIndex = -1;
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+function doGlobalSearch(q) {
+  var res = document.getElementById('searchResults');
+  if (!q || q.length < 2) { res.innerHTML = '<div class="search-empty">Escribe al menos 2 caracteres...</div>'; return; }
+  var ql = q.toLowerCase();
+  var matches = [];
+  props.forEach(function(p) {
+    var h = [p.titulo, p.zona, p.municipio, p.tipo, p.precio, p.codigo].filter(Boolean).join(' ').toLowerCase();
+    if (h.includes(ql)) matches.push({ type:'prop', title:p.titulo||'Sin título', sub:[p.tipo,p.zona,p.precio?(p.moneda||'Q')+' '+p.precio:''].filter(Boolean).join(' · '), id:p.id||p.slug });
+  });
+  leads.forEach(function(l) {
+    var h = [l.nombre, l.email, l.telefono, l.propiedad].filter(Boolean).join(' ').toLowerCase();
+    if (h.includes(ql)) matches.push({ type:'lead', title:l.nombre||'Sin nombre', sub:[l.email,l.propiedad].filter(Boolean).join(' · '), id:l.id });
+  });
+  if (!matches.length) { res.innerHTML = '<div class="search-empty">Sin resultados</div>'; return; }
+  var html = '';
+  matches.slice(0,8).forEach(function(m,i) {
+    html += '<div class="search-result'+(i===0?' active':'')+'" onclick="searchSelect(\''+m.type+'\',\''+esc(m.id||'')+'\')">'
+      + '<div class="sr-icon '+m.type+'"><i class="ti ti-'+(m.type==='prop'?'building':'user')+'"></i></div>'
+      + '<div class="sr-text"><div class="sr-title">'+esc(m.title)+'</div><div class="sr-sub">'+esc(m.sub)+'</div></div>'
+      + '<span style="font-size:10px;color:var(--text3)">'+(m.type==='prop'?'Propiedad':'Lead')+'</span></div>';
+  });
+  res.innerHTML = html;
+  searchResultIndex = 0;
+}
+function searchSelect(type, id) {
+  closeSearch();
+  if (type === 'prop' && id) openModal(id);
+  else if (type === 'lead') showPage('leads');
+}
+
+// ── KEYBOARD SHORTCUTS ───────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n' && !document.getElementById('searchOverlay').classList.contains('open')) { e.preventDefault(); openModal(null); return; }
+  if (e.key === 'Escape') {
+    if (document.getElementById('searchOverlay').classList.contains('open')) { closeSearch(); return; }
+  }
+  if (document.getElementById('searchOverlay').classList.contains('open')) {
+    var items = document.querySelectorAll('.search-result');
+    if (e.key === 'ArrowDown') { e.preventDefault(); searchResultIndex = Math.min(searchResultIndex+1, items.length-1); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); searchResultIndex = Math.max(searchResultIndex-1, 0); }
+    items.forEach(function(it,i) { it.classList.toggle('active', i === searchResultIndex); });
+    if (e.key === 'Enter' && items[searchResultIndex]) { items[searchResultIndex].click(); }
+  }
+});
+
+// ── ACTIVITY TIMELINE ────────────────────────────────────────
+function buildTimeline() {
+  var events = [];
+  leads.forEach(function(l) {
+    events.push({ text:'<strong>'+esc(l.nombre||'Nuevo lead')+'</strong> interesado en '+esc(l.propiedad||l.tipo||'propiedad'), date:l.fecha||'', icon:'lead' });
+  });
+  props.forEach(function(p) {
+    if (p.estado === 'Vendida') events.push({ text:'<strong>'+esc(p.titulo||'')+'</strong> marcada como vendida', date:p.updatedAt||'', icon:'sale' });
+  });
+  events.sort(function(a,b) { return (b.date||'').localeCompare(a.date||''); });
+  var html = '';
+  events.slice(0,8).forEach(function(ev) {
+    html += '<div class="tl-item"><div class="tl-dot '+ev.icon+'"></div><div class="tl-content"><div class="tl-text">'+ev.text+'</div><div class="tl-time">'+(ev.date?formatDate(ev.date):'')+'</div></div></div>';
+  });
+  return html || '<div style="padding:18px;text-align:center;color:var(--text3);font-size:12px">Sin actividad reciente</div>';
+}
+
+// ── LEADS WEEKLY CHART ───────────────────────────────────────
+function buildLeadsChart() {
+  var now = new Date();
+  var weeks = [];
+  for (var i = 7; i >= 0; i--) {
+    var start = new Date(now); start.setDate(now.getDate() - (i * 7));
+    var end = new Date(start); end.setDate(start.getDate() + 7);
+    var count = leads.filter(function(l) {
+      if (!l.fecha) return false;
+      var d = new Date(l.fecha);
+      return d >= start && d < end;
+    }).length;
+    var label = i === 0 ? 'Esta' : i === 1 ? 'Ant.' : '-' + i;
+    weeks.push({ label:label, count:count });
+  }
+  var max = Math.max.apply(null, weeks.map(function(w){return w.count;}));
+  if (max < 1) max = 1;
+  var html = '';
+  weeks.forEach(function(w) {
+    var h = Math.max((w.count / max) * 70, 2);
+    html += '<div class="leads-bar" style="height:'+h+'px">'
+      + (w.count > 0 ? '<div class="leads-bar-val">'+w.count+'</div>' : '')
+      + '<div class="leads-bar-label">'+w.label+'</div></div>';
+  });
+  return html;
+}
+
+// ── CONVERSION FUNNEL ────────────────────────────────────────
+function buildFunnel() {
+  var stages = ['Nuevo','Contactado','Interesado','Visita','Cierre','Perdido'];
+  var colors = ['#1E40AF','#D97706','#9A3412','#7C3AED','#15803d','#991B1B'];
+  var counts = stages.map(function(s) { return leads.filter(function(l){ return mapFaseToStage(l)===s; }).length; });
+  var max = Math.max.apply(null, counts);
+  if (max < 1) max = 1;
+  var html = '';
+  stages.forEach(function(s, i) {
+    var pct = leads.length>0 ? Math.round(counts[i]/leads.length*100) : 0;
+    html += '<div class="funnel-step"><div class="funnel-label">'+s+'</div>'
+      + '<div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:'+(counts[i]/max*100)+'%;background:'+colors[i]+'">'+counts[i]+'</div></div>'
+      + '<div class="funnel-count">'+pct+'%</div></div>';
+  });
+  return html;
+}
+
+function buildSourceChart() {
+  var sources = {};
+  leads.forEach(function(l){ var s = l.fuente||l.source||'Directo'; sources[s]=(sources[s]||0)+1; });
+  var sorted = Object.keys(sources).sort(function(a,b){return sources[b]-sources[a];});
+  var max = sources[sorted[0]]||1;
+  var colors = ['#F5820D','#0D1B3E','#3B82F6','#22c55e','#f59e0b','#8b5cf6'];
+  var html = '';
+  sorted.slice(0,6).forEach(function(s,i){
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      + '<div style="width:80px;font-size:11px;color:var(--text2);font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+s+'</div>'
+      + '<div style="flex:1;height:20px;background:var(--bg);border-radius:4px;overflow:hidden">'
+      + '<div style="height:100%;width:'+(sources[s]/max*100)+'%;background:'+colors[i%6]+';border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;color:#fff;font-weight:700">'+sources[s]+'</div></div></div>';
+  });
+  return html;
+}
+
+// ── QUALITY SCORE ────────────────────────────────────────────
+function getQualityScore(p) {
+  var s = 0;
+  if (p.titulo) s += 10;
+  if (p.precio) s += 10;
+  if (p.imagen) s += 15;
+  if (p.galeria && p.galeria.length >= 3) s += 10;
+  if (p.galeria && p.galeria.length >= 6) s += 5;
+  if (p.descripcion && p.descripcion.length > 50) s += 10;
+  if (p.hook) s += 10;
+  if (p.descCorta) s += 5;
+  if (p.area) s += 5;
+  if (p.habitaciones) s += 5;
+  if (p.zona) s += 5;
+  if (p.caracteristicas && p.caracteristicas.length >= 3) s += 5;
+  if (p.videoUrl) s += 5;
+  return Math.min(s, 100);
+}
+function qualityBadge(p) {
+  var s = getQualityScore(p);
+  var cls = s >= 75 ? 'high' : s >= 45 ? 'mid' : 'low';
+  return '<div class="quality-score"><div class="qs-ring ' + cls + '">' + s + '</div></div>';
+}
+
+// ── NOTIFICATION POLLING ─────────────────────────────────────
+var lastLeadCount = 0;
+function checkNewLeads() {
+  var badge = document.getElementById('leadsCount');
+  if (!badge) return;
+  var current = leads.length;
+  if (lastLeadCount > 0 && current > lastLeadCount) {
+    badge.classList.add('pulse');
+    showToast((current - lastLeadCount) + ' nuevo(s) lead(s)!');
+    setTimeout(function() { badge.classList.remove('pulse'); }, 10000);
+  }
+  lastLeadCount = current;
+}
+setInterval(function() {
+  fetch(API + '/api/leads', { credentials: 'include' }).then(function(r) {
+    if (r.ok) return r.json(); throw '';
+  }).then(function(d) {
+    if (Array.isArray(d) && d.length > leads.length) { leads = d; checkNewLeads(); var b=document.getElementById('leadsCount'); if(b)b.textContent=leads.length; }
+  }).catch(function(){});
+}, 60000);
+
+// ── QUICK STATUS CHANGE ──────────────────────────────────────
+function quickChangeStatus(propId, newStatus) {
+  var p = props.find(function(x) { return (x.id||x.slug) === decodeURIComponent(propId); });
+  if (!p) return;
+  p.estado = newStatus;
+  fetch(API + '/api/propiedades/' + propId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(p)
+  }).then(function() {
+    showToast('"' + (p.titulo||'Propiedad') + '" → ' + newStatus);
+    var page = document.querySelector('.sb-item.active');
+    showPage(page ? page.id.replace('nav-','') : 'dashboard');
+  }).catch(function() { showToast('Error al cambiar estado'); });
+}
+
+// ── COPY LANDING PAGE URL ────────────────────────────────────
+function copyLP(slug) {
+  var url = 'https://zona-innmueble.com/lp.html?p=' + encodeURIComponent(slug) + '&utm_source=meta&utm_medium=cpc&utm_campaign=' + encodeURIComponent(slug);
+  navigator.clipboard.writeText(url).then(function(){
+    showToast('URL de landing page copiada al portapapeles','success');
+  }).catch(function(){
+    prompt('Copia esta URL para Meta Ads:', url);
+  });
+}
+
+// ── EXPORT PROPERTY AS PDF ───────────────────────────────────
+function exportPropPDF(propId) {
+  var p = props.find(function(x) { return (x.id||x.slug) === decodeURIComponent(propId); });
+  if (!p) return;
+  var w = window.open('', '_blank');
+  var h = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    + '<title>' + (p.titulo||'Propiedad') + '</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">'
+    + '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;color:#1A1A2E;max-width:800px;margin:0 auto;padding:40px}'
+    + '.header{text-align:center;margin-bottom:32px;border-bottom:2px solid #0D1B3E;padding-bottom:20px}'
+    + '.brand{font-family:Cormorant Garamond,serif;font-size:24px;font-weight:500;color:#0D1B3E;letter-spacing:.15em}'
+    + '.sub{font-size:10px;color:#8A9BB0;letter-spacing:.1em;margin-top:4px}'
+    + 'h1{font-family:Cormorant Garamond,serif;font-size:28px;font-weight:500;color:#0D1B3E;margin:24px 0 8px}'
+    + '.loc{font-size:13px;color:#8A9BB0;margin-bottom:16px}'
+    + '.price{font-family:Cormorant Garamond,serif;font-size:32px;font-weight:600;color:#0D1B3E;margin-bottom:24px}'
+    + '.specs{display:flex;gap:24px;margin-bottom:24px;padding:16px;background:#F8FAFF;border-radius:8px}'
+    + '.spec{text-align:center}.spec-val{font-size:20px;font-weight:700;color:#0D1B3E}.spec-label{font-size:10px;color:#8A9BB0;letter-spacing:.06em}'
+    + '.desc{font-size:13px;line-height:1.7;color:#4A5568;margin-bottom:24px}'
+    + '.img{width:100%;border-radius:8px;margin-bottom:24px}'
+    + '.footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid #E2E8F0;font-size:10px;color:#8A9BB0}'
+    + '.cta{background:#0D1B3E;color:#fff;padding:12px 32px;border-radius:8px;font-size:13px;font-weight:600;display:inline-block;margin-top:16px;text-decoration:none}'
+    + '.chars{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px}'
+    + '.char{padding:4px 10px;background:#EEF0F6;border-radius:4px;font-size:11px;color:#0D1B3E}'
+    + '@media print{body{padding:20px}.cta{display:none}}</style></head><body>';
+  h += '<div class="header"><div class="brand">ZONA-INNMUEBLE</div><div class="sub">LUXURY REAL ESTATE · GUATEMALA</div></div>';
+  if (p.imagen) h += '<img class="img" src="' + p.imagen + '" />';
+  h += '<h1>' + (p.titulo||'') + '</h1>';
+  h += '<div class="loc">' + [p.zona,p.municipio].filter(Boolean).join(' · ') + '</div>';
+  if (!p.privada) h += '<div class="price">' + (p.moneda||'Q') + ' ' + (p.precio||'') + '</div>';
+  h += '<div class="specs">';
+  if (p.habitaciones) h += '<div class="spec"><div class="spec-val">'+p.habitaciones+'</div><div class="spec-label">HABITACIONES</div></div>';
+  if (p.banos) h += '<div class="spec"><div class="spec-val">'+p.banos+'</div><div class="spec-label">BAÑOS</div></div>';
+  if (p.area) h += '<div class="spec"><div class="spec-val">'+p.area+'</div><div class="spec-label">M²</div></div>';
+  if (p.parqueos) h += '<div class="spec"><div class="spec-val">'+p.parqueos+'</div><div class="spec-label">PARQUEOS</div></div>';
+  h += '</div>';
+  h += '<div class="desc">' + (p.descripcion||p.descCorta||'') + '</div>';
+  if (p.caracteristicas && p.caracteristicas.length) {
+    h += '<div class="chars">';
+    p.caracteristicas.forEach(function(c) { h += '<span class="char">'+c+'</span>'; });
+    h += '</div>';
+  }
+  h += '<div style="text-align:center"><a class="cta" href="https://wa.me/50245542088?text=Hola, me interesa: '+encodeURIComponent(p.titulo||'')+'">Contactar por WhatsApp</a></div>';
+  h += '<div class="footer">zona-innmueble.com · +502 4554-2088 · Guatemala</div>';
+  h += '</body></html>';
+  w.document.write(h);
+  w.document.close();
+  setTimeout(function() { w.print(); }, 500);
+}
+
+// ── WIZARD MODAL ─────────────────────────────────────────────
+var currentWizardStep = 1;
+function wizardGo(step) {
+  currentWizardStep = step;
+  document.querySelectorAll('.wizard-tab').forEach(function(t) {
+    t.classList.toggle('active', parseInt(t.dataset.step) === step);
+  });
+  document.querySelectorAll('.wizard-step').forEach(function(s) {
+    s.classList.toggle('active', parseInt(s.dataset.step) === step);
+  });
+  var mb = document.querySelector('.modal-body');
+  if (mb) mb.scrollTop = 0;
+}
+
+// ── COMPLETENESS BAR ─────────────────────────────────────────
+function updateCompleteness() {
+  var fields = [
+    {id:'fTitulo',w:15},{id:'fPrecio',w:12},{id:'fTipo',w:5},{id:'fZona',w:8},
+    {id:'fMunicipio',w:5},{id:'fArea',w:8},{id:'fHabitaciones',w:5},{id:'fBanos',w:5},
+    {id:'fDescripcion',w:12},{id:'fImagen',w:15},{id:'fSlug',w:5}
+  ];
+  var score=0, total=0, missing=[];
+  fields.forEach(function(f) {
+    total += f.w;
+    var el = document.getElementById(f.id);
+    if (el && el.value && el.value.trim()) score += f.w;
+    else missing.push(f.id.replace('f',''));
+  });
+  if (document.querySelectorAll('.chars-grid input:checked').length > 0) score += 5;
+  total += 5;
+  var pct = Math.round((score/total)*100);
+  var fill = document.getElementById('wizardFill');
+  var pctEl = document.getElementById('wizardPct');
+  var hint = document.getElementById('wizardHint');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (hint) hint.textContent = pct === 100 ? 'Propiedad completa!' : 'Falta: ' + missing.slice(0,3).join(', ');
+}
+
+// ── AUTO-FILL ────────────────────────────────────────────────
+function setupAutoFill() {
+  var tit = document.getElementById('fTitulo');
+  var slug = document.getElementById('fSlug');
+  if (tit && slug) {
+    tit.addEventListener('input', function() {
+      if (!slug.dataset.manual) {
+        slug.value = tit.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      }
+      updateLivePreview(); updateCompleteness();
+    });
+    slug.addEventListener('input', function() { slug.dataset.manual = '1'; });
+  }
+  ['fHabitaciones','fBanos','fArea','fAreaV2','fParqueos'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() { autoFillDatosTecnicos(); updateLivePreview(); updateCompleteness(); });
+  });
+  var precio = document.getElementById('fPrecio');
+  if (precio) precio.addEventListener('blur', function() {
+    var raw = precio.value.replace(/[^0-9.]/g,'');
+    if (raw) { var num = parseFloat(raw); if (!isNaN(num)) precio.value = num.toLocaleString('en-US'); }
+    updateLivePreview(); updateCompleteness();
+  });
+  ['fTitulo','fPrecio','fZona','fMunicipio','fImagen','fHabitaciones','fBanos','fArea','fParqueos','fDescripcion'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.addEventListener('input', function(){ updateLivePreview(); updateCompleteness(); }); }
+  });
+}
+function autoFillDatosTecnicos() {
+  var hab = document.getElementById('fHabitaciones');
+  var ban = document.getElementById('fBanos');
+  var area = document.getElementById('fArea');
+  var areaV = document.getElementById('fAreaV2');
+  var dt = document.getElementById('fDatosTecnicos');
+  if (!dt || dt.dataset.manual) return;
+  var parts = [];
+  if (hab && hab.value && hab.value !== '0') parts.push(hab.value + ' hab');
+  if (ban && ban.value && ban.value !== '0') parts.push(ban.value + ' baños');
+  if (area && area.value) parts.push(area.value + ' m²');
+  if (areaV && areaV.value) parts.push('Terreno ' + areaV.value + ' v²');
+  dt.value = parts.join(' · ');
+}
+
+// ── LIVE PREVIEW ─────────────────────────────────────────────
+function updateLivePreview() {
+  var v = function(id) { var e = document.getElementById(id); return e ? e.value : ''; };
+  var lpTitle = document.getElementById('lpTitle');
+  var lpLoc = document.getElementById('lpLoc');
+  var lpPrice = document.getElementById('lpPrice');
+  var lpBadge = document.getElementById('lpBadge');
+  var lpImg = document.getElementById('lpImg');
+  var lpImgPh = document.getElementById('lpImgPlaceholder');
+  if (lpTitle) lpTitle.textContent = v('fTitulo') || 'Título de la propiedad';
+  if (lpLoc) lpLoc.textContent = [v('fZona'), v('fMunicipio')].filter(Boolean).join(' · ');
+  if (lpPrice) lpPrice.textContent = v('fPrecio') ? (v('fMoneda')||'Q') + ' ' + v('fPrecio') : '';
+  if (lpBadge) lpBadge.textContent = v('fCinta') || v('fTipo') || '';
+  if (lpImg && lpImgPh) {
+    if (v('fImagen')) { lpImg.src = v('fImagen'); lpImg.style.display = 'block'; lpImgPh.style.display = 'none'; }
+    else { lpImg.style.display = 'none'; lpImgPh.style.display = 'block'; }
+  }
+  var setSpec = function(id, val) { var el = document.getElementById(id); if (el) el.querySelector('span').textContent = val || '-'; };
+  setSpec('lpHab', v('fHabitaciones'));
+  setSpec('lpBan', v('fBanos'));
+  setSpec('lpArea', v('fArea') ? v('fArea') + ' m²' : '');
+  setSpec('lpParq', v('fParqueos'));
+}
+
+// ── QUICK PASTE GALLERY ──────────────────────────────────────
+function applyQuickPaste() {
+  var ta = document.getElementById('galQuickPaste');
+  if (!ta) return;
+  var urls = ta.value.split('\n').map(function(u){return u.trim();}).filter(function(u){return u.startsWith('http');});
+  urls.forEach(function(url) { galUrls.push(url); });
+  renderGallery();
+  ta.value = '';
+  showToast(urls.length + ' imágenes agregadas');
+}
+
+// ── SAVE DRAFT ───────────────────────────────────────────────
+function saveDraft() {
+  var titulo = document.getElementById('fTitulo');
+  if (!titulo || !titulo.value) { showToast('Agrega al menos un título'); return; }
+  document.getElementById('fEstado').value = 'Pausada';
+  setStatus('Pausada');
+  saveProp();
+}
+
+// ── COUNT-UP ANIMATION ───────────────────────────────────────
+function animateCountUp() {
+  document.querySelectorAll('.stat-val').forEach(function(el) {
+    var text = el.textContent.trim();
+    var match = text.match(/^([Q$]\s?)?(\d+\.?\d*)([MK%]?)$/);
+    if (!match) return;
+    var prefix = match[1] || '';
+    var target = parseFloat(match[2]);
+    var suffix = match[3] || '';
+    var duration = 800;
+    var start = performance.now();
+    var step = function(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = (target * eased).toFixed(suffix === 'M' ? 1 : 0);
+      el.textContent = prefix + current + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+// ── HOOK INTO EXISTING FUNCTIONS ─────────────────────────────
+var _origShowPage = showPage;
+showPage = function(page) {
+  _origShowPage(page);
+  if (page === 'dashboard') {
+    setTimeout(animateCountUp, 350);
+    setTimeout(function() {
+      var mc = document.getElementById('mainContent');
+      if (!mc) return;
+      var existing = document.getElementById('v6DashExtras');
+      if (existing) existing.remove();
+      var div = document.createElement('div');
+      div.id = 'v6DashExtras';
+      div.className = 'dash-grid';
+      div.style.marginTop = '22px';
+      var stl = calcSpeedToLead();
+      div.innerHTML = '<div class="chart-card">'
+        + '<div class="chart-title">Speed-to-Lead</div>'
+        + '<div style="padding:18px;display:flex;align-items:center;gap:16px">'
+        + '<div class="stl-metric ' + stl.cls + '"><i class="ti ti-clock" style="font-size:18px"></i> ' + stl.label + '</div>'
+        + '<div style="font-size:11px;color:var(--text2)">Meta: <strong style="color:var(--green)">&lt; 5 min</strong></div>'
+        + '</div></div>'
+        + '<div class="chart-card">'
+        + '<div class="chart-title">Historial de cambios</div>'
+        + '<div style="padding:12px">' + buildActivityLog() + '</div>'
+        + '</div>';
+      mc.appendChild(div);
+    }, 400);
+  }
+};
+
+var _origOpenModal = openModal;
+openModal = function(id) {
+  _origOpenModal(id);
+  setTimeout(function() {
+    currentWizardStep = 1;
+    wizardGo(1);
+    setupAutoFill();
+    updateLivePreview();
+    updateCompleteness();
+    // v6: ROI, comparables, language
+    comparables = [];
+    var roiW = document.getElementById('roiCalcWrap');
+    var compW = document.getElementById('compWrap');
+    var langW = document.getElementById('langToggleWrap');
+    if (id) {
+      var prop = null;
+      for (var j = 0; j < props.length; j++) {
+        if ((props[j].id || props[j].slug) === decodeURIComponent(id)) { prop = props[j]; break; }
+      }
+      if (prop && roiW) roiW.innerHTML = buildROICalc(prop);
+      if (prop && compW) compW.innerHTML = buildComparables(prop);
+    } else {
+      if (roiW) roiW.innerHTML = '<div style="font-size:11px;color:var(--text3);padding:8px">Guarda primero para ver analisis</div>';
+      if (compW) compW.innerHTML = '';
+    }
+    if (langW) langW.innerHTML = buildLangToggle();
+  }, 150);
+};
+
+
+// ══════ FEATURES v6 — WORLD-CLASS ══════
+
+// ── LEAD SCORING ─────────────────────────────────────────────
+function calcLeadScore(l) {
+  var s = 0;
+  if (l.nombre) s += 10;
+  if (l.email) s += 15;
+  if (l.telefono) s += 20;
+  if (l.propiedad) s += 15;
+  if (l.mensaje && l.mensaje.length > 20) s += 10;
+  if (l.tipo) s += 5;
+  // Recency bonus
+  if (l.fecha) {
+    var days = (Date.now() - new Date(l.fecha).getTime()) / 86400000;
+    if (days < 1) s += 25;
+    else if (days < 3) s += 15;
+    else if (days < 7) s += 5;
+  }
+  return Math.min(s, 100);
+}
+
+function leadScoreBadge(l) {
+  var s = calcLeadScore(l);
+  var cls = s >= 70 ? 'hot' : s >= 40 ? 'warm' : 'cold';
+  var label = s >= 70 ? 'Caliente' : s >= 40 ? 'Tibio' : 'Frío';
+  return '<div class="lead-score">'
+    + '<div class="ls-bar"><div class="ls-fill '+cls+'" style="width:'+s+'%"></div></div>'
+    + '<span class="ls-val '+cls+'">'+s+'</span>'
+    + '<span class="ls-label '+cls+'">'+label+'</span></div>';
+}
+
+// ── SPEED TO LEAD ────────────────────────────────────────────
+function calcSpeedToLead() {
+  var contacted = leads.filter(function(l) { return l.stage && l.stage !== 'Nuevo' && l.fecha; });
+  if (!contacted.length) return { avg: 0, label: 'Sin datos', cls: 'stl-medium' };
+  var totalMins = 0;
+  contacted.forEach(function(l) {
+    var created = new Date(l.fecha).getTime();
+    var responded = l.contactedAt ? new Date(l.contactedAt).getTime() : created + 3600000;
+    totalMins += (responded - created) / 60000;
+  });
+  var avg = Math.round(totalMins / contacted.length);
+  var cls = avg < 30 ? 'stl-fast' : avg < 120 ? 'stl-medium' : 'stl-slow';
+  var label = avg < 60 ? avg + ' min' : Math.round(avg/60) + 'h';
+  return { avg: avg, label: label, cls: cls };
+}
+
+// ── WHATSAPP TEMPLATES ───────────────────────────────────────
+var waTemplates = [
+  { stage: 'Nuevo', title: 'Primer contacto', text: 'Hola {nombre}, gracias por tu interés en {propiedad}. Soy de Zona INNmueble. ¿Te gustaría agendar una visita o recibir más información?' },
+  { stage: 'Contactado', title: 'Follow-up', text: 'Hola {nombre}, ¿pudiste revisar la información de {propiedad}? Con gusto te resuelvo cualquier duda o agendamos una visita.' },
+  { stage: 'Calificado', title: 'Envío de ficha', text: 'Hola {nombre}, te comparto la ficha de {propiedad} con todos los detalles. Si te interesa, podemos coordinar una visita esta semana.' },
+  { stage: 'Negociación', title: 'Seguimiento negociación', text: 'Hola {nombre}, ¿cómo van las consideraciones sobre {propiedad}? Estoy disponible para resolver cualquier duda sobre los términos.' },
+  { stage: 'Cerrado', title: 'Bienvenida', text: '¡Felicitaciones {nombre}! Bienvenido a tu nuevo hogar. Fue un placer acompañarte en este proceso. Zona INNmueble queda a tus órdenes.' }
+];
+
+function getWALink(phone, text) {
+  var num = (phone || '').replace(/[^0-9]/g, '');
+  if (num.length === 8) num = '502' + num;
+  return 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+}
+
+function fillTemplate(tmpl, lead) {
+  return tmpl.replace('{nombre}', lead.nombre || '').replace('{propiedad}', lead.propiedad || 'la propiedad');
+}
+
+function buildWATemplates(lead) {
+  var html = '<div class="wa-templates">';
+  waTemplates.forEach(function(t) {
+    var filled = fillTemplate(t.text, lead);
+    var link = getWALink(lead.telefono, filled);
+    html += '<div class="wa-tmpl" onclick="window.open(\'' + link + '\',\'_blank\')">'
+      + '<i class="ti ti-brand-whatsapp wa-tmpl-icon"></i>'
+      + '<div class="wa-tmpl-text"><strong>' + t.title + '</strong><br>' + filled.substring(0,80) + '...</div>'
+      + '<span class="wa-tmpl-copy">Enviar</span></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// ── FOLLOW-UP CALENDAR ───────────────────────────────────────
+function buildFollowupRow(lead) {
+  var lid = lead.id || '';
+  var followup = lead.followupDate || '';
+  var badge = '';
+  if (followup) {
+    var diff = (new Date(followup).getTime() - Date.now()) / 86400000;
+    if (diff < 0) badge = '<span class="followup-badge followup-overdue">Vencido</span>';
+    else if (diff < 1) badge = '<span class="followup-badge followup-today">Hoy</span>';
+    else badge = '<span class="followup-badge followup-upcoming">En ' + Math.ceil(diff) + 'd</span>';
+  }
+  return '<div class="followup-row">'
+    + '<i class="ti ti-calendar" style="font-size:14px;color:var(--text3)"></i>'
+    + '<input type="date" class="followup-date" value="' + followup + '" onchange="setFollowup(\'' + lid + '\',this.value)">'
+    + badge + '</div>';
+}
+
+function setFollowup(leadId, date) {
+  var l = leads.find(function(x) { return x.id === leadId; });
+  if (!l) return;
+  l.followupDate = date;
+  fetch(API + '/api/leads/' + leadId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(l)
+  }).then(function() { showToast('Follow-up actualizado'); })
+  .catch(function() { showToast('Error al guardar'); });
+}
+
+// ── ROI CALCULATOR ───────────────────────────────────────────
+function buildROICalc(p) {
+  var precio = parseFloat((p.precio || '0').replace(/[^0-9.]/g, ''));
+  if (!precio) return '';
+  var rentaEstimada = Math.round(precio * 0.005);
+  var roiAnual = precio > 0 ? ((rentaEstimada * 12) / precio * 100).toFixed(1) : 0;
+  var plusvalia5 = Math.round(precio * 1.25);
+  var retorno5 = Math.round((rentaEstimada * 60) + (plusvalia5 - precio));
+
+  return '<div class="roi-section">'
+    + '<div class="roi-title"><i class="ti ti-trending-up"></i> Análisis de inversión</div>'
+    + '<div class="roi-grid">'
+    + '<div class="fg"><label style="font-size:10px">Renta estimada/mes</label><input type="text" id="roiRenta" value="Q ' + rentaEstimada.toLocaleString() + '" style="font-size:12px" oninput="updateROI()"></div>'
+    + '<div class="fg"><label style="font-size:10px">Plusvalía anual est.</label><input type="text" id="roiPlusvalia" value="5%" style="font-size:12px" oninput="updateROI()"></div>'
+    + '</div>'
+    + '<div class="roi-result">'
+    + '<div class="roi-big" id="roiReturn">' + roiAnual + '%</div>'
+    + '<div class="roi-label">ROI anual estimado</div>'
+    + '<div style="font-size:10px;color:var(--text3);margin-top:4px" id="roiDetail">Retorno a 5 años: Q ' + retorno5.toLocaleString() + '</div>'
+    + '</div></div>';
+}
+
+// ── COMPARABLES ──────────────────────────────────────────────
+function buildComparables(p) {
+  var precio = parseFloat((p.precio || '0').replace(/[^0-9.]/g, ''));
+  var area = parseFloat(p.area || 0);
+  if (!precio || !area) return '';
+  var ppm2 = Math.round(precio / area);
+
+  return '<div class="comp-section">'
+    + '<div class="fsec-title" style="font-size:12px"><i class="ti ti-chart-bar"></i> Posicionamiento de mercado</div>'
+    + '<div style="font-size:11px;color:var(--text2);margin:8px 0">Precio por m²: <strong style="color:var(--navy)">Q ' + ppm2.toLocaleString() + '/m²</strong></div>'
+    + '<div class="fg"><label style="font-size:10px">Agregar comparable</label>'
+    + '<div style="display:flex;gap:4px">'
+    + '<input type="text" id="compName" placeholder="Nombre" style="flex:2;font-size:11px">'
+    + '<input type="text" id="compPrice" placeholder="Precio/m²" style="flex:1;font-size:11px">'
+    + '<button type="button" onclick="addComparable()" style="padding:4px 8px;border:1px solid var(--or);border-radius:4px;background:none;color:var(--or);font-size:10px;cursor:pointer;font-weight:600">+</button>'
+    + '</div></div>'
+    + '<div id="compList"></div></div>';
+}
+
+var comparables = [];
+function addComparable() {
+  var name = document.getElementById('compName');
+  var price = document.getElementById('compPrice');
+  if (!name || !price || !name.value) return;
+  comparables.push({ name: name.value, ppm2: parseInt(price.value.replace(/[^0-9]/g,'')) || 0 });
+  name.value = ''; price.value = '';
+  renderComparables();
+}
+
+function renderComparables() {
+  var list = document.getElementById('compList');
+  if (!list) return;
+  var currentPrecio = parseFloat((document.getElementById('fPrecio') || {value:'0'}).value.replace(/[^0-9.]/g,''));
+  var currentArea = parseFloat((document.getElementById('fArea') || {value:'0'}).value) || 1;
+  var myPPM2 = Math.round(currentPrecio / currentArea);
+  var html = '';
+  comparables.forEach(function(c) {
+    var diff = c.ppm2 - myPPM2;
+    var pct = myPPM2 > 0 ? Math.round((diff / myPPM2) * 100) : 0;
+    var cls = diff > 0 ? 'lower' : 'higher';
+    html += '<div class="comp-row"><span class="comp-name">' + c.name + '</span>'
+      + '<span class="comp-price">Q ' + c.ppm2.toLocaleString() + '/m²</span>'
+      + '<span class="comp-diff ' + cls + '">' + (pct > 0 ? '+' : '') + pct + '%</span></div>';
+  });
+  list.innerHTML = html;
+}
+
+// ── ACTIVITY LOG ─────────────────────────────────────────────
+var activityLog = JSON.parse(localStorage.getItem('zi_activity_log') || '[]');
+
+function logActivity(action) {
+  var entry = { time: new Date().toISOString(), text: action };
+  activityLog.unshift(entry);
+  if (activityLog.length > 50) activityLog = activityLog.slice(0, 50);
+  try { localStorage.setItem('zi_activity_log', JSON.stringify(activityLog)); } catch(e) {}
+}
+
+function buildActivityLog() {
+  if (!activityLog.length) return '<div style="padding:12px;text-align:center;color:var(--text3);font-size:11px">Sin actividad registrada</div>';
+  var html = '<div class="activity-log">';
+  activityLog.slice(0, 15).forEach(function(a) {
+    var t = a.time ? formatDate(a.time) : '';
+    html += '<div class="al-item"><span class="al-time">' + t + '</span><span class="al-text">' + a.text + '</span></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// Hook into saveProp to log
+var _origSaveProp = typeof saveProp === 'function' ? saveProp : null;
+
+// ── MULTI-LANGUAGE TOGGLE ────────────────────────────────────
+function buildLangToggle() {
+  return '<div style="margin-top:8px"><div style="font-size:10px;color:var(--text3);margin-bottom:4px">Idioma del listing</div>'
+    + '<div class="lang-toggle">'
+    + '<button type="button" class="lang-btn active" onclick="setListingLang(\'es\',this)">Español</button>'
+    + '<button type="button" class="lang-btn" onclick="setListingLang(\'en\',this)">English</button>'
+    + '</div></div>';
+}
+
+function setListingLang(lang, btn) {
+  btn.parentElement.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var input = document.getElementById('fLang');
+  if (!input) {
+    input = document.createElement('input');
+    input.type = 'hidden';
+    input.id = 'fLang';
+    btn.closest('.side-card').appendChild(input);
+  }
+  input.value = lang;
+}
+
+// ── FICHA INTERACTIVA ────────────────────────────────────────
+function generateFichaInteractiva(propId) {
+  var p = props.find(function(x) { return (x.id||x.slug) === decodeURIComponent(propId); });
+  if (!p) return;
+  var w = window.open('', '_blank');
+  var galHtml = '';
+  if (p.galeria && p.galeria.length) {
+    galHtml = '<div style="display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:24px">';
+    p.galeria.forEach(function(img) {
+      galHtml += '<img src="' + img + '" style="height:200px;border-radius:12px;object-fit:cover;flex-shrink:0" />';
+    });
+    galHtml += '</div>';
+  }
+  var chars = '';
+  if (p.caracteristicas && p.caracteristicas.length) {
+    chars = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin:20px 0">';
+    p.caracteristicas.forEach(function(c) {
+      chars += '<span style="padding:6px 12px;background:#EEF0F6;border-radius:6px;font-size:12px;color:#0D1B3E">' + c + '</span>';
+    });
+    chars += '</div>';
+  }
+  var calcHtml = '<div style="margin:24px 0;padding:20px;background:#F8FAFF;border-radius:12px">'
+    + '<h3 style="font-family:Cormorant Garamond,serif;font-size:20px;margin-bottom:12px;color:#0D1B3E">Calculadora hipotecaria</h3>'
+    + '<div style="display:flex;gap:12px;flex-wrap:wrap">'
+    + '<div><label style="font-size:11px;color:#8A9BB0">Enganche (%)</label><input id="hcDown" type="number" value="20" style="width:80px;padding:6px;border:1px solid #E2E8F0;border-radius:6px" oninput="calcMortgage()"></div>'
+    + '<div><label style="font-size:11px;color:#8A9BB0">Plazo (años)</label><input id="hcYears" type="number" value="20" style="width:80px;padding:6px;border:1px solid #E2E8F0;border-radius:6px" oninput="calcMortgage()"></div>'
+    + '<div><label style="font-size:11px;color:#8A9BB0">Tasa (%)</label><input id="hcRate" type="number" value="8" step="0.5" style="width:80px;padding:6px;border:1px solid #E2E8F0;border-radius:6px" oninput="calcMortgage()"></div>'
+    + '</div>'
+    + '<div id="hcResult" style="margin-top:12px;font-family:Cormorant Garamond,serif;font-size:28px;color:#0D1B3E"></div>'
+    + '<script>function calcMortgage(){var p=' + parseFloat((p.precio||'0').replace(/[^0-9.]/g,'')) + ';var d=document.getElementById("hcDown").value/100;var y=document.getElementById("hcYears").value;var r=document.getElementById("hcRate").value/100/12;var loan=p*(1-d);var n=y*12;var payment=loan*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);document.getElementById("hcResult").textContent="Q "+Math.round(payment).toLocaleString()+"/mes";}calcMortgage();<\/script>'
+    + '</div>';
+
+  var h = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<title>' + (p.titulo||'Propiedad') + ' | Zona INNmueble</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">'
+    + '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;color:#1A1A2E;background:#fff}'
+    + '.hero{width:100%;height:50vh;object-fit:cover}'
+    + '.container{max-width:800px;margin:0 auto;padding:32px 24px}'
+    + 'h1{font-family:Cormorant Garamond,serif;font-size:32px;font-weight:500;color:#0D1B3E;margin-bottom:8px}'
+    + '.loc{font-size:14px;color:#8A9BB0;margin-bottom:16px}'
+    + '.price{font-family:Cormorant Garamond,serif;font-size:36px;font-weight:600;color:#0D1B3E;margin-bottom:24px}'
+    + '.specs{display:flex;gap:24px;margin-bottom:24px;padding:16px;background:#F8FAFF;border-radius:12px}'
+    + '.spec{text-align:center;flex:1}.spec-val{font-size:24px;font-weight:700;color:#0D1B3E}.spec-label{font-size:10px;color:#8A9BB0;letter-spacing:.06em}'
+    + '.desc{font-size:14px;line-height:1.8;color:#4A5568;margin-bottom:24px}'
+    + '.cta-bar{position:fixed;bottom:0;left:0;right:0;background:#0D1B3E;padding:14px 24px;display:flex;justify-content:center;gap:12px;z-index:10}'
+    + '.cta-btn{padding:10px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;border:none;cursor:pointer}'
+    + '.cta-wa{background:#25D366;color:#fff}.cta-call{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3)}'
+    + '.brand{text-align:center;padding:24px;font-family:Cormorant Garamond,serif;font-size:18px;color:#0D1B3E;letter-spacing:.15em;border-top:1px solid #E2E8F0;margin-top:32px;margin-bottom:80px}'
+    + '</style></head><body>';
+  if (p.imagen) h += '<img class="hero" src="' + p.imagen + '" />';
+  h += '<div class="container">';
+  h += '<h1>' + (p.titulo||'') + '</h1>';
+  h += '<div class="loc">' + [p.zona, p.municipio].filter(Boolean).join(' · ') + '</div>';
+  if (!p.privada) h += '<div class="price">' + (p.moneda||'Q') + ' ' + (p.precio||'') + '</div>';
+  h += '<div class="specs">';
+  if (p.habitaciones) h += '<div class="spec"><div class="spec-val">' + p.habitaciones + '</div><div class="spec-label">HABITACIONES</div></div>';
+  if (p.banos) h += '<div class="spec"><div class="spec-val">' + p.banos + '</div><div class="spec-label">BAÑOS</div></div>';
+  if (p.area) h += '<div class="spec"><div class="spec-val">' + p.area + '</div><div class="spec-label">M²</div></div>';
+  if (p.parqueos) h += '<div class="spec"><div class="spec-val">' + p.parqueos + '</div><div class="spec-label">PARQUEOS</div></div>';
+  h += '</div>';
+  h += galHtml;
+  h += '<div class="desc">' + (p.descripcion||p.descCorta||'') + '</div>';
+  h += chars;
+  if (!p.privada) h += calcHtml;
+  if (p.googleMapsUrl) h += '<div style="margin:24px 0"><iframe src="' + p.googleMapsUrl.replace('/maps/','/maps/embed/') + '" width="100%" height="300" style="border:0;border-radius:12px" allowfullscreen loading="lazy"></iframe></div>';
+  h += '</div>';
+  var isZona = !p.sitios || !p.sitios.length || p.sitios.indexOf('zona-innmueble') !== -1;
+  h += '<div class="brand">' + (isZona ? 'ZONA-INNMUEBLE' : 'INMUHUB') + '</div>';
+  if (isZona) {
+    h += '<div class="cta-bar">';
+    h += '<a class="cta-btn cta-wa" href="https://wa.me/50245542088?text=' + encodeURIComponent('Hola, me interesa: ' + (p.titulo||'')) + '"><i>💬</i> WhatsApp</a>';
+    h += '<a class="cta-btn cta-call" href="tel:+50245542088"><i>📞</i> Llamar</a>';
+    h += '</div>';
+  }
+  h += '</body></html>';
+  w.document.write(h);
+  w.document.close();
+}
+
+// ── HOOK: LOG ACTIVITIES ─────────────────────────────────────
+// Wrap saveProp to log activity
+(function() {
+  var origSave = typeof saveProp === 'function' ? saveProp : null;
+  if (origSave) {
+    saveProp = function() {
+      var title = (document.getElementById('fTitulo') || {}).value || 'propiedad';
+      var isEdit = !!editingId;
+      origSave.apply(this, arguments);
+      logActivity((isEdit ? 'Editada: ' : 'Creada: ') + title);
+    };
+  }
+})();
+
+
+
+// v6 Lead card enhancements via DOM
+function enhanceLeadCards() {
+  var cards = document.querySelectorAll('.lead-card');
+  cards.forEach(function(card) {
+    if (card.dataset.v6enhanced) return;
+    card.dataset.v6enhanced = '1';
+    var nameEl = card.querySelector('.lead-name');
+    if (!nameEl) return;
+    var nombre = nameEl.textContent;
+    var lead = null;
+    for (var i = 0; i < leads.length; i++) {
+      if ((leads[i].nombre || 'Sin nombre') === nombre) { lead = leads[i]; break; }
+    }
+    if (!lead) return;
+    var actions = card.querySelector('.lead-card-actions');
+    if (!actions) return;
+    var wrap = document.createElement('div');
+    wrap.style.marginTop = '6px';
+    wrap.innerHTML = leadScoreBadge(lead)
+      + buildFollowupRow(lead)
+      + '<details style="margin-top:6px"><summary style="font-size:10px;color:#25D366;cursor:pointer;font-weight:600">'
+      + '<i class="ti ti-brand-whatsapp" style="font-size:12px"></i> Templates WhatsApp</summary>'
+      + buildWATemplates(lead) + '</details>';
+    card.insertBefore(wrap, actions);
+  });
+}
+var _leadObserver = new MutationObserver(function() { setTimeout(enhanceLeadCards, 150); });
+setTimeout(function() {
+  var mc = document.getElementById('mainContent');
+  if (mc) _leadObserver.observe(mc, {childList: true, subtree: true});
+}, 500);
+
+
 // ── INIT ─────────────────────────────────────────────────────
 checkSession();
 
@@ -1672,4 +3703,3 @@ function getDescBloques() {
 </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            

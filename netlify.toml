@@ -1,0 +1,47 @@
+# ═══════════════════════════════════════════════════════════════════
+#  NETLIFY — Two sites from one GitHub repo
+# ═══════════════════════════════════════════════════════════════════
+#
+#  Create TWO separate Netlify projects pointing to the same repo:
+#
+#  SITE 1 — vinculoinmobiliario.com
+#    Build command : npm install && npm run build:vinculo
+#    Publish dir   : dist/vinculo
+#
+#  SITE 2 — zona-innmueble.com
+#    Build command : npm install && npm run build:zona
+#    Publish dir   : dist/zona
+#
+#  This file provides shared defaults. Each Netlify site overrides
+#  build command and publish dir in its own dashboard settings.
+# ═══════════════════════════════════════════════════════════════════
+
+[build]
+  command = "npm install && npm run build"
+  publish = "dist/vinculo"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options           = "SAMEORIGIN"
+    X-Content-Type-Options    = "nosniff"
+    Referrer-Policy           = "no-referrer"
+    Permissions-Policy        = "geolocation=(), camera=(), microphone=()"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

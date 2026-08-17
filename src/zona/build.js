@@ -78,7 +78,7 @@ function normalizeKV(kvProps) {
 const path = require('path');
 const { parseProperties }  = require('../shared/parse-csv');
 const { generateSitemap, generateRobots, generateRedirects } = require('../shared/utils');
-const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, zonasIndexPage } = require('./templates/pages');
+const { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, zonasIndexPage, tipoPage } = require('./templates/pages');
 const { sharePage } = require('./templates/share-page');
 
 const DOMAIN = 'https://zona-innmueble.com';
@@ -114,11 +114,38 @@ function copyAssets() {
     fs.copyFileSync(zonaFaviconSrc, zonaFaviconDst);
   }
 
+  // Copiar iconos PWA (manifest + apple-touch-icon) desde src/zona/assets
+  const pwaIcons = ['icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
+  pwaIcons.forEach((name) => {
+    const srcPath = path.join(__dirname, 'assets', name);
+    if (fs.existsSync(srcPath)) {
+      fs.copyFileSync(srcPath, path.join(dstDir, name));
+    }
+  });
+
   // Copiar images/ si existe
   const imagesDir = path.join(__dirname, 'assets/images');
   const dstImagesDir = path.join(dstDir, 'images');
   if (fs.existsSync(imagesDir)) {
     fs.cpSync(imagesDir, dstImagesDir, { recursive: true });
+  }
+
+  // Copiar zona-fase1.js (Sort, Area filter, Lightbox, Mobile CTA)
+  const fase1Src = path.join(__dirname, 'assets/zona-fase1.js');
+  if (fs.existsSync(fase1Src)) {
+    fs.copyFileSync(fase1Src, path.join(dstDir, 'zona-fase1.js'));
+  }
+
+  // Reel de fincas (categoria /tipos/finca.html) + foto premium extraida del video
+  const fincaPremiumSrc = path.join(__dirname, 'assets/finca-premium.jpg');
+  if (fs.existsSync(fincaPremiumSrc)) {
+    fs.copyFileSync(fincaPremiumSrc, path.join(dstDir, 'finca-premium.jpg'));
+  }
+  const fincaReelSrc = path.join(__dirname, 'assets/videos/finca-reel.mp4');
+  if (fs.existsSync(fincaReelSrc)) {
+    const dstVideosDir = path.join(dstDir, 'videos');
+    fs.mkdirSync(dstVideosDir, { recursive: true });
+    fs.copyFileSync(fincaReelSrc, path.join(dstVideosDir, 'finca-reel.mp4'));
   }
 }
 
@@ -138,8 +165,10 @@ const props = allProps;
 console.log(`   ✔  ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 
-fs.rmSync(OUT, { recursive:true, force:true });
+try { fs.rmSync(OUT, { recursive:true, force:true }); } catch(e) { console.log('(rmSync skipped zona)'); }
 fs.mkdirSync(PROPS, { recursive:true });
+
+copyAssets();  console.log('   ✔  assets copiados');
 
 write(path.join(OUT,'index.html'),        indexPage(props));   console.log('   ✔  index.html');
 write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   ✔  propiedades.html');
@@ -159,6 +188,24 @@ if(fs.existsSync(src404)) {
   fs.copyFileSync(src404, path.join(OUT, '404.html'));
   console.log('   ✔  404.html');
 }
+
+// _redirects (Cloudflare Pages) — reglas 301 de URLs viejas de Wix.
+// Sin este copyFileSync el archivo nunca llegaba a dist/, así que ninguna
+// regla se aplicaba nunca en producción (todas devolvían 404 en vez de 301).
+const redirectsSrc = path.join(__dirname, '_redirects');
+if (fs.existsSync(redirectsSrc)) {
+  fs.copyFileSync(redirectsSrc, path.join(OUT, '_redirects'));
+  console.log('   ✔  _redirects');
+}
+
+// PWA: manifest.json, sw.js, offline.html
+['manifest.json', 'sw.js', 'offline.html'].forEach((name) => {
+  const srcPath = path.join(__dirname, name);
+  if (fs.existsSync(srcPath)) {
+    fs.copyFileSync(srcPath, path.join(OUT, name));
+    console.log(`   ✔  ${name}`);
+  }
+});
 
 const aboutSrc = path.join(__dirname, 'about.html');
 const blogSrc = path.join(__dirname, 'blog.html');
@@ -197,6 +244,24 @@ if(fs.existsSync(blogSrc)) {
   console.log('   ✔  blog.html');
 }
 
+// ── Landing Page para Meta Ads campaigns ────────────────────────────
+const lpSrc = path.join(__dirname, 'lp.html');
+if(fs.existsSync(lpSrc)) {
+  fs.copyFileSync(lpSrc, path.join(OUT, 'lp.html'));
+  console.log('   ✔  lp.html (landing page Meta Ads)');
+}
+// ── Thank You page (conversion tracking) ───────────────────────────
+// -- Portafolio Selecto (pagina para compartir con agentes/clientes) --
+const portafolioSrc = path.join(__dirname, 'portafolio.html');
+if(fs.existsSync(portafolioSrc)) {
+  fs.copyFileSync(portafolioSrc, path.join(OUT, 'portafolio.html'));
+  console.log('   ✔  portafolio.html');
+}
+const graciasSrc = path.join(__dirname, 'gracias.html');
+if(fs.existsSync(graciasSrc)) {
+  fs.copyFileSync(graciasSrc, path.join(OUT, 'gracias.html'));
+  console.log('   ✔  gracias.html');
+}
 // ── NUEVO: Política de Privacidad ────────────────────────────────────
 const privacidadSrc = path.join(__dirname, 'privacidad.html');
 if(fs.existsSync(privacidadSrc)) {
@@ -249,11 +314,33 @@ ZONAS_PREMIUM.forEach(function(slug) {
     console.log("   zone editorial: /zonas/" + slug + ".html");
   }
 });
+// Generar landing pages por tipo /tipos/*.html
+var TIPOS_DIR = path.join(OUT, 'tipos');
+fs.mkdirSync(TIPOS_DIR, { recursive: true });
+var tiposUnicos = [...new Set(props.map(function(p){ return p.tipo; }).filter(Boolean))];
+tiposUnicos.forEach(function(tipo) {
+  var tipoSlug = tipo.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  write(path.join(TIPOS_DIR, tipoSlug + '.html'), tipoPage(tipo, props, props));
+  console.log('   tipo: /tipos/' + tipoSlug + '.html (' + props.filter(function(p){ return p.tipo === tipo; }).length + ' props)');
+});
+console.log('   ' + tiposUnicos.length + ' tipo pages');
+
 // Generar paginas compartibles /share/*.html - rebuild 2026-06-16
 const SHARE = path.join(OUT, 'share');
 fs.mkdirSync(SHARE, { recursive: true });
 props.forEach(p => write(path.join(SHARE, `${p.slug}.html`), sharePage(p)));
 console.log(`   ✔  ${props.length} share pages`);
+
+// Copiar páginas hiperlocales estáticas de src/zona/zonas/ (solo si no existen ya)
+var staticZonasDir = path.join(__dirname, 'zonas');
+if (fs.existsSync(staticZonasDir)) {
+  fs.readdirSync(staticZonasDir).forEach(function(file) {
+    if (!file.endsWith('.html')) return;
+    var dest = path.join(ZONAS, file);
+    fs.copyFileSync(path.join(staticZonasDir, file), dest);
+    console.log('   ✔  zona hiperlocal (override): /zonas/' + file);
+  });
+}
 
 // FASE 3: Zonas index
 write(path.join(ZONAS, 'index.html'), zonasIndexPage(zonasMap));
@@ -280,6 +367,10 @@ const urls = [
     lastmod: (p.fechaPublicacion || p.createdAt || '').toString().substring(0,10) || new Date().toISOString().substring(0,10)
   })),
   ...Object.keys(zonasMap).map(slug=>({ loc:`/zonas/${slug}.html`, priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) })),
+  { loc:'/zonas/cayala.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/zonas/fraijanes.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/zonas/carretera-el-salvador.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  ...tiposUnicos.map(function(t){ var s = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); return { loc:'/tipos/'+s+'.html', priority:'0.8', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) }; }),
 ];
 write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log('   ✔  sitemap.xml');
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
