@@ -63,6 +63,7 @@ function card(p, idx) {
   const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
   const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(ikTransform(u,{w:600,q:70}))));
   const priceLabel = (esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(p.priceFormatted);
+  const priceAlt = (esExclusiva||cfg.precio) ? '' : (p.priceSecondary ? `<span class="pc-price-alt">≈ ${escapeHtml(p.priceSecondary)}</span>` : '');
 
   // Flechas del carrusel solo si hay galeria
   const arrows = hasGallery ? `
@@ -98,7 +99,7 @@ function card(p, idx) {
       <div class="pc-title">${escapeHtml(p.title)}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="pc-price">${priceLabel}</div>
+        <div class="pc-price">${priceLabel}${priceAlt}</div>
         <span class="pc-arr">→</span>
       </div>
     </div>
@@ -1147,6 +1148,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       <div>
         <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
         ${(!esExclusiva&&!cfg.precio&&prop.precioRenta) ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
+        ${(!esExclusiva&&!cfg.precio&&prop.priceSecondary) ? '<div class="dv3-price-sub">≈ '+escapeHtml(prop.priceSecondary)+' · tipo de cambio referencial</div>' : ''}
       </div>
       <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
         &#8679; Compartir

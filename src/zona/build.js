@@ -57,6 +57,24 @@ function normalizeKV(kvProps) {
       if (isQ) return 'Q ' + fmt;
       return rawPrice;
     })(),
+    // Precio en la moneda secundaria (referencial) para que el comprador no tenga
+    // que adivinar el equivalente cuando unas fichas estan en $ y otras en Q.
+    // Tasa fija de referencia (actualizar periodicamente, no es tipo de cambio en vivo).
+    priceSecondary: p.priceSecondary || (function(){
+      const RATE = 7.65;
+      if (!rawPrice || isNaN(parsedNum) || !parsedNum) return '';
+      const isUSD = rawPrice.includes('$') || rawPrice.toUpperCase().includes('USD');
+      const isQ = rawPrice.startsWith('Q') || rawPrice.toUpperCase().startsWith('Q ');
+      if (isUSD) {
+        const q = Math.round(parsedNum * RATE / 1000) * 1000;
+        return 'Q ' + q.toLocaleString('en-US');
+      }
+      if (isQ) {
+        const usd = Math.round((parsedNum / RATE) / 100) * 100;
+        return '$' + usd.toLocaleString('en-US');
+      }
+      return '';
+    })(),
     // IMPORTANTE: priceNumeric se calcula del texto en `precio` porque el admin nunca
     // envía un priceNumeric explícito. Si en el futuro el admin lo calculara y lo guardara,
     // p.priceNumeric tendría prioridad aquí (fue la causa real de que los filtros de precio
