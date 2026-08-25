@@ -43,7 +43,11 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
   "areaServed": ["Guatemala", "Fraijanes", "Mixco", "Santa Catarina Pinula", "Escuintla"],
   "openingHours": "Mo-Fr 08:00-18:00",
   "sameAs": [
-    "https://www.facebook.com/Zona-INNmueble-1616853578595692/"
+    "https://www.facebook.com/Zona-INNmueble-1616853578595692/",
+    "https://www.instagram.com/zona.innmueble/",
+    "https://www.tiktok.com/@zonainnmueble",
+    "https://www.youtube.com/@zonainnmueble",
+    "https://www.linkedin.com/in/zona-innmueble/"
   ]
 }
 </script>
