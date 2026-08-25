@@ -44,7 +44,17 @@ function card(p, idx) {
     const daysSince = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60 * 24);
     return daysSince >= 0 && daysSince <= 7;
   })();
-  const imgs = (p.gallery && p.gallery.length > 0 && !(esExclusiva||cfg.fotos)) ? p.gallery : [p.mainImageThumb || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'];
+  // Antes esto usaba SIEMPRE la primera foto de la galeria (imgs[0]) como portada,
+  // ignorando por completo el campo "Imagen principal" que el admin elige a mano en
+  // el panel. Resultado real: propiedades con una portada excelente ya seleccionada
+  // (ej. Florencia -> sala de doble altura) mostraban en la tarjeta la primera foto
+  // subida en su lugar (ej. la cocina), sin que nadie lo supiera. Ahora la imagen
+  // principal manda, y el resto de la galeria la sigue en su orden normal.
+  const galleryList = (p.gallery && p.gallery.length > 0 && !(esExclusiva||cfg.fotos)) ? p.gallery : [];
+  const mainPick = p.mainImage || p.mainImageThumb || '';
+  const imgs = mainPick
+    ? [mainPick, ...galleryList.filter(u => u !== mainPick)]
+    : (galleryList.length ? galleryList : ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70']);
   const img = ikTransform(imgs[0], { w: 600, q: 70 });
   const hasGallery = imgs.length > 1;
   // Las primeras tarjetas de una grilla suelen estar sobre el pliegue (LCP) -
@@ -880,7 +890,13 @@ function detailPage(prop, all) {
     prop.codigo                                ? { l:'Código',        v: prop.codigo }       : null,
   ].filter(Boolean);
 
-  const gal    = prop.gallery.slice(0, 10);
+  // Mismo criterio que en la tarjeta: el swiper mobile debe abrir con la imagen
+  // principal elegida en el admin, no con la primera foto subida a la galeria.
+  const galMainPick = prop.mainImage || prop.mainImageThumb || '';
+  const galOrdered = galMainPick
+    ? [galMainPick, ...prop.gallery.filter(u => u !== galMainPick)]
+    : prop.gallery;
+  const gal    = galOrdered.slice(0, 10);
   const galHtml= gal.length > 1
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
 
