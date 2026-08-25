@@ -43,11 +43,12 @@ function normalizeKV(kvProps) {
       ? parseFloat(rawPriceStripped.replace(/,/g, '').replace(/[^0-9.]/g, ''))
       : NaN;
     const safeNum = isNaN(parsedNum) ? 0 : parsedNum;
-    return ({
-    ...p,
-    title: p.titulo || p.title || '',
-    description: p.descripcion || p.description || '',
-    priceFormatted: p.priceFormatted || (function(){
+    // priceFormattedFinal se calcula una sola vez y es la fuente de verdad para
+    // detectar la moneda: p.precio a veces llega sin simbolo ($/Q) aunque el admin
+    // ya haya guardado un p.priceFormatted con simbolo aparte (ej. precio:"585,000"
+    // pero priceFormatted:"$ 585,000") - por eso priceSecondary NO debe leer rawPrice
+    // directamente, o se le escapan esos casos y no calcula el equivalente.
+    const priceFormattedFinal = p.priceFormatted || (function(){
       if (!rawPrice) return '';
       const isUSD = rawPrice.includes('$') || rawPrice.toUpperCase().includes('USD');
       const isQ = rawPrice.startsWith('Q') || rawPrice.toUpperCase().startsWith('Q ');
@@ -56,15 +57,21 @@ function normalizeKV(kvProps) {
       if (isUSD) return '$' + fmt;
       if (isQ) return 'Q ' + fmt;
       return rawPrice;
-    })(),
+    })();
+    return ({
+    ...p,
+    title: p.titulo || p.title || '',
+    description: p.descripcion || p.description || '',
+    priceFormatted: priceFormattedFinal,
     // Precio en la moneda secundaria (referencial) para que el comprador no tenga
     // que adivinar el equivalente cuando unas fichas estan en $ y otras en Q.
     // Tasa fija de referencia (actualizar periodicamente, no es tipo de cambio en vivo).
     priceSecondary: p.priceSecondary || (function(){
       const RATE = 7.65;
-      if (!rawPrice || isNaN(parsedNum) || !parsedNum) return '';
-      const isUSD = rawPrice.includes('$') || rawPrice.toUpperCase().includes('USD');
-      const isQ = rawPrice.startsWith('Q') || rawPrice.toUpperCase().startsWith('Q ');
+      const ref = priceFormattedFinal || rawPrice;
+      if (!ref || isNaN(parsedNum) || !parsedNum) return '';
+      const isUSD = ref.includes('$') || ref.toUpperCase().includes('USD');
+      const isQ = ref.trim().toUpperCase().startsWith('Q') || ref.toUpperCase().includes('GTQ');
       if (isUSD) {
         const q = Math.round(parsedNum * RATE / 1000) * 1000;
         return 'Q ' + q.toLocaleString('en-US');
