@@ -669,12 +669,12 @@ function indexPage(props) {
     <h2 class="st">Tu pr&oacute;xima propiedad empieza <em>con una conversaci&oacute;n.</em></h2>
     <p style="font-size:.81rem;color:var(--sv);line-height:1.9;margin-bottom:40px;font-weight:300">Nuestro equipo est&aacute; disponible para asesorarte de forma privada. Sin compromiso.</p>
     <div style="display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto">
-      <a href="${waLink('Hola, me interesa una asesorÃ­a de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="justify-content:center">${WA_SVG} Escribir por WhatsApp</a>
+      <a href="${waLink('Hola, me interesa una asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="wa-btn" style="justify-content:center">${WA_SVG} Escribir por WhatsApp</a>
       <a href="/propiedades.html" class="btn-ol" style="justify-content:center">Ver propiedades disponibles</a>
     </div>
     
   </div>
-</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. AsesorÃ­a personalizada.`, canonical: '/', body });
+</section>`;  return layout({ title: null, desc: `Casas, fincas y apartamentos en venta en Guatemala. ${props.length} propiedades disponibles en Fraijanes, Zona 10, Zona 14, Mixco y Carretera a El Salvador. Asesoría personalizada.`, canonical: '/', body });
 }
 function catalogPage(props) {
   const tiposRaw = uniqueValues(props, 'tipo');

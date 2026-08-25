@@ -148,6 +148,14 @@ function copyAssets() {
     }
   });
 
+  // Imagen de portada para Open Graph / link previews (WhatsApp, Facebook, Meta Ads).
+  // Sin esto, el link preview del sitio se queda usando el default hardcodeado
+  // o referencias externas que pueden romperse - la servimos nosotros mismos.
+  const ogCoverSrc = path.join(__dirname, 'assets/og.jpg');
+  if (fs.existsSync(ogCoverSrc)) {
+    fs.copyFileSync(ogCoverSrc, path.join(dstDir, 'og.jpg'));
+  }
+
   // Copiar images/ si existe
   const imagesDir = path.join(__dirname, 'assets/images');
   const dstImagesDir = path.join(dstDir, 'images');

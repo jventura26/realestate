@@ -12,7 +12,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
     ? `${escapeHtml(title)} | Zona INNmueble`
     : 'Casas y Fincas en Venta en Guatemala | Zona INNmueble — Inmobiliaria Premium';
   const metaDesc  = escapeHtml(desc || 'Inmobiliaria premium en Guatemala. Casas, fincas, apartamentos y terrenos en venta en Zona 10, Zona 14, Zona 15, Fraijanes, Cayala y Carretera a El Salvador. Propiedades verificadas con asesoria personalizada.');
-  const ogImg     = ogImage || 'https://ik.imagekit.io/Zona/Imagen%201%20Reel.png';
+  const ogImg     = ogImage || 'https://zona-innmueble.com/assets/og.jpg';
   const canon     = `${DOMAIN}${canonical || '/'}`;
 
   return `<!DOCTYPE html>
