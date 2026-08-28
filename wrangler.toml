@@ -2,11 +2,25 @@ name = "zona-inmu"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
 
+# Seguimientos automaticos de leads por WhatsApp: corre todos los dias 10am Guatemala (16:00 UTC)
+[triggers]
+crons = ["0 16 * * *"]
+
 # KV Namespace para datos del admin
 [[kv_namespaces]]
 binding = "DB"
 id = "5ea66b6b4c7c45cb908111fa3259862c"
 preview_id = "5ea66b6b4c7c45cb908111fa3259862c"
+
+# Durable Object: serializa los mensajes de WhatsApp por numero de telefono
+# para que nunca se procesen dos mensajes del mismo cliente al mismo tiempo.
+[[durable_objects.bindings]]
+name = "WA_CONVO"
+class_name = "WaConversationDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["WaConversationDO"]
 
 # NO incluir [build] — Cloudflare Workers despliega src/index.js directamente
 # Si usas Cloudflare Pages para los sitios estáticos, ese es un proyecto SEPARADO
