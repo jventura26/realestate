@@ -304,6 +304,7 @@ var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
 var WA_FOLLOWUP_PAID_TIERS = ["WARM", "HOT"];
+var WA_ALERT_PHONE_DEFAULT = "50247692366";
 var DEFAULT_FOLLOWUP_TEMPLATES = [
   "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando quieras, aqu\xED estoy.",
   "A veces la propiedad correcta aparece cuando uno menos la busca. Si quieres, te comparto otra opci\xF3n que podr\xEDa interesarte.",
@@ -498,8 +499,22 @@ async function logWaError(env, where, err) {
   } catch (e2) {}
 }
 __name(logWaError, "logWaError");
+async function notifyLeadAlert(env, from, contactName, userText) {
+  try {
+    var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
+    if (!alertPhone || alertPhone === from) return;
+    var nombreMostrar = contactName || ("+" + from);
+    var textoCorto = String(userText || "").slice(0, 300);
+    var alertText = "Nuevo mensaje en WhatsApp de " + nombreMostrar + " (+" + from + "):\n\"" + textoCorto + "\"";
+    await sendWhatsAppMessage(env, alertPhone, alertText);
+  } catch (eAlert) {
+    await logWaError(env, "notifyLeadAlert", eAlert);
+  }
+}
+__name(notifyLeadAlert, "notifyLeadAlert");
 async function processWhatsAppTurn(env, from, userText, contactName) {
   var catalogo = await buildWhatsAppCatalogContext(env);
+  notifyLeadAlert(env, from, contactName, userText).catch(function() {});
   var paused = await isAiPausedForHuman(env, from);
   if (paused) {
     var pausedHistory = await getWaHistory(env, from);
