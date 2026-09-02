@@ -2872,6 +2872,19 @@ var index_default = {
       var ttData = await ttRes.json().catch(function() { return null; });
       return jsonRes({ status: ttRes.status, meta_response: ttData });
     }
+    if (method === "GET" && path === "/api/whatsapp/list-templates") {
+      var ltToken = new URL(request.url).searchParams.get("token");
+      var ltVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
+      if (ltToken !== ltVerify) return jsonRes({ error: "no autorizado" }, 403);
+      var ltWaToken = env.WHATSAPP_TOKEN;
+      if (!ltWaToken) return jsonRes({ error: "WHATSAPP_TOKEN no configurado" }, 500);
+      var ltWabaId = env.WHATSAPP_WABA_ID || "1700973914498013";
+      var ltRes = await fetch("https://graph.facebook.com/v21.0/" + ltWabaId + "/message_templates?fields=name,language,status,category,components&limit=100", {
+        headers: { "Authorization": "Bearer " + ltWaToken }
+      });
+      var ltData = await ltRes.json().catch(function() { return null; });
+      return jsonRes({ status: ltRes.status, waba_id: ltWabaId, meta_response: ltData });
+    }
     if (method === "POST" && path === "/api/whatsapp/webhook") {
       var waBody;
       var waRawText = await request.text();
