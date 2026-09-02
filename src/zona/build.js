@@ -169,6 +169,13 @@ function copyAssets() {
     fs.copyFileSync(fase1Src, path.join(dstDir, 'zona-fase1.js'));
   }
 
+  // Copiar zona-styles.css (CSS global extraido de layout.js para que el
+  // navegador lo cachee 1 año en vez de re-descargarlo inline en cada pagina)
+  const stylesSrc = path.join(__dirname, 'assets/zona-styles.css');
+  if (fs.existsSync(stylesSrc)) {
+    fs.copyFileSync(stylesSrc, path.join(dstDir, 'zona-styles.css'));
+  }
+
   // Reel de fincas (categoria /tipos/finca.html) + foto premium extraida del video
   const fincaPremiumSrc = path.join(__dirname, 'assets/finca-premium.jpg');
   if (fs.existsSync(fincaPremiumSrc)) {
