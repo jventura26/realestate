@@ -151,7 +151,10 @@ var DEFAULT_BRAND_VOICE = [
 ].join("\n");
 async function buildWhatsAppSystemPrompt(env, catalogo) {
   var catalogoTexto = catalogo.length ? catalogo.map(function(p) {
-    return "- " + p.titulo + " | " + p.tipo + " (" + p.operacion + ") | " + (p.zona || p.municipio) + " | Q" + p.precio + " | " + (p.habitaciones || "?") + " hab / " + (p.banos || "?") + " banos | " + p.url;
+    var precioTxt = String(p.precio || "").trim();
+    if (precioTxt && !/^[Q$]/.test(precioTxt)) precioTxt = "Q" + precioTxt;
+    if (!precioTxt) precioTxt = "precio a consultar";
+    return "- " + p.titulo + " | " + p.tipo + " (" + p.operacion + ") | " + (p.zona || p.municipio) + " | " + precioTxt + " | " + (p.habitaciones || "?") + " hab / " + (p.banos || "?") + " banos | " + p.url;
   }).join("\n") : "No hay propiedades activas cargadas en este momento.";
   var brandVoice = DEFAULT_BRAND_VOICE;
   try {
@@ -176,7 +179,8 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "10. Cuando la conversacion es nueva o el interes de la persona todavia no esta claro, no recomiendes una propiedad al azar del catalogo de una vez -- primero haz una sola pregunta breve para entender que busca (zona, tipo de propiedad, presupuesto o estilo de vida), y hasta con esa respuesta conecta con una propiedad real. Esto no aplica si la persona ya menciono algo especifico (zona, tipo, presupuesto o el nombre de una propiedad) -- en ese caso responde directo con eso, sin preguntar de mas.",
     "11. Nunca menciones mas de una o dos propiedades en un mismo mensaje, incluso si varias del catalogo coinciden con lo que piden. Elige la que mejor conecte con lo que la persona busca. Si hay mas opciones validas, dilo brevemente ('tengo un par mas que podrian interesarte') y ofrece compartirlas si la persona quiere ver mas, en vez de listarlas todas de una vez.",
     "12. Nunca ofrezcas descuentos ni promociones, ni digas si un precio es negociable o no -- si preguntan eso, responde con calidez que un asesor humano puede platicar directamente ese tema.",
-    "13. Cuando recomiendes una propiedad especifica, comparte su link del catalogo para que la persona pueda ver fotos y detalles completos -- no describas fotos ni caracteristicas visuales que no puedes mostrar.",
+    "13. SIEMPRE que menciones o recomiendes una propiedad especifica por nombre, incluye su link del catalogo en el mismo mensaje (el que aparece al final de esa propiedad en el listado de abajo), sin excepcion -- para que la persona pueda ver fotos y detalles completos. No describas fotos ni caracteristicas visuales que no puedes mostrar. Repite esta regla mentalmente antes de enviar cualquier mensaje que mencione una propiedad: si no incluiste el link, falta algo.",
+    "14. El precio de cada propiedad en el catalogo ya viene con su simbolo de moneda correcto (Q para quetzales, $ para dolares) -- usa el precio exactamente como aparece, nunca cambies ni asumas el simbolo de moneda.",
     "",
     "CATALOGO ACTIVO (unica fuente de verdad):",
     catalogoTexto
