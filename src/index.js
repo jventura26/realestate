@@ -303,7 +303,6 @@ var WA_FOLLOWUP_STOP_STAGES = ["Cierre", "Perdido"];
 var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
-var WA_FOLLOWUP_PAID_TIERS = ["WARM", "HOT"];
 var WA_ALERT_PHONE_DEFAULT = "50247692366";
 var DEFAULT_FOLLOWUP_TEMPLATES = [
   "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando quieras, aqu\xED estoy.",
@@ -338,6 +337,16 @@ async function sendFollowUps(env) {
         if (lead.followUpStatus !== "stopped") { lead.followUpStatus = "stopped"; changed = true; }
         continue;
       }
+      // Reactivar leads que quedaron atrapados en "completed_cold" por el filtro
+      // de tier WARM/HOT que existia antes -- ese filtro cancelaba el seguimiento
+      // para siempre a cualquier lead que no hubiera mencionado zona/tipo/presupuesto
+      // explicitamente, que en la practica era casi todos. Se elimino el filtro:
+      // ahora todo lead activo (que no este en Cierre/Perdido) recibe la secuencia
+      // completa de seguimientos, sin importar su lead_tier.
+      if (lead.followUpStatus === "completed_cold") {
+        lead.followUpStatus = "active";
+        changed = true;
+      }
       if (lead.followUpStatus !== "active") continue;
       if (typeof lead.followUpStage !== "number" || lead.followUpStage >= WA_FOLLOWUP_INTERVALS_DAYS.length) continue;
       if (!lead.nextFollowUpAt || new Date(lead.nextFollowUpAt).getTime() > now) continue;
@@ -347,11 +356,6 @@ async function sendFollowUps(env) {
       var nombre = (lead.nombre && lead.nombre !== "Contacto WhatsApp") ? lead.nombre.split(" ")[0] : "";
       var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : now;
       var withinWindow = (now - anchorTime) < WA_24H_WINDOW_MS;
-      if (!withinWindow && WA_FOLLOWUP_PAID_TIERS.indexOf(lead.lead_tier) < 0) {
-        lead.followUpStatus = "completed_cold";
-        changed = true;
-        continue;
-      }
       if (withinWindow) {
         var text = tpl.split("{nombre}").join(nombre || "").replace(/\s{2,}/g, " ").trim();
         await sendWhatsAppMessage(env, lead.wa_from, text);
