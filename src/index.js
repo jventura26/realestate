@@ -360,7 +360,11 @@ async function sendFollowUps(env) {
       var tpl = templates[stageIdx] || DEFAULT_FOLLOWUP_TEMPLATES[stageIdx];
       if (!tpl) continue;
       var nombre = (lead.nombre && lead.nombre !== "Contacto WhatsApp") ? lead.nombre.split(" ")[0] : "";
-      var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : now;
+      // Si nunca hay lastInboundAt (p.ej. un lead de Meta Lead Ads contactado
+      // primero por nosotros via plantilla, que todavia no ha respondido),
+      // el default seguro es "fuera de ventana" (0), no "now" -- lo contrario
+      // hacia que el sistema intentara mandar texto libre y Meta lo rechazara.
+      var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : 0;
       var withinWindow = (now - anchorTime) < WA_24H_WINDOW_MS;
       if (withinWindow) {
         var text = tpl.split("{nombre}").join(nombre || "").replace(/\s{2,}/g, " ").trim();
@@ -2979,7 +2983,62 @@ var index_default = {
         activados,
         requieren_opt_in_count: requierenOptIn.length,
         requieren_opt_in: requierenOptIn,
-        nota: "Los 'requieren_opt_in' nunca han escrito por WhatsApp -- no se activaron automaticamente por riesgo de politica de Meta. Revisar manualmente antes de contactarlos por este canal."
+        nota: "Los 'requieren_opt_in' nunca han escrito por WhatsApp -- no se activaron automaticamente por riesgo de politica de Meta. Revisar manualmente antes de contactarlos por este canal. Ver /api/whatsapp/optin-outreach para hacerles primer contacto con la plantilla ya aprobada."
+      });
+    }
+    if (method === "GET" && path === "/api/whatsapp/optin-outreach") {
+      var ooToken = new URL(request.url).searchParams.get("token");
+      var ooVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
+      if (ooToken !== ooVerify) return jsonRes({ error: "no autorizado" }, 403);
+      var ooLimit = parseInt(new URL(request.url).searchParams.get("limit") || "20", 10) || 20;
+      var ooRaw = await env.DB.get("leads");
+      var ooLeads = ooRaw ? JSON.parse(ooRaw) : [];
+      var ooBusinessDigits = "50245542088";
+      var ooSent = [];
+      var ooSkipped = [];
+      var ooChanged = false;
+      for (var oi = 0; oi < ooLeads.length && ooSent.length < ooLimit; oi++) {
+        var ooLead = ooLeads[oi];
+        if (WA_FOLLOWUP_STOP_STAGES.indexOf(ooLead.stage) >= 0) continue;
+        if (typeof ooLead.followUpStage === "number" && ooLead.followUpStatus) continue;
+        if (ooLead.wa_from) continue;
+        if (!ooLead.telefono) continue;
+        var ooNombreRaw = String(ooLead.nombre || "");
+        var ooTelRaw = String(ooLead.telefono || "");
+        if (/test lead/i.test(ooNombreRaw) || /test lead/i.test(ooTelRaw)) {
+          ooSkipped.push({ id: ooLead.id, nombre: ooLead.nombre, razon: "dato de prueba de Meta" });
+          continue;
+        }
+        var ooDigits = ooTelRaw.replace(/[^0-9]/g, "");
+        if (!ooDigits || ooDigits.length < 8) {
+          ooSkipped.push({ id: ooLead.id, nombre: ooLead.nombre, razon: "telefono invalido" });
+          continue;
+        }
+        if (ooDigits.length === 8) ooDigits = "502" + ooDigits;
+        if (ooDigits === ooBusinessDigits) {
+          ooSkipped.push({ id: ooLead.id, nombre: ooLead.nombre, razon: "es el numero propio del negocio" });
+          continue;
+        }
+        if (await isAiPausedForHuman(env, ooDigits)) {
+          ooSkipped.push({ id: ooLead.id, nombre: ooLead.nombre, razon: "conversacion pausada" });
+          continue;
+        }
+        var ooNombre = ooNombreRaw && ooNombreRaw.toLowerCase() !== "contacto whatsapp" ? ooNombreRaw.split(" ")[0] : "";
+        await sendWhatsAppTemplateMessage(env, ooDigits, WA_FOLLOWUP_TEMPLATE_NAME, WA_FOLLOWUP_TEMPLATE_LANG, [ooNombre || "de nuevo"]);
+        ooLead.wa_from = ooDigits;
+        ooLead.followUpStage = 0;
+        ooLead.followUpStatus = "active";
+        ooLead.nextFollowUpAt = new Date(Date.now() + WA_FOLLOWUP_INTERVALS_DAYS[0] * 864e5).toISOString();
+        ooChanged = true;
+        ooSent.push({ id: ooLead.id, nombre: ooLead.nombre, telefono: ooDigits });
+      }
+      if (ooChanged) await env.DB.put("leads", JSON.stringify(ooLeads));
+      return jsonRes({
+        enviados_count: ooSent.length,
+        enviados: ooSent,
+        omitidos_count: ooSkipped.length,
+        omitidos: ooSkipped,
+        nota: "Procesa hasta ?limit= leads por llamada (default 20). Volver a llamar para procesar el resto -- los ya contactados no se repiten."
       });
     }
     if (method === "GET" && path === "/api/whatsapp/test-template") {
