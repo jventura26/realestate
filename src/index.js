@@ -143,7 +143,8 @@ async function saveWaHistory(env, phone, history) {
 }
 __name(saveWaHistory, "saveWaHistory");
 var DEFAULT_BRAND_VOICE = [
-  "Eres el asistente de WhatsApp de Zona-INNmueble, marca de real estate premium en Guatemala especializada en propiedades de lujo, residenciales, inversion y fincas en Zona 10, Zona 14, Zona 15, Zona 16, Cayala, Fraijanes y Carretera a El Salvador.",
+  "Eres el asistente de WhatsApp de Zona-INNmueble, marca de real estate premium en Guatemala especializada en propiedades de lujo, residenciales e inversion en Zona 10, Zona 14, Zona 15, Zona 16, Cayala, Fraijanes y Carretera a El Salvador, con un portafolio de fincas e inversion en tierra que se extiende a distintos departamentos de toda la Republica de Guatemala (no solo el area metropolitana).",
+  "Cuando alguien pregunte por fincas o inversion fuera de la ciudad, aclara con naturalidad que Zona-INNmueble tiene presencia e inventario en varios departamentos del pais -- nunca des a entender que el catalogo se limita solo a la zona metropolitana.",
   "Tu voz es la de un concierge inmobiliario de una marca luxury internacional: calida, elegante, consultiva y segura de si misma -- nunca la de un vendedor de piso.",
   "Actua como lo haria un asesor senior: primero escuchas y entiendes que busca la persona (estilo de vida, inversion, tranquilidad, estatus, privacidad) y luego conectas eso con una propiedad real del catalogo.",
   "Genera curiosidad, nunca presion. No suenes a anuncio. Suena a una conversacion real entre dos personas que se respetan.",
@@ -181,12 +182,34 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "12. Nunca ofrezcas descuentos ni promociones, ni digas si un precio es negociable o no -- si preguntan eso, responde con calidez que un asesor humano puede platicar directamente ese tema.",
     "13. SIEMPRE que menciones o recomiendes una propiedad especifica por nombre, incluye su link del catalogo en el mismo mensaje (el que aparece al final de esa propiedad en el listado de abajo), sin excepcion -- para que la persona pueda ver fotos y detalles completos. Si mencionas DOS propiedades en el mismo mensaje, cada una lleva su propio link, no solo la primera -- cuenta cuantas propiedades mencionaste y verifica que haya el mismo numero de links antes de responder. No describas fotos ni caracteristicas visuales que no puedes mostrar.",
     "14. El precio de cada propiedad en el catalogo ya viene con su simbolo de moneda correcto (Q para quetzales, $ para dolares) -- usa el precio exactamente como aparece, nunca cambies ni asumas el simbolo de moneda.",
+    "15. Detecta el idioma del ULTIMO mensaje de la persona: si esta escrito en ingles, responde completamente en ingles manteniendo el mismo tono premium y consultivo (nunca mezcles ingles y espanol en un mismo mensaje). Si esta en espanol, responde en espanol. Si el idioma no es claro, responde en espanol por defecto.",
     "",
     "CATALOGO ACTIVO (unica fuente de verdad):",
     catalogoTexto
   ].join("\n");
 }
 __name(buildWhatsAppSystemPrompt, "buildWhatsAppSystemPrompt");
+function stripAccents(s) {
+  return (s || "").toString().normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+__name(stripAccents, "stripAccents");
+var GT_DEPARTAMENTOS_MATCH = [
+  ["sacatepequez", "Sacatep\xE9quez"], ["escuintla", "Escuintla"], ["chimaltenango", "Chimaltenango"],
+  ["santa rosa", "Santa Rosa"], ["solola", "Solol\xE1"], ["totonicapan", "Totonicap\xE1n"],
+  ["quetzaltenango", "Quetzaltenango"], ["xela", "Quetzaltenango"], ["suchitepequez", "Suchitep\xE9quez"],
+  ["retalhuleu", "Retalhuleu"], ["san marcos", "San Marcos"], ["huehuetenango", "Huehuetenango"],
+  ["quiche", "Quich\xE9"], ["baja verapaz", "Baja Verapaz"], ["alta verapaz", "Alta Verapaz"],
+  ["coban", "Alta Verapaz"], ["peten", "Pet\xE9n"], ["izabal", "Izabal"], ["zacapa", "Zacapa"],
+  ["chiquimula", "Chiquimula"], ["jalapa", "Jalapa"], ["jutiapa", "Jutiapa"], ["el progreso", "El Progreso"]
+];
+function detectDepartamentoNacional(tRaw) {
+  var t = stripAccents(tRaw).toLowerCase();
+  for (var i = 0; i < GT_DEPARTAMENTOS_MATCH.length; i++) {
+    if (t.indexOf(GT_DEPARTAMENTOS_MATCH[i][0]) >= 0) return GT_DEPARTAMENTOS_MATCH[i][1];
+  }
+  return null;
+}
+__name(detectDepartamentoNacional, "detectDepartamentoNacional");
 function extractLeadSignals(text) {
   var t = (text || "").toLowerCase();
   var zona = null;
@@ -197,6 +220,7 @@ function extractLeadSignals(text) {
   else if (/cayal/.test(t)) zona = "Cayal\xE1";
   else if (/fraijanes/.test(t)) zona = "Fraijanes";
   else if (/carretera a el salvador|carr\.?\s*a\s*el\s*salvador|carr\.?\s*salvador/.test(t)) zona = "Carretera a El Salvador";
+  else zona = detectDepartamentoNacional(text);
   var tipo = null;
   if (/\bfinca\b/.test(t)) tipo = "Finca";
   else if (/\bpenthouse\b/.test(t)) tipo = "Penthouse";
@@ -306,6 +330,8 @@ var WA_NEWLISTING_TEMPLATE_NAME = "seguimiento_2_zona_innmueble";
 var WA_NEWLISTING_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
 var WA_ALERT_PHONE_DEFAULT = "50247692366";
+var WA_REVIEW_DELAY_DAYS = 10;
+var WA_REVIEW_URL_DEFAULT = "https://g.page/r/REEMPLAZAR-CON-TU-LINK-DE-RESENAS/review";
 var DEFAULT_FOLLOWUP_TEMPLATES = [
   "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando quieras, aqu\xED estoy.",
   "A veces la propiedad correcta aparece cuando uno menos la busca. Si quieres, te comparto otra opci\xF3n que podr\xEDa interesarte.",
@@ -385,6 +411,36 @@ async function sendFollowUps(env) {
     await logWaError(env, "sendFollowUps", e);
   }
 }
+async function sendReviewRequests(env) {
+  try {
+    var raw = await env.DB.get("leads");
+    var leads = raw ? JSON.parse(raw) : [];
+    if (!leads.length) return;
+    var now = Date.now();
+    var changed = false;
+    var reviewUrl = env.GOOGLE_REVIEW_URL || WA_REVIEW_URL_DEFAULT;
+    for (var i = 0; i < leads.length; i++) {
+      var lead = leads[i];
+      if (lead.reviewRequestStatus !== "pending" || !lead.reviewRequestAt || !lead.wa_from) continue;
+      if (new Date(lead.reviewRequestAt).getTime() > now) continue;
+      var nombre = lead.nombre && lead.nombre !== "Contacto WhatsApp" ? lead.nombre.split(" ")[0] : "";
+      var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : 0;
+      var withinWindow = anchorTime && now - anchorTime < WA_24H_WINDOW_MS;
+      if (withinWindow) {
+        var text = "Hola" + (nombre ? " " + nombre : "") + ", fue un gusto acompa\xF1arte en este proceso con Zona-INNmueble. Si tienes un minuto, nos ayudar\xEDa mucho que compartieras tu experiencia aqu\xED: " + reviewUrl;
+        await sendWhatsAppMessage(env, lead.wa_from, text);
+        lead.reviewRequestStatus = "sent";
+      } else {
+        lead.reviewRequestStatus = "requiere_plantilla";
+      }
+      changed = true;
+    }
+    if (changed) await env.DB.put("leads", JSON.stringify(leads));
+  } catch (e) {
+    await logWaError(env, "sendReviewRequests", e);
+  }
+}
+__name(sendReviewRequests, "sendReviewRequests");
 function normalizeZonaForMatch(z) {
   var t = (z || "").toString().toLowerCase();
   if (t.indexOf("14") >= 0) return "Zona 14";
@@ -394,6 +450,8 @@ function normalizeZonaForMatch(z) {
   if (t.indexOf("cayal") >= 0) return "Cayal\xE1";
   if (t.indexOf("fraijanes") >= 0) return "Fraijanes";
   if (t.indexOf("salvador") >= 0) return "Carretera a El Salvador";
+  var depto = detectDepartamentoNacional(z);
+  if (depto) return depto;
   return "";
 }
 __name(normalizeZonaForMatch, "normalizeZonaForMatch");
@@ -418,7 +476,7 @@ async function notifyMatchingLeadsForNewProperty(env, prop) {
   try {
     if (!prop || prop.estado !== "Activa") return;
     if (Array.isArray(prop.sitios) && prop.sitios.length && prop.sitios.indexOf("zona") < 0) return;
-    var propZona = normalizeZonaForMatch(prop.zona || prop.municipio || "");
+    var propZona = normalizeZonaForMatch(prop.zona || prop.municipio || prop.departamento || "");
     var propTipo = normalizeTipoForMatch(prop.tipo || "");
     if (!propZona) return;
     var raw = await env.DB.get("leads");
@@ -586,6 +644,107 @@ async function logWaError(env, where, err) {
   } catch (e2) {}
 }
 __name(logWaError, "logWaError");
+function toDirectDriveLink(url) {
+  try {
+    var s = String(url || "");
+    if (!s || s.indexOf("drive.google.com") < 0) return s;
+    var m = s.match(/\/file\/d\/([^/]+)/);
+    if (m && m[1]) return "https://drive.google.com/uc?export=download&id=" + m[1];
+    var m2 = s.match(/[?&]id=([^&]+)/);
+    if (m2 && m2[1]) return "https://drive.google.com/uc?export=download&id=" + m2[1];
+    return s;
+  } catch (e) {
+    return url;
+  }
+}
+__name(toDirectDriveLink, "toDirectDriveLink");
+async function getPropertyMediaByTitle(env, titulo) {
+  try {
+    if (!titulo) return null;
+    var raw = await env.DB.get("propiedades");
+    var data = raw ? JSON.parse(raw) : [];
+    var t = titulo.toLowerCase();
+    var match = data.find(function(p) { return (p.titulo || "").toLowerCase() === t; });
+    if (!match) return null;
+    return { pdfUrl: match.pdfUrl || "", videoUrl: match.videoUrl || match.video || "", titulo: match.titulo };
+  } catch (e) {
+    return null;
+  }
+}
+__name(getPropertyMediaByTitle, "getPropertyMediaByTitle");
+var WA_MEDIA_REQUEST_RE = /\b(pdf|ficha|brochure|folleto|video|tour)\b/i;
+var WA_MEDIA_WANTS_PDF_RE = /\b(pdf|ficha|brochure|folleto)\b/i;
+var WA_MEDIA_WANTS_VIDEO_RE = /\b(video|tour)\b/i;
+async function sendWhatsAppDocument(env, to, link, filename, caption) {
+  var token = env.WHATSAPP_TOKEN;
+  var phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID || "1276726378858448";
+  if (!token || !link) return;
+  try {
+    var res = await fetch("https://graph.facebook.com/v21.0/" + phoneNumberId + "/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to,
+        type: "document",
+        document: { link, filename: filename || "Zona-INNmueble.pdf", caption: caption || "" }
+      })
+    });
+    if (!res.ok) {
+      var errBody = await res.text().catch(function() { return ""; });
+      await logWaError(env, "sendWhatsAppDocument", "Meta API " + res.status + " (to=" + to + "): " + errBody.slice(0, 500));
+    }
+  } catch (e) {
+    await logWaError(env, "sendWhatsAppDocument", e);
+  }
+}
+__name(sendWhatsAppDocument, "sendWhatsAppDocument");
+async function sendWhatsAppVideo(env, to, link, caption) {
+  var token = env.WHATSAPP_TOKEN;
+  var phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID || "1276726378858448";
+  if (!token || !link) return;
+  try {
+    var res = await fetch("https://graph.facebook.com/v21.0/" + phoneNumberId + "/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to,
+        type: "video",
+        video: { link, caption: caption || "" }
+      })
+    });
+    if (!res.ok) {
+      var errBody = await res.text().catch(function() { return ""; });
+      await logWaError(env, "sendWhatsAppVideo", "Meta API " + res.status + " (to=" + to + "): " + errBody.slice(0, 500));
+    }
+  } catch (e) {
+    await logWaError(env, "sendWhatsAppVideo", e);
+  }
+}
+__name(sendWhatsAppVideo, "sendWhatsAppVideo");
+async function maybeSendPropertyMedia(env, from, userText, reply, catalogo, history) {
+  try {
+    if (!WA_MEDIA_REQUEST_RE.test(userText)) return;
+    var scanTexts = [userText, reply].concat((history || []).slice(-4).map(function(h) { return h.content; }));
+    var mentionTitle = null;
+    for (var i = 0; i < scanTexts.length && !mentionTitle; i++) {
+      mentionTitle = matchCatalogPropertyMention(catalogo, scanTexts[i]);
+    }
+    if (!mentionTitle) return;
+    var media = await getPropertyMediaByTitle(env, mentionTitle);
+    if (!media) return;
+    if (WA_MEDIA_WANTS_PDF_RE.test(userText) && media.pdfUrl) {
+      await sendWhatsAppDocument(env, from, toDirectDriveLink(media.pdfUrl), (media.titulo || "Zona-INNmueble") + ".pdf", media.titulo);
+    }
+    if (WA_MEDIA_WANTS_VIDEO_RE.test(userText) && media.videoUrl) {
+      await sendWhatsAppVideo(env, from, media.videoUrl, media.titulo);
+    }
+  } catch (e) {
+    await logWaError(env, "maybeSendPropertyMedia", e);
+  }
+}
+__name(maybeSendPropertyMedia, "maybeSendPropertyMedia");
 async function notifyLeadAlert(env, from, contactName, userText) {
   try {
     var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
@@ -622,6 +781,7 @@ async function processWhatsAppTurn(env, from, userText, contactName) {
     reply = WA_SCHEDULING_GUARDRAIL_MESSAGE;
   }
   await sendWhatsAppMessage(env, from, reply);
+  maybeSendPropertyMedia(env, from, userText, reply, catalogo, history).catch(function() {});
   history.push({ role: "user", content: userText });
   history.push({ role: "assistant", content: reply });
   await saveWaHistory(env, from, history);
@@ -662,9 +822,19 @@ async function handleWhatsAppMessage(body, env) {
         var contactName = (value.contacts && value.contacts[0] && value.contacts[0].profile && value.contacts[0].profile.name) || "";
         for (var m = 0; m < messages.length; m++) {
           var msg = messages[m];
-          if (msg.type !== "text" || !msg.text || !msg.text.body) continue;
           var from = msg.from;
-          var userText = msg.text.body;
+          var userText = null;
+          if (msg.type === "text" && msg.text && msg.text.body) {
+            userText = msg.text.body;
+          } else if (msg.type === "audio" && msg.audio && msg.audio.id) {
+            userText = await transcribeWhatsAppAudio(env, msg.audio.id);
+            if (!userText) {
+              await sendWhatsAppMessage(env, from, "No pude escuchar bien tu nota de voz -- \xBFme la escribes en texto, por favor?");
+              continue;
+            }
+          } else {
+            continue;
+          }
           try {
             if (env.WA_CONVO) {
               var doId = env.WA_CONVO.idFromName(from);
@@ -687,6 +857,38 @@ async function handleWhatsAppMessage(body, env) {
   }
 }
 __name(handleWhatsAppMessage, "handleWhatsAppMessage");
+async function transcribeWhatsAppAudio(env, mediaId) {
+  try {
+    var token = env.WHATSAPP_TOKEN;
+    if (!token) { await logWaError(env, "transcribeWhatsAppAudio", "WHATSAPP_TOKEN no configurado"); return null; }
+    var metaRes = await fetch("https://graph.facebook.com/v21.0/" + mediaId, {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (!metaRes.ok) {
+      await logWaError(env, "transcribeWhatsAppAudio", "media meta " + metaRes.status);
+      return null;
+    }
+    var meta = await metaRes.json();
+    if (!meta || !meta.url) return null;
+    var audioRes = await fetch(meta.url, { headers: { "Authorization": "Bearer " + token } });
+    if (!audioRes.ok) {
+      await logWaError(env, "transcribeWhatsAppAudio", "media download " + audioRes.status);
+      return null;
+    }
+    var buf = await audioRes.arrayBuffer();
+    if (!env.AI) {
+      await logWaError(env, "transcribeWhatsAppAudio", "Workers AI (env.AI) no esta enlazado -- revisa el binding [ai] en wrangler.toml");
+      return null;
+    }
+    var result = await env.AI.run("@cf/openai/whisper", { audio: Array.from(new Uint8Array(buf)) });
+    var text = result && (result.text || result.result && result.result.text);
+    return text ? String(text).trim() : null;
+  } catch (e) {
+    await logWaError(env, "transcribeWhatsAppAudio", e);
+    return null;
+  }
+}
+__name(transcribeWhatsAppAudio, "transcribeWhatsAppAudio");
 async function hashSHA256(value) {
   var encoder = new TextEncoder();
   var data = encoder.encode(value);
@@ -1180,8 +1382,13 @@ tr:hover td{background:#FAFBFF}
                 <select id="fDepartamento">
                   <option value="">-- Seleccionar --</option>
                   <option>Guatemala</option><option>Sacatep\xE9quez</option><option>Escuintla</option>
-                  <option>Chimaltenango</option><option>Baja Verapaz</option><option>Alta Verapaz</option>
-                  <option>El Progreso</option><option>Jalapa</option><option>Jutiapa</option>
+                  <option>Chimaltenango</option><option>El Progreso</option><option>Santa Rosa</option>
+                  <option>Solol\xE1</option><option>Totonicap\xE1n</option>
+                  <option>Quetzaltenango</option><option>Suchitep\xE9quez</option><option>Retalhuleu</option>
+                  <option>San Marcos</option><option>Huehuetenango</option><option>Quich\xE9</option>
+                  <option>Baja Verapaz</option><option>Alta Verapaz</option><option>Pet\xE9n</option>
+                  <option>Izabal</option><option>Zacapa</option><option>Chiquimula</option>
+                  <option>Jalapa</option><option>Jutiapa</option>
                 </select>
               </div>
               <div class="fg"><label>Ubicaci\xF3n general (referencia)</label><input type="text" id="fUbicacionGeneral" placeholder="Fraijanes \xB7 Km 16.5 \xB7 Carr. a El Salvador"></div>
@@ -3205,7 +3412,14 @@ var index_default = {
       var found = false;
       for (var i = 0; i < data.length; i++) {
         if ((data[i].id || data[i]._id || data[i].fecha) == body.id) {
-          if (body.stage) data[i].stage = body.stage;
+          if (body.stage) {
+            var prevStage = data[i].stage;
+            data[i].stage = body.stage;
+            if (body.stage === "Cierre" && prevStage !== "Cierre" && data[i].wa_from) {
+              data[i].reviewRequestStatus = "pending";
+              data[i].reviewRequestAt = new Date(Date.now() + WA_REVIEW_DELAY_DAYS * 864e5).toISOString();
+            }
+          }
           if (body.followup_date) data[i].followup_date = body.followup_date;
           if (body.contacted_at) data[i].contacted_at = body.contacted_at;
           found = true;
@@ -4610,6 +4824,7 @@ var index_default = {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(logWaError(env, "cron_heartbeat", "scheduled() se ejecuto correctamente a las " + new Date(event.scheduledTime).toISOString()));
     ctx.waitUntil(sendFollowUps(env));
+    ctx.waitUntil(sendReviewRequests(env));
   }
 };
 export {

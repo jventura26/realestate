@@ -12,6 +12,10 @@ binding = "DB"
 id = "5ea66b6b4c7c45cb908111fa3259862c"
 preview_id = "5ea66b6b4c7c45cb908111fa3259862c"
 
+# Workers AI: usado para transcribir notas de voz de WhatsApp (Whisper)
+[ai]
+binding = "AI"
+
 # Durable Object: serializa los mensajes de WhatsApp por numero de telefono
 # para que nunca se procesen dos mensajes del mismo cliente al mismo tiempo.
 [[durable_objects.bindings]]
