@@ -2901,6 +2901,35 @@ var index_default = {
       var errList = errRaw ? JSON.parse(errRaw) : [];
       return jsonRes({ count: errList.length, errors: errList });
     }
+    if (method === "GET" && path === "/api/whatsapp/followup-stats") {
+      var fsToken = new URL(request.url).searchParams.get("token");
+      var fsVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
+      if (fsToken !== fsVerify) return jsonRes({ error: "no autorizado" }, 403);
+      var fsRaw = await env.DB.get("leads");
+      var fsLeads = fsRaw ? JSON.parse(fsRaw) : [];
+      var fsByStatus = {};
+      var fsByTier = {};
+      var fsSample = [];
+      for (var fsI = 0; fsI < fsLeads.length; fsI++) {
+        var fsLead = fsLeads[fsI];
+        var fsStatus = fsLead.followUpStatus || "(sin estado)";
+        fsByStatus[fsStatus] = (fsByStatus[fsStatus] || 0) + 1;
+        var fsTier = fsLead.lead_tier || "(sin tier)";
+        fsByTier[fsTier] = (fsByTier[fsTier] || 0) + 1;
+        if (fsSample.length < 15) {
+          fsSample.push({
+            nombre: fsLead.nombre,
+            stage: fsLead.stage,
+            lead_tier: fsLead.lead_tier,
+            followUpStatus: fsLead.followUpStatus,
+            followUpStage: fsLead.followUpStage,
+            nextFollowUpAt: fsLead.nextFollowUpAt,
+            lastInboundAt: fsLead.lastInboundAt
+          });
+        }
+      }
+      return jsonRes({ total_leads: fsLeads.length, por_estado: fsByStatus, por_tier: fsByTier, muestra: fsSample });
+    }
     if (method === "GET" && path === "/api/whatsapp/unpause") {
       var upToken = new URL(request.url).searchParams.get("token");
       var upVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
