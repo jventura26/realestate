@@ -298,7 +298,7 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo) {
   }
 }
 __name(upsertWhatsAppLead, "upsertWhatsAppLead");
-var WA_FOLLOWUP_INTERVALS_DAYS = [1, 3, 7, 21];
+var WA_FOLLOWUP_INTERVALS_DAYS = [1, 3, 7, 21, 35, 50, 70, 90];
 var WA_FOLLOWUP_STOP_STAGES = ["Cierre", "Perdido"];
 var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
@@ -308,7 +308,11 @@ var DEFAULT_FOLLOWUP_TEMPLATES = [
   "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando quieras, aqu\xED estoy.",
   "A veces la propiedad correcta aparece cuando uno menos la busca. Si quieres, te comparto otra opci\xF3n que podr\xEDa interesarte.",
   "\xBFSigues buscando, {nombre}, o ya diste con algo? Cualquiera sea la respuesta, aqu\xED sigo disponible.",
-  "Ha pasado un tiempo. Si tu b\xFAsqueda sigue en pie, con gusto retomamos donde quedamos -- y si no, fue un gusto haber conversado."
+  "Ha pasado un tiempo. Si tu b\xFAsqueda sigue en pie, con gusto retomamos donde quedamos -- y si no, fue un gusto haber conversado.",
+  "Ha pasado un tiempo, {nombre}. El mercado en las zonas que te interesan sigue movi\xE9ndose -- si tu b\xFAsqueda contin\xFAa, con gusto te cuento qu\xE9 ha cambiado.",
+  "Las mejores decisiones rara vez se apresuran. Si en alg\xFAn momento quieres retomar la conversaci\xF3n sobre tu propiedad ideal, aqu\xED sigo disponible.",
+  "\xBFSigue vigente tu inter\xE9s, {nombre}? El panorama de propiedades premium cambia con el tiempo, y puede que hoy haya algo distinto para mostrarte.",
+  "Cierro este seguimiento por ahora, {nombre}, pero la puerta sigue abierta. Cuando quieras retomar la b\xFAsqueda, aqu\xED estar\xE9."
 ];
 async function getFollowUpTemplates(env) {
   try {
