@@ -330,7 +330,7 @@ const ZONAS = path.join(OUT, 'zonas');
 fs.mkdirSync(ZONAS, { recursive: true });
 const zonasMap = {};
 props.forEach(p => {
-  const z = p.municipio || p.zona || '';
+  const z = p.municipio || p.zona || p.departamento || '';
   if (!z) return;
   const slug = zonaSlug(z);
   if (!zonasMap[slug]) zonasMap[slug] = { nombre: z, props: [] };

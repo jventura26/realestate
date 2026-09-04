@@ -89,12 +89,12 @@ function card(p, idx) {
 
   return `<div class="prop-card-wrap" id="${cardId}" data-imgs='${imgsJson}' data-idx="0">
   <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
-    data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio)}"
+    data-tipo="${escapeHtml(p.tipo)}" data-ciudad="${escapeHtml(p.municipio || p.departamento || '')}"
     data-cinta="${escapeHtml(p.cinta)}" data-precio="${p.priceNumeric}"
     data-habs="${p.habitaciones||0}"
     data-fecha="${escapeHtml(String(p.fechaPublicacion||p.createdAt||''))}"
     data-area="${parseFloat(p.areaConst)||parseFloat(p.area)||0}">
-    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio||'Guatemala') + ' - ' + (p.title||''))}" ${imgLoadAttrs} width="600" height="750" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
+    <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio || p.departamento || 'Guatemala') + ' - ' + (p.title||''))}" ${imgLoadAttrs} width="600" height="750" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
     <div class="pc-ov"></div>
     ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
     ${exclusivaBadge}
@@ -105,7 +105,7 @@ function card(p, idx) {
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
     <div class="pc-info">
-      <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(p.municipio)}</div>
+      <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(p.municipio || p.departamento || '')}</div>
       <div class="pc-title">${escapeHtml(p.title)}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
@@ -689,7 +689,7 @@ function indexPage(props) {
 function catalogPage(props) {
   const tiposRaw = uniqueValues(props, 'tipo');
   const tipos    = ['Casa','Apartamento','Finca',...tiposRaw.filter(t=>!['Casa','Apartamento','Finca'].includes(t))];
-  const ciudades = uniqueValues(props, 'municipio');
+  const ciudades = [...new Set([...uniqueValues(props, 'municipio'), ...uniqueValues(props, 'departamento')])].sort();
   const cintas   = uniqueValues(props, 'cinta');
 
   const filterJS = `<script>

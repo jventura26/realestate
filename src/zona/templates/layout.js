@@ -193,6 +193,7 @@ ${body}
         <li><a href="/zonas/zona-16.html">Zona 16</a></li>
         <li><a href="/zonas/fraijanes.html">Fraijanes</a></li>
         <li><a href="/zonas/carretera-el-salvador.html">Carretera a El Salvador</a></li>
+        <li><a href="/zonas/fincas-guatemala.html">Fincas en toda Guatemala</a></li>
         <li><a href="/zonas/index.html">Ver todas</a></li>
       </ul>
     </div>
