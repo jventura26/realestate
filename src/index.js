@@ -302,6 +302,8 @@ var WA_FOLLOWUP_INTERVALS_DAYS = [1, 3, 7, 21, 35, 50, 70, 90];
 var WA_FOLLOWUP_STOP_STAGES = ["Cierre", "Perdido"];
 var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
+var WA_NEWLISTING_TEMPLATE_NAME = "nuevo_listado_zona_innmueble";
+var WA_NEWLISTING_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
 var WA_ALERT_PHONE_DEFAULT = "50247692366";
 var DEFAULT_FOLLOWUP_TEMPLATES = [
@@ -379,6 +381,79 @@ async function sendFollowUps(env) {
     await logWaError(env, "sendFollowUps", e);
   }
 }
+function normalizeZonaForMatch(z) {
+  var t = (z || "").toString().toLowerCase();
+  if (t.indexOf("14") >= 0) return "Zona 14";
+  if (t.indexOf("15") >= 0) return "Zona 15";
+  if (t.indexOf("16") >= 0) return "Zona 16";
+  if (t.indexOf("10") >= 0) return "Zona 10";
+  if (t.indexOf("cayal") >= 0) return "Cayal\xE1";
+  if (t.indexOf("fraijanes") >= 0) return "Fraijanes";
+  if (t.indexOf("salvador") >= 0) return "Carretera a El Salvador";
+  return "";
+}
+__name(normalizeZonaForMatch, "normalizeZonaForMatch");
+function normalizeTipoForMatch(t) {
+  var s = (t || "").toString().toLowerCase();
+  if (s.indexOf("finca") >= 0) return "Finca";
+  if (s.indexOf("penthouse") >= 0) return "Penthouse";
+  if (s.indexOf("apartamento") >= 0 || s.indexOf("apto") >= 0) return "Apartamento";
+  if (s.indexOf("casa") >= 0 || s.indexOf("residencia") >= 0) return "Casa";
+  if (s.indexOf("terreno") >= 0 || s.indexOf("lote") >= 0) return "Terreno";
+  return "";
+}
+__name(normalizeTipoForMatch, "normalizeTipoForMatch");
+// Alerta de "nuevo listado" a leads antiguos: cuando se publica una propiedad
+// nueva en Zona-INNmueble, se revisa la base de leads (activos, en seguimiento
+// o incluso ya completados/pausados -- excepto Cierre/Perdido) y se avisa a
+// quienes ya habian mostrado interes en esa zona/tipo. Reactiva leads viejos
+// sin gastar en adquisicion nueva. Dentro de la ventana de 24h se manda texto
+// libre; fuera de la ventana se requiere la plantilla aprobada por Meta
+// "nuevo_listado_zona_innmueble" (variables: {{1}} nombre, {{2}} descripcion).
+async function notifyMatchingLeadsForNewProperty(env, prop) {
+  try {
+    if (!prop || prop.estado !== "Activa") return;
+    if (Array.isArray(prop.sitios) && prop.sitios.length && prop.sitios.indexOf("zona") < 0) return;
+    var propZona = normalizeZonaForMatch(prop.zona || prop.municipio || "");
+    var propTipo = normalizeTipoForMatch(prop.tipo || "");
+    if (!propZona) return;
+    var raw = await env.DB.get("leads");
+    var leads = raw ? JSON.parse(raw) : [];
+    if (!leads.length) return;
+    var now = Date.now();
+    var changed = false;
+    var url = "https://zona-innmueble.com/propiedades/" + (prop.slug || "") + ".html";
+    var descripcion = (propTipo ? propTipo.toLowerCase() : "propiedad") + " en " + propZona;
+    for (var i = 0; i < leads.length; i++) {
+      var lead = leads[i];
+      if (!lead.wa_from) continue;
+      if (WA_FOLLOWUP_STOP_STAGES.indexOf(lead.stage) >= 0) continue;
+      var leadZona = normalizeZonaForMatch(lead.zona_interes || "");
+      if (!leadZona || leadZona !== propZona) continue;
+      var leadTipo = normalizeTipoForMatch(lead.tipo_propiedad || "");
+      if (leadTipo && propTipo && leadTipo !== propTipo) continue;
+      if (!Array.isArray(lead.notifiedListings)) lead.notifiedListings = [];
+      if (lead.notifiedListings.indexOf(prop.id) >= 0) continue;
+      if (await isAiPausedForHuman(env, lead.wa_from)) continue;
+      var nombre = (lead.nombre && lead.nombre !== "Contacto WhatsApp") ? lead.nombre.split(" ")[0] : "";
+      var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : 0;
+      var withinWindow = anchorTime && now - anchorTime < WA_24H_WINDOW_MS;
+      if (withinWindow) {
+        var text = "Hola" + (nombre ? " " + nombre : "") + ", encontramos algo en Zona-INNmueble que podr\xEDa conectar con lo que buscabas: " + descripcion + ". Te comparto el link para que lo veas: " + url;
+        await sendWhatsAppMessage(env, lead.wa_from, text);
+      } else {
+        await sendWhatsAppTemplateMessage(env, lead.wa_from, WA_NEWLISTING_TEMPLATE_NAME, WA_NEWLISTING_TEMPLATE_LANG, [nombre || "de nuevo", descripcion]);
+      }
+      lead.notifiedListings.push(prop.id);
+      if (lead.notifiedListings.length > 20) lead.notifiedListings = lead.notifiedListings.slice(-20);
+      changed = true;
+    }
+    if (changed) await env.DB.put("leads", JSON.stringify(leads));
+  } catch (e) {
+    await logWaError(env, "notifyMatchingLeadsForNewProperty", e);
+  }
+}
+__name(notifyMatchingLeadsForNewProperty, "notifyMatchingLeadsForNewProperty");
 __name(sendFollowUps, "sendFollowUps");
 var WA_SCHEDULING_GUARDRAIL_MESSAGE = "Para coordinar fechas, horarios o un encuentro, prefiero que lo confirme directamente un asesor de Zona-INNmueble contigo -- en breve te contacta. Mientras tanto, cuentame que tipo de propiedad te interesa.";
 function violatesSchedulingGuardrail(text) {
@@ -2497,6 +2572,7 @@ var index_default = {
       data2.push(body2);
       await env.DB.put("propiedades", JSON.stringify(data2));
       ctx.waitUntil(triggerRebuild());
+      ctx.waitUntil(notifyMatchingLeadsForNewProperty(env, body2));
       return jsonRes({ ok: true, id: body2.id });
     }
     if (method === "PUT" && path.startsWith("/api/propiedades/")) {
@@ -2916,6 +2992,30 @@ var index_default = {
       });
       var ltData = await ltRes.json().catch(function() { return null; });
       return jsonRes({ status: ltRes.status, waba_id: ltWabaId, meta_response: ltData });
+    }
+    if (method === "POST" && path === "/api/whatsapp/create-template") {
+      var ctToken = new URL(request.url).searchParams.get("token");
+      var ctVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
+      if (ctToken !== ctVerify) return jsonRes({ error: "no autorizado" }, 403);
+      var ctWaToken = env.WHATSAPP_TOKEN;
+      if (!ctWaToken) return jsonRes({ error: "WHATSAPP_TOKEN no configurado" }, 500);
+      var ctWabaId = env.WHATSAPP_WABA_ID || "1700973914498013";
+      var ctRes = await fetch("https://graph.facebook.com/v21.0/" + ctWabaId + "/message_templates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + ctWaToken },
+        body: JSON.stringify({
+          name: WA_NEWLISTING_TEMPLATE_NAME,
+          language: WA_NEWLISTING_TEMPLATE_LANG,
+          category: "MARKETING",
+          components: [{
+            type: "BODY",
+            text: "Hola {{1}}, tenemos disponible {{2}} en Zona-INNmueble, algo que podr\xEDa conectar con lo que buscabas. Escr\xEDbeme si quieres que te comparta los detalles.",
+            example: { body_text: [["Jorge", "una casa en Zona 14"]] }
+          }]
+        })
+      });
+      var ctData = await ctRes.json().catch(function() { return null; });
+      return jsonRes({ status: ctRes.status, waba_id: ctWabaId, meta_response: ctData });
     }
     if (method === "POST" && path === "/api/whatsapp/webhook") {
       var waBody;
