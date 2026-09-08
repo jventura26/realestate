@@ -3160,6 +3160,15 @@ var index_default = {
       await markHumanTookOver(env, pzPhone);
       return jsonRes({ ok: true, phone: pzPhone, paused: true });
     }
+    if (method === "GET" && path === "/api/whatsapp/reset-history") {
+      var rhToken = new URL(request.url).searchParams.get("token");
+      var rhVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
+      if (rhToken !== rhVerify) return jsonRes({ error: "no autorizado" }, 403);
+      var rhPhone = (new URL(request.url).searchParams.get("phone") || "").replace(/[^0-9]/g, "");
+      if (!rhPhone) return jsonRes({ error: "falta ?phone= (solo digitos, sin +)" }, 400);
+      await env.DB.delete("wa_convo:" + rhPhone);
+      return jsonRes({ ok: true, phone: rhPhone, mensaje: "Memoria de conversacion borrada. El proximo mensaje de este numero se trata como contacto nuevo." });
+    }
     if (method === "GET" && path === "/api/whatsapp/backfill-followups") {
       var bfToken = new URL(request.url).searchParams.get("token");
       var bfVerify = env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026";
