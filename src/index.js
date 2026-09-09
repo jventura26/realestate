@@ -239,10 +239,23 @@ var WA_GENERIC_SHORT_NAMES = [
   "zona 10", "zona 14", "zona 15", "zona 16", "cayala", "fraijanes",
   "carretera a el salvador", "casa", "finca", "terreno", "apartamento"
 ];
+var WA_TITLE_FILLER_PREFIXES = [
+  /^casa\s+en\s+/i, /^residencia\s+exclusiva\s+en\s+/i, /^residencia\s+exclusiva\s+/i,
+  /^residencia\s+exclusiva\s+terreno\s+en\s+/i, /^residencial\s+/i
+];
 function getShortPropertyName(titulo) {
   return (titulo || "").split("|")[0].trim();
 }
 __name(getShortPropertyName, "getShortPropertyName");
+function getCorePropertyName(titulo) {
+  var corto = getShortPropertyName(titulo);
+  for (var i = 0; i < WA_TITLE_FILLER_PREFIXES.length; i++) {
+    var sinPrefijo = corto.replace(WA_TITLE_FILLER_PREFIXES[i], "").trim();
+    if (sinPrefijo !== corto) return sinPrefijo;
+  }
+  return corto;
+}
+__name(getCorePropertyName, "getCorePropertyName");
 function isMatchableShortName(corto) {
   var norm = stripAccents(corto || "").toLowerCase().trim();
   if (norm.length < 6) return false;
@@ -261,6 +274,11 @@ function matchCatalogPropertyMention(catalogo, text) {
       var cortoNorm = stripAccents(corto).toLowerCase();
       if (t.indexOf(cortoNorm) >= 0) return catalogo[i].titulo;
     }
+    var nucleo = getCorePropertyName(catalogo[i].titulo);
+    if (nucleo !== corto && isMatchableShortName(nucleo)) {
+      var nucleoNorm = stripAccents(nucleo).toLowerCase();
+      if (t.indexOf(nucleoNorm) >= 0) return catalogo[i].titulo;
+    }
   }
   return null;
 }
@@ -275,6 +293,10 @@ function matchAllCatalogPropertyMentions(catalogo, text, maxResults) {
     if (!matched) {
       var corto = getShortPropertyName(catalogo[i].titulo);
       if (isMatchableShortName(corto) && t.indexOf(stripAccents(corto).toLowerCase()) >= 0) matched = true;
+      if (!matched) {
+        var nucleo = getCorePropertyName(catalogo[i].titulo);
+        if (nucleo !== corto && isMatchableShortName(nucleo) && t.indexOf(stripAccents(nucleo).toLowerCase()) >= 0) matched = true;
+      }
     }
     if (matched) {
       out.push(catalogo[i].titulo);
@@ -796,11 +818,11 @@ async function maybeSendRecommendedPhotos(env, from, reply, catalogo, history) {
     var priorText = stripAccents((history || []).slice(-6).map(function(h) { return h.content; }).join(" ")).toLowerCase();
     for (var i = 0; i < mentioned.length; i++) {
       var titulo = mentioned[i];
-      var cortoNorm = stripAccents(getShortPropertyName(titulo)).toLowerCase();
-      if (cortoNorm && priorText.indexOf(cortoNorm) >= 0) continue;
+      var nucleoNorm = stripAccents(getCorePropertyName(titulo)).toLowerCase();
+      if (nucleoNorm && priorText.indexOf(nucleoNorm) >= 0) continue;
       var media = await getPropertyMediaByTitle(env, titulo);
       if (!media || !media.imagenUrl) continue;
-      var caption = getShortPropertyName(media.titulo) + (media.precioFormateado ? " -- " + media.precioFormateado : "");
+      var caption = getCorePropertyName(media.titulo) + (media.precioFormateado ? " -- " + media.precioFormateado : "");
       await sendWhatsAppImage(env, from, toDirectDriveLink(media.imagenUrl), caption);
     }
   } catch (e) {
