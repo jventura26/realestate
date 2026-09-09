@@ -243,6 +243,20 @@ function matchCatalogPropertyMention(catalogo, text) {
   }
   return null;
 }
+function matchAllCatalogPropertyMentions(catalogo, text, maxResults) {
+  var t = (text || "").toLowerCase();
+  var out = [];
+  if (!t || !catalogo || !catalogo.length) return out;
+  for (var i = 0; i < catalogo.length; i++) {
+    var titulo = (catalogo[i].titulo || "").toLowerCase();
+    if (titulo && t.indexOf(titulo) >= 0) {
+      out.push(catalogo[i].titulo);
+      if (out.length >= (maxResults || 2)) break;
+    }
+  }
+  return out;
+}
+__name(matchAllCatalogPropertyMentions, "matchAllCatalogPropertyMentions");
 __name(matchCatalogPropertyMention, "matchCatalogPropertyMention");
 async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo) {
   try {
@@ -667,7 +681,7 @@ async function getPropertyMediaByTitle(env, titulo) {
     var t = titulo.toLowerCase();
     var match = data.find(function(p) { return (p.titulo || "").toLowerCase() === t; });
     if (!match) return null;
-    return { pdfUrl: match.pdfUrl || "", videoUrl: match.videoUrl || match.video || "", titulo: match.titulo };
+    return { pdfUrl: match.pdfUrl || "", videoUrl: match.videoUrl || match.video || "", imagenUrl: match.mainImage || match.imagen || "", precioFormateado: match.priceFormatted || match.precio || "", titulo: match.titulo };
   } catch (e) {
     return null;
   }
@@ -724,6 +738,48 @@ async function sendWhatsAppVideo(env, to, link, caption) {
   }
 }
 __name(sendWhatsAppVideo, "sendWhatsAppVideo");
+async function sendWhatsAppImage(env, to, link, caption) {
+  var token = env.WHATSAPP_TOKEN;
+  var phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID || "1276726378858448";
+  if (!token || !link) return;
+  try {
+    var res = await fetch("https://graph.facebook.com/v21.0/" + phoneNumberId + "/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to,
+        type: "image",
+        image: { link, caption: caption || "" }
+      })
+    });
+    if (!res.ok) {
+      var errBody = await res.text().catch(function() { return ""; });
+      await logWaError(env, "sendWhatsAppImage", "Meta API " + res.status + " (to=" + to + "): " + errBody.slice(0, 500));
+    }
+  } catch (e) {
+    await logWaError(env, "sendWhatsAppImage", e);
+  }
+}
+__name(sendWhatsAppImage, "sendWhatsAppImage");
+async function maybeSendRecommendedPhotos(env, from, reply, catalogo, history) {
+  try {
+    var mentioned = matchAllCatalogPropertyMentions(catalogo, reply, 2);
+    if (!mentioned.length) return;
+    var priorText = (history || []).slice(-6).map(function(h) { return h.content; }).join(" ").toLowerCase();
+    for (var i = 0; i < mentioned.length; i++) {
+      var titulo = mentioned[i];
+      if (priorText.indexOf(titulo.toLowerCase()) >= 0) continue;
+      var media = await getPropertyMediaByTitle(env, titulo);
+      if (!media || !media.imagenUrl) continue;
+      var caption = media.titulo + (media.precioFormateado ? " -- " + media.precioFormateado : "");
+      await sendWhatsAppImage(env, from, toDirectDriveLink(media.imagenUrl), caption);
+    }
+  } catch (e) {
+    await logWaError(env, "maybeSendRecommendedPhotos", e);
+  }
+}
+__name(maybeSendRecommendedPhotos, "maybeSendRecommendedPhotos");
 async function maybeSendPropertyMedia(env, from, userText, reply, catalogo, history) {
   try {
     if (!WA_MEDIA_REQUEST_RE.test(userText)) return;
@@ -782,6 +838,7 @@ async function processWhatsAppTurn(env, from, userText, contactName) {
     reply = WA_SCHEDULING_GUARDRAIL_MESSAGE;
   }
   await sendWhatsAppMessage(env, from, reply);
+  maybeSendRecommendedPhotos(env, from, reply, catalogo, history).catch(function() {});
   maybeSendPropertyMedia(env, from, userText, reply, catalogo, history).catch(function() {});
   history.push({ role: "user", content: userText });
   history.push({ role: "assistant", content: reply });
