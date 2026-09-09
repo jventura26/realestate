@@ -235,22 +235,48 @@ function extractLeadSignals(text) {
   return { zona, tipo, presupuesto };
 }
 __name(extractLeadSignals, "extractLeadSignals");
+var WA_GENERIC_SHORT_NAMES = [
+  "zona 10", "zona 14", "zona 15", "zona 16", "cayala", "fraijanes",
+  "carretera a el salvador", "casa", "finca", "terreno", "apartamento"
+];
+function getShortPropertyName(titulo) {
+  return (titulo || "").split("|")[0].trim();
+}
+__name(getShortPropertyName, "getShortPropertyName");
+function isMatchableShortName(corto) {
+  var norm = stripAccents(corto || "").toLowerCase().trim();
+  if (norm.length < 6) return false;
+  if (WA_GENERIC_SHORT_NAMES.indexOf(norm) >= 0) return false;
+  return true;
+}
+__name(isMatchableShortName, "isMatchableShortName");
 function matchCatalogPropertyMention(catalogo, text) {
-  var t = (text || "").toLowerCase();
+  var t = stripAccents(text || "").toLowerCase();
   if (!t || !catalogo || !catalogo.length) return null;
   for (var i = 0; i < catalogo.length; i++) {
-    var titulo = (catalogo[i].titulo || "").toLowerCase();
-    if (titulo && (t.indexOf(titulo) >= 0 || titulo.indexOf(t) >= 0)) return catalogo[i].titulo;
+    var tituloCompleto = (catalogo[i].titulo || "").toLowerCase();
+    if (tituloCompleto && (t.indexOf(stripAccents(tituloCompleto)) >= 0 || stripAccents(tituloCompleto).indexOf(t) >= 0)) return catalogo[i].titulo;
+    var corto = getShortPropertyName(catalogo[i].titulo);
+    if (isMatchableShortName(corto)) {
+      var cortoNorm = stripAccents(corto).toLowerCase();
+      if (t.indexOf(cortoNorm) >= 0) return catalogo[i].titulo;
+    }
   }
   return null;
 }
 function matchAllCatalogPropertyMentions(catalogo, text, maxResults) {
-  var t = (text || "").toLowerCase();
+  var t = stripAccents(text || "").toLowerCase();
   var out = [];
   if (!t || !catalogo || !catalogo.length) return out;
   for (var i = 0; i < catalogo.length; i++) {
-    var titulo = (catalogo[i].titulo || "").toLowerCase();
-    if (titulo && t.indexOf(titulo) >= 0) {
+    var tituloCompleto = (catalogo[i].titulo || "").toLowerCase();
+    var matched = false;
+    if (tituloCompleto && t.indexOf(stripAccents(tituloCompleto)) >= 0) matched = true;
+    if (!matched) {
+      var corto = getShortPropertyName(catalogo[i].titulo);
+      if (isMatchableShortName(corto) && t.indexOf(stripAccents(corto).toLowerCase()) >= 0) matched = true;
+    }
+    if (matched) {
       out.push(catalogo[i].titulo);
       if (out.length >= (maxResults || 2)) break;
     }
@@ -767,13 +793,14 @@ async function maybeSendRecommendedPhotos(env, from, reply, catalogo, history) {
   try {
     var mentioned = matchAllCatalogPropertyMentions(catalogo, reply, 2);
     if (!mentioned.length) return;
-    var priorText = (history || []).slice(-6).map(function(h) { return h.content; }).join(" ").toLowerCase();
+    var priorText = stripAccents((history || []).slice(-6).map(function(h) { return h.content; }).join(" ")).toLowerCase();
     for (var i = 0; i < mentioned.length; i++) {
       var titulo = mentioned[i];
-      if (priorText.indexOf(titulo.toLowerCase()) >= 0) continue;
+      var cortoNorm = stripAccents(getShortPropertyName(titulo)).toLowerCase();
+      if (cortoNorm && priorText.indexOf(cortoNorm) >= 0) continue;
       var media = await getPropertyMediaByTitle(env, titulo);
       if (!media || !media.imagenUrl) continue;
-      var caption = media.titulo + (media.precioFormateado ? " -- " + media.precioFormateado : "");
+      var caption = getShortPropertyName(media.titulo) + (media.precioFormateado ? " -- " + media.precioFormateado : "");
       await sendWhatsAppImage(env, from, toDirectDriveLink(media.imagenUrl), caption);
     }
   } catch (e) {
