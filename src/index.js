@@ -184,6 +184,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "13. SIEMPRE que menciones o recomiendes una propiedad especifica por nombre, incluye su link del catalogo en el mismo mensaje (el que aparece al final de esa propiedad en el listado de abajo), sin excepcion -- para que la persona pueda ver fotos y detalles completos. Si mencionas DOS propiedades en el mismo mensaje, cada una lleva su propio link, no solo la primera -- cuenta cuantas propiedades mencionaste y verifica que haya el mismo numero de links antes de responder. No describas fotos ni caracteristicas visuales que no puedes mostrar.",
     "14. El precio de cada propiedad en el catalogo ya viene con su simbolo de moneda correcto (Q para quetzales, $ para dolares) -- usa el precio exactamente como aparece, nunca cambies ni asumas el simbolo de moneda.",
     "15. Detecta el idioma del ULTIMO mensaje de la persona: si esta escrito en ingles, responde completamente en ingles manteniendo el mismo tono premium y consultivo (nunca mezcles ingles y espanol en un mismo mensaje). Si esta en espanol, responde en espanol. Si el idioma no es claro, responde en espanol por defecto.",
+    "16. Dirigete a la persona SIEMPRE de 'usted' -- nunca de 'tu' ni de 'vos', ni en verbos, pronombres o posesivos. Correcto: 'tiene', 'le recomiendo', 'su presupuesto', '\xBFle interesa?', 'cuenteme'. PROHIBIDO: 'tienes', 'te recomiendo', 'tu presupuesto', '\xBFte interesa?', 'preferis', 'sos', 'vos', 'quieres', 'quieras'. Antes de enviar cualquier mensaje, revisalo completo buscando conjugaciones de tu o vos -- si encuentras una sola, corrigela a usted antes de responder. Este trato formal aplica siempre, incluso si la persona te tutea o te habla de vos primero -- nunca imites su registro informal.",
     "",
     "CATALOGO ACTIVO (unica fuente de verdad):",
     catalogoTexto
@@ -348,14 +349,14 @@ var WA_ALERT_PHONE_DEFAULT = "50247692366";
 var WA_REVIEW_DELAY_DAYS = 10;
 var WA_REVIEW_URL_DEFAULT = "https://g.page/r/REEMPLAZAR-CON-TU-LINK-DE-RESENAS/review";
 var DEFAULT_FOLLOWUP_TEMPLATES = [
-  "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando quieras, aqu\xED estoy.",
-  "A veces la propiedad correcta aparece cuando uno menos la busca. Si quieres, te comparto otra opci\xF3n que podr\xEDa interesarte.",
-  "\xBFSigues buscando, {nombre}, o ya diste con algo? Cualquiera sea la respuesta, aqu\xED sigo disponible.",
-  "Ha pasado un tiempo. Si tu b\xFAsqueda sigue en pie, con gusto retomamos donde quedamos -- y si no, fue un gusto haber conversado.",
-  "Ha pasado un tiempo, {nombre}. El mercado en las zonas que te interesan sigue movi\xE9ndose -- si tu b\xFAsqueda contin\xFAa, con gusto te cuento qu\xE9 ha cambiado.",
-  "Las mejores decisiones rara vez se apresuran. Si en alg\xFAn momento quieres retomar la conversaci\xF3n sobre tu propiedad ideal, aqu\xED sigo disponible.",
-  "\xBFSigue vigente tu inter\xE9s, {nombre}? El panorama de propiedades premium cambia con el tiempo, y puede que hoy haya algo distinto para mostrarte.",
-  "Cierro este seguimiento por ahora, {nombre}, pero la puerta sigue abierta. Cuando quieras retomar la b\xFAsqueda, aqu\xED estar\xE9."
+  "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando guste, aqu\xED estoy.",
+  "A veces la propiedad correcta aparece cuando uno menos la busca. Si gusta, le comparto otra opci\xF3n que podr\xEDa interesarle.",
+  "\xBFSigue buscando, {nombre}, o ya dio con algo? Cualquiera sea la respuesta, aqu\xED sigo disponible.",
+  "Ha pasado un tiempo. Si su b\xFAsqueda sigue en pie, con gusto retomamos donde quedamos -- y si no, fue un gusto haber conversado.",
+  "Ha pasado un tiempo, {nombre}. El mercado en las zonas que le interesan sigue movi\xE9ndose -- si su b\xFAsqueda contin\xFAa, con gusto le cuento qu\xE9 ha cambiado.",
+  "Las mejores decisiones rara vez se apresuran. Si en alg\xFAn momento gusta retomar la conversaci\xF3n sobre su propiedad ideal, aqu\xED sigo disponible.",
+  "\xBFSigue vigente su inter\xE9s, {nombre}? El panorama de propiedades premium cambia con el tiempo, y puede que hoy haya algo distinto para mostrarle.",
+  "Cierro este seguimiento por ahora, {nombre}, pero la puerta sigue abierta. Cuando guste retomar la b\xFAsqueda, aqu\xED estar\xE9."
 ];
 async function getFollowUpTemplates(env) {
   try {
