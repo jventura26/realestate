@@ -417,6 +417,7 @@ async function getFollowUpTemplates(env) {
   return DEFAULT_FOLLOWUP_TEMPLATES;
 }
 __name(getFollowUpTemplates, "getFollowUpTemplates");
+var WA_FOLLOWUP_MAX_SENDS_PER_RUN = 35;
 async function sendFollowUps(env) {
   try {
     var raw = await env.DB.get("leads");
@@ -425,10 +426,11 @@ async function sendFollowUps(env) {
     var templates = await getFollowUpTemplates(env);
     var now = Date.now();
     var changed = false;
+    var sentCount = 0;
     for (var i = 0; i < leads.length; i++) {
+      if (sentCount >= WA_FOLLOWUP_MAX_SENDS_PER_RUN) break;
       var lead = leads[i];
       if (!lead.wa_from) continue;
-      if (await isAiPausedForHuman(env, lead.wa_from)) continue;
       if (WA_FOLLOWUP_STOP_STAGES.indexOf(lead.stage) >= 0) {
         if (lead.followUpStatus !== "stopped") { lead.followUpStatus = "stopped"; changed = true; }
         continue;
@@ -446,6 +448,12 @@ async function sendFollowUps(env) {
       if (lead.followUpStatus !== "active") continue;
       if (typeof lead.followUpStage !== "number" || lead.followUpStage >= WA_FOLLOWUP_INTERVALS_DAYS.length) continue;
       if (!lead.nextFollowUpAt || new Date(lead.nextFollowUpAt).getTime() > now) continue;
+      // El chequeo de pausa-por-humano cuesta una subrequest -- se hace hasta
+      // aqui, ya filtrados los leads que en realidad estan en fecha de recibir
+      // seguimiento, para no gastar el limite de subrequests del Worker
+      // revisando leads que ni siquiera les toca hoy (con 300+ leads, revisar
+      // TODOS antes de filtrar agotaba el limite y tronaba el cron completo).
+      if (await isAiPausedForHuman(env, lead.wa_from)) continue;
       var stageIdx = lead.followUpStage;
       var tpl = templates[stageIdx] || DEFAULT_FOLLOWUP_TEMPLATES[stageIdx];
       if (!tpl) continue;
@@ -469,6 +477,7 @@ async function sendFollowUps(env) {
         lead.nextFollowUpAt = new Date(anchorTime + WA_FOLLOWUP_INTERVALS_DAYS[lead.followUpStage] * 864e5).toISOString();
       }
       changed = true;
+      sentCount++;
     }
     if (changed) await env.DB.put("leads", JSON.stringify(leads));
   } catch (e) {
