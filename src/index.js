@@ -127,7 +127,7 @@ __name(buildWhatsAppCatalogContext, "buildWhatsAppCatalogContext");
 var WA_HISTORY_TTL = 60 * 60 * 24;
 var WA_HISTORY_MAX_TURNS = 8;
 var WA_FILLER_TIMEOUT_MS = 8000;
-var WA_FILLER_MESSAGE = "Dame un momento, estoy revisando esto con cuidado para darte una respuesta precisa.";
+var WA_FILLER_MESSAGE = "Perm\u00EDtame un momento, estoy revisando esto con cuidado para darle una respuesta precisa.";
 async function getWaHistory(env, phone) {
   try {
     var raw = await env.DB.get("wa_convo:" + phone);
@@ -150,7 +150,63 @@ var DEFAULT_BRAND_VOICE = [
   "Genera curiosidad, nunca presion. No suenes a anuncio. Suena a una conversacion real entre dos personas que se respetan.",
   'Inspirate en este tipo de frases sin repetirlas siempre igual: "La mayoria busca casa. Pocos encuentran tranquilidad.", "Hay propiedades que simplemente se sienten diferentes.", "Mas que una propiedad. Un estilo de vida.", "Pocos saben donde estan estas oportunidades.", "Analiza antes de decidir.", "Compra, renta o invierte con claridad.", "La ubicacion tambien se invierte."'
 ].join("\n");
+var VALORES_ZONA_URL = "https://zona-innmueble.com/valor-por-zona";
+var VALORES_ZONA_KV = "valores_zona_txt";
+function fmtUsd(n) {
+  return "US$" + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+__name(fmtUsd, "fmtUsd");
+function valoresZonaTexto(D) {
+  var out = ["Datos al " + (D.fecha || "?") + ", " + (D.n_anuncios || "?") + " propiedades en venta y " + (D.n_rentas || "?") + " en alquiler. Formato: tipo, m2 = precio tipico por metro cuadrado (rango entre parentesis; de construccion para casas y apartamentos, de terreno para terrenos y fincas), tipico = precio total tipico, renta = renta mensual tipica, rend = rendimiento bruto anual de alquiler."];
+  var lugares = D.lugares || [];
+  for (var i = 0; i < lugares.length; i++) {
+    var l = lugares[i];
+    var tipos = l.tipos || {};
+    var partes = [];
+    ["Apartamento", "Casa", "Terreno", "Finca"].forEach(function(t) {
+      var v = tipos[t];
+      if (!v || !v.m2 || !v.n_m2 || v.n_m2 < 5) return;
+      var p = t + " m2 " + fmtUsd(v.m2[1]) + " (" + fmtUsd(v.m2[0]).slice(3) + "-" + fmtUsd(v.m2[2]).slice(3) + ")";
+      if (v.precio) p += ", tipico " + fmtUsd(v.precio[1]);
+      if (v.renta && v.n_renta >= 5) p += ", renta " + fmtUsd(v.renta[1]) + "/mes";
+      if (v.rend) p += ", rend " + (v.rend * 100).toFixed(1) + "%";
+      partes.push(p);
+    });
+    if (!partes.length) continue;
+    var alias = (l.alias && l.alias.length) ? " (" + l.alias.slice(0, 3).join(", ") + ")" : "";
+    out.push("- " + l.nombre + alias + " | " + partes.join(" | "));
+  }
+  return out.join("\n").slice(0, 16000);
+}
+__name(valoresZonaTexto, "valoresZonaTexto");
+async function getValoresZonaTexto(env) {
+  try {
+    var cached = await env.DB.get(VALORES_ZONA_KV);
+    if (cached !== null && cached !== undefined) return cached;
+  } catch (e) {}
+  var txt = "";
+  try {
+    var res = await fetch(VALORES_ZONA_URL, { redirect: "follow", cf: { cacheTtl: 3600 } });
+    if (res.ok) {
+      var html = await res.text();
+      var i0 = html.indexOf("const D = ");
+      if (i0 >= 0) {
+        var i1 = html.indexOf("\n", i0);
+        var raw = html.slice(i0 + 10, i1 < 0 ? void 0 : i1).trim().replace(/;$/, "");
+        txt = valoresZonaTexto(JSON.parse(raw));
+      }
+    }
+  } catch (e2) {
+    txt = "";
+  }
+  try {
+    await env.DB.put(VALORES_ZONA_KV, txt, { expirationTtl: txt ? 43200 : 3600 });
+  } catch (e3) {}
+  return txt;
+}
+__name(getValoresZonaTexto, "getValoresZonaTexto");
 async function buildWhatsAppSystemPrompt(env, catalogo) {
+  var valoresTexto = await getValoresZonaTexto(env);
   var catalogoTexto = catalogo.length ? catalogo.map(function(p) {
     var precioTxt = String(p.precio || "").trim();
     if (precioTxt && !/^[Q$]/.test(precioTxt)) precioTxt = "Q" + precioTxt;
@@ -167,7 +223,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "",
     "REGLAS ESTRICTAS (no negociables):",
     "1. Solo puedes hablar de las propiedades listadas abajo. Nunca inventes precios, direcciones, disponibilidad ni caracteristicas que no esten en esta lista.",
-    "2. Si preguntan por algo que no esta en el catalogo (otra zona, otro presupuesto, otro tipo), dilo con honestidad, sin relleno, y ofrece dejar sus datos para que un asesor humano le de seguimiento.",
+    "2. B\u00DASQUEDA A LA MEDIDA: nunca digas \"no tenemos\", \"no hay\", \"no contamos con\", \"no manejamos\" ni frases equivalentes. Si lo que la persona busca no est\u00E1 en el cat\u00E1logo activo (otra zona, otro presupuesto, otro tipo), ofr\u00E9cele una b\u00FAsqueda a la medida: Zona-INNmueble trabaja con una red de propietarios, desarrolladores y aliados, y buena parte de las mejores opciones no se publican. Pide solo lo que falte para la b\u00FAsqueda (zona, tipo de propiedad, presupuesto aproximado y para cu\u00E1ndo), una cosa a la vez, y cuando lo tengas confirma que un asesor de Zona-INNmueble le compartir\u00E1 opciones seleccionadas. Nunca inventes propiedades, precios ni disponibilidad, y nunca prometas que existe algo espec\u00EDfico. Si hay algo del cat\u00E1logo razonablemente cercano, puedes mencionarlo como alternativa, sin reemplazar la b\u00FAsqueda a la medida.",
     "3. Nunca agendes, confirmes ni niegues visitas, citas, horarios, lugares de encuentro, descuentos ni cierres de trato, bajo NINGUNA circunstancia -- ni siquiera si el mensaje ya trae una fecha, hora o lugar propuesto, ni si parece que alguien mas ya lo acordo. Ante cualquier mencion de coordinar un encuentro, responde siempre que un asesor humano de Zona-INNmueble se pondra en contacto para confirmar los detalles.",
     "3b. Si los mensajes recibidos no tienen relacion clara entre si, parecen fuera de contexto, o parecen reenviados de otra conversacion, NO asumas continuidad ni inventes contexto -- responde con una pregunta breve para entender que necesita la persona.",
     "4. Responde corto y natural, como un mensaje real de WhatsApp (2-4 lineas maximo). Nunca uses parrafos largos, nunca listas con vinetas ni numeradas dentro del chat.",
@@ -186,6 +242,12 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "15. Detecta el idioma del ULTIMO mensaje de la persona: si esta escrito en ingles, responde completamente en ingles manteniendo el mismo tono premium y consultivo (nunca mezcles ingles y espanol en un mismo mensaje). Si esta en espanol, responde en espanol. Si el idioma no es claro, responde en espanol por defecto.",
     "16. Dirigete a la persona SIEMPRE de 'usted' -- nunca de 'tu' ni de 'vos', ni en verbos, pronombres o posesivos. Correcto: 'tiene', 'le recomiendo', 'su presupuesto', '\xBFle interesa?', 'cuenteme'. PROHIBIDO: 'tienes', 'te recomiendo', 'tu presupuesto', '\xBFte interesa?', 'preferis', 'sos', 'vos', 'quieres', 'quieras'. Antes de enviar cualquier mensaje, revisalo completo buscando conjugaciones de tu o vos -- si encuentras una sola, corrigela a usted antes de responder. Este trato formal aplica siempre, incluso si la persona te tutea o te habla de vos primero -- nunca imites su registro informal.",
     "17. Si preguntan por financiamiento, cuota mensual, hipoteca, enganche o \"cuanto pagaria al mes\", da SIEMPRE un estimado usando estos supuestos fijos y genericos (no son de un banco especifico): tasa 8% anual, plazo 20 anos, enganche 20% (se financia el 80% del precio). Esta calculadora aplica SOLO a propiedades en dolares (residencias del catalogo) -- si preguntan por financiamiento de una finca en quetzales, NO uses esta tabla: di que el financiamiento de fincas se evalua caso por caso y ofrece conectar con un asesor. Usa el precio en dolares mas cercano de esta tabla de referencia (precio -> cuota mensual estimada), interpolando si cae entre dos filas: $100,000 -> $669/mes | $150,000 -> $1,004/mes | $200,000 -> $1,338/mes | $250,000 -> $1,673/mes | $300,000 -> $2,007/mes | $350,000 -> $2,342/mes | $400,000 -> $2,677/mes | $450,000 -> $3,011/mes | $500,000 -> $3,346/mes | $600,000 -> $4,015/mes | $700,000 -> $4,684/mes | $800,000 -> $5,353/mes | $900,000 -> $6,022/mes | $1,000,000 -> $6,692/mes. SIEMPRE que des este estimado, incluye la frase completa (puedes adaptar el orden pero no omitir el contenido): \"Este es un estimado referencial -- las tasas reales van de 6% a 10% segun banco y perfil, y no incluyen seguros ni gastos de formalizacion. Para una cotizacion real, un asesor puede platicar los detalles con usted.\" Nunca prometas una tasa exacta ni una aprobacion.",
+    "18. HERRAMIENTA \"\u00BFCU\u00C1NTO VALE SU ZONA?\": puedes sugerir la herramienta gratuita https://zona-innmueble.com/valor-por-zona?utm_source=whatsapp&utm_medium=asistente cuando (a) la persona quiere vender o rentar su propiedad y pregunta cu\u00E1nto vale o en cu\u00E1nto ponerla; (b) pregunta cu\u00E1nto cuesta el metro cuadrado o cu\u00E1nto renta una propiedad en una zona; (c) est\u00E1 comparando zonas para invertir; o (d) acabas de ofrecerle una b\u00FAsqueda a la medida, como algo \u00FAtil mientras tanto. Menci\u00F3nala como m\u00E1ximo una vez por conversaci\u00F3n, nunca en el primer mensaje, y aclara que muestra precios publicados, no precios de cierre. Si la persona es propietaria, ofr\u00E9cele adem\u00E1s un an\u00E1lisis personalizado de su propiedad con un asesor.",
+    "19. VALORES DE REFERENCIA POR ZONA: abajo tienes los valores por zona que publica Zona-INNmueble (si el bloque viene vac\u00EDo, no des cifras). \u00DAsalos solo cuando pregunten por el valor del metro cuadrado, la renta t\u00EDpica o el rendimiento de una zona, o cuando comparen zonas. Da la cifra t\u00EDpica redondeada y, si ayuda, el rango; di siempre que son precios publicados (no de cierre ni un aval\u00FAo). Nunca los uses para valuar una propiedad espec\u00EDfica de la persona: para eso ofrece el an\u00E1lisis con un asesor. Nunca los presentes como propiedades disponibles. Si la zona no aparece, no inventes: ofrece el an\u00E1lisis con un asesor.",
+    "20. MARCA INTERNA: cada vez que ofrezcas o confirmes una b\u00FAsqueda a la medida (regla 2), agrega al final de tu mensaje, en una l\u00EDnea aparte, exactamente el texto [BUSQUEDA_MEDIDA]. Es una marca interna que el sistema quita antes de enviar el mensaje; nunca la expliques ni la uses en otro caso.",
+    "",
+    "VALORES DE REFERENCIA POR ZONA (precios publicados, no de cierre):",
+    valoresTexto || "(sin datos disponibles en este momento)",
     "",
     "CATALOGO ACTIVO (unica fuente de verdad):",
     catalogoTexto
@@ -308,7 +370,8 @@ function matchAllCatalogPropertyMentions(catalogo, text, maxResults) {
 }
 __name(matchAllCatalogPropertyMentions, "matchAllCatalogPropertyMentions");
 __name(matchCatalogPropertyMention, "matchCatalogPropertyMention");
-async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo) {
+async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo, opts) {
+  opts = opts || {};
   try {
     var raw = await env.DB.get("leads");
     var leads = raw ? JSON.parse(raw) : [];
@@ -342,6 +405,15 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo) {
     if (signals.presupuesto && lead.presupuesto !== signals.presupuesto) { lead.presupuesto = signals.presupuesto; changed = true; }
     if (propMention && lead.propiedad !== propMention) { lead.propiedad = propMention; changed = true; }
     if (contactName && lead.nombre === "Contacto WhatsApp" && contactName !== lead.nombre) { lead.nombre = contactName; changed = true; }
+    var nuevaBusquedaMedida = false;
+    if (opts.busquedaMedida && !lead.busqueda_medida) {
+      lead.busqueda_medida = true;
+      lead.busqueda_medida_at = (/* @__PURE__ */ new Date()).toISOString();
+      lead.etiquetas = Array.isArray(lead.etiquetas) ? lead.etiquetas : [];
+      if (lead.etiquetas.indexOf("B\u00FAsqueda a la medida") < 0) lead.etiquetas.push("B\u00FAsqueda a la medida");
+      nuevaBusquedaMedida = true;
+      changed = true;
+    }
     var prevTier = lead.lead_tier;
     var scoring = computeLeadScore({
       presupuesto: lead.presupuesto,
@@ -354,7 +426,8 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo) {
     lead.lead_tier = scoring.tier;
     if (isNew) leads.push(lead); else leads[idx] = lead;
     await env.DB.put("leads", JSON.stringify(leads));
-    var shouldNotify = isNew || (changed && lead.lead_tier !== prevTier);
+    var shouldNotify = isNew || nuevaBusquedaMedida || (changed && lead.lead_tier !== prevTier);
+    if (nuevaBusquedaMedida) notifyBusquedaMedida(env, from, lead).catch(function() {});
     if (shouldNotify) {
       var NOTIFY_URL = env.NOTIFY_WEBHOOK || NOTIFY_WEBHOOK || "";
       if (NOTIFY_URL) {
@@ -370,6 +443,7 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo) {
           fecha: lead.fecha,
           lead_score: lead.lead_score,
           lead_tier: lead.lead_tier,
+          busqueda_medida: !!lead.busqueda_medida,
           whatsapp_link: "https://wa.me/" + from
         };
         try {
@@ -591,7 +665,7 @@ async function notifyMatchingLeadsForNewProperty(env, prop) {
 }
 __name(notifyMatchingLeadsForNewProperty, "notifyMatchingLeadsForNewProperty");
 __name(sendFollowUps, "sendFollowUps");
-var WA_SCHEDULING_GUARDRAIL_MESSAGE = "Para coordinar fechas, horarios o un encuentro, prefiero que lo confirme directamente un asesor de Zona-INNmueble contigo -- en breve te contacta. Mientras tanto, cuentame que tipo de propiedad te interesa.";
+var WA_SCHEDULING_GUARDRAIL_MESSAGE = "Para coordinar fechas, horarios o un encuentro, prefiero que lo confirme directamente con usted un asesor de Zona-INNmueble; en breve le contacta. Mientras tanto, cu\u00E9nteme qu\u00E9 tipo de propiedad le interesa.";
 function violatesSchedulingGuardrail(text) {
   var t = (text || "").toLowerCase();
   var schedulingVerbs = /(coordinamos|coordinar|confirmo|confirmado|confirmamos|agendamos|agendo|agendado|quedamos( a| en)|nos vemos|te espero|la reuni[o\xf3]n es|programamos|programado)/;
@@ -599,9 +673,18 @@ function violatesSchedulingGuardrail(text) {
   return schedulingVerbs.test(t) && timeRefs.test(t);
 }
 __name(violatesSchedulingGuardrail, "violatesSchedulingGuardrail");
+var NO_INVENTORY_RETRY_NOTE = "Tu respuesta anterior decia que no hay o que no tienen lo que la persona busca. Reescribela sin decir eso: ofrece una busqueda a la medida segun la regla 2, en el mismo tono y en 2-4 lineas.";
+function violatesNoInventoryRule(text) {
+  var t = stripAccents(text || "").toLowerCase();
+  return /\bno (tenemos|contamos con|manejamos|disponemos de)\b/.test(t) ||
+    /\bno hay (propiedades|opciones|nada|inventario|disponibilidad|casas|apartamentos|terrenos|fincas)\b/.test(t) ||
+    /\bno (tengo|encontre|encuentro) (propiedades|opciones|nada)\b/.test(t) ||
+    /\bno esta(mos)? disponible/.test(t) && /\b(catalogo|inventario)\b/.test(t);
+}
+__name(violatesNoInventoryRule, "violatesNoInventoryRule");
 async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
   var apiKey = env.ANTHROPIC_API_KEY;
-  if (!apiKey) return "Gracias por escribir a Zona-INNmueble. En breve un asesor te contacta directamente.";
+  if (!apiKey) return "Gracias por escribir a Zona-INNmueble. En breve un asesor le contacta directamente.";
   var messages = history.concat([{ role: "user", content: userMessage }]);
   var controller = new AbortController();
   var hardTimeout = setTimeout(function() { controller.abort(); }, 20000);
@@ -626,10 +709,10 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
     if (data && data.content && data.content[0] && data.content[0].text) {
       return data.content[0].text.trim();
     }
-    return "Gracias por tu mensaje. En un momento un asesor de Zona-INNmueble te contacta directamente.";
+    return "Gracias por su mensaje. En un momento un asesor de Zona-INNmueble le contacta directamente.";
   } catch (e) {
     clearTimeout(hardTimeout);
-    return "Gracias por tu mensaje. En un momento un asesor de Zona-INNmueble te contacta directamente.";
+    return "Gracias por su mensaje. En un momento un asesor de Zona-INNmueble le contacta directamente.";
   }
 }
 __name(askWhatsAppAssistant, "askWhatsAppAssistant");
@@ -862,6 +945,18 @@ async function maybeSendPropertyMedia(env, from, userText, reply, catalogo, hist
   }
 }
 __name(maybeSendPropertyMedia, "maybeSendPropertyMedia");
+async function notifyBusquedaMedida(env, from, lead) {
+  try {
+    var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
+    if (!alertPhone || alertPhone === from) return;
+    var det = [lead.tipo_propiedad, lead.zona_interes ? "en " + lead.zona_interes : "", lead.presupuesto ? "presupuesto " + lead.presupuesto : ""].filter(Boolean).join(", ");
+    var txt = "B\u00FAsqueda a la medida: " + (lead.nombre || "Contacto") + " (+" + from + ")" + (det ? ": " + det : "") + ". https://wa.me/" + from;
+    await sendWhatsAppMessage(env, alertPhone, txt);
+  } catch (e) {
+    await logWaError(env, "notifyBusquedaMedida", e);
+  }
+}
+__name(notifyBusquedaMedida, "notifyBusquedaMedida");
 async function notifyLeadAlert(env, from, contactName, userText) {
   try {
     var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
@@ -893,7 +988,13 @@ async function processWhatsAppTurn(env, from, userText, contactName) {
     sendWhatsAppMessage(env, from, WA_FILLER_MESSAGE).catch(function() {});
   }, WA_FILLER_TIMEOUT_MS);
   var reply = await askWhatsAppAssistant(env, systemPrompt, history, userText);
+  if (violatesNoInventoryRule(reply)) {
+    var retry = await askWhatsAppAssistant(env, systemPrompt + "\n\nIMPORTANTE: " + NO_INVENTORY_RETRY_NOTE, history, userText);
+    if (retry && !violatesNoInventoryRule(retry)) reply = retry;
+  }
   clearTimeout(fillerTimer);
+  var busquedaMedida = /\[BUSQUEDA_MEDIDA\]/i.test(reply) || /b[u\xfa]squeda a la medida/i.test(reply);
+  reply = reply.replace(/\s*\[BUSQUEDA_MEDIDA\]\s*/gi, " ").replace(/[ \t]+\n/g, "\n").trim();
   if (violatesSchedulingGuardrail(reply)) {
     reply = WA_SCHEDULING_GUARDRAIL_MESSAGE;
   }
@@ -904,7 +1005,7 @@ async function processWhatsAppTurn(env, from, userText, contactName) {
   history.push({ role: "assistant", content: reply });
   await saveWaHistory(env, from, history);
   var convoText = history.map(function(h) { return h.content; }).join(" ");
-  await upsertWhatsAppLead(env, from, contactName, convoText, catalogo);
+  await upsertWhatsAppLead(env, from, contactName, convoText, catalogo, { busquedaMedida });
 }
 __name(processWhatsAppTurn, "processWhatsAppTurn");
 var WaConversationDO = class {
@@ -947,7 +1048,7 @@ async function handleWhatsAppMessage(body, env) {
           } else if (msg.type === "audio" && msg.audio && msg.audio.id) {
             userText = await transcribeWhatsAppAudio(env, msg.audio.id);
             if (!userText) {
-              await sendWhatsAppMessage(env, from, "No pude escuchar bien tu nota de voz -- \xBFme la escribes en texto, por favor?");
+              await sendWhatsAppMessage(env, from, "No pude escuchar bien su nota de voz. \u00BFMe la podr\u00EDa escribir, por favor?");
               continue;
             }
           } else {

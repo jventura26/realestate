@@ -1738,7 +1738,7 @@ function renderLeads(mc) {
   const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'];
   const counters = {};
   stages.forEach(s => counters[s] = leads.filter(l=>(l.stage||'Nuevo')===s).length);
-  let filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  let filtered = leadFilter === 'todos' ? leads : leadFilter === 'medida' ? leads.filter(l=>l.busqueda_medida) : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
   // Ordenar por lead_score desc (los HOT primero) para que el asesor sepa a quien llamar primero
   filtered = filtered.slice().sort(function(a,b){
     var d = (b.lead_score||0) - (a.lead_score||0);
@@ -1751,6 +1751,7 @@ function renderLeads(mc) {
       <div class="lead-tabs">
         <div class="lead-tab ${leadFilter==='todos'?'active':''}" onclick="setLeadFilter('todos')">Todos (${leads.length})</div>
         ${stages.map(s=>`<div class="lead-tab ${leadFilter===s?'active':''}" onclick="setLeadFilter('${s}')">${s} (${counters[s]})</div>`).join('')}
+        <div class="lead-tab ${leadFilter==='medida'?'active':''}" onclick="setLeadFilter('medida')" title="Leads a los que el asistente ofreció una búsqueda a la medida">A la medida (${leads.filter(l=>l.busqueda_medida).length})</div>
       </div>
       <button class="btn btn-ghost btn-sm" onclick="exportLeadsCSV()"><i class="ti ti-download"></i> CSV</button>
     </div>
@@ -1766,7 +1767,7 @@ function filterLeads() {
   const stages = ['Nuevo','Contactado','Calificado','Negociaci\u00f3n','Cerrado','Perdido'];
   const counters = {};
   stages.forEach(s => counters[s] = leads.filter(l=>(l.stage||'Nuevo')===s).length);
-  let filtered = leadFilter === 'todos' ? leads : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
+  let filtered = leadFilter === 'todos' ? leads : leadFilter === 'medida' ? leads.filter(l=>l.busqueda_medida) : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
   if (q) {
     filtered = filtered.filter(l =>
       (l.nombre||'').toLowerCase().includes(q) ||
@@ -1834,6 +1835,7 @@ function buildLeadCard(l) {
         <div class="lead-name">${esc(nombre)}</div>
         <span class="badge ${stageClass}" style="margin-top:5px;display:inline-flex">${stage}</span>
         ${l.lead_tier?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;background:${l.lead_tier==='HOT'?'#FEE2E2':l.lead_tier==='WARM'?'#FEF9C3':'#F3F4F6'};color:${l.lead_tier==='HOT'?'#991B1B':l.lead_tier==='WARM'?'#854D0E':'#6B7280'}">${l.lead_tier==='HOT'?'🔥':''}${l.lead_tier} ${l.lead_score||''}</span>`:''}
+        ${l.busqueda_medida?`<span title="Búsqueda a la medida" style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;background:#FFF4E6;color:#C2410C">A la medida</span>`:''}
         ${fase?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;background:#EFF6FF;color:#1E40AF;border-radius:4px">${esc(fase)}</span>`:''}
       </div>
       <div class="lead-time">${formatDate(l.fecha)}</div>
@@ -2050,6 +2052,7 @@ function openLeadDetail(lid) {
     + '<div class="ld-field"><label>Fecha seguimiento</label><input type="date" id="ldFollowup" value="'+(l.followup_date||'')+'"></div></div>'
     + '<div class="ld-row"><div class="ld-field"><label>Propiedad</label><div class="ld-val">'+esc(l.propiedad||l.tipo_propiedad||'—')+'</div></div>'
     + '<div class="ld-field"><label>Presupuesto</label><div class="ld-val">'+esc(l.presupuesto||'—')+'</div></div></div>'
+    + (l.busqueda_medida ? '<div class="ld-row"><div class="ld-field"><label>Búsqueda a la medida</label><div class="ld-val" style="color:#C2410C;font-weight:600">'+esc([l.tipo_propiedad, l.zona_interes, l.presupuesto].filter(Boolean).join(' · ')||'Pendiente de detalles')+(l.busqueda_medida_at?' <span style="font-weight:400;color:var(--text3)">(desde '+esc(String(l.busqueda_medida_at).substring(0,10))+')</span>':'')+'</div></div></div>' : '')
     + '<div class="ld-row"><div class="ld-field"><label>Email</label><div class="ld-val">'+esc(l.email||'—')+'</div></div>'
     + '<div class="ld-field"><label>Fuente</label><div class="ld-val">'+esc(l.fuente||l.source||'—')+'</div></div></div>'
     + (waL?'<div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">'
