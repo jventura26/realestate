@@ -3081,6 +3081,13 @@ var index_default = {
       ctx.waitUntil(triggerRebuild());
       return jsonRes({ ok: true });
     }
+    if (method === "GET" && path === "/api/informe-clientes") {
+      const authedInf = await requireAuth(request, env);
+      if (!authedInf) return jsonRes({ error: "No autenticado" }, 401);
+      const rawInf = await env.DB.get("informe_clientes");
+      if (!rawInf) return jsonRes({ error: "Informe no publicado" }, 404);
+      return jsonRes(JSON.parse(rawInf));
+    }
     if (method === "GET" && path === "/api/leads") {
       const authed2 = await requireAuth(request, env);
       if (!authed2) return jsonRes({ error: "No autenticado" }, 401);

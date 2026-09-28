@@ -716,6 +716,51 @@ body.dark .share-link-box { background: var(--dm-bg); }
 .prop-views { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text3); margin-top: 2px; }
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* Informe de clientes */
+.inf{--i-card:var(--wh);--i-soft:#F4F6FA;--i-text:var(--text);--i-mut:var(--text2);--i-line:var(--border)}
+body.dark .inf{--i-card:var(--dm-card);--i-soft:#0f1b33;--i-text:var(--dm-text);--i-mut:var(--dm-text2);--i-line:var(--dm-border)}
+.inf{display:flex;flex-direction:column;gap:14px;color:var(--i-text)}
+.inf-sub{font-size:13px;color:var(--i-mut);margin:0}
+.inf-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.inf-lvl{border:1px solid var(--i-line);background:var(--i-card);color:var(--i-text);border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;font:inherit}
+.inf-lvl b{font-size:22px;line-height:1}.inf-lvl span{font-size:12px;font-weight:600}.inf-lvl small{font-size:11px;color:var(--i-mut)}
+.inf-lvl.on{border-color:var(--or);box-shadow:0 0 0 1px var(--or) inset}
+.inf-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.d-Coincide{background:#16a34a}.d-Probable{background:#2563eb}.d-Posible{background:#d97706}.d-Alternativa{background:#7c3aed}.d-Renta{background:#0d9488}.d-Perfil{background:#64748b}
+.inf-h{font-size:15px;margin:6px 0 0}
+.inf-feat{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.inf-fcard{flex:0 0 220px;background:var(--i-card);border:1px solid var(--i-line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.inf-fcard small{font-size:11.5px;color:var(--i-mut)}.inf-k{font-size:24px;font-weight:700;color:var(--or)}.inf-t{font-size:12.5px;font-weight:600}
+.inf-controls{display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:3;background:inherit;padding:6px 0}
+.inf-controls input,.inf-controls select{font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--i-line);border-radius:8px;background:var(--i-card);color:var(--i-text)}
+.inf-controls input{flex:1 1 220px;min-width:0}
+.inf-count{font-size:12.5px;color:var(--i-mut)}
+.inf-list{display:flex;flex-direction:column;gap:12px}
+.inf-card{background:var(--i-card);border:1px solid var(--i-line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.inf-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.inf-name{font-size:16px;font-weight:700}.inf-meta{font-size:12px;color:var(--i-mut);display:flex;flex-wrap:wrap;gap:4px 10px}
+.inf-pills{display:flex;gap:6px;flex-wrap:wrap}
+.inf-pill{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 8px}
+.n-Coincide{background:#dcfce7;color:#166534}.n-Probable{background:#dbeafe;color:#1e40af}.n-Posible{background:#fef3c7;color:#92400e}.n-Alternativa{background:#ede9fe;color:#5b21b6}.n-Renta{background:#ccfbf1;color:#115e59}.n-Perfil{background:#e2e8f0;color:#475569}
+.t-HOT{background:#fee2e2;color:#991b1b}.t-WARM{background:#fef9c3;color:#854d0e}.t-COLD{background:#f1f5f9;color:#64748b}
+.inf-lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--i-mut);font-weight:700}
+.inf-busca{display:flex;flex-wrap:wrap;gap:6px}.inf-chip{font-size:12px;background:var(--i-soft);border-radius:6px;padding:3px 8px}.inf-chip.inf{border:1px dashed var(--i-line);background:transparent;color:var(--i-mut)}
+.inf-best{border-top:1px solid var(--i-line);padding-top:8px;display:flex;flex-direction:column;gap:5px}
+.inf-optrow{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.inf-optname{font-weight:600;font-size:13.5px;overflow-wrap:anywhere}.inf-price{font-size:17px;font-weight:700;white-space:nowrap;color:var(--navy)}
+body.dark .inf-price{color:var(--or2)}
+.inf-facts{font-size:12px;color:var(--i-mut)}.inf-why{font-size:12.5px}.inf-why b{color:var(--or)}
+.inf-vs{font-size:12px}.inf-vs.low{color:#16a34a}.inf-vs.high{color:#d97706}
+.inf-acc{font-size:12px;color:var(--i-mut);border-left:2px solid var(--or);padding-left:8px}
+.inf-org{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--i-line);border-radius:4px;padding:1px 5px;margin-right:6px;color:var(--i-mut)}
+.inf-org.cat{border-color:var(--or);color:var(--or)}
+.inf-more summary{cursor:pointer;font-size:12.5px;color:var(--or);font-weight:600}
+.inf-alt{background:var(--i-soft);border-radius:10px;padding:10px;margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.inf-ask{font-size:12.5px;background:var(--i-soft);border-radius:10px;padding:10px}
+.inf-msg{font-size:12.5px;color:var(--i-mut);background:var(--i-soft);border-radius:10px;padding:10px;margin-top:6px;white-space:pre-wrap}
+.inf-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.inf-actions small{font-size:11.5px;color:var(--i-mut)}
+.inf-foot{font-size:11.5px;color:var(--i-mut);border-top:1px solid var(--i-line);padding-top:10px}
+@media (max-width:600px){.inf-levels{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -748,6 +793,7 @@ body.dark .share-link-box { background: var(--dm-bg); }
         <div class="sb-section">Clientes</div>
         <div class="sb-item" id="nav-leads" onclick="showPage('leads')"><i class="ti ti-users"></i> Leads <span class="sb-badge" id="leadsCount">0</span></div>
         <div class="sb-item" id="nav-crm" onclick="showPage('crm')"><i class="ti ti-layout-kanban"></i> Pipeline CRM</div>
+        <div class="sb-item" id="nav-informe" onclick="showPage('informe')"><i class="ti ti-report-search"></i> Informe de clientes</div>
         <div class="sb-section">InmuHub</div>
         <div class="sb-item" id="nav-brokers" onclick="showPage('brokers')"><i class="ti ti-user-star"></i> Asesores</div>
         <div class="sb-section">Sitios</div>
@@ -1289,13 +1335,13 @@ async function loadLeads() {
 
 // ── NAVIGATION ───────────────────────────────────────────────
 function showPage(page) {
-  ['dashboard','propiedades','leads','nueva','crm','brokers'].forEach(p => {
+  ['dashboard','propiedades','leads','nueva','crm','brokers','informe'].forEach(p => {
     const n = document.getElementById('nav-' + p);
     if (n) n.classList.remove('active');
   });
   const nav = document.getElementById('nav-' + page);
   if (nav) nav.classList.add('active');
-  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads', crm:'Pipeline CRM', brokers:'Asesores'};
+  const titles = {dashboard:'Dashboard', propiedades:'Propiedades', leads:'Leads', crm:'Pipeline CRM', brokers:'Asesores', informe:'Informe de clientes'};
   document.getElementById('pageTitle').textContent = titles[page] || page;
   const mc = document.getElementById('mainContent');
   if (!mc) return;
@@ -1304,6 +1350,124 @@ function showPage(page) {
   if (page === 'leads')       renderLeads(mc);
   if (page === 'crm')         renderCRM(mc);
   if (page === 'brokers')     renderBrokers(mc);
+  if (page === 'informe')     renderInforme(mc);
+}
+
+
+// ── INFORME DE CLIENTES (cruce clientes ↔ propiedades, se actualiza cada semana) ──
+var infState = {nivel:'', q:'', zona:'', tier:'', shown:30};
+var infData = null;
+async function renderInforme(mc) {
+  mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Cargando informe...</div>';
+  try {
+    if (!infData) {
+      const r = await fetch(API + '/api/informe-clientes', {credentials:'include'});
+      if (r.status === 404) { mc.innerHTML = '<div class="empty-state"><i class="ti ti-report-search"></i><p>Aún no se ha publicado el informe. Ejecute publicar-informe-clientes.bat.</p></div>'; return; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      infData = await r.json();
+    }
+    infBuild(mc);
+  } catch (e) {
+    mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--red)">No se pudo cargar el informe (' + String(e.message||e).replace(/</g,'&lt;') + ').</div>';
+  }
+}
+function infBuild(mc) {
+  var R = infData, M = R.meta, P = R.P;
+  var F = ['ID','nombre','tel','canal','tier','fase','ultimo','tipo','zonas','flexible','presupuesto','hab','plazo','inferido','consulto','nivel','n','opciones','mensaje'];
+  var ACC = {'Catálogo':'Propiedad de su catálogo: puede presentarla hoy.','Banco':'Activo bancario: confirme disponibilidad y condiciones con el banco antes de presentarlo.',
+    'Mercado':'Anuncio de mercado: contacte al anunciante y acuerde la colaboración antes de compartirlo.','Agencia':'Anuncio de otra agencia: proponga compartir comisión antes de presentarlo.',
+    'Remate':'Remate judicial: requiere asesoría legal; el monto es la base del edicto.','Alquiler':'Alquiler de otra agencia o propietario: contacte al anunciante antes de compartirlo.'};
+  var popt = function(k){ var a=P[k]||[]; return {origen:a[0],tipo:a[1],zona:a[2],precio:a[3],area:a[4],hab:a[5],nombre:a[6],url:a[7],lectura:a[8],vs_zona:a[9],vs_dif:a[10],ID:a[11]}; };
+  if (!R._CL) R._CL = R.C.map(function(a){ var c={}; for (var i=0;i<F.length;i++) c[F[i]]=a[i];
+    c.opciones=(c.opciones||[]).map(function(x){ var o=popt(x[0]); o.pts=x[1]; o.razones=x[2]; o.accion=ACC[o.origen]||''; return o; });
+    c._s = infNorm([c.nombre,c.tel,c.tipo,(c.zonas||[]).join(' '),c.consulto,c.opciones.map(function(o){return o.nombre+' '+o.ID+' '+o.zona;}).join(' ')].join(' '));
+    return c; });
+  var CL = R._CL;
+  var NIV = [['Coincide','Coincide','Tipo, zona y presupuesto confirmados'],['Probable','Probable','Tipo y zona; un dato inferido'],['Posible','Posible','Solo se conoce tipo o zona'],
+    ['Alternativa cercana','Alternativa','Nada exacto; opción cercana'],['Renta','Renta','Busca alquilar'],['Perfil incompleto','Perfil','Falta saber qué busca']];
+  var zs = {}; CL.forEach(function(c){ (c.zonas||[]).forEach(function(z){ zs[z]=(zs[z]||0)+1; }); });
+  var H = '<div class="inf">';
+  H += '<p class="inf-sub"><b>'+CL.length+'</b> clientes cruzados contra <b>'+infFmt(M.ninv)+'</b> propiedades (catálogo, mercado, bancos, remates y alquileres). Datos del análisis del '+infDate(M.fv)+' · publicado '+infDate((M.fecha||'').slice(0,10))+'.</p>';
+  H += '<div class="inf-levels">' + NIV.map(function(n){ return '<button type="button" class="inf-lvl'+(infState.nivel===n[0]?' on':'')+'" onclick="infSet(\'nivel\',\''+n[0]+'\')"><b>'+(M.niv[n[0]]||0)+'</b><span><i class="inf-dot d-'+n[1]+'"></i>'+n[0]+'</span><small>'+n[2]+'</small></button>'; }).join('') + '</div>';
+  if (M.dest && M.dest.length) {
+    H += '<h3 class="inf-h">Propiedades para presentar primero</h3><div class="inf-feat">' + M.dest.map(function(x){ var o=popt(x[0]);
+      return '<div class="inf-fcard"><div class="inf-k">'+x[1]+'</div><small>clientes la tienen como mejor opción</small><div class="inf-t">'+infEsc(o.nombre)+'</div><small>'+infOrg(o)+infEsc(o.tipo)+' · '+infEsc(o.zona)+'</small><div class="inf-price">'+infUsd(o.precio)+'</div>'+(o.url?'<a class="btn btn-ghost btn-sm" href="'+infEsc(o.url)+'" target="_blank" rel="noopener">Ver propiedad</a>':'')+'</div>'; }).join('') + '</div>';
+  }
+  H += '<div class="inf-controls"><input id="infQ" type="search" placeholder="Buscar nombre, zona, teléfono o propiedad" value="'+infEsc(infState.q)+'" oninput="infSet(\'q\',this.value)">'+
+    '<select onchange="infSet(\'zona\',this.value)"><option value="">Todas las zonas</option>'+Object.keys(zs).sort(function(a,b){return zs[b]-zs[a];}).map(function(z){ return '<option value="'+infEsc(z)+'"'+(infState.zona===z?' selected':'')+'>'+infEsc(z)+' ('+zs[z]+')</option>'; }).join('')+'</select>'+
+    '<select onchange="infSet(\'tier\',this.value)"><option value="">HOT, WARM y COLD</option><option value="HOT"'+(infState.tier==='HOT'?' selected':'')+'>Solo HOT</option><option value="HW"'+(infState.tier==='HW'?' selected':'')+'>HOT y WARM</option></select></div>';
+  var qq = infNorm(infState.q);
+  var cur = CL.filter(function(c){
+    if (infState.nivel && c.nivel!==infState.nivel) return false;
+    if (infState.zona && (c.zonas||[]).indexOf(infState.zona)<0) return false;
+    if (infState.tier==='HOT' && c.tier!=='HOT') return false;
+    if (infState.tier==='HW' && c.tier!=='HOT' && c.tier!=='WARM') return false;
+    if (qq && c._s.indexOf(qq)<0) return false;
+    return true; });
+  H += '<div class="inf-count">'+(cur.length===CL.length ? CL.length+' clientes, ordenados por coincidencia y temperatura' : cur.length+' de '+CL.length+' clientes')+'</div>';
+  H += '<div class="inf-list">' + (cur.length ? cur.slice(0, infState.shown).map(function(c){ return infCard(c, NIV); }).join('') : '<div class="empty-state"><p>Ningún cliente con estos filtros.</p></div>') + '</div>';
+  if (cur.length > infState.shown) H += '<div style="text-align:center;margin:14px 0"><button class="btn btn-ghost" onclick="infSet(\'shown\','+(infState.shown+30)+')">Mostrar más clientes ('+(cur.length-infState.shown)+' restantes)</button></div>';
+  H += '<p class="inf-foot"><b>Cómo se calcula.</b> Cada cliente se compara con todas las propiedades encontradas por tipo, zona y presupuesto (entre 45 % y 110 % del presupuesto). Puntos: tipo 30, zona 30, precio 30 (15 si hasta 10 % arriba), habitaciones 10, zona prioritaria 5, activo bancario bajo mercado 5. Hasta 3 opciones por cliente: primero su catálogo, luego bancos, propietarios, agencias y remates. La comparación con la zona usa los valores publicados de «¿Cuánto vale su zona?», no precios de cierre.</p></div>';
+  mc.innerHTML = H;
+  var qi = document.getElementById('infQ');
+  if (qi && infState._focus) { qi.focus(); try { qi.setSelectionRange(qi.value.length, qi.value.length); } catch(e){} }
+}
+function infSet(k, v) {
+  if (k === 'nivel') v = infState.nivel === v ? '' : v;
+  infState[k] = v;
+  if (k !== 'shown') infState.shown = 30;
+  infState._focus = (k === 'q');
+  var mc = document.getElementById('mainContent'); if (mc) infBuild(mc);
+}
+function infNorm(s){ s=String(s||'').toLowerCase(); try{ s=s.normalize('NFD').replace(/[̀-ͯ]/g,''); }catch(e){} return s; }
+function infEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function infFmt(v){ return String(Math.round(v||0)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function infUsd(v){ return v==null ? 's/p' : 'US$' + infFmt(v); }
+function infDate(s){ if(!s) return ''; var p=String(s).split('-'); var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']; return p.length===3 ? (+p[2])+' '+m[+p[1]-1]+' '+p[0] : s; }
+function infOrg(o){ return '<span class="inf-org'+(o.origen==='Catálogo'?' cat':'')+'">'+infEsc(o.origen)+'</span>'; }
+function infOpt(o, main) {
+  var vs = '';
+  if (o.vs_zona) { var cl = o.vs_dif!=null && o.vs_dif < -0.05 ? ' low' : (o.vs_dif!=null && o.vs_dif > 0.10 ? ' high' : ''); vs = '<div class="inf-vs'+cl+'">'+infEsc(o.vs_zona)+(o.vs_dif!=null?' ('+(o.vs_dif>0?'+':'')+Math.round(o.vs_dif*100)+' %)':'')+'</div>'; }
+  var facts = [o.tipo, o.zona, o.area? infFmt(o.area)+' m²' : null, o.hab? o.hab+' hab.' : null, o.lectura].filter(function(x){return !!x;});
+  return '<div class="inf-optrow"><div class="inf-optname">'+infOrg(o)+infEsc(o.nombre||o.ID)+'</div><div class="inf-price">'+infUsd(o.precio)+(o.origen==='Alquiler'?'/mes':'')+'</div></div>'+
+    '<div class="inf-facts">'+facts.map(infEsc).join(' · ')+'</div>'+
+    (o.razones && o.razones.length ? '<div class="inf-why"><b>Por qué encaja:</b> '+infEsc(o.razones.join(', '))+'.</div>' : '')+ vs +
+    (main ? '<div class="inf-acc">'+infEsc(o.accion)+'</div>' : '')+
+    '<div class="inf-actions">'+(o.url?'<a class="btn btn-ghost btn-sm" href="'+infEsc(o.url)+'" target="_blank" rel="noopener">Ver propiedad</a>':'')+'<small>'+infEsc(o.ID)+(o.pts!=null?' · '+o.pts+' pts':'')+'</small></div>';
+}
+function infCard(c, NIV) {
+  var k = 'Perfil'; NIV.forEach(function(n){ if (n[0]===c.nivel) k=n[1]; });
+  var dig = String(c.tel||'').replace(/\D/g,''); if (dig.length===8) dig='502'+dig;
+  var hi = function(p){ return (c.inferido||[]).some(function(x){ return String(x).indexOf(p)===0; }); };
+  var b = [];
+  if (c.tipo) b.push('<span class="inf-chip'+(hi('tipo')?' inf':'')+'">'+infEsc(c.tipo)+'</span>');
+  if (c.zonas && c.zonas.length) b.push('<span class="inf-chip'+(hi('zona')?' inf':'')+'">'+infEsc(c.zonas.join(', '))+'</span>'); else if (c.flexible) b.push('<span class="inf-chip">Zona flexible</span>');
+  if (c.presupuesto) b.push('<span class="inf-chip'+(hi('presupuesto')?' inf':'')+'">'+infUsd(c.presupuesto)+(c.nivel==='Renta'?'/mes':'')+'</span>');
+  if (c.hab) b.push('<span class="inf-chip">'+c.hab+'+ hab.</span>');
+  if (c.plazo) b.push('<span class="inf-chip">'+infEsc(c.plazo)+'</span>');
+  var body = '';
+  if (c.opciones.length) {
+    body = '<div class="inf-best"><div class="inf-lbl">'+(c.nivel==='Alternativa cercana'?'Alternativa más cercana':c.nivel==='Renta'?'Alquiler que mejor se adapta':'Mejor opción')+'</div>'+infOpt(c.opciones[0], true)+'</div>';
+    if (c.opciones.length>1) body += '<details class="inf-more"><summary>Ver '+(c.opciones.length-1)+' opción'+(c.opciones.length>2?'es':'')+' más'+(c.n>c.opciones.length?' (de '+c.n+' que cumplen)':'')+'</summary>'+c.opciones.slice(1).map(function(o){ return '<div class="inf-alt">'+infOpt(o,false)+'</div>'; }).join('')+'</details>';
+  } else if (c.nivel==='Perfil incompleto') {
+    body = '<div class="inf-ask"><b>Qué preguntar:</b> tipo de propiedad, zona y presupuesto aproximado.'+(c.consulto?'<br>Escribió por: '+infEsc(c.consulto):'')+'</div>';
+  } else {
+    body = '<div class="inf-ask">Ninguna propiedad encontrada cumple este perfil: ofrezca una búsqueda a la medida y pregunte si hay flexibilidad en zona o presupuesto.</div>';
+  }
+  var wa = dig ? 'https://wa.me/'+dig+'?text='+encodeURIComponent(c.mensaje) : '';
+  return '<div class="inf-card"><div class="inf-head"><div><div class="inf-name">'+infEsc(c.nombre)+'</div><div class="inf-meta">'+
+    (c.tel?'<span>'+infEsc(c.tel)+'</span>':'')+(c.canal?'<span>'+infEsc(c.canal)+'</span>':'')+(c.ultimo?'<span>Último contacto '+infDate(c.ultimo)+'</span>':'')+'</div></div>'+
+    '<div class="inf-pills">'+(c.tier?'<span class="inf-pill t-'+infEsc(c.tier)+'">'+infEsc(c.tier)+'</span>':'')+'<span class="inf-pill n-'+k+'">'+infEsc(c.nivel)+'</span></div></div>'+
+    (b.length?'<div class="inf-lbl">Busca</div><div class="inf-busca">'+b.join('')+'</div>':'')+
+    (c.consulto && c.opciones.length ? '<div class="inf-facts">Escribió por: '+infEsc(c.consulto)+'</div>' : '')+ body +
+    '<details class="inf-more"><summary>Mensaje sugerido para WhatsApp</summary><div class="inf-msg">'+infEsc(c.mensaje)+'</div></details>'+
+    '<div class="inf-actions">'+(wa?'<a class="wa-btn" href="'+infEsc(wa)+'" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Abrir WhatsApp con el mensaje</a>':'')+
+    '<button class="btn btn-ghost btn-sm" onclick="infCopy(this, \''+infEsc(c.ID)+'\')"><i class="ti ti-copy"></i> Copiar mensaje</button></div></div>';
+}
+function infCopy(btn, id) {
+  var c = (infData._CL||[]).filter(function(x){ return x.ID===id; })[0]; if (!c) return;
+  var ok = function(){ btn.innerHTML='<i class="ti ti-check"></i> Copiado'; setTimeout(function(){ btn.innerHTML='<i class="ti ti-copy"></i> Copiar mensaje'; },1800); };
+  try { navigator.clipboard.writeText(c.mensaje).then(ok, function(){ btn.closest('.inf-card').querySelector('details:last-of-type').open = true; }); } catch(e) { btn.closest('.inf-card').querySelector('details:last-of-type').open = true; }
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────
