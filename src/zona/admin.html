@@ -762,6 +762,7 @@ body.dark .inf-price{color:var(--or2)}
 .inf-tip{font-size:12.5px;background:#FFF4E6;color:#9A4A00;border-radius:10px;padding:10px}
 body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
 .inf-done{color:#16a34a;font-weight:600}
+.inf-disp{display:inline-block;margin-left:6px;font-size:10px;font-weight:700;border-radius:4px;padding:1px 6px;vertical-align:middle}.inf-disp.ok{background:#dcfce7;color:#166534}.inf-disp.warn{background:#fef3c7;color:#92400e}
 .inf-foot{font-size:11.5px;color:var(--i-mut);border-top:1px solid var(--i-line);padding-top:10px}
 @media (max-width:600px){.inf-levels{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -1385,7 +1386,7 @@ function infBuild(mc) {
   var ACC = {'Catálogo':'Propiedad de su catálogo: puede presentarla hoy.','Banco':'Activo bancario: confirme disponibilidad y condiciones con el banco antes de presentarlo.',
     'Mercado':'Anuncio de mercado: contacte al anunciante y acuerde la colaboración antes de compartirlo.','Agencia':'Anuncio de otra agencia: proponga compartir comisión antes de presentarlo.',
     'Remate':'Remate judicial: requiere asesoría legal; el monto es la base del edicto.','Alquiler':'Alquiler de otra agencia o propietario: contacte al anunciante antes de compartirlo.'};
-  var popt = function(k){ var a=P[k]||[]; return {origen:a[0],tipo:a[1],zona:a[2],precio:a[3],area:a[4],hab:a[5],nombre:a[6],url:a[7],lectura:a[8],vs_zona:a[9],vs_dif:a[10],ID:a[11]}; };
+  var popt = function(k){ var a=P[k]||[]; return {origen:a[0],tipo:a[1],zona:a[2],precio:a[3],area:a[4],hab:a[5],nombre:a[6],url:a[7],lectura:a[8],vs_zona:a[9],vs_dif:a[10],ID:a[11],disp:a[12]}; };
   if (!R._CL) R._CL = R.C.map(function(a){ var c={}; for (var i=0;i<F.length;i++) c[F[i]]=a[i];
     c.opciones=(c.opciones||[]).map(function(x){ var o=popt(x[0]); o.pts=x[1]; o.razones=x[2]; o.accion=ACC[o.origen]||''; return o; });
     c._s = infNorm([c.nombre,c.tel,c.tipo,(c.zonas||[]).join(' '),c.consulto,c.opciones.map(function(o){return o.nombre+' '+o.ID+' '+o.zona;}).join(' ')].join(' '));
@@ -1395,7 +1396,7 @@ function infBuild(mc) {
     ['Alternativa cercana','Alternativa','Nada exacto; opción cercana'],['Renta','Renta','Busca alquilar'],['Perfil incompleto','Perfil','Falta saber qué busca']];
   var zs = {}; CL.forEach(function(c){ (c.zonas||[]).forEach(function(z){ zs[z]=(zs[z]||0)+1; }); });
   var H = '<div class="inf">';
-  H += '<p class="inf-sub"><b>'+CL.length+'</b> clientes cruzados contra <b>'+infFmt(M.ninv)+'</b> propiedades (catálogo, mercado, bancos, remates y alquileres). Datos del análisis del '+infDate(M.fv)+' · publicado '+infDate((M.fecha||'').slice(0,10))+'.</p>';
+  H += '<p class="inf-sub"><b>'+CL.length+'</b> clientes cruzados contra <b>'+infFmt(M.ninv)+'</b> propiedades (catálogo, mercado, bancos, remates y alquileres). Datos del análisis del '+infDate(M.fv)+' · publicado '+infDate((M.fecha||'').slice(0,10))+(M.verif?' · disponibilidad revisada el '+infDate(M.verif.slice(0,10)):'')+'.</p>';
   H += '<div class="inf-levels">' + NIV.map(function(n){ return '<button type="button" class="inf-lvl'+(infState.nivel===n[0]?' on':'')+'" onclick="infSet(\'nivel\',\''+n[0]+'\')"><b>'+(M.niv[n[0]]||0)+'</b><span><i class="inf-dot d-'+n[1]+'"></i>'+n[0]+'</span><small>'+n[2]+'</small></button>'; }).join('') + '</div>';
   if (M.dest && M.dest.length) {
     H += '<h3 class="inf-h">Propiedades para presentar primero</h3><div class="inf-feat">' + M.dest.map(function(x){ var o=popt(x[0]);
@@ -1421,7 +1422,7 @@ function infBuild(mc) {
   H += '<div class="inf-count">'+(cur.length===CL.length ? CL.length+' clientes, ordenados por coincidencia y temperatura' : cur.length+' de '+CL.length+' clientes')+'</div>';
   H += '<div class="inf-list">' + (cur.length ? cur.slice(0, infState.shown).map(function(c){ return infCard(c, NIV); }).join('') : '<div class="empty-state"><p>Ningún cliente con estos filtros.</p></div>') + '</div>';
   if (cur.length > infState.shown) H += '<div style="text-align:center;margin:14px 0"><button class="btn btn-ghost" onclick="infSet(\'shown\','+(infState.shown+30)+')">Mostrar más clientes ('+(cur.length-infState.shown)+' restantes)</button></div>';
-  H += '<p class="inf-foot"><b>Cómo se calcula.</b> Cada cliente se compara con todas las propiedades encontradas por tipo, zona y presupuesto (entre 45 % y 110 % del presupuesto). Puntos: tipo 30, zona 30, precio 30 (15 si hasta 10 % arriba), habitaciones 10, zona prioritaria 5, activo bancario bajo mercado 5. Hasta 3 opciones por cliente: primero su catálogo, luego bancos, propietarios, agencias y remates. La comparación con la zona usa los valores publicados de «¿Cuánto vale su zona?», no precios de cierre.</p></div>';
+  H += '<p class="inf-foot"><b>Cómo se calcula.</b> Cada cliente se compara con todas las propiedades encontradas por tipo, zona y presupuesto (entre 45 % y 110 % del presupuesto). Puntos: tipo 30, zona 30, precio 30 (15 si hasta 10 % arriba), habitaciones 10, zona prioritaria 5, activo bancario bajo mercado 5. Hasta 3 opciones por cliente: primero su catálogo, luego bancos, propietarios, agencias y remates. La comparación con la zona usa los valores publicados de «¿Cuánto vale su zona?», no precios de cierre. Antes de publicar el informe se revisa que cada propiedad sugerida siga publicada: lo vendido, alquilado o con remate vencido se descarta y se propone la siguiente mejor opción. Las listas de bancos en PDF y los remates no se pueden revisar en línea: confírmelos antes de presentarlos.</p></div>';
   mc.innerHTML = H;
   var qi = document.getElementById('infQ');
   if (qi && infState._focus) { qi.focus(); try { qi.setSelectionRange(qi.value.length, qi.value.length); } catch(e){} }
@@ -1443,7 +1444,10 @@ function infOpt(o, main) {
   var vs = '';
   if (o.vs_zona) { var cl = o.vs_dif!=null && o.vs_dif < -0.05 ? ' low' : (o.vs_dif!=null && o.vs_dif > 0.10 ? ' high' : ''); vs = '<div class="inf-vs'+cl+'">'+infEsc(o.vs_zona)+(o.vs_dif!=null?' ('+(o.vs_dif>0?'+':'')+Math.round(o.vs_dif*100)+' %)':'')+'</div>'; }
   var facts = [o.tipo, o.zona, o.area? infFmt(o.area)+' m²' : null, o.hab? o.hab+' hab.' : null, o.lectura].filter(function(x){return !!x;});
-  return '<div class="inf-optrow"><div class="inf-optname">'+infOrg(o)+infEsc(o.nombre||o.ID)+'</div><div class="inf-price">'+infUsd(o.precio)+(o.origen==='Alquiler'?'/mes':'')+'</div></div>'+
+  // INF_DISP: estado verificado de la ficha
+  var DB = {disponible:['ok','Publicada al revisar'], por_confirmar:['warn', o.origen==='Remate'?'Confirmar en el juzgado':'Confirmar con el banco o anunciante'], reservada:['warn','Reservada']};
+  var db = DB[o.disp] ? '<span class="inf-disp '+DB[o.disp][0]+'">'+DB[o.disp][1]+'</span>' : '';
+  return '<div class="inf-optrow"><div class="inf-optname">'+infOrg(o)+infEsc(o.nombre||o.ID)+db+'</div><div class="inf-price">'+infUsd(o.precio)+(o.origen==='Alquiler'?'/mes':'')+'</div></div>'+
     '<div class="inf-facts">'+facts.map(infEsc).join(' · ')+'</div>'+
     (o.razones && o.razones.length ? '<div class="inf-why"><b>Por qué encaja:</b> '+infEsc(o.razones.join(', '))+'.</div>' : '')+ vs +
     (main ? '<div class="inf-acc">'+infEsc(o.accion)+'</div>' : '')+
