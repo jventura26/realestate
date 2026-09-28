@@ -242,7 +242,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "15. Detecta el idioma del ULTIMO mensaje de la persona: si esta escrito en ingles, responde completamente en ingles manteniendo el mismo tono premium y consultivo (nunca mezcles ingles y espanol en un mismo mensaje). Si esta en espanol, responde en espanol. Si el idioma no es claro, responde en espanol por defecto.",
     "16. Dirigete a la persona SIEMPRE de 'usted' -- nunca de 'tu' ni de 'vos', ni en verbos, pronombres o posesivos. Correcto: 'tiene', 'le recomiendo', 'su presupuesto', '\xBFle interesa?', 'cuenteme'. PROHIBIDO: 'tienes', 'te recomiendo', 'tu presupuesto', '\xBFte interesa?', 'preferis', 'sos', 'vos', 'quieres', 'quieras'. Antes de enviar cualquier mensaje, revisalo completo buscando conjugaciones de tu o vos -- si encuentras una sola, corrigela a usted antes de responder. Este trato formal aplica siempre, incluso si la persona te tutea o te habla de vos primero -- nunca imites su registro informal.",
     "17. Si preguntan por financiamiento, cuota mensual, hipoteca, enganche o \"cuanto pagaria al mes\", da SIEMPRE un estimado usando estos supuestos fijos y genericos (no son de un banco especifico): tasa 8% anual, plazo 20 anos, enganche 20% (se financia el 80% del precio). Esta calculadora aplica SOLO a propiedades en dolares (residencias del catalogo) -- si preguntan por financiamiento de una finca en quetzales, NO uses esta tabla: di que el financiamiento de fincas se evalua caso por caso y ofrece conectar con un asesor. Usa el precio en dolares mas cercano de esta tabla de referencia (precio -> cuota mensual estimada), interpolando si cae entre dos filas: $100,000 -> $669/mes | $150,000 -> $1,004/mes | $200,000 -> $1,338/mes | $250,000 -> $1,673/mes | $300,000 -> $2,007/mes | $350,000 -> $2,342/mes | $400,000 -> $2,677/mes | $450,000 -> $3,011/mes | $500,000 -> $3,346/mes | $600,000 -> $4,015/mes | $700,000 -> $4,684/mes | $800,000 -> $5,353/mes | $900,000 -> $6,022/mes | $1,000,000 -> $6,692/mes. SIEMPRE que des este estimado, incluye la frase completa (puedes adaptar el orden pero no omitir el contenido): \"Este es un estimado referencial -- las tasas reales van de 6% a 10% segun banco y perfil, y no incluyen seguros ni gastos de formalizacion. Para una cotizacion real, un asesor puede platicar los detalles con usted.\" Nunca prometas una tasa exacta ni una aprobacion.",
-    "18. HERRAMIENTA \"\u00BFCU\u00C1NTO VALE SU ZONA?\": puedes sugerir la herramienta gratuita https://zona-innmueble.com/valor-por-zona?utm_source=whatsapp&utm_medium=asistente cuando (a) la persona quiere vender o rentar su propiedad y pregunta cu\u00E1nto vale o en cu\u00E1nto ponerla; (b) pregunta cu\u00E1nto cuesta el metro cuadrado o cu\u00E1nto renta una propiedad en una zona; (c) est\u00E1 comparando zonas para invertir; o (d) acabas de ofrecerle una b\u00FAsqueda a la medida, como algo \u00FAtil mientras tanto. Menci\u00F3nala como m\u00E1ximo una vez por conversaci\u00F3n, nunca en el primer mensaje, y aclara que muestra precios publicados, no precios de cierre. Si la persona es propietaria, ofr\u00E9cele adem\u00E1s un an\u00E1lisis personalizado de su propiedad con un asesor.",
+    "18. HERRAMIENTA \"\u00BFCU\u00C1NTO VALE SU ZONA?\": en TODAS las conversaciones comparte una vez la herramienta gratuita https://zona-innmueble.com/valor-por-zona?utm_source=whatsapp, de preferencia en tu primera respuesta, integrada con naturalidad en una frase breve (por ejemplo: \"Si le sirve de referencia, aqu\u00ED puede consultar el valor por m\u00B2 de cualquier zona: <link>\"). \u00DAsala con m\u00E1s \u00E9nfasis cuando la persona quiere vender o rentar su propiedad, pregunta por precios o rentas de una zona, compara zonas para invertir o acaba de pedir una b\u00FAsqueda a la medida. No la repitas si ya la compartiste en la conversaci\u00F3n. Aclara que muestra precios publicados, no de cierre. Si la persona es propietaria, ofr\u00E9cele adem\u00E1s un an\u00E1lisis personalizado de su propiedad con un asesor.",
     "19. VALORES DE REFERENCIA POR ZONA: abajo tienes los valores por zona que publica Zona-INNmueble (si el bloque viene vac\u00EDo, no des cifras). \u00DAsalos solo cuando pregunten por el valor del metro cuadrado, la renta t\u00EDpica o el rendimiento de una zona, o cuando comparen zonas. Da la cifra t\u00EDpica redondeada y, si ayuda, el rango; di siempre que son precios publicados (no de cierre ni un aval\u00FAo). Nunca los uses para valuar una propiedad espec\u00EDfica de la persona: para eso ofrece el an\u00E1lisis con un asesor. Nunca los presentes como propiedades disponibles. Si la zona no aparece, no inventes: ofrece el an\u00E1lisis con un asesor.",
     "20. MARCA INTERNA: cada vez que ofrezcas o confirmes una b\u00FAsqueda a la medida (regla 2), agrega al final de tu mensaje, en una l\u00EDnea aparte, exactamente el texto [BUSQUEDA_MEDIDA]. Es una marca interna que el sistema quita antes de enviar el mensaje; nunca la expliques ni la uses en otro caso.",
     "",
@@ -682,6 +682,20 @@ function violatesNoInventoryRule(text) {
     /\bno esta(mos)? disponible/.test(t) && /\b(catalogo|inventario)\b/.test(t);
 }
 __name(violatesNoInventoryRule, "violatesNoInventoryRule");
+var VALOR_ZONA_LINK = "https://zona-innmueble.com/valor-por-zona?utm_source=whatsapp";
+var VALOR_ZONA_LINE_ES = "Si le sirve de referencia, aqu\u00ED puede consultar el valor por m\u00B2 de cualquier zona: " + VALOR_ZONA_LINK;
+var VALOR_ZONA_LINE_EN = "If it helps as a reference, you can check the price per m\u00B2 in any area here: " + VALOR_ZONA_LINK;
+// HERRAMIENTA_SIEMPRE: toda conversacion recibe una vez el link de "Cuanto vale su zona"
+function ensureValorZonaLink(reply, history) {
+  if (!reply || /valor-por-zona/i.test(reply)) return reply;
+  for (var i = 0; i < (history || []).length; i++) {
+    if (history[i].role === "assistant" && /valor-por-zona/i.test(history[i].content || "")) return reply;
+  }
+  var t = stripAccents(reply).toLowerCase();
+  var es = /[\u00BF\u00A1]/.test(reply) || /\b(usted|le|su|con gusto|de la|que|para|zona)\b/.test(t);
+  return reply + "\n\n" + (es ? VALOR_ZONA_LINE_ES : VALOR_ZONA_LINE_EN);
+}
+__name(ensureValorZonaLink, "ensureValorZonaLink");
 async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
   var apiKey = env.ANTHROPIC_API_KEY;
   if (!apiKey) return "Gracias por escribir a Zona-INNmueble. En breve un asesor le contacta directamente.";
@@ -998,6 +1012,7 @@ async function processWhatsAppTurn(env, from, userText, contactName) {
   if (violatesSchedulingGuardrail(reply)) {
     reply = WA_SCHEDULING_GUARDRAIL_MESSAGE;
   }
+  reply = ensureValorZonaLink(reply, history);
   await sendWhatsAppMessage(env, from, reply);
   maybeSendRecommendedPhotos(env, from, reply, catalogo, history).catch(function() {});
   maybeSendPropertyMedia(env, from, userText, reply, catalogo, history).catch(function() {});
