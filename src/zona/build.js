@@ -264,6 +264,7 @@ const blogArticles = [
   'mejores-zonas-vivir-guatemala.html',
   'proceso-comprar-casa-guatemala.html',
   'precios-casas-zona-10-guatemala.html',
+  'valor-por-zona.html',   // buscador «¿Cuánto vale su zona?» (se regenera cada semana desde ZonaINNmueble_Analisis)
 ];
 
 const adminSrc = path.join(__dirname, 'admin.html');
@@ -392,6 +393,7 @@ const urls = [
   { loc:'/about.html',       priority:'0.6', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/faq.html',         priority:'0.6', changefreq:'monthly', lastmod:'2026-06-10' },
   { loc:'/privacidad.html',  priority:'0.3', changefreq:'yearly',  lastmod:'2026-06-21' },
+  { loc:'/valor-por-zona.html', priority:'0.9', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
   { loc:'/cuanto-cuesta-casa-fraijanes-2026.html',   priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/como-comprar-finca-guatemala.html',         priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/mejores-zonas-vivir-guatemala.html',        priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },

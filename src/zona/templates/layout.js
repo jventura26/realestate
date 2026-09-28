@@ -146,6 +146,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li class="dd-sep"><a href="/zonas/index.html">Ver todas &rarr;</a></li>
         </ul>
       </li>
+      <li><a href="/valor-por-zona.html">Valor por zona</a></li>
       <li><a href="/blog.html">Blog</a></li>
       <li><a href="/about.html">Nosotros</a></li>
       <li><a href="/faq.html">FAQ</a></li>
@@ -200,7 +201,8 @@ ${body}
     <div class="footer-col">
       <h4>Recursos</h4>
       <ul>
-        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/valor-por-zona.html">Valor por zona</a></li>
+      <li><a href="/blog.html">Blog</a></li>
         <li><a href="/faq.html">Preguntas Frecuentes</a></li>
         <li><a href="/about.html">Nosotros</a></li>
         <li><a href="/privacidad.html">Privacidad</a></li>
