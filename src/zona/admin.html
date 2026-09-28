@@ -759,6 +759,9 @@ body.dark .inf-price{color:var(--or2)}
 .inf-ask{font-size:12.5px;background:var(--i-soft);border-radius:10px;padding:10px}
 .inf-msg{font-size:12.5px;color:var(--i-mut);background:var(--i-soft);border-radius:10px;padding:10px;margin-top:6px;white-space:pre-wrap}
 .inf-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.inf-actions small{font-size:11.5px;color:var(--i-mut)}
+.inf-tip{font-size:12.5px;background:#FFF4E6;color:#9A4A00;border-radius:10px;padding:10px}
+body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
+.inf-done{color:#16a34a;font-weight:600}
 .inf-foot{font-size:11.5px;color:var(--i-mut);border-top:1px solid var(--i-line);padding-top:10px}
 @media (max-width:600px){.inf-levels{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -1355,7 +1358,12 @@ function showPage(page) {
 
 
 // ── INFORME DE CLIENTES (cruce clientes ↔ propiedades, se actualiza cada semana) ──
-var infState = {nivel:'', q:'', zona:'', tier:'', shown:30};
+var infState = {nivel:'', q:'', zona:'', tier:'', seg:'', shown:30};
+// INF_REACTIVAR: clientes marcados como contactados (se guarda en este dispositivo)
+var infCT = null;
+function infContactados(){ if (infCT) return infCT; try { infCT = JSON.parse(localStorage.getItem('zi_inf_contactados')||'{}') || {}; } catch(e) { infCT = {}; } return infCT; }
+function infDias(c){ if(!c.ultimo) return null; var d=new Date(c.ultimo+'T12:00:00'); return Math.floor((Date.now()-d.getTime())/864e5); }
+function infMarcar(id){ var m=infContactados(); if(m[id]) delete m[id]; else m[id]=new Date().toISOString().slice(0,10); try{ localStorage.setItem('zi_inf_contactados', JSON.stringify(m)); }catch(e){} var mc=document.getElementById('mainContent'); if(mc) infBuild(mc); }
 var infData = null;
 async function renderInforme(mc) {
   mc.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Cargando informe...</div>';
@@ -1395,15 +1403,21 @@ function infBuild(mc) {
   }
   H += '<div class="inf-controls"><input id="infQ" type="search" placeholder="Buscar nombre, zona, teléfono o propiedad" value="'+infEsc(infState.q)+'" oninput="infSet(\'q\',this.value)">'+
     '<select onchange="infSet(\'zona\',this.value)"><option value="">Todas las zonas</option>'+Object.keys(zs).sort(function(a,b){return zs[b]-zs[a];}).map(function(z){ return '<option value="'+infEsc(z)+'"'+(infState.zona===z?' selected':'')+'>'+infEsc(z)+' ('+zs[z]+')</option>'; }).join('')+'</select>'+
+    '<select onchange="infSet(\'seg\',this.value)"><option value="">Todos los clientes</option><option value="r14"'+(infState.seg==='r14'?' selected':'')+'>Por reactivar: +14 días sin contacto</option><option value="r30"'+(infState.seg==='r30'?' selected':'')+'>Por reactivar: +30 días sin contacto</option><option value="hecho"'+(infState.seg==='hecho'?' selected':'')+'>Ya contactados</option></select>'+
     '<select onchange="infSet(\'tier\',this.value)"><option value="">HOT, WARM y COLD</option><option value="HOT"'+(infState.tier==='HOT'?' selected':'')+'>Solo HOT</option><option value="HW"'+(infState.tier==='HW'?' selected':'')+'>HOT y WARM</option></select></div>';
   var qq = infNorm(infState.q);
+  var CT = infContactados();
   var cur = CL.filter(function(c){
     if (infState.nivel && c.nivel!==infState.nivel) return false;
     if (infState.zona && (c.zonas||[]).indexOf(infState.zona)<0) return false;
     if (infState.tier==='HOT' && c.tier!=='HOT') return false;
     if (infState.tier==='HW' && c.tier!=='HOT' && c.tier!=='WARM') return false;
     if (qq && c._s.indexOf(qq)<0) return false;
+    if (infState.seg) { var dd = infDias(c), hecho = !!CT[c.ID];
+      if (infState.seg==='hecho') return hecho;
+      if (hecho || dd==null || dd <= (infState.seg==='r30'?30:14)) return false; }
     return true; });
+  if (infState.seg==='r14' || infState.seg==='r30') H += '<div class="inf-tip">Sugerencia: contacte unos 10 por día, empezando por los de arriba (mejor coincidencia y temperatura). Al escribirle a cada uno, toque «Marcar contactado» y saldrá de esta lista.</div>';
   H += '<div class="inf-count">'+(cur.length===CL.length ? CL.length+' clientes, ordenados por coincidencia y temperatura' : cur.length+' de '+CL.length+' clientes')+'</div>';
   H += '<div class="inf-list">' + (cur.length ? cur.slice(0, infState.shown).map(function(c){ return infCard(c, NIV); }).join('') : '<div class="empty-state"><p>Ningún cliente con estos filtros.</p></div>') + '</div>';
   if (cur.length > infState.shown) H += '<div style="text-align:center;margin:14px 0"><button class="btn btn-ghost" onclick="infSet(\'shown\','+(infState.shown+30)+')">Mostrar más clientes ('+(cur.length-infState.shown)+' restantes)</button></div>';
@@ -1456,13 +1470,14 @@ function infCard(c, NIV) {
   }
   var wa = dig ? 'https://wa.me/'+dig+'?text='+encodeURIComponent(c.mensaje) : '';
   return '<div class="inf-card"><div class="inf-head"><div><div class="inf-name">'+infEsc(c.nombre)+'</div><div class="inf-meta">'+
-    (c.tel?'<span>'+infEsc(c.tel)+'</span>':'')+(c.canal?'<span>'+infEsc(c.canal)+'</span>':'')+(c.ultimo?'<span>Último contacto '+infDate(c.ultimo)+'</span>':'')+'</div></div>'+
+    (c.tel?'<span>'+infEsc(c.tel)+'</span>':'')+(c.canal?'<span>'+infEsc(c.canal)+'</span>':'')+(c.ultimo?'<span>Último contacto '+infDate(c.ultimo)+(infDias(c)!=null?' (hace '+infDias(c)+' días)':'')+'</span>':'')+(infContactados()[c.ID]?'<span class="inf-done"><i class="ti ti-check"></i> Contactado '+infDate(infContactados()[c.ID])+'</span>':'')+'</div></div>'+
     '<div class="inf-pills">'+(c.tier?'<span class="inf-pill t-'+infEsc(c.tier)+'">'+infEsc(c.tier)+'</span>':'')+'<span class="inf-pill n-'+k+'">'+infEsc(c.nivel)+'</span></div></div>'+
     (b.length?'<div class="inf-lbl">Busca</div><div class="inf-busca">'+b.join('')+'</div>':'')+
     (c.consulto && c.opciones.length ? '<div class="inf-facts">Escribió por: '+infEsc(c.consulto)+'</div>' : '')+ body +
     '<details class="inf-more"><summary>Mensaje sugerido para WhatsApp</summary><div class="inf-msg">'+infEsc(c.mensaje)+'</div></details>'+
     '<div class="inf-actions">'+(wa?'<a class="wa-btn" href="'+infEsc(wa)+'" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i> Abrir WhatsApp con el mensaje</a>':'')+
-    '<button class="btn btn-ghost btn-sm" onclick="infCopy(this, \''+infEsc(c.ID)+'\')"><i class="ti ti-copy"></i> Copiar mensaje</button></div></div>';
+    '<button class="btn btn-ghost btn-sm" onclick="infCopy(this, \''+infEsc(c.ID)+'\')"><i class="ti ti-copy"></i> Copiar mensaje</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="infMarcar(\''+infEsc(c.ID)+'\')"><i class="ti ti-'+(infContactados()[c.ID]?'arrow-back-up':'circle-check')+'"></i> '+(infContactados()[c.ID]?'Desmarcar':'Marcar contactado')+'</button></div></div>';
 }
 function infCopy(btn, id) {
   var c = (infData._CL||[]).filter(function(x){ return x.ID===id; })[0]; if (!c) return;
