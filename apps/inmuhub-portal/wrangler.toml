@@ -1,0 +1,29 @@
+# inmuhub — portal inmobiliario curado
+# Proyecto independiente del Worker principal (zona-inmu) y del sitio estático actual.
+name = "inmuhub-portal"
+main = "src/worker.js"
+compatibility_date = "2026-09-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "inmuhub"
+database_id = "REEMPLAZAR_CON_EL_ID_DE_D1"   # npx wrangler d1 create inmuhub
+migrations_dir = "migrations"
+
+[vars]
+SITE_URL = "https://inmuhub.com"
+# Número de WhatsApp del portal (formato internacional sin +). Recibe las consultas
+# cuando una propiedad no tiene asesor asignado.
+WHATSAPP_DEFAULT = "50200000000"
+# Tipo de cambio para comparar precios en USD y GTQ.
+USD_TO_GTQ = "7.70"
+# Mínimo de propiedades comparables para mostrar un rango de valor por zona.
+MIN_COMPARABLES = "5"
+
+# Secretos (no van en este archivo):
+#   npx wrangler secret put ADMIN_TOKEN        -> acceso a /admin
+#   npx wrangler secret put CRM_WEBHOOK_URL    -> opcional: reenvía cada lead a Zona-CRM
