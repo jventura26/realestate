@@ -58,10 +58,12 @@ en un par de minutos. No toca DNS, Pages ni la base de datos.
 Opcionales: `npx wrangler secret put CRM_WEBHOOK_URL` para reenviar leads a Zona-CRM y
 `META_PIXEL_ID` en `[vars]` para el Pixel (PageView y Lead al enviar formularios).
 
-## Actualizar el inventario desde Wix
+## Inventario y consultas
 
-```bash
-npm run seed:build   # regenera migrations/0003_seed_inventario.sql desde data/propiedades.json
-```
+El inventario vive en Cloudflare D1. La carga inicial salió de `data/propiedades.json` con
+`scripts/import-wix-json.mjs` (migración 0003); desde ahora las propiedades se administran en `/admin`.
 
-Para cargas posteriores conviene una migración nueva (0004, 0005…) en lugar de editar la 0003.
+Todas las consultas por WhatsApp llegan a Zona-INNmueble (`agencies.whatsapp`, migración 0004).
+Una propiedad solo se envía a otro número si se le asigna un asesor propio en la tabla `agents`.
+
+Cambios de datos: siempre con una migración nueva (0005, 0006…), nunca editando las anteriores.

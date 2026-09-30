@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Convierte data/propiedades.json (export de Wix) en SQL para D1.
+// Convierte data/propiedades.json (inventario del sitio anterior) en SQL para D1.
+// Solo sirvió para la carga inicial: desde ahora las propiedades se administran en /admin (Cloudflare D1).
 //
 // Solo copia campos públicos en una lista blanca. Nunca exporta precioReal,
 // contactoVendedor, notasInternas, estadoLegal ni otros campos internos.
@@ -7,7 +8,7 @@
 // Uso: node scripts/import-wix-json.mjs ../../data/propiedades.json > migrations/0003_seed_inventario.sql
 
 import { readFileSync } from 'node:fs';
-import { detectZone, parsePrice, parseNumber, mapType, mapOperation, cleanText, splitAdvisor } from '../src/normalize.js';
+import { detectZone, parsePrice, parseNumber, mapType, mapOperation, cleanText } from '../src/normalize.js';
 
 const file = process.argv[2];
 if (!file) {
@@ -39,8 +40,9 @@ for (const p of rows) {
     ? p.caracteristicas
     : String(p.caracteristicas || '').split(/[,\n|]/).map((s) => s.trim()).filter(Boolean);
 
-  const advisor = splitAdvisor(p.asesor, p.waAsesor);
-  if (advisor && !agents.has(advisor.name)) agents.set(advisor.name, advisor);
+  // Los asesores que vienen en el archivo de origen no se importan: todas las consultas
+  // de estas propiedades van a Zona-INNmueble (ver migración 0004).
+  const advisor = null;
 
   if (!amount) warnings.push(`${p.slug}: sin precio`);
   if (!areaBuilt && ['casa', 'apartamento'].includes(type)) warnings.push(`${p.slug}: sin área de construcción (no entra en el cálculo de valor por zona)`);

@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "seed:build": "node scripts/import-wix-json.mjs ../../data/propiedades.json > migrations/0003_seed_inventario.sql",
     "db:local": "wrangler d1 migrations apply inmuhub --local",
     "db:remote": "wrangler d1 migrations apply inmuhub --remote",
     "dev": "wrangler dev",
