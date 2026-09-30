@@ -1,0 +1,15 @@
+{
+  "name": "inmuhub-portal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:local": "wrangler d1 migrations apply inmuhub --local",
+    "db:remote": "wrangler d1 migrations apply inmuhub --remote",
+    "dev": "wrangler dev",
+    "test": "node --test test/*.test.js",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

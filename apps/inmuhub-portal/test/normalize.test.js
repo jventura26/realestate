@@ -1,0 +1,51 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { detectZone, parsePrice, splitAdvisor, zoneRange, valuePosition, cleanText, normalizeWhatsapp } from '../src/normalize.js';
+
+test('detectZone reconoce zonas y municipios', () => {
+  assert.equal(detectZone('Zona 15 | Vista Hermosa 3', 'Guatemala'), 'zona-15');
+  assert.equal(detectZone('Casa en Kanajuyú', 'Guatemala'), 'zona-16');
+  assert.equal(detectZone('Apartamento en Cayalá, Zona 16', 'Guatemala'), 'cayala');
+  assert.equal(detectZone('Casa en La Fontana | CAES', 'Fraijanes'), 'carretera-el-salvador');
+  assert.equal(detectZone('Carretera a Olmeca', 'Fraijanes'), 'fraijanes');
+  assert.equal(detectZone('Finca en Chimaltenango', ''), 'interior');
+  assert.equal(detectZone('Casa amplia, es muy luminosa', 'Guatemala'), null);
+});
+
+test('parsePrice separa monto y moneda', () => {
+  assert.deepEqual(parsePrice('$ 585,000'), { amount: 585000, currency: 'USD' });
+  assert.deepEqual(parsePrice('Q. 1,440,000'), { amount: 1440000, currency: 'GTQ' });
+  assert.deepEqual(parsePrice('585,000', 'USD'), { amount: 585000, currency: 'USD' });
+});
+
+test('splitAdvisor separa nombre y WhatsApp', () => {
+  assert.deepEqual(splitAdvisor('Zoraida Quintana 4769-2366'), { name: 'Zoraida Quintana', whatsapp: '50247692366' });
+  assert.equal(splitAdvisor(''), null);
+});
+
+test('zoneRange exige un mínimo de comparables', () => {
+  assert.equal(zoneRange([10, 20, 30], 5).enough, false);
+  const r = zoneRange([10, 20, 30, 40, 50], 5);
+  assert.equal(r.enough, true);
+  assert.equal(r.low, 20);
+  assert.equal(r.median, 30);
+  assert.equal(r.high, 40);
+});
+
+test('valuePosition ubica el precio frente al rango', () => {
+  const r = zoneRange([10, 20, 30, 40, 50], 5);
+  assert.equal(valuePosition(15, r), 'bajo');
+  assert.equal(valuePosition(30, r), 'en');
+  assert.equal(valuePosition(45, r), 'sobre');
+  assert.equal(valuePosition(30, { enough: false }), null);
+});
+
+test('cleanText quita emojis', () => {
+  assert.equal(cleanText('🏡 Residencia  exclusiva ✨'), 'Residencia exclusiva');
+});
+
+test('normalizeWhatsapp agrega el código de Guatemala', () => {
+  assert.equal(normalizeWhatsapp('4769-2366'), '50247692366');
+  assert.equal(normalizeWhatsapp('+502 4769 2366'), '50247692366');
+  assert.equal(normalizeWhatsapp('123'), null);
+});

@@ -1,0 +1,47 @@
+# inmuhub — portal inmobiliario curado
+# Proyecto independiente del Worker principal (zona-inmu).
+#
+# En inmuhub.com funciona como RUTA delante del sitio actual (proyecto Pages "realestateinmuhub"):
+#   - El portal atiende: /, /propiedades, /propiedad/*, /valor, /planes, /publicar, /admin, /api/*
+#   - Todo lo demás (blog, herramientas, asesores, zonas...) se sirve desde el sitio actual sin cambios.
+#   - Para volver al sitio anterior: ejecutar revertir-portal.bat (borra este Worker; no toca DNS ni Pages).
+name = "inmuhub-portal"
+main = "src/worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+routes = [
+  { pattern = "inmuhub.com/*", zone_name = "inmuhub.com" },
+  { pattern = "www.inmuhub.com/*", zone_name = "inmuhub.com" },
+]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# Fotografías subidas desde /admin
+[[kv_namespaces]]
+binding = "MEDIA"
+id = "bb6cc6c18d9d467bb784aa5e0955c34e"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "inmuhub"
+database_id = "563e7762-7895-4df5-96c7-a1dd87ab732e"
+migrations_dir = "migrations"
+
+[vars]
+SITE_URL = "https://inmuhub.com"
+# Sitio anterior al que se pasan las rutas que no son del portal.
+LEGACY_ORIGIN = "https://realestateinmuhub.pages.dev"
+# WhatsApp que recibe las consultas cuando la propiedad no tiene asesor asignado.
+WHATSAPP_DEFAULT = "50245542088"
+# Tipo de cambio para comparar precios en USD y GTQ.
+USD_TO_GTQ = "7.70"
+# Mínimo de propiedades comparables para mostrar un rango de valor por zona.
+MIN_COMPARABLES = "5"
+# META_PIXEL_ID = ""   # opcional: activa el Pixel de Meta (PageView y Lead)
+
+# Secretos (no van en este archivo):
+#   npx wrangler secret put ADMIN_TOKEN        -> clave de acceso a /admin
+#   npx wrangler secret put CRM_WEBHOOK_URL    -> opcional: reenvía cada lead a Zona-CRM
