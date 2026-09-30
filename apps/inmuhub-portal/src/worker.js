@@ -1,3 +1,4 @@
+import { EmailMessage } from 'cloudflare:email';
 // inmuhub portal — Worker principal.
 import * as db from './db.js';
 import * as views from './views.js';
@@ -94,6 +95,59 @@ async function forwardToCrm(env, lead) {
   return res.ok;
 }
 
+// Aviso por correo de cada consulta nueva (Cloudflare Email Routing).
+// Solo funciona si wrangler.toml tiene el binding LEAD_MAIL y LEAD_MAIL_FROM/TO configurados.
+const KIND_LABEL = { propiedad: 'Consulta por propiedad', valor_zona: 'Análisis de valor por zona', plan: 'Interés en planes', publicar: 'Propiedad enviada a revisión' };
+
+async function notifyByEmail(env, lead) {
+  if (!env.LEAD_MAIL || !env.LEAD_MAIL_FROM || !env.LEAD_MAIL_TO) return false;
+  const phone = lead.whatsapp ? `+${lead.whatsapp}` : '';
+  const lines = [
+    `${KIND_LABEL[lead.kind] || 'Consulta nueva'} en inmuhub`,
+    '',
+    `Nombre: ${lead.name || '—'}`,
+    `Teléfono: ${phone}`,
+    lead.whatsapp ? `WhatsApp: https://wa.me/${lead.whatsapp}` : null,
+    lead.property_title ? `Propiedad: ${lead.property_title}` : null,
+    lead.property_slug ? `Ficha: ${env.SITE_URL}/propiedad/${lead.property_slug}` : null,
+    lead.zone_slug && !lead.property_slug ? `Zona: ${lead.zone_name || lead.zone_slug}` : null,
+    lead.intent ? `Interés: ${lead.intent}` : null,
+    lead.message ? `Detalle: ${lead.message}` : null,
+    lead.ref ? `Referencia: ${lead.ref}` : null,
+    lead.utm_source || lead.utm_campaign ? `Origen: ${[lead.utm_source, lead.utm_campaign, lead.utm_content].filter(Boolean).join(' / ')}` : 'Origen: directo',
+    '',
+    `Panel: ${env.SITE_URL}/admin`,
+  ].filter((l) => l !== null);
+  const subject = `${KIND_LABEL[lead.kind] || 'Consulta nueva'}: ${lead.name || phone}`;
+  const raw = buildMime({ from: env.LEAD_MAIL_FROM, fromName: 'inmuhub', to: env.LEAD_MAIL_TO, subject, text: lines.join('\r\n') });
+  await env.LEAD_MAIL.send(new EmailMessage(env.LEAD_MAIL_FROM, env.LEAD_MAIL_TO, raw));
+  return true;
+}
+
+// Mensaje RFC 5322 en texto plano UTF-8 (base64).
+function b64utf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
+export function buildMime({ from, fromName, to, subject, text }) {
+  const body = b64utf8(text).replace(/.{76}/g, '$&\r\n');
+  return [
+    `From: =?UTF-8?B?${b64utf8(fromName)}?= <${from}>`,
+    `To: <${to}>`,
+    `Subject: =?UTF-8?B?${b64utf8(subject)}?=`,
+    `Date: ${new Date().toUTCString()}`,
+    `Message-ID: <${crypto.randomUUID()}@${from.split('@')[1]}>`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    body,
+  ].join('\r\n');
+}
+
 async function handleConsulta(request, env, ctx) {
   const form = await request.formData();
   const kind = field(form, 'tipo', 20);
@@ -149,6 +203,7 @@ async function handleConsulta(request, env, ctx) {
   } else if (kind === 'valor_zona') {
     const zone = await db.getZone(env.DB, field(form, 'zona', 60));
     lead.zone_slug = zone?.slug || null;
+    lead.zone_name = zone?.name || null;
     const tipo = TYPE_LABELS[mapType(field(form, 'tipo_propiedad', 20))] || 'Casa';
     text = `Hola, soy ${name}. Quiero el análisis de valor de ${zone?.name || 'mi zona'} (${tipo.toLowerCase()}). Mi interés es ${lead.intent === 'vender' ? 'vender' : 'comprar'}.`;
   } else {
@@ -156,11 +211,13 @@ async function handleConsulta(request, env, ctx) {
   }
 
   const id = await db.insertLead(env.DB, lead);
+  const full = { id, ...lead, property_slug: property?.slug, property_title: property?.title };
   ctx.waitUntil(
-    forwardToCrm(env, { id, ...lead, property_slug: property?.slug, property_title: property?.title })
+    forwardToCrm(env, full)
       .then((ok) => ok && db.markLeadSynced(env.DB, id))
       .catch((e) => console.error('CRM webhook', e))
   );
+  ctx.waitUntil(notifyByEmail(env, full).catch((e) => console.error('Aviso por correo', e)));
 
   // Propiedades sin WhatsApp: la consulta queda en el panel y la persona ve la confirmación.
   if (property && property.contact_mode === 'formulario') return redirect(`/gracias?propiedad=${encodeURIComponent(property.slug)}`);
@@ -218,6 +275,11 @@ async function handlePublicar(request, env, ctx) {
   const ref = `IH-${String(id).padStart(4, '0')}`;
   const leadId = await db.insertLead(env.DB, { kind: 'publicar', name, whatsapp, zone_slug: zone.slug, message: `${ref} · ${title}` });
   ctx.waitUntil(forwardToCrm(env, { id: leadId, kind: 'publicar', name, whatsapp, ref, title }).catch(() => {}));
+  ctx.waitUntil(
+    notifyByEmail(env, { kind: 'publicar', name, whatsapp, ref, message: title, zone_slug: zone.slug }).catch((e) =>
+      console.error('Aviso por correo', e)
+    )
+  );
 
   const text = `Hola, soy ${name}. Envié mi propiedad a revisión en inmuhub (referencia ${ref}: ${title}). Aquí les comparto las fotografías.`;
   return page(views.publishThanksPage(env, { ref, waUrl: waLink(env.WHATSAPP_DEFAULT, text) }));
@@ -466,6 +528,10 @@ export default {
         const type = ['casa', 'apartamento', 'terreno'].includes(url.searchParams.get('tipo')) ? url.searchParams.get('tipo') : 'casa';
         const value = zone ? await db.zoneValue(env.DB, zone.slug, type, minComparables(env)) : null;
         return page(views.zoneValuePage(env, { zones, zone, type, value, utm: utmFrom(url) }));
+      }
+
+      if (method === 'GET' && path === '/privacidad') {
+        return page(views.privacyPage(env), 200, { 'Cache-Control': 'public, max-age=3600' });
       }
 
       if (method === 'GET' && path === '/gracias') {

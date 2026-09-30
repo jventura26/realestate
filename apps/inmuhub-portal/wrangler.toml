@@ -40,8 +40,19 @@ WHATSAPP_DEFAULT = "50245542088"
 USD_TO_GTQ = "7.70"
 # Mínimo de propiedades comparables para mostrar un rango de valor por zona.
 MIN_COMPARABLES = "5"
+# Aviso por correo de cada consulta nueva (ver bloque [[send_email]] al final).
+LEAD_MAIL_FROM = "avisos@inmuhub.com"
+LEAD_MAIL_TO = "compartiendo.ideas@gmail.com"
 # META_PIXEL_ID = ""   # opcional: activa el Pixel de Meta (PageView y Lead)
 
 # Secretos (no van en este archivo):
 #   npx wrangler secret put ADMIN_TOKEN        -> clave de acceso a /admin
 #   npx wrangler secret put CRM_WEBHOOK_URL    -> opcional: reenvía cada lead a Zona-CRM
+
+# AVISO POR CORREO — se activa quitando el "#" de las 3 líneas siguientes, DESPUÉS de:
+#   1) Cloudflare > inmuhub.com > Email > Email Routing > activar
+#   2) Destination addresses > agregar LEAD_MAIL_TO y confirmar el correo de verificación
+# Si se activa antes, `wrangler deploy` falla.
+# [[send_email]]
+# name = "LEAD_MAIL"
+# destination_address = "compartiendo.ideas@gmail.com"

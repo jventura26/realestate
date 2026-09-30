@@ -60,6 +60,7 @@ ${pixel}
     <div class="footer-cols">
       <div><strong>Explorar</strong><a href="/propiedades">Propiedades</a><a href="/valor">Valor por zona</a></div>
       <div><strong>Publicar</strong><a href="/publicar">Propietarios</a><a href="/planes">Inmobiliarias</a></div>
+      <div><strong>Legal</strong><a href="/privacidad">Aviso de privacidad</a></div>
     </div>
   </div>
   <div class="wrap footer-legal muted">© ${new Date().getFullYear()} inmuhub. Los rangos de valor son referenciales y no sustituyen un avalúo profesional.</div>
@@ -153,13 +154,44 @@ function utmInputs(utm) {
   return html`<input type="hidden" name="utm_source" value="${utm.utm_source || ''}"><input type="hidden" name="utm_campaign" value="${utm.utm_campaign || ''}"><input type="hidden" name="utm_content" value="${utm.utm_content || ''}">`;
 }
 
+const PRIVACY_NOTE = raw('<p class="small muted form-legal">Al enviar acepta el <a href="/privacidad">aviso de privacidad</a>.</p>');
 const HONEYPOT = raw('<div class="hp" aria-hidden="true"><label>No llenar<input type="text" name="empresa" tabindex="-1" autocomplete="off"></label></div>');
+
+// Descripción con formato simple: párrafos, «## Título» para secciones y «- punto» para listas.
+// Los párrafos antes de la primera sección son la presentación; las secciones van en rejilla.
+export function renderDescription(text) {
+  const blocks = String(text || '').replace(/\r/g, '').split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
+  const intro = [];
+  const sections = [];
+  let current = null;
+  for (const b of blocks) {
+    const lines = b.split('\n');
+    if (lines[0].startsWith('## ')) {
+      current = { title: lines[0].slice(3).trim(), items: [] };
+      sections.push(current);
+      lines.shift();
+      if (!lines.length) continue;
+    }
+    const bullets = lines.filter((l) => l.startsWith('- '));
+    const node = bullets.length === lines.length && bullets.length
+      ? { list: bullets.map((l) => l.slice(2).trim()) }
+      : { text: lines.join(' ') };
+    (current ? current.items : intro).push(node);
+  }
+  const renderItems = (items) =>
+    items.map((it) => (it.list ? html`<ul class="desc-list">${it.list.map((li) => html`<li>${li}</li>`)}</ul>` : html`<p>${it.text}</p>`));
+  return html`<div class="desc">
+  ${intro.length ? html`<div class="desc-intro">${renderItems(intro)}</div>` : ''}
+  ${sections.length ? html`<div class="desc-sections">${sections.map((sec) => html`<div class="desc-section"><h3>${sec.title}</h3>${renderItems(sec.items)}</div>`)}</div>` : ''}
+</div>`;
+}
 
 // ---------- Páginas ----------
 
 export function homePage(env, { zones, featured, positions, heroImage }) {
   const featuredZones = zones.filter((z) => z.featured);
-  const hero = heroImage || (featured[0] && firstImage(featured[0]));
+  const hero = heroImage || '/portada.webp';
+  const illustrative = hero === '/portada.webp';
   const body = html`
 <section class="hero wrap">
   <div class="hero-copy">
@@ -179,7 +211,8 @@ export function homePage(env, { zones, featured, positions, heroImage }) {
     </ul>
   </div>
   <div class="hero-media">
-    ${hero ? html`<img src="${hero}" alt="Propiedad destacada en inmuhub">` : html`<div class="ph">inmuhub</div>`}
+    <img src="${hero}" alt="${illustrative ? 'Residencia contemporánea al atardecer con vista a un volcán' : 'Propiedad destacada en inmuhub'}" fetchpriority="high">
+    ${illustrative ? html`<span class="hero-note">Imagen ilustrativa</span>` : ''}
   </div>
 </section>
 
@@ -310,8 +343,8 @@ export function propertyPage(env, { p, reading, utm, error }) {
       <div class="price-row"><span class="price-lg">${formatMoney(p.price_amount, p.currency)}</span>${p.currency === 'USD' && p.price_gtq ? html`<span class="muted small">≈ Q ${formatNumber(p.price_gtq)}</span>` : ''}</div>
       ${shownSpecs.length ? html`<dl class="specs">${shownSpecs.map(([k, v]) => html`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl>` : ''}
       ${readingBlock}
-      ${p.description ? html`<section class="block"><h2>Sobre la propiedad</h2><div class="prose">${p.description.split(/\n{2,}/).map((para) => html`<p>${para}</p>`)}</div></section>` : ''}
-      ${features.length ? html`<section class="block"><h2>Características</h2><ul class="tags">${features.map((f) => html`<li>${f}</li>`)}</ul></section>` : ''}
+      ${p.description ? html`<section class="block"><h2>Sobre la propiedad</h2>${renderDescription(p.description)}</section>` : ''}
+      ${features.length ? html`<section class="block"><h2>Amenidades y equipamiento</h2><ul class="tags">${features.map((f) => html`<li>${f}</li>`)}</ul></section>` : ''}
       <section class="block"><h2>Ubicación</h2><p class="muted">${place}. La ubicación exacta se comparte al agendar la visita.</p></section>
     </div>
     <aside class="ficha-side">
@@ -331,6 +364,7 @@ export function propertyPage(env, { p, reading, utm, error }) {
         </fieldset>
         <button class="btn btn-primary btn-block" type="submit">${wa ? html`${WA_ICON}Continuar por WhatsApp` : 'Solicitar información'}</button>
         <p class="small muted">${wa ? 'Sus datos solo se comparten con el asesor de esta propiedad.' : 'Un asesor le contactará para darle información y coordinar una visita.'}</p>
+      ${PRIVACY_NOTE}
       </form>` : ''}
     </aside>
   </div>
@@ -394,7 +428,8 @@ export function zoneValuePage(env, { zones, zone, type, value, utm, error }) {
         <label><input type="radio" name="intencion" value="vender"><span>Vender</span></label>
       </fieldset>
       <button class="btn btn-primary btn-block" type="submit">${WA_ICON}Recibir por WhatsApp</button>
-    </form>
+    ${PRIVACY_NOTE}
+      </form>
   </div>
 </section>`;
   return layout(env, {
@@ -458,7 +493,8 @@ export function plansPage(env, { utm, error, selected }) {
       <label>WhatsApp<input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="+502" maxlength="20" required></label>
       <label>Plan<select name="intencion">${PLANS.map((pl) => html`<option value="${pl.id}"${selected === pl.id ? raw(' selected') : ''}>${pl.name} · ${pl.price}/mes</option>`)}</select></label>
       <button class="btn btn-primary btn-block" type="submit">${WA_ICON}Continuar por WhatsApp</button>
-    </form>
+    ${PRIVACY_NOTE}
+      </form>
   </div>
 </section>`;
   return layout(env, { title: 'Planes para inmobiliarias', path: '/planes', body });
@@ -499,7 +535,8 @@ export function publishPage(env, { zones, values = {}, error }) {
     </fieldset>
     <button class="btn btn-primary btn-block" type="submit">Enviar a revisión</button>
     <p class="small muted">Publicación básica sin costo. Le indicaremos las opciones Verificado y Premium si le interesan.</p>
-  </form>
+  ${PRIVACY_NOTE}
+      </form>
 </section>`;
   return layout(env, { title: 'Publicar propiedad', path: '/publicar', body });
 }
@@ -650,7 +687,8 @@ export function adminEditPage(env, { p, zones, heroImage, notice, error }) {
       <p class="small muted">El área de construcción (o de terreno, en terrenos y fincas) define la lectura de valor por zona.</p>
     </fieldset>
     <fieldset><legend>Contenido</legend>
-      <label>Descripción<textarea name="description" rows="8" maxlength="6000">${v('description')}</textarea></label>
+      <label>Descripción<textarea name="description" rows="16" maxlength="6000">${v('description')}</textarea></label>
+      <p class="small muted">Formato: párrafos separados por una línea en blanco. «## Título» crea una sección y «- texto» un punto de lista.</p>
       <label>Características (separadas por coma)<input type="text" name="features" maxlength="1500" value="${features.join(', ')}"></label>
       <label>Enlace del tour 360°<input type="url" name="tour_url" maxlength="500" value="${v('tour_url')}" placeholder="https://"></label>
     </fieldset>
@@ -715,4 +753,49 @@ export function adminEditPage(env, { p, zones, heroImage, notice, error }) {
   </script>
 </section>`;
   return layout(env, { title: `Editar · ${p.title}`, body, noindex: true });
+}
+
+// ---------- Aviso de privacidad ----------
+
+export function privacyPage(env) {
+  const wa = String(env.WHATSAPP_DEFAULT || '');
+  const waLabel = wa.startsWith('502') && wa.length === 11 ? `+502 ${wa.slice(3, 7)}-${wa.slice(7)}` : wa;
+  const body = html`
+<section class="wrap section narrow legal">
+  <div class="eyebrow">Aviso de privacidad</div>
+  <h1 class="display-md">Cómo tratamos sus datos</h1>
+  <p class="lead">inmuhub es un portal inmobiliario operado por Zona-INNmueble en Guatemala. Este aviso explica qué datos recibimos a través del sitio, para qué los usamos y cómo puede pedir que los corrijamos o eliminemos.</p>
+
+  <h2>Qué datos recibimos</h2>
+  <ul class="desc-list">
+    <li>Los que usted escribe en nuestros formularios: nombre, número de teléfono o WhatsApp, correo (opcional), su interés (comprar, vender, invertir) y los datos de la propiedad que desea publicar.</li>
+    <li>La página desde la que nos contacta y, si llegó desde un anuncio, el nombre de la campaña.</li>
+    <li>Datos técnicos básicos de navegación que registran nuestros proveedores de alojamiento y, si está activa, la medición de anuncios de Meta.</li>
+  </ul>
+
+  <h2>Para qué los usamos</h2>
+  <ul class="desc-list">
+    <li>Responder su consulta y darle información sobre la propiedad o zona que le interesa.</li>
+    <li>Revisar y publicar la propiedad que usted nos envía.</li>
+    <li>Coordinar visitas y dar seguimiento a su solicitud.</li>
+    <li>Medir qué anuncios y páginas funcionan mejor, de forma agregada.</li>
+  </ul>
+  <p>No vendemos sus datos ni los usamos para fines distintos de los descritos aquí.</p>
+
+  <h2>Con quién los compartimos</h2>
+  <ul class="desc-list">
+    <li>Con el asesor o propietario responsable de la propiedad por la que usted consulta, solo para atender su solicitud.</li>
+    <li>Con los proveedores técnicos que alojan el sitio y los mensajes (Cloudflare) y, cuando usted elige continuar por WhatsApp, con esa plataforma.</li>
+  </ul>
+  <p>Los datos de contacto de quien publica una propiedad no se muestran en el sitio.</p>
+
+  <h2>Cuánto tiempo los guardamos</h2>
+  <p>Mientras sean útiles para atender su solicitud o dar seguimiento comercial razonable. Puede pedir su eliminación en cualquier momento.</p>
+
+  <h2>Sus derechos</h2>
+  <p>Puede solicitar acceso, corrección o eliminación de sus datos, o pedir que dejemos de contactarle, escribiéndonos por WhatsApp${waLabel ? html` al <strong>${waLabel}</strong>` : ''}. Atenderemos su solicitud en un plazo razonable.</p>
+
+  <p class="small muted">Última actualización: septiembre de 2026.</p>
+</section>`;
+  return layout(env, { title: 'Aviso de privacidad', path: '/privacidad', body });
 }
