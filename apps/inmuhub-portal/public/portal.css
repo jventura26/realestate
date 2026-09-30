@@ -310,3 +310,16 @@ label.check input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; 
 .form-legal a { color: inherit; text-decoration: underline; }
 .hero-media { position: relative; }
 .hero-note { position: absolute; right: 14px; bottom: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: #fff; background: rgba(15, 27, 45, 0.55); padding: 4px 9px; border-radius: 10px; }
+
+/* Subida de fotos */
+.upload-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.upload-preview:empty { display: none; }
+.upload-preview img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+input[type=file] { font-family: var(--body); font-size: 15px; }
+.hero-admin { display: grid; gap: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-top: 8px; }
+.hero-admin img { width: 100%; max-width: 220px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+.hero-admin-body { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.hero-admin h2 { margin-top: 0; }
+@media (min-width: 720px) { .hero-admin { grid-template-columns: 220px 1fr; align-items: center; } }
+input[type=file]::file-selector-button { font-family: var(--body); font-size: 14px; font-weight: 700; color: #fff; background: var(--ink); border: 0; border-radius: 10px; padding: 11px 16px; margin-right: 12px; cursor: pointer; }
+input[type=file]::file-selector-button:hover { background: #1b2c45; }

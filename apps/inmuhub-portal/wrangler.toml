@@ -24,6 +24,12 @@ binding = "ASSETS"
 binding = "MEDIA"
 id = "bb6cc6c18d9d467bb784aa5e0955c34e"
 
+# Límite de envíos del formulario "Publicar propiedad": 3 por minuto por IP
+[[ratelimits]]
+name = "PUBLISH_LIMITER"
+namespace_id = "1001"
+simple = { limit = 3, period = 60 }
+
 [[d1_databases]]
 binding = "DB"
 database_name = "inmuhub"

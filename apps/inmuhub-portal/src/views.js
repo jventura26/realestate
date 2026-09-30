@@ -8,7 +8,7 @@ const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fil
 
 // ---------- Layout ----------
 
-export function layout(env, { title, description, image, path = '/', body, noindex = false, bodyClass = '' }) {
+export function layout(env, { title, description, image, path = '/', body, noindex = false, bodyClass = '', scripts = [] }) {
   const site = env.SITE_URL || '';
   const fullTitle = title ? `${title} · inmuhub` : 'inmuhub · Portal inmobiliario curado en Guatemala';
   const desc = description || 'Propiedades revisadas en Guatemala, con lectura de valor por zona y contacto directo por WhatsApp.';
@@ -65,6 +65,7 @@ ${pixel}
   </div>
   <div class="wrap footer-legal muted">© ${new Date().getFullYear()} inmuhub. Los rangos de valor son referenciales y no sustituyen un avalúo profesional.</div>
 </footer>
+${scripts.map((src) => html`<script src="${src}" defer></script>`)}
 </body>
 </html>`;
 }
@@ -506,9 +507,9 @@ export function publishPage(env, { zones, values = {}, error }) {
 <section class="wrap section narrow">
   <div class="eyebrow">Propietarios</div>
   <h1 class="display-md">Publique su propiedad con análisis de valor</h1>
-  <p class="lead">Complete los datos básicos. Revisamos la información y le escribimos por WhatsApp para recibir fotografías y confirmar la publicación.</p>
+  <p class="lead">Complete los datos básicos y agregue sus fotografías. Revisamos la información y le escribimos por WhatsApp para confirmar la publicación.</p>
   <ol class="mini-steps"><li><strong>1.</strong> Datos de la propiedad</li><li><strong>2.</strong> Revisión y lectura de valor</li><li><strong>3.</strong> Publicación y consultas a su WhatsApp</li></ol>
-  <form class="form-card form-wide" method="post" action="/publicar" data-lead="1">
+  <form class="form-card form-wide" method="post" action="/publicar" enctype="multipart/form-data" data-lead="1" data-upload>
     ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
     ${HONEYPOT}
     <fieldset><legend>La propiedad</legend>
@@ -526,6 +527,11 @@ export function publishPage(env, { zones, values = {}, error }) {
       </div>
       <label>Descripción breve<textarea name="descripcion" rows="4" maxlength="2000" placeholder="Luz natural, distribución, entorno. Sin superlativos.">${v('descripcion')}</textarea></label>
     </fieldset>
+    <fieldset><legend>Fotografías</legend>
+      <label>Hasta 10 fotos (JPG, PNG o WebP)<input type="file" name="fotos" accept="image/jpeg,image/png,image/webp" multiple data-max="10"></label>
+      <div class="upload-preview" data-upload-preview></div>
+      <p class="small muted" data-upload-msg>Recomendado: fachada, sala, cocina, habitación principal y jardín, con buena luz natural. Se optimizan automáticamente.</p>
+    </fieldset>
     <fieldset><legend>Sus datos (no se publican)</legend>
       <div class="grid-2">
         <label>Nombre<input type="text" name="nombre" autocomplete="name" maxlength="80" value="${v('nombre')}" required></label>
@@ -538,16 +544,19 @@ export function publishPage(env, { zones, values = {}, error }) {
   ${PRIVACY_NOTE}
       </form>
 </section>`;
-  return layout(env, { title: 'Publicar propiedad', path: '/publicar', body });
+  return layout(env, { title: 'Publicar propiedad', path: '/publicar', body, scripts: ['/upload.js'] });
 }
 
-export function publishThanksPage(env, { ref, waUrl }) {
+export function publishThanksPage(env, { ref, waUrl, photos = 0 }) {
   const body = html`
 <section class="wrap section narrow center">
   <div class="eyebrow">Recibido · Referencia ${ref}</div>
   <h1 class="display-md">Su propiedad está en revisión.</h1>
-  <p class="lead">El siguiente paso es enviarnos las fotografías por WhatsApp. Con eso completamos la revisión y la lectura de valor.</p>
-  <a class="btn btn-primary" href="${waUrl}">${WA_ICON}Enviar fotografías por WhatsApp</a>
+  ${photos
+    ? html`<p class="lead">Recibimos sus datos y ${photos === 1 ? 'una fotografía' : `${photos} fotografías`}. Le escribiremos por WhatsApp para confirmar la publicación y compartirle la lectura de valor.</p>
+  <a class="btn btn-outline" href="${waUrl}">${WA_ICON}Enviar más fotografías por WhatsApp</a>`
+    : html`<p class="lead">El siguiente paso es enviarnos las fotografías por WhatsApp. Con eso completamos la revisión y la lectura de valor.</p>
+  <a class="btn btn-primary" href="${waUrl}">${WA_ICON}Enviar fotografías por WhatsApp</a>`}
 </section>`;
   return layout(env, { title: 'Propiedad en revisión', path: '/publicar', body, noindex: true });
 }
@@ -569,17 +578,32 @@ export function adminLoginPage(env, { error }) {
 
 const STATUS_LABEL = { revision: 'En revisión', publicada: 'Publicada', rechazada: 'Rechazada', pausada: 'Pausada', vendida: 'Vendida' };
 
-export function adminPage(env, { counts, props, leads, zones, filter }) {
+export function adminPage(env, { counts, props, leads, zones, filter, heroImage, notice }) {
   const waLink = (n) => (n ? `https://wa.me/${n}` : null);
   const body = html`
 <section class="wrap section admin">
   <div class="section-head"><h1 class="display-sm">Panel inmuhub</h1><form method="post" action="/admin/logout"><button class="btn btn-outline btn-sm" type="submit">Salir</button></form></div>
+  ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
   <div class="kpis">
     <div><span>En revisión</span><strong>${counts.pendientes}</strong></div>
     <div><span>Publicadas</span><strong>${counts.publicadas}</strong></div>
     <div><span>Consultas 7 días</span><strong>${counts.leads_7d}</strong></div>
     <div><span>Consultas totales</span><strong>${counts.leads_total}</strong></div>
   </div>
+
+  <section class="hero-admin">
+    <img src="${heroImage || '/portada.webp'}" alt="Portada actual">
+    <div class="hero-admin-body">
+      <h2>Portada del sitio</h2>
+      <p class="small muted">${heroImage ? 'Foto elegida por usted.' : 'Imagen ilustrativa predeterminada.'} Se muestra en la parte superior de la home. Funcionan mejor las fotos verticales o cuadradas.</p>
+      <form method="post" action="/admin/portada" enctype="multipart/form-data" data-upload class="row-actions">
+        <input type="file" name="foto" accept="image/jpeg,image/png,image/webp" data-max="1" required aria-label="Foto de portada">
+        <button class="btn btn-primary btn-sm" type="submit">Subir como portada</button>
+        <span class="small muted" data-upload-msg></span>
+      </form>
+      ${heroImage ? html`<form method="post" action="/admin/portada"><button class="btn btn-outline btn-sm" name="accion" value="restablecer">Volver a la imagen ilustrativa</button></form>` : ''}
+    </div>
+  </section>
 
   <div class="section-head"><h2>Propiedades</h2><form method="post" action="/admin/nueva"><button class="btn btn-primary btn-sm" type="submit">Nueva propiedad</button></form></div>
   <nav class="tabs">${[['', 'Todas'], ['revision', 'En revisión'], ['publicada', 'Publicadas'], ['pausada', 'Pausadas'], ['rechazada', 'Rechazadas']].map(
@@ -623,7 +647,7 @@ export function adminPage(env, { counts, props, leads, zones, filter }) {
     </tr>`)}</tbody>
   </table></div>
 </section>`;
-  return layout(env, { title: 'Administración', body, noindex: true });
+  return layout(env, { title: 'Administración', body, noindex: true, scripts: ['/upload.js'] });
 }
 
 // ---------- Solicitud recibida (propiedades sin WhatsApp) ----------

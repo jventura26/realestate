@@ -11,7 +11,7 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'DENY',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Content-Security-Policy':
-    "default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; " +
+    "default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; " +
     "script-src 'self' 'unsafe-inline' https://connect.facebook.net; connect-src 'self' https://www.facebook.com; " +
     "form-action 'self' https://wa.me https://*.whatsapp.com; frame-ancestors 'none'; base-uri 'self'",
 };
@@ -233,6 +233,22 @@ async function handlePublicar(request, env, ctx) {
 
   if (field(form, 'empresa')) return redirect('/');
 
+  // Límite de envíos por IP (binding opcional PUBLISH_LIMITER).
+  if (env.PUBLISH_LIMITER) {
+    const ip = request.headers.get('CF-Connecting-IP') || 'local';
+    const { success } = await env.PUBLISH_LIMITER.limit({ key: ip });
+    if (!success) return fail('Recibimos varios envíos seguidos desde su conexión. Espere un minuto e intente de nuevo.');
+  }
+
+  // Fotografías del propietario: se validan antes de guardar nada.
+  const photos = form.getAll('fotos').filter((f) => typeof f === 'object' && f && f.size > 0);
+  if (photos.length > MAX_OWNER_PHOTOS) return fail(`Puede subir hasta ${MAX_OWNER_PHOTOS} fotografías.`);
+  for (const f of photos) {
+    if (!IMAGE_TYPES[f.type]) return fail(`La foto «${f.name}» no tiene un formato admitido. Use JPG, PNG o WebP.`);
+    if (f.size > MAX_IMAGE_BYTES) return fail(`La foto «${f.name}» supera 8 MB.`);
+  }
+  if (photos.length && !env.MEDIA) return fail('En este momento no podemos recibir fotografías. Envíe el formulario sin fotos y se las pediremos por WhatsApp.');
+
   const type = mapType(field(form, 'tipo', 20));
   const zone = zones.find((z) => z.slug === field(form, 'zona', 60));
   const price = parseNumber(field(form, 'precio', 20));
@@ -272,6 +288,16 @@ async function handlePublicar(request, env, ctx) {
     owner_email: field(form, 'correo', 120) || null,
   });
 
+  if (photos.length) {
+    const images = [];
+    for (const f of photos) {
+      const key = `p/${id}/${crypto.randomUUID()}.${IMAGE_TYPES[f.type]}`;
+      await env.MEDIA.put(key, await f.arrayBuffer(), { metadata: { type: f.type } });
+      images.push(`/media/${key}`);
+    }
+    await db.adminSetImages(env.DB, id, images);
+  }
+
   const ref = `IH-${String(id).padStart(4, '0')}`;
   const leadId = await db.insertLead(env.DB, { kind: 'publicar', name, whatsapp, zone_slug: zone.slug, message: `${ref} · ${title}` });
   ctx.waitUntil(forwardToCrm(env, { id: leadId, kind: 'publicar', name, whatsapp, ref, title }).catch(() => {}));
@@ -281,9 +307,10 @@ async function handlePublicar(request, env, ctx) {
     )
   );
 
-  const text = `Hola, soy ${name}. Envié mi propiedad a revisión en inmuhub (referencia ${ref}: ${title}). Aquí les comparto las fotografías.`;
-  return page(views.publishThanksPage(env, { ref, waUrl: waLink(env.WHATSAPP_DEFAULT, text) }));
+  return redirect(`/publicar/gracias?ref=${ref}&fotos=${photos.length}`);
 }
+
+const MAX_OWNER_PHOTOS = 10;
 
 // ---------- Sitio anterior (Cloudflare Pages) ----------
 // El portal atiende sus rutas; el resto se sirve desde el sitio anterior sin cambios.
@@ -541,7 +568,7 @@ export default {
       }
 
       // Fotografías subidas desde /admin (Workers KV)
-      const mediaMatch = path.match(/^\/media\/(p\/\d+\/[a-z0-9-]+\.(?:webp|jpg|png))$/);
+      const mediaMatch = path.match(/^\/media\/((?:p\/\d+|site)\/[a-z0-9-]+\.(?:webp|jpg|png))$/);
       if ((method === 'GET' || method === 'HEAD') && mediaMatch && env.MEDIA) {
         const { value, metadata } = await env.MEDIA.getWithMetadata(mediaMatch[1], { type: 'stream', cacheTtl: 3600 });
         if (!value) return page(views.notFoundPage(env), 404);
@@ -564,6 +591,14 @@ export default {
 
       if (method === 'POST' && path === '/consulta') return handleConsulta(request, env, ctx);
       if (method === 'POST' && path === '/publicar') return handlePublicar(request, env, ctx);
+
+      if (method === 'GET' && path === '/publicar/gracias') {
+        const ref = /^IH-\d{1,8}$/.test(url.searchParams.get('ref') || '') ? url.searchParams.get('ref') : null;
+        if (!ref) return redirect('/publicar');
+        const photos = Math.min(Number(url.searchParams.get('fotos')) || 0, MAX_OWNER_PHOTOS);
+        const text = `Hola, envié mi propiedad a revisión en inmuhub (referencia ${ref}).${photos ? ' Les comparto más fotografías.' : ' Aquí les comparto las fotografías.'}`;
+        return page(views.publishThanksPage(env, { ref, photos, waUrl: waLink(env.WHATSAPP_DEFAULT, text) }), 200, { 'Cache-Control': 'no-store' });
+      }
 
       // --- API pública (JSON) ---
       if (method === 'GET' && path === '/api/propiedades') {
@@ -617,6 +652,29 @@ export default {
         const editMatch = path.match(/^\/admin\/propiedad\/(\d+)\/(editar|guardar|fotos|foto)$/);
         if (editMatch) return handleAdminEdit(request, env, url, Number(editMatch[1]), editMatch[2]);
 
+        if (method === 'POST' && path === '/admin/portada') {
+          const form = await request.formData();
+          const current = await db.getSetting(env.DB, 'hero_image');
+          const dropOld = async () => {
+            if (current && current.startsWith('/media/site/') && env.MEDIA) await env.MEDIA.delete(current.slice('/media/'.length));
+          };
+          if (field(form, 'accion', 20) === 'restablecer') {
+            await dropOld();
+            await db.setSetting(env.DB, 'hero_image', null);
+            return redirect('/admin?ok=portada-ilustrativa');
+          }
+          const f = form.get('foto');
+          if (!f || typeof f !== 'object' || !f.size) return new Response('Seleccione una fotografía.', { status: 400 });
+          if (!IMAGE_TYPES[f.type]) return new Response('Formato no admitido. Use JPG, PNG o WebP.', { status: 400 });
+          if (f.size > MAX_IMAGE_BYTES) return new Response('La foto supera 8 MB.', { status: 400 });
+          if (!env.MEDIA) return new Response('El almacenamiento de fotos no está configurado.', { status: 500 });
+          const key = `site/hero-${crypto.randomUUID()}.${IMAGE_TYPES[f.type]}`;
+          await env.MEDIA.put(key, await f.arrayBuffer(), { metadata: { type: f.type } });
+          await dropOld();
+          await db.setSetting(env.DB, 'hero_image', `/media/${key}`);
+          return redirect('/admin?ok=portada');
+        }
+
         if (method === 'POST' && path === '/admin/nueva') {
           const id = await db.adminCreateProperty(env.DB, `nueva-${crypto.randomUUID().slice(0, 8)}`);
           return redirect(`/admin/propiedad/${id}/editar?ok=nueva`);
@@ -624,13 +682,15 @@ export default {
 
         if (method === 'GET' && path === '/admin') {
           const filter = url.searchParams.get('estado') || '';
-          const [counts, props, leads, zones] = await Promise.all([
+          const [counts, props, leads, zones, heroImage] = await Promise.all([
             db.adminCounts(env.DB),
             db.adminListProperties(env.DB, filter || null),
             db.adminRecentLeads(env.DB),
             db.listZones(env.DB),
+            db.getSetting(env.DB, 'hero_image'),
           ]);
-          return page(views.adminPage(env, { counts, props, leads, zones, filter }), 200, { 'Cache-Control': 'no-store' });
+          const notice = { portada: 'Portada del sitio actualizada.', 'portada-ilustrativa': 'La home vuelve a usar la imagen ilustrativa.' }[url.searchParams.get('ok')];
+          return page(views.adminPage(env, { counts, props, leads, zones, filter, heroImage, notice }), 200, { 'Cache-Control': 'no-store' });
         }
       }
 
