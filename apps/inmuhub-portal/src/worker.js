@@ -141,6 +141,7 @@ async function handleConsulta(request, env, ctx) {
   if (kind === 'propiedad') {
     property = await db.getPublicProperty(env.DB, field(form, 'propiedad', 80));
     if (!property) return page(views.notFoundPage(env), 404);
+    if (property.contact_mode === 'ninguno') return redirect(`/propiedad/${property.slug}`);
     lead.property_id = property.id;
     lead.zone_slug = property.zone_slug;
     destination = normalizeWhatsapp(property.contact_whatsapp) || destination;
@@ -162,7 +163,7 @@ async function handleConsulta(request, env, ctx) {
   );
 
   // Propiedades sin WhatsApp: la consulta queda en el panel y la persona ve la confirmación.
-  if (property && property.whatsapp_enabled === 0) return redirect(`/gracias?propiedad=${encodeURIComponent(property.slug)}`);
+  if (property && property.contact_mode === 'formulario') return redirect(`/gracias?propiedad=${encodeURIComponent(property.slug)}`);
   if (!destination) return redirect('/gracias');
   return redirect(waLink(destination, text));
 }
@@ -346,7 +347,7 @@ async function handleAdminEdit(request, env, url, id, action) {
         field(form, 'features', 1500).split(',').map((s) => cleanText(s)).filter(Boolean).slice(0, 30)
       ),
       tour_url: /^https:\/\/\S+$/.test(tour) ? tour : null,
-      whatsapp_enabled: form.get('whatsapp_enabled') ? 1 : 0,
+      contact_mode: ['whatsapp', 'formulario', 'ninguno'].includes(field(form, 'contact_mode', 12)) ? field(form, 'contact_mode', 12) : 'whatsapp',
       verified: form.get('verified') ? 1 : 0,
     };
     // Una propiedad nueva recibe una URL definitiva con su primer título real.

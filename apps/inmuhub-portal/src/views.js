@@ -257,7 +257,9 @@ export function listingPage(env, { zones, filters, items, total, positions }) {
 }
 
 export function propertyPage(env, { p, reading, utm, error }) {
-  const wa = p.whatsapp_enabled !== 0;
+  const mode = p.contact_mode || (p.whatsapp_enabled === 0 ? 'formulario' : 'whatsapp');
+  const wa = mode === 'whatsapp';
+  const contact = mode !== 'ninguno';
   const images = parseJsonArray(p.images);
   const features = parseJsonArray(p.features);
   const isLand = ['terreno', 'finca'].includes(p.type);
@@ -314,7 +316,7 @@ export function propertyPage(env, { p, reading, utm, error }) {
     </div>
     <aside class="ficha-side">
       ${p.agency_name ? html`<div class="advisor"><div class="avatar">${(p.agent_name || p.agency_name).charAt(0)}</div><div><strong>${p.agent_name || p.agency_name}</strong><span class="small muted">${p.agent_name ? p.agency_name + ' · ' : ''}${p.agency_verified ? 'Perfil verificado' : 'Asesor'}</span></div></div>` : ''}
-      <form class="form-card" method="post" action="/consulta" id="consulta" data-lead="1">
+      ${contact ? html`      <form class="form-card" method="post" action="/consulta" id="consulta" data-lead="1">
         <h2>¿Le interesa esta propiedad?</h2>
         ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
         <input type="hidden" name="propiedad" value="${p.slug}">
@@ -329,10 +331,10 @@ export function propertyPage(env, { p, reading, utm, error }) {
         </fieldset>
         <button class="btn btn-primary btn-block" type="submit">${wa ? html`${WA_ICON}Continuar por WhatsApp` : 'Solicitar información'}</button>
         <p class="small muted">${wa ? 'Sus datos solo se comparten con el asesor de esta propiedad.' : 'Un asesor le contactará para darle información y coordinar una visita.'}</p>
-      </form>
+      </form>` : ''}
     </aside>
   </div>
-  <div class="sticky-cta"><a class="btn btn-primary btn-block" href="#consulta">${wa ? html`${WA_ICON}Consultar por WhatsApp` : 'Solicitar información'}</a></div>
+  ${contact ? html`<div class="sticky-cta"><a class="btn btn-primary btn-block" href="#consulta">${wa ? html`${WA_ICON}Consultar por WhatsApp` : 'Solicitar información'}</a></div>` : ''}
 </article>`;
   return layout(env, {
     title: p.title,
@@ -340,7 +342,7 @@ export function propertyPage(env, { p, reading, utm, error }) {
     image: images[0],
     path: `/propiedad/${p.slug}`,
     body,
-    bodyClass: 'has-sticky',
+    bodyClass: contact ? 'has-sticky' : '',
   });
 }
 
@@ -553,7 +555,7 @@ export function adminPage(env, { counts, props, leads, zones, filter }) {
       <td>${p.zone_name || html`<em class="muted">sin zona</em>`}</td>
       <td>${formatMoney(p.price_amount, p.currency)}</td>
       <td>${p.area_built_m2 ? `${formatNumber(p.area_built_m2)} m²` : p.area_land_v2 ? `${formatNumber(p.area_land_v2)} v²` : '—'}</td>
-      <td><span class="status status-${p.status}">${STATUS_LABEL[p.status]}</span>${p.verified ? html` <span class="status status-publicada">Verificada</span>` : ''}${!p.images || p.images === '[]' ? html` <span class="status status-revision">Sin fotos</span>` : ''}${p.whatsapp_enabled === 0 ? html` <span class="status">Sin WhatsApp</span>` : ''}</td>
+      <td><span class="status status-${p.status}">${STATUS_LABEL[p.status]}</span>${p.verified ? html` <span class="status status-publicada">Verificada</span>` : ''}${!p.images || p.images === '[]' ? html` <span class="status status-revision">Sin fotos</span>` : ''}${p.contact_mode === 'ninguno' ? html` <span class="status">Sin contacto</span>` : p.contact_mode === 'formulario' ? html` <span class="status">Solo formulario</span>` : ''}</td>
       <td><form class="row-actions" method="post" action="/admin/propiedad/${p.id}">
         <a class="btn btn-primary btn-xs" href="/admin/propiedad/${p.id}/editar">Editar</a>
         ${p.status === 'revision'
@@ -653,7 +655,7 @@ export function adminEditPage(env, { p, zones, heroImage, notice, error }) {
       <label>Enlace del tour 360°<input type="url" name="tour_url" maxlength="500" value="${v('tour_url')}" placeholder="https://"></label>
     </fieldset>
     <fieldset><legend>Contacto y confianza</legend>
-      <label class="check"><input type="checkbox" name="whatsapp_enabled" value="1"${p.whatsapp_enabled ? raw(' checked') : ''}><span>Mostrar WhatsApp en la ficha (si se desactiva, las consultas solo se guardan en el panel)</span></label>
+      <label>Forma de contacto en la ficha<select name="contact_mode">${opt('whatsapp', 'Formulario que abre WhatsApp', p.contact_mode)}${opt('formulario', 'Formulario (la consulta solo se guarda en este panel)', p.contact_mode)}${opt('ninguno', 'Sin contacto (ficha solo informativa)', p.contact_mode)}</select></label>
       <label class="check"><input type="checkbox" name="verified" value="1"${p.verified ? raw(' checked') : ''}><span>Sello «Verificada» (documentación revisada)</span></label>
     </fieldset>
     <button class="btn btn-primary" type="submit">Guardar cambios</button>

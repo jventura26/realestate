@@ -5,7 +5,7 @@ import { zoneRange, valuePosition } from './normalize.js';
 const PUBLIC_COLUMNS = `p.id, p.slug, p.title, p.status, p.verified, p.operation, p.type, p.zone_slug, p.location_label,
   p.municipality, p.price_amount, p.currency, p.price_gtq, p.area_built_m2, p.area_land_v2, p.bedrooms, p.bathrooms,
   p.parking, p.levels, p.description, p.features, p.images, p.tour_url, p.video_url, p.lat, p.lng, p.featured_until,
-  p.published_at, p.whatsapp_enabled, z.name AS zone_name, a.name AS agency_name, a.verified AS agency_verified,
+  p.published_at, p.whatsapp_enabled, p.contact_mode, z.name AS zone_name, a.name AS agency_name, a.verified AS agency_verified,
   g.name AS agent_name, COALESCE(g.whatsapp, a.whatsapp) AS contact_whatsapp`;
 
 const PUBLIC_FROM = `FROM properties p
@@ -225,7 +225,7 @@ export async function adminGetProperty(db, id) {
 const EDITABLE = [
   'title', 'operation', 'type', 'zone_slug', 'location_label', 'municipality', 'price_amount', 'currency', 'price_gtq',
   'area_built_m2', 'area_land_v2', 'bedrooms', 'bathrooms', 'parking', 'levels', 'description', 'features', 'tour_url',
-  'video_url', 'whatsapp_enabled', 'verified', 'slug',
+  'video_url', 'whatsapp_enabled', 'contact_mode', 'verified', 'slug',
 ];
 
 export async function adminSaveProperty(db, id, fields) {
