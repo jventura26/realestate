@@ -220,6 +220,58 @@ async function handlePublicar(request, env, ctx) {
   return page(views.publishThanksPage(env, { ref, waUrl: waLink(env.WHATSAPP_DEFAULT, text) }));
 }
 
+// ---------- Sitio anterior (Cloudflare Pages) ----------
+// El portal atiende sus rutas; el resto se sirve desde el sitio anterior sin cambios.
+
+const HOP_HEADERS = ['host', 'cf-connecting-ip', 'cf-ipcountry', 'cf-ray', 'cf-visitor', 'x-forwarded-proto', 'x-real-ip'];
+
+async function legacyFetch(request, env) {
+  if (!env.LEGACY_ORIGIN) return null;
+  const incoming = new URL(request.url);
+  const origin = new URL(env.LEGACY_ORIGIN);
+  const target = new URL(incoming.pathname + incoming.search, origin);
+  const headers = new Headers(request.headers);
+  for (const h of HOP_HEADERS) headers.delete(h);
+  const res = await fetch(target, {
+    method: request.method,
+    headers,
+    body: ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
+    redirect: 'manual',
+  });
+  const out = new Response(res.body, res);
+  // Las redirecciones del sitio anterior deben quedarse en inmuhub.com.
+  const loc = out.headers.get('Location');
+  if (loc) {
+    const l = new URL(loc, origin);
+    if (l.host === origin.host) out.headers.set('Location', incoming.origin + l.pathname + l.search + l.hash);
+  }
+  out.headers.delete('X-Robots-Tag');
+  return out;
+}
+
+async function legacySitemapUrls(request, env) {
+  if (!env.LEGACY_ORIGIN) return [];
+  try {
+    const res = await fetch(new URL('/sitemap.xml', env.LEGACY_ORIGIN), { cf: { cacheTtl: 3600 } });
+    if (!res.ok) return [];
+    const xml = await res.text();
+    const locs = [...xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => m[1]);
+    return locs
+      .map((u) => {
+        try {
+          const p = new URL(u);
+          return p.pathname + p.search;
+        } catch {
+          return null;
+        }
+      })
+      .filter((p) => p && p !== '/' && p !== '/index.html' && !p.startsWith('/propiedades') && !/admin|dashboard/.test(p))
+      .map((p) => env.SITE_URL + p);
+  } catch {
+    return [];
+  }
+}
+
 // ---------- Router ----------
 
 export default {
@@ -228,7 +280,23 @@ export default {
     const path = url.pathname.replace(/\/+$/, '') || '/';
     const method = request.method;
 
+    // www.inmuhub.com -> inmuhub.com
+    if (url.hostname.startsWith('www.')) {
+      url.hostname = url.hostname.slice(4);
+      return redirect(url.toString(), 301);
+    }
+
     try {
+      // URLs del sitio anterior que ahora tienen versión en el portal.
+      if (method === 'GET' || method === 'HEAD') {
+        if (path === '/index.html') return redirect('/' + url.search, 301);
+        if (path === '/propiedades.html') return redirect('/propiedades' + url.search, 301);
+        const old = path.match(/^\/propiedades\/([a-z0-9-]{1,100})(?:\.html)?$/i);
+        if (old) {
+          const exists = await db.getPublicProperty(env.DB, old[1]);
+          if (exists) return redirect(`/propiedad/${old[1]}${url.search}`, 301);
+        }
+      }
       if (method === 'GET' && path === '/') {
         const [zones, featured] = await Promise.all([db.listZones(env.DB), db.featuredProperties(env.DB, 3)]);
         const positions = await db.positionsFor(env.DB, featured, minComparables(env));
@@ -336,23 +404,34 @@ export default {
       }
 
       if (method === 'GET' && path === '/robots.txt') {
-        return new Response(`User-agent: *\nDisallow: /admin\nSitemap: ${env.SITE_URL}/sitemap.xml\n`, { headers: { 'Content-Type': 'text/plain' } });
+        return new Response(
+          `User-agent: *\nDisallow: /admin\nDisallow: /admin-hub.html\nDisallow: /dashboard.html\nSitemap: ${env.SITE_URL}/sitemap.xml\n`,
+          { headers: { 'Content-Type': 'text/plain' } }
+        );
       }
 
       if (method === 'GET' && path === '/sitemap.xml') {
         const { items } = await db.listProperties(env.DB, { limit: 1000 });
-        const urls = ['/', '/propiedades', '/valor', '/planes', '/publicar', ...items.map((p) => `/propiedad/${p.slug}`)];
+        const own = ['/', '/propiedades', '/valor', '/planes', '/publicar', ...items.map((p) => `/propiedad/${p.slug}`)].map(
+          (u) => `${env.SITE_URL}${u}`
+        );
+        // Páginas del sitio anterior que siguen vivas (blog, herramientas, zonas, asesores).
+        const legacy = await legacySitemapUrls(request, env);
+        const urls = [...new Set([...own, ...legacy])];
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls
-          .map((u) => `<url><loc>${env.SITE_URL}${u}</loc></url>`)
+          .map((u) => `<url><loc>${u.replace(/&/g, '&amp;')}</loc></url>`)
           .join('')}</urlset>`;
         return new Response(xml, { headers: { 'Content-Type': 'application/xml' } });
       }
 
-      // Archivos estáticos (styles.css, favicon, etc.)
+      // Archivos estáticos del portal (portal.css)
       if (env.ASSETS) {
         const asset = await env.ASSETS.fetch(request);
         if (asset.status !== 404) return asset;
       }
+      // Todo lo demás es del sitio anterior (blog, herramientas, asesores, zonas...).
+      const legacy = await legacyFetch(request, env);
+      if (legacy) return legacy;
       return page(views.notFoundPage(env), 404);
     } catch (err) {
       console.error(err);

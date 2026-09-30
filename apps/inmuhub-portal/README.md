@@ -36,22 +36,27 @@ npm run dev                      # http://localhost:8787
 npm test
 ```
 
-## Publicar en Cloudflare
+## Publicar en inmuhub.com
 
-```bash
-npx wrangler login
-npx wrangler d1 create inmuhub          # copie el database_id en wrangler.toml
-npm run db:remote
-npx wrangler secret put ADMIN_TOKEN     # clave larga para /admin
-npx wrangler secret put CRM_WEBHOOK_URL # opcional
-# En wrangler.toml: WHATSAPP_DEFAULT con el número del portal
-npm run deploy                          # queda en inmuhub-portal.<cuenta>.workers.dev
-```
+La base de datos D1 `inmuhub` ya existe en la cuenta y su `database_id` está en `wrangler.toml`.
+En Windows basta con doble clic en **`publicar-portal.bat`**, que:
 
-Para servirlo en `inmuhub.com`, agregue la ruta o el dominio personalizado al Worker en Cloudflare.
-Ese paso reemplaza el sitio actual de inmuhub.com: hágalo cuando el portal esté aprobado.
+1. instala dependencias,
+2. crea las tablas y carga el inventario en D1 (`wrangler d1 migrations apply inmuhub --remote`),
+3. publica el Worker con las rutas `inmuhub.com/*` y `www.inmuhub.com/*`,
+4. ofrece crear la clave de `/admin` (`wrangler secret put ADMIN_TOKEN`).
 
-Opcional: `META_PIXEL_ID` en `[vars]` activa el Pixel (PageView y Lead al enviar formularios).
+**Cómo convive con el sitio actual:** el Worker funciona como ruta delante del proyecto Pages
+`realestateinmuhub`. El portal atiende sus rutas; todo lo demás (blog, herramientas, asesores, zonas)
+se sirve desde el sitio actual (`LEGACY_ORIGIN`) sin cambios. Las URLs viejas `/propiedades/<slug>(.html)`
+redirigen con 301 a `/propiedad/<slug>`, y `www.inmuhub.com` redirige a `inmuhub.com`.
+El `sitemap.xml` combina las páginas del portal y las del sitio anterior.
+
+**Revertir:** `revertir-portal.bat` borra el Worker y sus rutas; inmuhub.com vuelve al sitio anterior
+en un par de minutos. No toca DNS, Pages ni la base de datos.
+
+Opcionales: `npx wrangler secret put CRM_WEBHOOK_URL` para reenviar leads a Zona-CRM y
+`META_PIXEL_ID` en `[vars]` para el Pixel (PageView y Lead al enviar formularios).
 
 ## Actualizar el inventario desde Wix
 
