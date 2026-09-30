@@ -96,7 +96,7 @@ p { margin: 0; }
 
 /* Formularios */
 label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-2); }
-input[type=text], input[type=tel], input[type=email], input[type=number], input[type=password], select, textarea {
+input[type=text], input[type=tel], input[type=email], input[type=url], input[type=number], input[type=password], select, textarea {
   width: 100%; min-height: 50px; padding: 0 14px; border-radius: 10px; border: 1px solid #CFC7B8; background: #fff;
   font-family: var(--body); font-size: 16px; color: var(--ink);
 }
@@ -280,3 +280,13 @@ th { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var
   .addons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .gallery img { flex-basis: 48%; }
 }
+
+/* Admin: edición */
+.notice { background: #E6EEF6; color: var(--blue); border-radius: 10px; padding: 12px 14px; font-size: 14px; font-weight: 600; }
+label.check { flex-direction: row; align-items: flex-start; gap: 10px; font-size: 15px; font-weight: 500; color: var(--ink); }
+label.check input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; }
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.photo { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.photo figcaption { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.photo.is-hero { border: 2px solid var(--brass); }

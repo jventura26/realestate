@@ -7,6 +7,9 @@ echo   Publicando portal inmuhub en inmuhub.com
 echo ================================================
 echo.
 
+echo [0/4] Descargando la version mas reciente desde GitHub...
+git pull
+echo.
 echo [1/4] Instalando dependencias...
 call npm install --no-audit --no-fund
 if errorlevel 1 goto error

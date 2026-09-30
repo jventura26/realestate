@@ -19,6 +19,11 @@ routes = [
 directory = "./public"
 binding = "ASSETS"
 
+# Fotografías subidas desde /admin
+[[kv_namespaces]]
+binding = "MEDIA"
+id = "bb6cc6c18d9d467bb784aa5e0955c34e"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "inmuhub"

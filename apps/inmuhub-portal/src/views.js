@@ -29,7 +29,7 @@ ${noindex ? raw('<meta name="robots" content="noindex">') : ''}
 <meta property="og:title" content="${title || 'inmuhub'}">
 <meta property="og:description" content="${desc}">
 <meta property="og:url" content="${site + path}">
-${image ? html`<meta property="og:image" content="${image}">` : ''}
+${image ? html`<meta property="og:image" content="${image.startsWith('/') ? site + image : image}">` : ''}
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,8 +157,9 @@ const HONEYPOT = raw('<div class="hp" aria-hidden="true"><label>No llenar<input 
 
 // ---------- Páginas ----------
 
-export function homePage(env, { zones, featured, positions }) {
+export function homePage(env, { zones, featured, positions, heroImage }) {
   const featuredZones = zones.filter((z) => z.featured);
+  const hero = heroImage || (featured[0] && firstImage(featured[0]));
   const body = html`
 <section class="hero wrap">
   <div class="hero-copy">
@@ -174,11 +175,11 @@ export function homePage(env, { zones, featured, positions }) {
     <ul class="trust">
       <li>${CHECK}Propiedades revisadas</li>
       <li>${CHECK}Rango de valor por zona</li>
-      <li>${CHECK}Contacto directo por WhatsApp</li>
+      <li>${CHECK}Atención de un asesor</li>
     </ul>
   </div>
   <div class="hero-media">
-    ${featured[0] && firstImage(featured[0]) ? html`<img src="${firstImage(featured[0])}" alt="${featured[0].title}">` : html`<div class="ph">inmuhub</div>`}
+    ${hero ? html`<img src="${hero}" alt="Propiedad destacada en inmuhub">` : html`<div class="ph">inmuhub</div>`}
   </div>
 </section>
 
@@ -211,7 +212,7 @@ export function homePage(env, { zones, featured, positions }) {
   <div class="steps">
     <div><span class="num">01</span><h3>Revisión antes de publicar</h3><p>Datos, fotos y precio se revisan antes de que la propiedad aparezca. Si algo no cuadra, no se publica.</p></div>
     <div><span class="num">02</span><h3>Lectura de valor en cada ficha</h3><p>Cada propiedad indica si su precio está por debajo, dentro o por encima del rango de su zona.</p></div>
-    <div><span class="num">03</span><h3>Contacto directo y con contexto</h3><p>Su consulta llega por WhatsApp al asesor o propietario, con la propiedad ya identificada.</p></div>
+    <div><span class="num">03</span><h3>Contacto directo y con contexto</h3><p>Su consulta llega al asesor o propietario con la propiedad ya identificada, sin intermediarios innecesarios.</p></div>
   </div>
 </section>
 
@@ -231,7 +232,7 @@ export function homePage(env, { zones, featured, positions }) {
     <a class="btn btn-brass" href="/planes">Ver planes</a>
   </div>
 </section>`;
-  return layout(env, { path: '/', body, image: featured[0] ? firstImage(featured[0]) : null });
+  return layout(env, { path: '/', body, image: hero || null });
 }
 
 export function listingPage(env, { zones, filters, items, total, positions }) {
@@ -256,6 +257,7 @@ export function listingPage(env, { zones, filters, items, total, positions }) {
 }
 
 export function propertyPage(env, { p, reading, utm, error }) {
+  const wa = p.whatsapp_enabled !== 0;
   const images = parseJsonArray(p.images);
   const features = parseJsonArray(p.features);
   const isLand = ['terreno', 'finca'].includes(p.type);
@@ -320,17 +322,17 @@ export function propertyPage(env, { p, reading, utm, error }) {
         ${utmInputs(utm)}
         ${HONEYPOT}
         <label>Nombre<input type="text" name="nombre" autocomplete="name" maxlength="80" required></label>
-        <label>WhatsApp<input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="+502" maxlength="20" required></label>
+        <label>${wa ? 'WhatsApp' : 'Teléfono'}<input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="+502" maxlength="20" required></label>
         <fieldset class="seg"><legend>La busca para</legend>
           <label><input type="radio" name="intencion" value="vivir" checked><span>Vivir</span></label>
           <label><input type="radio" name="intencion" value="invertir"><span>Invertir</span></label>
         </fieldset>
-        <button class="btn btn-primary btn-block" type="submit">${WA_ICON}Continuar por WhatsApp</button>
-        <p class="small muted">Sus datos solo se comparten con el asesor de esta propiedad.</p>
+        <button class="btn btn-primary btn-block" type="submit">${wa ? html`${WA_ICON}Continuar por WhatsApp` : 'Solicitar información'}</button>
+        <p class="small muted">${wa ? 'Sus datos solo se comparten con el asesor de esta propiedad.' : 'Un asesor le contactará para darle información y coordinar una visita.'}</p>
       </form>
     </aside>
   </div>
-  <div class="sticky-cta"><a class="btn btn-primary btn-block" href="#consulta">${WA_ICON}Consultar por WhatsApp</a></div>
+  <div class="sticky-cta"><a class="btn btn-primary btn-block" href="#consulta">${wa ? html`${WA_ICON}Consultar por WhatsApp` : 'Solicitar información'}</a></div>
 </article>`;
   return layout(env, {
     title: p.title,
@@ -540,7 +542,7 @@ export function adminPage(env, { counts, props, leads, zones, filter }) {
     <div><span>Consultas totales</span><strong>${counts.leads_total}</strong></div>
   </div>
 
-  <h2>Propiedades</h2>
+  <div class="section-head"><h2>Propiedades</h2><form method="post" action="/admin/nueva"><button class="btn btn-primary btn-sm" type="submit">Nueva propiedad</button></form></div>
   <nav class="tabs">${[['', 'Todas'], ['revision', 'En revisión'], ['publicada', 'Publicadas'], ['pausada', 'Pausadas'], ['rechazada', 'Rechazadas']].map(
     ([k, l]) => html`<a href="/admin${k ? '?estado=' + k : ''}"${filter === k ? raw(' aria-current="page"') : ''}>${l}</a>`
   )}</nav>
@@ -551,8 +553,9 @@ export function adminPage(env, { counts, props, leads, zones, filter }) {
       <td>${p.zone_name || html`<em class="muted">sin zona</em>`}</td>
       <td>${formatMoney(p.price_amount, p.currency)}</td>
       <td>${p.area_built_m2 ? `${formatNumber(p.area_built_m2)} m²` : p.area_land_v2 ? `${formatNumber(p.area_land_v2)} v²` : '—'}</td>
-      <td><span class="status status-${p.status}">${STATUS_LABEL[p.status]}</span>${p.verified ? html` <span class="status status-publicada">Verificada</span>` : ''}${!p.images || p.images === '[]' ? html` <span class="status status-revision">Sin fotos</span>` : ''}</td>
+      <td><span class="status status-${p.status}">${STATUS_LABEL[p.status]}</span>${p.verified ? html` <span class="status status-publicada">Verificada</span>` : ''}${!p.images || p.images === '[]' ? html` <span class="status status-revision">Sin fotos</span>` : ''}${p.whatsapp_enabled === 0 ? html` <span class="status">Sin WhatsApp</span>` : ''}</td>
       <td><form class="row-actions" method="post" action="/admin/propiedad/${p.id}">
+        <a class="btn btn-primary btn-xs" href="/admin/propiedad/${p.id}/editar">Editar</a>
         ${p.status === 'revision'
           ? html`<select name="zona" aria-label="Zona">${zoneOptions(zones, p.zone_slug, { includeAll: false })}</select>
             <button name="accion" value="publicar" class="btn btn-primary btn-xs">Aprobar</button>
@@ -582,4 +585,132 @@ export function adminPage(env, { counts, props, leads, zones, filter }) {
   </table></div>
 </section>`;
   return layout(env, { title: 'Administración', body, noindex: true });
+}
+
+// ---------- Solicitud recibida (propiedades sin WhatsApp) ----------
+
+export function requestReceivedPage(env, { p }) {
+  const body = html`
+<section class="wrap section narrow center">
+  <div class="eyebrow">Solicitud recibida</div>
+  <h1 class="display-md">Gracias. Un asesor le contactará pronto.</h1>
+  <p class="lead">${p ? html`Recibimos su interés en <strong>${p.title}</strong>. ` : ''}Le escribiremos para compartirle información y coordinar una visita.</p>
+  <div class="row-actions">
+    ${p ? html`<a class="btn btn-outline" href="/propiedad/${p.slug}">Volver a la propiedad</a>` : ''}
+    <a class="btn btn-primary" href="/propiedades">Ver más propiedades</a>
+  </div>
+</section>`;
+  return layout(env, { title: 'Solicitud recibida', body, noindex: true });
+}
+
+// ---------- Admin: editar propiedad ----------
+
+export function adminEditPage(env, { p, zones, heroImage, notice, error }) {
+  const images = parseJsonArray(p.images);
+  const features = parseJsonArray(p.features);
+  const v = (k) => p[k] ?? '';
+  const opt = (value, label, current) => html`<option value="${value}"${String(current) === String(value) ? raw(' selected') : ''}>${label}</option>`;
+  const photoAction = (i, accion, label, cls = 'btn-outline') =>
+    html`<button class="btn ${cls} btn-xs" name="accion" value="${accion}">${label}</button>`;
+  const body = html`
+<section class="wrap section admin">
+  <div class="section-head">
+    <div>
+      <a class="small" href="/admin">← Volver al panel</a>
+      <h1 class="display-sm">${p.title}</h1>
+      <span class="small muted">${p.slug} · ${STATUS_LABEL[p.status]}${p.status === 'publicada' ? html` · <a href="/propiedad/${p.slug}" target="_blank" rel="noopener">Ver ficha</a>` : ''}</span>
+    </div>
+  </div>
+  ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
+  ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
+
+  <form class="form-card form-wide" method="post" action="/admin/propiedad/${p.id}/guardar">
+    <fieldset><legend>Datos principales</legend>
+      <label>Título<input type="text" name="title" maxlength="140" value="${v('title')}" required></label>
+      <div class="grid-2">
+        <label>Tipo<select name="type">${Object.entries(TYPE_LABELS).map(([k, l]) => opt(k, l, p.type))}</select></label>
+        <label>Operación<select name="operation">${Object.entries(OPERATION_LABELS).map(([k, l]) => opt(k, l, p.operation))}</select></label>
+        <label>Zona<select name="zone_slug">${opt('', 'Sin zona', p.zone_slug || '')}${zones.map((z) => opt(z.slug, z.name, p.zone_slug))}</select></label>
+        <label>Colonia, condominio o km<input type="text" name="location_label" maxlength="140" value="${v('location_label')}"></label>
+        <label>Precio<input type="text" name="price_amount" inputmode="decimal" maxlength="20" value="${p.price_amount ? formatNumber(p.price_amount) : ''}"></label>
+        <label>Moneda<select name="currency">${opt('GTQ', 'Quetzales', p.currency)}${opt('USD', 'Dólares', p.currency)}</select></label>
+      </div>
+    </fieldset>
+    <fieldset><legend>Medidas y distribución</legend>
+      <div class="grid-2">
+        <label>Construcción (m²)<input type="text" name="area_built_m2" inputmode="decimal" maxlength="12" value="${v('area_built_m2')}"></label>
+        <label>Terreno (v²)<input type="text" name="area_land_v2" inputmode="decimal" maxlength="12" value="${v('area_land_v2')}"></label>
+        <label>Habitaciones<input type="number" name="bedrooms" min="0" max="50" value="${v('bedrooms')}"></label>
+        <label>Baños<input type="number" name="bathrooms" min="0" max="50" step="0.5" value="${v('bathrooms')}"></label>
+        <label>Parqueos<input type="number" name="parking" min="0" max="50" value="${v('parking')}"></label>
+        <label>Niveles<input type="number" name="levels" min="0" max="50" value="${v('levels')}"></label>
+      </div>
+      <p class="small muted">El área de construcción (o de terreno, en terrenos y fincas) define la lectura de valor por zona.</p>
+    </fieldset>
+    <fieldset><legend>Contenido</legend>
+      <label>Descripción<textarea name="description" rows="8" maxlength="6000">${v('description')}</textarea></label>
+      <label>Características (separadas por coma)<input type="text" name="features" maxlength="1500" value="${features.join(', ')}"></label>
+      <label>Enlace del tour 360°<input type="url" name="tour_url" maxlength="500" value="${v('tour_url')}" placeholder="https://"></label>
+    </fieldset>
+    <fieldset><legend>Contacto y confianza</legend>
+      <label class="check"><input type="checkbox" name="whatsapp_enabled" value="1"${p.whatsapp_enabled ? raw(' checked') : ''}><span>Mostrar WhatsApp en la ficha (si se desactiva, las consultas solo se guardan en el panel)</span></label>
+      <label class="check"><input type="checkbox" name="verified" value="1"${p.verified ? raw(' checked') : ''}><span>Sello «Verificada» (documentación revisada)</span></label>
+    </fieldset>
+    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+  </form>
+
+  <h2>Fotografías</h2>
+  <p class="small muted">La primera foto es la principal de la ficha. «Portada del sitio» la muestra en la home de inmuhub.com.</p>
+  ${images.length
+    ? html`<div class="photo-grid">${images.map((src, i) => html`<figure class="photo${src === heroImage ? ' is-hero' : ''}">
+      <img src="${src}" alt="Foto ${i + 1}" loading="lazy">
+      <figcaption>
+        <span class="small">${i === 0 ? 'Principal' : `Foto ${i + 1}`}${src === heroImage ? ' · Portada del sitio' : ''}</span>
+        <form class="row-actions" method="post" action="/admin/propiedad/${p.id}/foto">
+          <input type="hidden" name="i" value="${i}">
+          ${i > 0 ? photoAction(i, 'principal', 'Hacer principal') : ''}
+          ${i > 0 ? photoAction(i, 'subir', '↑') : ''}
+          ${i < images.length - 1 ? photoAction(i, 'bajar', '↓') : ''}
+          ${src === heroImage ? '' : photoAction(i, 'portada', 'Portada del sitio')}
+          ${photoAction(i, 'quitar', 'Quitar')}
+        </form>
+      </figcaption>
+    </figure>`)}</div>`
+    : html`<p class="muted">Esta propiedad aún no tiene fotografías.</p>`}
+
+  <form class="form-card" id="upload" method="post" action="/admin/propiedad/${p.id}/fotos" enctype="multipart/form-data">
+    <label>Agregar fotografías (JPG, PNG o WebP)<input type="file" name="fotos" accept="image/jpeg,image/png,image/webp" multiple required></label>
+    <button class="btn btn-primary" type="submit">Subir fotografías</button>
+    <p class="small muted" id="upmsg">Se optimizan automáticamente (máx. 1920 px) antes de subirlas.</p>
+  </form>
+  <script>
+  (function () {
+    var form = document.getElementById('upload');
+    var msg = document.getElementById('upmsg');
+    function shrink(file) {
+      if (!window.createImageBitmap) return Promise.resolve(file);
+      return createImageBitmap(file).then(function (bmp) {
+        var s = Math.min(1, 1920 / Math.max(bmp.width, bmp.height));
+        var c = document.createElement('canvas');
+        c.width = Math.round(bmp.width * s); c.height = Math.round(bmp.height * s);
+        c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+        return new Promise(function (res) { c.toBlob(function (b) { res(b || file); }, 'image/webp', 0.82); });
+      }).catch(function () { return file; });
+    }
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var files = Array.prototype.slice.call(form.fotos.files);
+      var fd = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        msg.textContent = 'Optimizando ' + (i + 1) + ' de ' + files.length + '…';
+        fd.append('fotos', await shrink(files[i]), files[i].name.replace(/\\.[^.]+$/, '') + '.webp');
+      }
+      msg.textContent = 'Subiendo…';
+      var r = await fetch(form.action, { method: 'POST', body: fd, credentials: 'same-origin' });
+      if (r.ok) { location.href = r.url; } else { msg.textContent = 'No se pudo subir: ' + (await r.text()).slice(0, 200); }
+    });
+  })();
+  </script>
+</section>`;
+  return layout(env, { title: `Editar · ${p.title}`, body, noindex: true });
 }

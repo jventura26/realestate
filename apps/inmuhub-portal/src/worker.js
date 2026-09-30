@@ -161,7 +161,9 @@ async function handleConsulta(request, env, ctx) {
       .catch((e) => console.error('CRM webhook', e))
   );
 
-  if (!destination) return redirect('/?consulta=recibida');
+  // Propiedades sin WhatsApp: la consulta queda en el panel y la persona ve la confirmación.
+  if (property && property.whatsapp_enabled === 0) return redirect(`/gracias?propiedad=${encodeURIComponent(property.slug)}`);
+  if (!destination) return redirect('/gracias');
   return redirect(waLink(destination, text));
 }
 
@@ -272,6 +274,136 @@ async function legacySitemapUrls(request, env) {
   }
 }
 
+// ---------- Admin: edición de propiedades y fotos ----------
+
+const IMAGE_TYPES = { 'image/webp': 'webp', 'image/jpeg': 'jpg', 'image/png': 'png' };
+const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+const MAX_IMAGES = 40;
+const NOTICES = {
+  guardado: 'Cambios guardados.',
+  fotos: 'Fotografías agregadas.',
+  orden: 'Orden de fotografías actualizado.',
+  quitada: 'Fotografía quitada.',
+  portada: 'Foto de portada del sitio actualizada.',
+  nueva: 'Propiedad creada como pausada. Complete los datos, agregue fotos y publíquela desde el panel.',
+};
+
+async function handleAdminEdit(request, env, url, id, action) {
+  const p = await db.adminGetProperty(env.DB, id);
+  if (!p) return page(views.notFoundPage(env), 404);
+  const back = (ok) => redirect(`/admin/propiedad/${id}/editar?ok=${ok}`);
+  const images = (() => {
+    try {
+      const a = JSON.parse(p.images || '[]');
+      return Array.isArray(a) ? a : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  if (action === 'editar' && request.method === 'GET') {
+    const [zones, heroImage] = await Promise.all([db.listZones(env.DB), db.getSetting(env.DB, 'hero_image')]);
+    return page(views.adminEditPage(env, { p, zones, heroImage, notice: NOTICES[url.searchParams.get('ok')] }), 200, {
+      'Cache-Control': 'no-store',
+    });
+  }
+
+  if (request.method !== 'POST') return redirect(`/admin/propiedad/${id}/editar`);
+  const form = await request.formData();
+
+  if (action === 'guardar') {
+    const zones = await db.listZones(env.DB);
+    const title = cleanText(field(form, 'title', 140));
+    if (!title) {
+      return page(views.adminEditPage(env, { p, zones, heroImage: await db.getSetting(env.DB, 'hero_image'), error: 'El título es obligatorio.' }), 422);
+    }
+    const currency = field(form, 'currency', 3) === 'USD' ? 'USD' : 'GTQ';
+    const price = parseNumber(field(form, 'price_amount', 20));
+    const zoneSlug = field(form, 'zone_slug', 60);
+    const operation = field(form, 'operation', 20);
+    const tour = field(form, 'tour_url', 500);
+    const int = (k) => {
+      const n = parseNumber(field(form, k, 6));
+      return n === null ? null : Math.round(n);
+    };
+    const fields = {
+      title,
+      type: mapType(field(form, 'type', 20)),
+      operation: ['venta', 'renta', 'venta_renta'].includes(operation) ? operation : 'venta',
+      zone_slug: zones.some((z) => z.slug === zoneSlug) ? zoneSlug : null,
+      location_label: cleanText(field(form, 'location_label', 140)) || null,
+      price_amount: price,
+      currency,
+      price_gtq: price ? Math.round(currency === 'USD' ? price * usdRate(env) : price) : null,
+      area_built_m2: parseNumber(field(form, 'area_built_m2', 12)),
+      area_land_v2: parseNumber(field(form, 'area_land_v2', 12)),
+      bedrooms: int('bedrooms'),
+      bathrooms: parseNumber(field(form, 'bathrooms', 6)),
+      parking: int('parking'),
+      levels: int('levels'),
+      description: cleanText(field(form, 'description', 6000)) || null,
+      features: JSON.stringify(
+        field(form, 'features', 1500).split(',').map((s) => cleanText(s)).filter(Boolean).slice(0, 30)
+      ),
+      tour_url: /^https:\/\/\S+$/.test(tour) ? tour : null,
+      whatsapp_enabled: form.get('whatsapp_enabled') ? 1 : 0,
+      verified: form.get('verified') ? 1 : 0,
+    };
+    // Una propiedad nueva recibe una URL definitiva con su primer título real.
+    if (p.slug.startsWith('nueva-') && title !== 'Nueva propiedad') {
+      fields.slug = `${slugify(title)}-${crypto.randomUUID().slice(0, 4)}`;
+    }
+    await db.adminSaveProperty(env.DB, id, fields);
+    return back('guardado');
+  }
+
+  if (action === 'fotos') {
+    if (!env.MEDIA) return new Response('El almacenamiento de fotos no está configurado.', { status: 500 });
+    const files = form.getAll('fotos').filter((f) => typeof f === 'object' && f && f.size > 0);
+    if (!files.length) return new Response('Seleccione al menos una fotografía.', { status: 400 });
+    if (images.length + files.length > MAX_IMAGES) {
+      return new Response(`Cada propiedad admite hasta ${MAX_IMAGES} fotografías.`, { status: 400 });
+    }
+    for (const f of files) {
+      const ext = IMAGE_TYPES[f.type];
+      if (!ext) return new Response(`Formato no admitido: ${f.name}. Use JPG, PNG o WebP.`, { status: 400 });
+      if (f.size > MAX_IMAGE_BYTES) return new Response(`La foto ${f.name} supera 8 MB.`, { status: 400 });
+    }
+    for (const f of files) {
+      const key = `p/${id}/${crypto.randomUUID()}.${IMAGE_TYPES[f.type]}`;
+      await env.MEDIA.put(key, await f.arrayBuffer(), { metadata: { type: f.type } });
+      images.push(`/media/${key}`);
+    }
+    await db.adminSetImages(env.DB, id, images);
+    return back('fotos');
+  }
+
+  if (action === 'foto') {
+    const i = Number(field(form, 'i', 3));
+    const accion = field(form, 'accion', 20);
+    if (!Number.isInteger(i) || i < 0 || i >= images.length) return back('orden');
+    const src = images[i];
+    const move = (from, to) => images.splice(to, 0, images.splice(from, 1)[0]);
+    if (accion === 'principal') move(i, 0);
+    else if (accion === 'subir' && i > 0) move(i, i - 1);
+    else if (accion === 'bajar' && i < images.length - 1) move(i, i + 1);
+    else if (accion === 'portada') {
+      await db.setSetting(env.DB, 'hero_image', src);
+      return back('portada');
+    } else if (accion === 'quitar') {
+      images.splice(i, 1);
+      if (src.startsWith('/media/') && env.MEDIA) await env.MEDIA.delete(src.slice('/media/'.length));
+      if ((await db.getSetting(env.DB, 'hero_image')) === src) await db.setSetting(env.DB, 'hero_image', null);
+      await db.adminSetImages(env.DB, id, images);
+      return back('quitada');
+    }
+    await db.adminSetImages(env.DB, id, images);
+    return back('orden');
+  }
+
+  return redirect(`/admin/propiedad/${id}/editar`);
+}
+
 // ---------- Router ----------
 
 export default {
@@ -298,9 +430,13 @@ export default {
         }
       }
       if (method === 'GET' && path === '/') {
-        const [zones, featured] = await Promise.all([db.listZones(env.DB), db.featuredProperties(env.DB, 3)]);
+        const [zones, featured, heroImage] = await Promise.all([
+          db.listZones(env.DB),
+          db.featuredProperties(env.DB, 3),
+          db.getSetting(env.DB, 'hero_image'),
+        ]);
         const positions = await db.positionsFor(env.DB, featured, minComparables(env));
-        return page(views.homePage(env, { zones, featured, positions }), 200, { 'Cache-Control': 'public, max-age=120' });
+        return page(views.homePage(env, { zones, featured, positions, heroImage }), 200, { 'Cache-Control': 'public, max-age=120' });
       }
 
       if (method === 'GET' && path === '/propiedades') {
@@ -329,6 +465,26 @@ export default {
         const type = ['casa', 'apartamento', 'terreno'].includes(url.searchParams.get('tipo')) ? url.searchParams.get('tipo') : 'casa';
         const value = zone ? await db.zoneValue(env.DB, zone.slug, type, minComparables(env)) : null;
         return page(views.zoneValuePage(env, { zones, zone, type, value, utm: utmFrom(url) }));
+      }
+
+      if (method === 'GET' && path === '/gracias') {
+        const slug = url.searchParams.get('propiedad');
+        const p = slug ? await db.getPublicProperty(env.DB, slug) : null;
+        return page(views.requestReceivedPage(env, { p }));
+      }
+
+      // Fotografías subidas desde /admin (Workers KV)
+      const mediaMatch = path.match(/^\/media\/(p\/\d+\/[a-z0-9-]+\.(?:webp|jpg|png))$/);
+      if ((method === 'GET' || method === 'HEAD') && mediaMatch && env.MEDIA) {
+        const { value, metadata } = await env.MEDIA.getWithMetadata(mediaMatch[1], { type: 'stream', cacheTtl: 3600 });
+        if (!value) return page(views.notFoundPage(env), 404);
+        return new Response(value, {
+          headers: {
+            'Content-Type': metadata?.type || 'image/webp',
+            'Cache-Control': 'public, max-age=31536000, immutable',
+            'X-Content-Type-Options': 'nosniff',
+          },
+        });
       }
 
       if (method === 'GET' && path === '/planes') {
@@ -389,6 +545,14 @@ export default {
             review_notes: field(form, 'nota', 200) || null,
           });
           return redirect(request.headers.get('Referer')?.startsWith(env.SITE_URL) ? request.headers.get('Referer') : '/admin');
+        }
+
+        const editMatch = path.match(/^\/admin\/propiedad\/(\d+)\/(editar|guardar|fotos|foto)$/);
+        if (editMatch) return handleAdminEdit(request, env, url, Number(editMatch[1]), editMatch[2]);
+
+        if (method === 'POST' && path === '/admin/nueva') {
+          const id = await db.adminCreateProperty(env.DB, `nueva-${crypto.randomUUID().slice(0, 8)}`);
+          return redirect(`/admin/propiedad/${id}/editar?ok=nueva`);
         }
 
         if (method === 'GET' && path === '/admin') {

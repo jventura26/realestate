@@ -5,7 +5,7 @@ import { zoneRange, valuePosition } from './normalize.js';
 const PUBLIC_COLUMNS = `p.id, p.slug, p.title, p.status, p.verified, p.operation, p.type, p.zone_slug, p.location_label,
   p.municipality, p.price_amount, p.currency, p.price_gtq, p.area_built_m2, p.area_land_v2, p.bedrooms, p.bathrooms,
   p.parking, p.levels, p.description, p.features, p.images, p.tour_url, p.video_url, p.lat, p.lng, p.featured_until,
-  p.published_at, z.name AS zone_name, a.name AS agency_name, a.verified AS agency_verified,
+  p.published_at, p.whatsapp_enabled, z.name AS zone_name, a.name AS agency_name, a.verified AS agency_verified,
   g.name AS agent_name, COALESCE(g.whatsapp, a.whatsapp) AS contact_whatsapp`;
 
 const PUBLIC_FROM = `FROM properties p
@@ -199,4 +199,54 @@ export async function adminUpdateProperty(db, id, action, fields = {}) {
     default:
       throw new Error('Acción no válida');
   }
+}
+
+// ---- Ajustes del sitio ----
+
+export async function getSetting(db, key) {
+  const r = await db.prepare('SELECT value FROM settings WHERE key = ?').bind(key).first();
+  return r?.value ?? null;
+}
+
+export async function setSetting(db, key, value) {
+  await db
+    .prepare(`INSERT INTO settings (key, value, updated_at) VALUES (?, ?, datetime('now'))
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`)
+    .bind(key, value)
+    .run();
+}
+
+// ---- Edición en /admin ----
+
+export async function adminGetProperty(db, id) {
+  return db.prepare('SELECT * FROM properties WHERE id = ?').bind(id).first();
+}
+
+const EDITABLE = [
+  'title', 'operation', 'type', 'zone_slug', 'location_label', 'municipality', 'price_amount', 'currency', 'price_gtq',
+  'area_built_m2', 'area_land_v2', 'bedrooms', 'bathrooms', 'parking', 'levels', 'description', 'features', 'tour_url',
+  'video_url', 'whatsapp_enabled', 'verified', 'slug',
+];
+
+export async function adminSaveProperty(db, id, fields) {
+  const cols = EDITABLE.filter((c) => c in fields);
+  if (!cols.length) return;
+  await db
+    .prepare(`UPDATE properties SET ${cols.map((c) => `${c} = ?`).join(', ')}, updated_at = datetime('now') WHERE id = ?`)
+    .bind(...cols.map((c) => fields[c]), id)
+    .run();
+}
+
+export async function adminSetImages(db, id, images) {
+  await db.prepare(`UPDATE properties SET images = ?, updated_at = datetime('now') WHERE id = ?`).bind(JSON.stringify(images), id).run();
+}
+
+export async function adminCreateProperty(db, slug) {
+  const r = await db
+    .prepare(`INSERT INTO properties (slug, title, status, type, operation, source, images, features, whatsapp_enabled, agency_id)
+      VALUES (?, 'Nueva propiedad', 'pausada', 'casa', 'venta', 'admin', '[]', '[]', 1,
+        (SELECT id FROM agencies WHERE slug = 'zona-innmueble')) RETURNING id`)
+    .bind(slug)
+    .first();
+  return r.id;
 }
