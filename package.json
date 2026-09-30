@@ -10,7 +10,7 @@
     "dev:zona": "npm run build:zona && npx serve dist/zona -p 3002"
   },
   "dependencies": {
-    "csv-parse": "^5.6.0"
+    "csv-parse": "^7.0.3"
   },
   "engines": {
     "node": ">=18"
