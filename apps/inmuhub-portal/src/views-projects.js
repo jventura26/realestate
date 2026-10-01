@@ -312,7 +312,7 @@ export function developersPage(env, { utm, error, stats }) {
     <h1 class="display">Su proyecto, frente a compradores que comparan.</h1>
     <p class="lead">inmuhub reúne proyectos nuevos con la información que el comprador busca antes de escribir: tipologías, precio por m², enganche, avance y cómo se compara con su zona. Las consultas llegan directo a su sala de ventas.</p>
     <div class="callout callout-brass"><strong>Lanzamiento.</strong> ${LAUNCH_OFFER}</div>
-    <div class="row-actions"><a class="btn btn-primary" href="#contacto">Quiero publicar mi proyecto</a><a class="btn btn-outline" href="#guia">Descargar la guía gratuita</a></div>
+    <div class="row-actions"><a class="btn btn-primary" href="#contacto">Quiero publicar mi proyecto</a><a class="btn btn-outline" href="#guia">Descargar el playbook gratuito</a></div>
   </div>
   <div class="dev-panel">
     <div class="eyebrow eyebrow-light">Lo que recibe cada mes</div>
@@ -350,10 +350,10 @@ export function developersPage(env, { utm, error, stats }) {
 <section class="wrap section" id="guia">
   <div class="split">
     <div class="panel panel-ink">
-      <div class="eyebrow eyebrow-light">Guía gratuita</div>
-      <h2 class="display-sm">Cómo presentar un proyecto a compradores que comparan</h2>
-      <p class="lead-light">Los 12 datos que el comprador busca antes de pedir información, cómo leer su precio por m² frente a la zona y una lista para revisar su ficha, su brochure y sus anuncios.</p>
-      <ul class="checks checks-light"><li>${CHECK}Lista de verificación de la ficha del proyecto</li><li>${CHECK}Cómo mostrar precio, enganche y avance sin fricción</li><li>${CHECK}Qué medir en cada campaña de captación</li></ul>
+      <div class="eyebrow eyebrow-light">Playbook gratuito · 2027</div>
+      <h2 class="display-sm">Cómo atraer compradores que comparan</h2>
+      <p class="lead-light">Lo que el comprador busca antes de escribir, cómo leer su precio por m² frente a la zona, qué destacar en cada mercado y cómo usar IA para responder y calificar mejor.</p>
+      <ul class="checks checks-light"><li>${CHECK}Los 12 datos que se revisan antes de pedir información</li><li>${CHECK}Lectura por zona: qué pesa en cada mercado</li><li>${CHECK}IA y herramientas digitales en la sala de ventas</li><li>${CHECK}Qué medir en cada campaña de captación</li></ul>
     </div>
     <form class="form-card" method="post" action="/consulta" data-lead="1" id="contacto">
       <h2>Hablemos de su proyecto</h2>
@@ -365,11 +365,11 @@ export function developersPage(env, { utm, error, stats }) {
       <label>Desarrolladora<input type="text" name="mensaje" maxlength="120" placeholder="Nombre de la empresa o del proyecto" required></label>
       <label>WhatsApp<input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="+502" maxlength="20" required></label>
       <fieldset class="seg"><legend>Quiero</legend>
-        <label><input type="radio" name="intencion" value="guia" checked><span>La guía</span></label>
+        <label><input type="radio" name="intencion" value="guia" checked><span>El playbook</span></label>
         <label><input type="radio" name="intencion" value="lanzamiento"><span>Publicar</span></label>
       </fieldset>
       <button class="btn btn-primary btn-block" type="submit">Continuar</button>
-      <p class="small muted">Con «La guía» la descarga de inmediato. Con «Publicar» seguimos la conversación por WhatsApp.</p>
+      <p class="small muted">Con «El playbook» lo descarga de inmediato. Con «Publicar» seguimos la conversación por WhatsApp.</p>
       ${PRIVACY_NOTE}
     </form>
   </div>
@@ -385,15 +385,15 @@ export function developersPage(env, { utm, error, stats }) {
 export function developersThanksPage(env, { waUrl }) {
   const body = html`
 <section class="wrap section narrow center">
-  <div class="eyebrow">Guía para desarrolladoras</div>
-  <h1 class="display-md">Gracias. Su guía está lista.</h1>
+  <div class="eyebrow">Playbook para desarrolladoras 2027</div>
+  <h1 class="display-md">Gracias. Su playbook está listo.</h1>
   <p class="lead">Descárguela aquí. Si quiere revisar su proyecto con nosotros, escríbanos por WhatsApp: le compartimos cómo quedaría su ficha y su lectura frente a la zona.</p>
   <div class="row-actions">
-    <a class="btn btn-primary" href="/recursos/guia-desarrolladoras-inmuhub.pdf" download>Descargar la guía (PDF)</a>
+    <a class="btn btn-primary" href="/recursos/playbook-inmuhub-desarrolladoras-2027.pdf" download>Descargar el playbook (PDF)</a>
     <a class="btn btn-outline" href="${waUrl}">${WA_ICON}Revisar mi proyecto</a>
   </div>
 </section>`;
-  return layout(env, { title: 'Guía para desarrolladoras', path: '/desarrolladoras', body, noindex: true });
+  return layout(env, { title: 'Playbook para desarrolladoras', path: '/desarrolladoras', body, noindex: true });
 }
 
 // Bloque de la home con proyectos nuevos (solo si hay publicados).

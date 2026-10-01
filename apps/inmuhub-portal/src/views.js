@@ -7,7 +7,7 @@ export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 2
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
-export const ASSET_VERSION = '2026-10-01a';
+export const ASSET_VERSION = '2026-10-01b';
 
 // ---------- Layout ----------
 

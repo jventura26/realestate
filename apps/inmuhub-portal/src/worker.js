@@ -797,7 +797,7 @@ export default {
       }
 
       if (method === 'GET' && path === '/desarrolladoras/gracias') {
-        const text = 'Hola, descargué la guía para desarrolladoras de inmuhub y quiero revisar cómo quedaría nuestro proyecto.';
+        const text = 'Hola, descargué el playbook para desarrolladoras de InmuHub y quiero revisar cómo quedaría nuestro proyecto.';
         return page(pviews.developersThanksPage(env, { waUrl: waLink(env.WHATSAPP_DEFAULT, text) }), 200, { 'Cache-Control': 'no-store' });
       }
 
