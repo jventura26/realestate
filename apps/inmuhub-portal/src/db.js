@@ -113,10 +113,10 @@ export async function positionsFor(db, props, minComparables) {
 
 export async function insertLead(db, lead) {
   const r = await db
-    .prepare(`INSERT INTO leads (property_id, zone_slug, kind, name, whatsapp, intent, message, utm_source, utm_campaign, utm_content)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`)
+    .prepare(`INSERT INTO leads (property_id, project_id, zone_slug, kind, name, whatsapp, intent, message, utm_source, utm_campaign, utm_content)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`)
     .bind(
-      lead.property_id ?? null, lead.zone_slug ?? null, lead.kind, lead.name ?? null, lead.whatsapp,
+      lead.property_id ?? null, lead.project_id ?? null, lead.zone_slug ?? null, lead.kind, lead.name ?? null, lead.whatsapp,
       lead.intent ?? null, lead.message ?? null, lead.utm_source ?? null, lead.utm_campaign ?? null, lead.utm_content ?? null
     )
     .first();
@@ -155,8 +155,9 @@ export async function adminListProperties(db, status) {
 
 export async function adminRecentLeads(db, limit = 50) {
   const { results } = await db
-    .prepare(`SELECT l.*, p.title AS property_title, p.slug AS property_slug FROM leads l
-      LEFT JOIN properties p ON p.id = l.property_id ORDER BY l.created_at DESC LIMIT ?`)
+    .prepare(`SELECT l.*, p.title AS property_title, p.slug AS property_slug, j.name AS project_name, j.slug AS project_slug
+      FROM leads l LEFT JOIN properties p ON p.id = l.property_id LEFT JOIN projects j ON j.id = l.project_id
+      ORDER BY l.created_at DESC LIMIT ?`)
     .bind(limit)
     .all();
   return results;
@@ -249,4 +250,159 @@ export async function adminCreateProperty(db, slug) {
     .bind(slug)
     .first();
   return r.id;
+}
+
+// ---- Proyectos nuevos ----
+
+const PROJECT_COLUMNS = `j.id, j.slug, j.name, j.status, j.kind, j.stage, j.delivery, j.zone_slug, j.location_label, j.currency,
+  j.price_from, j.price_from_gtq, j.m2_from, j.m2_to, j.bedrooms_min, j.bedrooms_max, j.units_total, j.units_available,
+  j.down_payment, j.typologies, j.amenities, j.description, j.images, j.tour_url, j.video_url, j.brochure_url, j.contact_mode,
+  j.featured_until, j.published_at, z.name AS zone_name, d.id AS developer_id, d.name AS developer_name,
+  d.website AS developer_website, d.whatsapp AS developer_whatsapp`;
+
+const PROJECT_FROM = `FROM projects j
+  LEFT JOIN zones z ON z.slug = j.zone_slug
+  LEFT JOIN developers d ON d.id = j.developer_id`;
+
+const PROJECT_ORDER = `(j.featured_until IS NOT NULL AND j.featured_until > datetime('now')) DESC, j.published_at DESC`;
+
+export async function listProjects(db, { zone, kind, stage, limit = 24 } = {}) {
+  const where = ["j.status = 'publicado'"];
+  const binds = [];
+  if (zone) { where.push('j.zone_slug = ?'); binds.push(zone); }
+  if (kind) { where.push('j.kind = ?'); binds.push(kind); }
+  if (stage) { where.push('j.stage = ?'); binds.push(stage); }
+  const { results } = await db
+    .prepare(`SELECT ${PROJECT_COLUMNS} ${PROJECT_FROM} WHERE ${where.join(' AND ')} ORDER BY ${PROJECT_ORDER} LIMIT ?`)
+    .bind(...binds, limit)
+    .all();
+  return results;
+}
+
+export async function getPublicProject(db, slug) {
+  return db.prepare(`SELECT ${PROJECT_COLUMNS} ${PROJECT_FROM} WHERE j.slug = ? AND j.status = 'publicado'`).bind(slug).first();
+}
+
+export async function getPublicProjects(db, slugs) {
+  if (!slugs.length) return [];
+  const { results } = await db
+    .prepare(`SELECT ${PROJECT_COLUMNS} ${PROJECT_FROM} WHERE j.status = 'publicado' AND j.slug IN (${slugs.map(() => '?').join(',')})`)
+    .bind(...slugs)
+    .all();
+  return slugs.map((s) => results.find((r) => r.slug === s)).filter(Boolean);
+}
+
+export async function countPublicProjects(db) {
+  const r = await db.prepare(`SELECT COUNT(*) AS n FROM projects WHERE status = 'publicado'`).first();
+  return r?.n ?? 0;
+}
+
+export async function recordProjectView(db, id) {
+  await db
+    .prepare(`INSERT INTO project_views (project_id, day, views) VALUES (?, date('now'), 1)
+      ON CONFLICT(project_id, day) DO UPDATE SET views = views + 1`)
+    .bind(id)
+    .run();
+}
+
+// ---- Admin: proyectos y desarrolladoras ----
+
+export async function adminListProjects(db) {
+  const { results } = await db
+    .prepare(`SELECT j.id, j.slug, j.name, j.status, j.kind, j.stage, j.currency, j.price_from, j.images, j.featured_until,
+        z.name AS zone_name, d.name AS developer_name,
+        (SELECT COUNT(*) FROM leads l WHERE l.project_id = j.id) AS leads_total,
+        (SELECT COUNT(*) FROM leads l WHERE l.project_id = j.id AND l.created_at > datetime('now','-30 days')) AS leads_30d,
+        (SELECT COALESCE(SUM(views),0) FROM project_views v WHERE v.project_id = j.id AND v.day > date('now','-30 days')) AS views_30d
+      FROM projects j LEFT JOIN zones z ON z.slug = j.zone_slug LEFT JOIN developers d ON d.id = j.developer_id
+      ORDER BY CASE j.status WHEN 'publicado' THEN 0 WHEN 'borrador' THEN 1 ELSE 2 END, j.updated_at DESC LIMIT 200`)
+    .all();
+  return results;
+}
+
+export async function adminGetProject(db, id) {
+  return db.prepare('SELECT * FROM projects WHERE id = ?').bind(id).first();
+}
+
+export async function adminCreateProject(db, slug) {
+  const r = await db.prepare(`INSERT INTO projects (slug, name) VALUES (?, 'Nuevo proyecto') RETURNING id`).bind(slug).first();
+  return r.id;
+}
+
+const PROJECT_EDITABLE = [
+  'name', 'slug', 'developer_id', 'kind', 'stage', 'delivery', 'zone_slug', 'location_label', 'currency', 'price_from',
+  'price_from_gtq', 'm2_from', 'm2_to', 'bedrooms_min', 'bedrooms_max', 'units_total', 'units_available', 'down_payment',
+  'typologies', 'amenities', 'description', 'tour_url', 'video_url', 'brochure_url', 'contact_mode',
+];
+
+export async function adminSaveProject(db, id, fields) {
+  const cols = PROJECT_EDITABLE.filter((c) => c in fields);
+  if (!cols.length) return;
+  await db
+    .prepare(`UPDATE projects SET ${cols.map((c) => `${c} = ?`).join(', ')}, updated_at = datetime('now') WHERE id = ?`)
+    .bind(...cols.map((c) => fields[c]), id)
+    .run();
+}
+
+export async function adminSetProjectImages(db, id, images) {
+  await db.prepare(`UPDATE projects SET images = ?, updated_at = datetime('now') WHERE id = ?`).bind(JSON.stringify(images), id).run();
+}
+
+export async function adminProjectAction(db, id, action) {
+  const sql = {
+    publicar: `UPDATE projects SET status = 'publicado', published_at = COALESCE(published_at, datetime('now')), updated_at = datetime('now') WHERE id = ?`,
+    pausar: `UPDATE projects SET status = 'pausado', updated_at = datetime('now') WHERE id = ?`,
+    vendido: `UPDATE projects SET status = 'vendido', updated_at = datetime('now') WHERE id = ?`,
+    destacar: `UPDATE projects SET featured_until = datetime('now', '+30 days'), updated_at = datetime('now') WHERE id = ?`,
+    quitar_destacado: `UPDATE projects SET featured_until = NULL, updated_at = datetime('now') WHERE id = ?`,
+  }[action];
+  if (!sql) throw new Error('Acción no válida');
+  await db.prepare(sql).bind(id).run();
+}
+
+export async function listDevelopers(db) {
+  const { results } = await db
+    .prepare(`SELECT d.*, (SELECT COUNT(*) FROM projects j WHERE j.developer_id = d.id AND j.status = 'publicado') AS projects_live
+      FROM developers d ORDER BY d.name`)
+    .all();
+  return results;
+}
+
+export async function getDeveloper(db, id) {
+  return db.prepare('SELECT * FROM developers WHERE id = ?').bind(id).first();
+}
+
+export async function saveDeveloper(db, id, d) {
+  if (id) {
+    await db
+      .prepare(`UPDATE developers SET name = ?, contact_name = ?, whatsapp = ?, email = ?, website = ?, plan = ?, trial_until = ?, notes = ? WHERE id = ?`)
+      .bind(d.name, d.contact_name, d.whatsapp, d.email, d.website, d.plan, d.trial_until, d.notes, id)
+      .run();
+    return id;
+  }
+  const r = await db
+    .prepare(`INSERT INTO developers (name, slug, contact_name, whatsapp, email, website, plan, trial_until, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`)
+    .bind(d.name, d.slug, d.contact_name, d.whatsapp, d.email, d.website, d.plan, d.trial_until, d.notes)
+    .first();
+  return r.id;
+}
+
+// Reporte mensual de un proyecto: visitas a la ficha y consultas recibidas.
+export async function projectMonthReport(db, id, month) {
+  const from = `${month}-01`;
+  const views = await db
+    .prepare(`SELECT COALESCE(SUM(views),0) AS n FROM project_views WHERE project_id = ? AND day >= ? AND day < date(?, '+1 month')`)
+    .bind(id, from, from)
+    .first();
+  const { results: leads } = await db
+    .prepare(`SELECT name, whatsapp, intent, message, utm_source, utm_campaign, created_at FROM leads
+      WHERE project_id = ? AND created_at >= ? AND created_at < datetime(?, '+1 month') ORDER BY created_at`)
+    .bind(id, from, from)
+    .all();
+  const { results: daily } = await db
+    .prepare(`SELECT day, views FROM project_views WHERE project_id = ? AND day >= ? AND day < date(?, '+1 month') ORDER BY day`)
+    .bind(id, from, from)
+    .all();
+  return { views: views?.n ?? 0, leads, daily };
 }

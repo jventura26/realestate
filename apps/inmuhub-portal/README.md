@@ -67,3 +67,16 @@ Todas las consultas por WhatsApp llegan a Zona-INNmueble (`agencies.whatsapp`, m
 Una propiedad solo se envía a otro número si se le asigna un asesor propio en la tabla `agents`.
 
 Cambios de datos: siempre con una migración nueva (0005, 0006…), nunca editando las anteriores.
+
+## Proyectos nuevos y desarrolladoras
+
+- `/proyectos` y `/proyecto/:slug`: proyectos en preventa, construcción o entrega inmediata, con tipologías,
+  enganche, avance y lectura de precio por m² frente a la oferta publicada de su zona.
+- `/comparar?p=a,b,c`: comparador de hasta 3 proyectos (la selección se guarda en el navegador, `public/compare.js`).
+- `/zona/:slug`: guía de zona con rangos de valor, proyectos y propiedades.
+- `/desarrolladoras`: planes por proyecto, oferta de lanzamiento y guía gratuita
+  (`public/recursos/guia-desarrolladoras-inmuhub.pdf`). Precios y oferta en `DEVELOPER_PLANS` y `LAUNCH_OFFER`
+  (`src/views-projects.js`).
+- Panel: `/admin/proyectos` (proyectos, desarrolladoras, imágenes) y `/admin/proyecto/:id/reporte`
+  (reporte mensual imprimible de visitas y consultas para la desarrolladora).
+- Las consultas de un proyecto van al WhatsApp de la sala de ventas de su desarrolladora (o al de inmuhub si no tiene).

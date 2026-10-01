@@ -123,3 +123,35 @@ export function valuePosition(ppm2, range) {
   if (ppm2 > range.high) return 'sobre';
   return 'en';
 }
+
+// ---------- Proyectos ----------
+
+// Tipo de propiedad del inventario contra el que se compara cada tipo de proyecto.
+export const PROJECT_COMPARABLE = { apartamentos: 'apartamento', casas: 'casa' };
+
+// Precio por m² de un proyecto en quetzales: mediana de sus tipologías con precio y área;
+// si no tiene tipologías completas, usa «precio desde» entre «m² desde».
+export function projectPricePerM2(project, typologies, usdRate) {
+  const toGtq = (n) => (project.currency === 'USD' ? n * usdRate : n);
+  const per = (typologies || [])
+    .filter((t) => t && Number(t.price) > 0 && Number(t.m2) > 0)
+    .map((t) => toGtq(Number(t.price)) / Number(t.m2))
+    .sort((a, b) => a - b);
+  if (per.length) return percentile(per, 0.5);
+  if (project.price_from > 0 && project.m2_from > 0) return toGtq(project.price_from) / project.m2_from;
+  return null;
+}
+
+// Tipologías escritas en el panel: filas con nombre, habitaciones, baños, m² y precio.
+export function parseTypologies(rows) {
+  return rows
+    .map((r) => ({
+      name: cleanText(r.name).slice(0, 60),
+      bedrooms: parseNumber(r.bedrooms),
+      bathrooms: parseNumber(r.bathrooms),
+      m2: parseNumber(r.m2),
+      price: parseNumber(r.price),
+    }))
+    .filter((t) => t.name || t.m2 || t.price)
+    .slice(0, 12);
+}

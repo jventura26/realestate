@@ -49,3 +49,25 @@ test('normalizeWhatsapp agrega el código de Guatemala', () => {
   assert.equal(normalizeWhatsapp('+502 4769 2366'), '50247692366');
   assert.equal(normalizeWhatsapp('123'), null);
 });
+
+import { projectPricePerM2, parseTypologies } from '../src/normalize.js';
+
+test('precio por m² de proyecto: mediana de tipologías en quetzales', () => {
+  const p = { currency: 'USD', price_from: 100000, m2_from: 50 };
+  const t = [{ price: 100000, m2: 50 }, { price: 150000, m2: 60 }, { price: 300000, m2: 100 }];
+  assert.equal(Math.round(projectPricePerM2(p, t, 7.7)), Math.round((150000 / 60) * 7.7));
+});
+
+test('precio por m² de proyecto: usa «desde» si no hay tipologías', () => {
+  assert.equal(projectPricePerM2({ currency: 'GTQ', price_from: 900000, m2_from: 60 }, [], 7.7), 15000);
+  assert.equal(projectPricePerM2({ currency: 'GTQ', price_from: null, m2_from: 60 }, [], 7.7), null);
+});
+
+test('tipologías: limpia filas vacías y números con comas', () => {
+  const rows = parseTypologies([
+    { name: 'Tipo A', bedrooms: '2', bathrooms: '2', m2: '78.5', price: '1,250,000' },
+    { name: '', bedrooms: '', bathrooms: '', m2: '', price: '' },
+  ]);
+  assert.equal(rows.length, 1);
+  assert.deepEqual(rows[0], { name: 'Tipo A', bedrooms: 2, bathrooms: 2, m2: 78.5, price: 1250000 });
+});

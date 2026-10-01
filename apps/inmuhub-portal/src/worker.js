@@ -2,8 +2,12 @@ import { EmailMessage } from 'cloudflare:email';
 // inmuhub portal — Worker principal.
 import * as db from './db.js';
 import * as views from './views.js';
-import { normalizeWhatsapp, parseNumber, mapType, cleanText } from './normalize.js';
-import { TYPE_LABELS } from './html.js';
+import * as pviews from './views-projects.js';
+import * as aviews from './views-admin-projects.js';
+import {
+  normalizeWhatsapp, parseNumber, mapType, cleanText, projectPricePerM2, parseTypologies, PROJECT_COMPARABLE, valuePosition,
+} from './normalize.js';
+import { TYPE_LABELS, parseJsonArray } from './html.js';
 
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
@@ -97,7 +101,10 @@ async function forwardToCrm(env, lead) {
 
 // Aviso por correo de cada consulta nueva (Cloudflare Email Routing).
 // Solo funciona si wrangler.toml tiene el binding LEAD_MAIL y LEAD_MAIL_FROM/TO configurados.
-const KIND_LABEL = { propiedad: 'Consulta por propiedad', valor_zona: 'Análisis de valor por zona', plan: 'Interés en planes', publicar: 'Propiedad enviada a revisión' };
+const KIND_LABEL = {
+  propiedad: 'Consulta por propiedad', valor_zona: 'Análisis de valor por zona', plan: 'Interés en planes',
+  publicar: 'Propiedad enviada a revisión', proyecto: 'Consulta por proyecto', desarrolladora: 'Desarrolladora interesada',
+};
 
 async function notifyByEmail(env, lead) {
   if (!env.LEAD_MAIL || !env.LEAD_MAIL_FROM || !env.LEAD_MAIL_TO) return false;
@@ -110,7 +117,9 @@ async function notifyByEmail(env, lead) {
     lead.whatsapp ? `WhatsApp: https://wa.me/${lead.whatsapp}` : null,
     lead.property_title ? `Propiedad: ${lead.property_title}` : null,
     lead.property_slug ? `Ficha: ${env.SITE_URL}/propiedad/${lead.property_slug}` : null,
-    lead.zone_slug && !lead.property_slug ? `Zona: ${lead.zone_name || lead.zone_slug}` : null,
+    lead.project_name ? `Proyecto: ${lead.project_name}` : null,
+    lead.project_slug ? `Ficha: ${env.SITE_URL}/proyecto/${lead.project_slug}` : null,
+    lead.zone_slug && !lead.property_slug && !lead.project_slug ? `Zona: ${lead.zone_name || lead.zone_slug}` : null,
     lead.intent ? `Interés: ${lead.intent}` : null,
     lead.message ? `Detalle: ${lead.message}` : null,
     lead.ref ? `Referencia: ${lead.ref}` : null,
@@ -166,11 +175,19 @@ async function handleConsulta(request, env, ctx) {
       const value = zone ? await db.zoneValue(env.DB, zone.slug, type, minComparables(env)) : null;
       return page(views.zoneValuePage(env, { zones, zone, type, value, utm: {}, error }), 422);
     }
+    if (kind === 'proyecto') {
+      const j = await db.getPublicProject(env.DB, field(form, 'proyecto', 100));
+      if (!j) return page(views.notFoundPage(env), 404);
+      return page(pviews.projectPage(env, { j, reading: await projectReading(env, j), utm: utmFrom(url), error }), 422);
+    }
+    if (kind === 'desarrolladora') {
+      return page(pviews.developersPage(env, { utm: {}, error, stats: await siteStats(env) }), 422);
+    }
     return page(views.plansPage(env, { utm: {}, error }), 422);
   };
 
   if (field(form, 'empresa')) return redirect('/'); // honeypot: bot
-  if (!['propiedad', 'valor_zona', 'plan'].includes(kind)) return redirect('/');
+  if (!['propiedad', 'valor_zona', 'plan', 'proyecto', 'desarrolladora'].includes(kind)) return redirect('/');
 
   const whatsapp = normalizeWhatsapp(field(form, 'whatsapp', 20));
   const name = cleanText(field(form, 'nombre', 80));
@@ -191,6 +208,7 @@ async function handleConsulta(request, env, ctx) {
   let destination = env.WHATSAPP_DEFAULT;
   let text;
   let property = null;
+  let project = null;
 
   if (kind === 'propiedad') {
     property = await db.getPublicProperty(env.DB, field(form, 'propiedad', 80));
@@ -206,12 +224,27 @@ async function handleConsulta(request, env, ctx) {
     lead.zone_name = zone?.name || null;
     const tipo = TYPE_LABELS[mapType(field(form, 'tipo_propiedad', 20))] || 'Casa';
     text = `Hola, soy ${name}. Quiero el análisis de valor de ${zone?.name || 'mi zona'} (${tipo.toLowerCase()}). Mi interés es ${lead.intent === 'vender' ? 'vender' : 'comprar'}.`;
+  } else if (kind === 'proyecto') {
+    project = await db.getPublicProject(env.DB, field(form, 'proyecto', 100));
+    if (!project) return page(views.notFoundPage(env), 404);
+    if (project.contact_mode === 'ninguno') return redirect(`/proyecto/${project.slug}`);
+    lead.project_id = project.id;
+    lead.zone_slug = project.zone_slug;
+    if (lead.intent && !['vivir', 'invertir'].includes(lead.intent)) lead.intent = null;
+    destination = normalizeWhatsapp(project.developer_whatsapp) || destination;
+    text = `Hola, soy ${name}. Vi el proyecto "${project.name}" en inmuhub (${env.SITE_URL}/proyecto/${project.slug}) y quiero precios y disponibilidad${lead.message ? ` de la tipología ${lead.message}` : ''}. Lo busco para ${lead.intent === 'invertir' ? 'invertir' : 'vivir'}.`;
+  } else if (kind === 'desarrolladora') {
+    if (!lead.message) return rerender('Escriba el nombre de su desarrolladora o proyecto.');
+    lead.intent = lead.intent === 'lanzamiento' ? 'lanzamiento' : 'guia';
+    text = `Hola, soy ${name} de ${lead.message}. Quiero publicar nuestro proyecto en inmuhub con la oferta de lanzamiento.`;
   } else {
     text = `Hola, soy ${name}${lead.message ? ` de ${lead.message}` : ''}. Quiero información del plan ${lead.intent || ''} de inmuhub.`;
   }
 
   const id = await db.insertLead(env.DB, lead);
-  const full = { id, ...lead, property_slug: property?.slug, property_title: property?.title };
+  const full = {
+    id, ...lead, property_slug: property?.slug, property_title: property?.title, project_slug: project?.slug, project_name: project?.name,
+  };
   ctx.waitUntil(
     forwardToCrm(env, full)
       .then((ok) => ok && db.markLeadSynced(env.DB, id))
@@ -221,6 +254,8 @@ async function handleConsulta(request, env, ctx) {
 
   // Propiedades sin WhatsApp: la consulta queda en el panel y la persona ve la confirmación.
   if (property && property.contact_mode === 'formulario') return redirect(`/gracias?propiedad=${encodeURIComponent(property.slug)}`);
+  if (project && project.contact_mode === 'formulario') return redirect('/gracias');
+  if (kind === 'desarrolladora' && lead.intent === 'guia') return redirect('/desarrolladoras/gracias');
   if (!destination) return redirect('/gracias');
   return redirect(waLink(destination, text));
 }
@@ -311,6 +346,162 @@ async function handlePublicar(request, env, ctx) {
 }
 
 const MAX_OWNER_PHOTOS = 10;
+
+// ---------- Proyectos ----------
+
+async function projectReading(env, j) {
+  const comparable = PROJECT_COMPARABLE[j.kind];
+  const ppm2 = projectPricePerM2(j, parseJsonArray(j.typologies), usdRate(env));
+  if (!comparable || !ppm2 || !j.zone_slug) return null;
+  const range = await db.zoneValue(env.DB, j.zone_slug, comparable, minComparables(env));
+  return { comparable, ppm2, range, position: valuePosition(ppm2, range) };
+}
+
+async function siteStats(env) {
+  const [counts, projects] = await Promise.all([db.adminCounts(env.DB), db.countPublicProjects(env.DB)]);
+  return { properties: counts?.publicadas ?? 0, projects };
+}
+
+const BOT_UA = /bot|crawl|spider|slurp|facebookexternalhit|preview|monitor|headless|lighthouse/i;
+
+const PROJECT_NOTICES = {
+  guardado: 'Proyecto guardado.',
+  fotos: 'Imágenes agregadas.',
+  orden: 'Orden de imágenes actualizado.',
+  quitada: 'Imagen quitada.',
+  nuevo: 'Proyecto creado como borrador. Complete los datos, agregue imágenes y publíquelo desde la lista.',
+};
+
+async function handleAdminProject(request, env, url, id, action) {
+  const j = await db.adminGetProject(env.DB, id);
+  if (!j) return page(views.notFoundPage(env), 404);
+  const back = (ok) => redirect(`/admin/proyecto/${id}/editar?ok=${ok}`);
+  const images = parseJsonArray(j.images);
+
+  if (action === 'editar' && request.method === 'GET') {
+    const [zones, developers] = await Promise.all([db.listZones(env.DB), db.listDevelopers(env.DB)]);
+    return page(aviews.adminProjectEditPage(env, { j, zones, developers, notice: PROJECT_NOTICES[url.searchParams.get('ok')] }), 200, {
+      'Cache-Control': 'no-store',
+    });
+  }
+
+  if (action === 'reporte' && request.method === 'GET') {
+    const now = new Date();
+    const months = Array.from({ length: 12 }, (_, i) => {
+      const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
+      return d.toISOString().slice(0, 7);
+    });
+    const month = months.includes(url.searchParams.get('mes')) ? url.searchParams.get('mes') : months[0];
+    const report = await db.projectMonthReport(env.DB, id, month);
+    const dev = j.developer_id ? await db.getDeveloper(env.DB, j.developer_id) : null;
+    return page(aviews.adminProjectReportPage(env, { j: { ...j, developer_name: dev?.name }, month, months, report }), 200, {
+      'Cache-Control': 'no-store',
+    });
+  }
+
+  if (request.method !== 'POST') return redirect(`/admin/proyecto/${id}/editar`);
+  const form = await request.formData();
+
+  if (action === 'accion') {
+    await db.adminProjectAction(env.DB, id, field(form, 'accion', 20));
+    return redirect('/admin/proyectos?ok=accion');
+  }
+
+  if (action === 'guardar') {
+    const [zones, developers] = await Promise.all([db.listZones(env.DB), db.listDevelopers(env.DB)]);
+    const name = cleanText(field(form, 'name', 120));
+    if (!name) return page(aviews.adminProjectEditPage(env, { j, zones, developers, error: 'El nombre es obligatorio.' }), 422);
+    const n = Math.min(Number(field(form, 't_count', 3)) || 8, 12);
+    const typologies = parseTypologies(
+      Array.from({ length: n }, (_, i) => ({
+        name: field(form, `t${i}_name`, 60), bedrooms: field(form, `t${i}_bedrooms`, 4), bathrooms: field(form, `t${i}_bathrooms`, 6),
+        m2: field(form, `t${i}_m2`, 10), price: field(form, `t${i}_price`, 20),
+      }))
+    );
+    const currency = field(form, 'currency', 3) === 'GTQ' ? 'GTQ' : 'USD';
+    const int = (k) => {
+      const v = parseNumber(field(form, k, 6));
+      return v === null ? null : Math.round(v);
+    };
+    const priced = typologies.filter((t) => t.price);
+    const sized = typologies.filter((t) => t.m2);
+    const beds = typologies.filter((t) => t.bedrooms);
+    const priceFrom = parseNumber(field(form, 'price_from', 20)) ?? (priced.length ? Math.min(...priced.map((t) => t.price)) : null);
+    const url_ = (k) => (/^https:\/\/\S+$/.test(field(form, k, 500)) ? field(form, k, 500) : null);
+    const zoneSlug = field(form, 'zone_slug', 60);
+    const devId = Number(field(form, 'developer_id', 10));
+    const kind = field(form, 'kind', 20);
+    const stage = field(form, 'stage', 20);
+    const mode = field(form, 'contact_mode', 12);
+    const fields = {
+      name,
+      developer_id: developers.some((d) => d.id === devId) ? devId : null,
+      kind: pviews.KIND_LABELS[kind] ? kind : 'apartamentos',
+      stage: pviews.STAGE_LABELS[stage] ? stage : 'preventa',
+      delivery: cleanText(field(form, 'delivery', 60)) || null,
+      zone_slug: zones.some((z) => z.slug === zoneSlug) ? zoneSlug : null,
+      location_label: cleanText(field(form, 'location_label', 140)) || null,
+      currency,
+      price_from: priceFrom,
+      price_from_gtq: priceFrom ? Math.round(currency === 'USD' ? priceFrom * usdRate(env) : priceFrom) : null,
+      m2_from: parseNumber(field(form, 'm2_from', 10)) ?? (sized.length ? Math.min(...sized.map((t) => t.m2)) : null),
+      m2_to: parseNumber(field(form, 'm2_to', 10)) ?? (sized.length ? Math.max(...sized.map((t) => t.m2)) : null),
+      bedrooms_min: int('bedrooms_min') ?? (beds.length ? Math.min(...beds.map((t) => t.bedrooms)) : null),
+      bedrooms_max: int('bedrooms_max') ?? (beds.length ? Math.max(...beds.map((t) => t.bedrooms)) : null),
+      units_total: int('units_total'),
+      units_available: int('units_available'),
+      down_payment: cleanText(field(form, 'down_payment', 160)) || null,
+      typologies: JSON.stringify(typologies),
+      amenities: JSON.stringify(field(form, 'amenities', 1500).split(',').map((x) => cleanText(x)).filter(Boolean).slice(0, 30)),
+      description: cleanText(field(form, 'description', 6000)) || null,
+      brochure_url: url_('brochure_url'),
+      video_url: url_('video_url'),
+      tour_url: url_('tour_url'),
+      contact_mode: ['whatsapp', 'formulario', 'ninguno'].includes(mode) ? mode : 'whatsapp',
+    };
+    if (j.slug.startsWith('nuevo-') && name !== 'Nuevo proyecto') fields.slug = `${slugify(name)}-${crypto.randomUUID().slice(0, 4)}`;
+    await db.adminSaveProject(env.DB, id, fields);
+    return back('guardado');
+  }
+
+  if (action === 'fotos') {
+    if (!env.MEDIA) return new Response('El almacenamiento de fotos no está configurado.', { status: 500 });
+    const files = form.getAll('fotos').filter((f) => typeof f === 'object' && f && f.size > 0);
+    if (!files.length) return new Response('Seleccione al menos una imagen.', { status: 400 });
+    if (images.length + files.length > MAX_IMAGES) return new Response(`Cada proyecto admite hasta ${MAX_IMAGES} imágenes.`, { status: 400 });
+    for (const f of files) {
+      if (!IMAGE_TYPES[f.type]) return new Response(`Formato no admitido: ${f.name}. Use JPG, PNG o WebP.`, { status: 400 });
+      if (f.size > MAX_IMAGE_BYTES) return new Response(`La imagen ${f.name} supera 8 MB.`, { status: 400 });
+    }
+    for (const f of files) {
+      const key = `pr/${id}/${crypto.randomUUID()}.${IMAGE_TYPES[f.type]}`;
+      await env.MEDIA.put(key, await f.arrayBuffer(), { metadata: { type: f.type } });
+      images.push(`/media/${key}`);
+    }
+    await db.adminSetProjectImages(env.DB, id, images);
+    return back('fotos');
+  }
+
+  if (action === 'foto') {
+    const i = Number(field(form, 'i', 3));
+    const accion = field(form, 'accion', 20);
+    if (!Number.isInteger(i) || i < 0 || i >= images.length) return back('orden');
+    const move = (from, to) => images.splice(to, 0, images.splice(from, 1)[0]);
+    if (accion === 'principal') move(i, 0);
+    else if (accion === 'subir' && i > 0) move(i, i - 1);
+    else if (accion === 'bajar' && i < images.length - 1) move(i, i + 1);
+    else if (accion === 'quitar') {
+      const [src] = images.splice(i, 1);
+      if (src.startsWith('/media/') && env.MEDIA) await env.MEDIA.delete(src.slice('/media/'.length));
+      await db.adminSetProjectImages(env.DB, id, images);
+      return back('quitada');
+    }
+    await db.adminSetProjectImages(env.DB, id, images);
+    return back('orden');
+  }
+
+  return redirect(`/admin/proyecto/${id}/editar`);
+}
 
 // ---------- Sitio anterior (Cloudflare Pages) ----------
 // El portal atiende sus rutas; el resto se sirve desde el sitio anterior sin cambios.
@@ -520,13 +711,15 @@ export default {
         }
       }
       if (method === 'GET' && path === '/') {
-        const [zones, featured, heroImage] = await Promise.all([
+        const [zones, featured, heroImage, projects] = await Promise.all([
           db.listZones(env.DB),
           db.featuredProperties(env.DB, 3),
           db.getSetting(env.DB, 'hero_image'),
+          db.listProjects(env.DB, { limit: 3 }),
         ]);
         const positions = await db.positionsFor(env.DB, featured, minComparables(env));
-        return page(views.homePage(env, { zones, featured, positions, heroImage }), 200, { 'Cache-Control': 'public, max-age=120' });
+        const projectsSection = pviews.homeProjectsSection(projects);
+        return page(views.homePage(env, { zones, featured, positions, heroImage, projectsSection }), 200, { 'Cache-Control': 'public, max-age=120' });
       }
 
       if (method === 'GET' && path === '/propiedades') {
@@ -549,6 +742,65 @@ export default {
         return page(views.propertyPage(env, { p, reading, utm: utmFrom(url) }));
       }
 
+      if (method === 'GET' && path === '/proyectos') {
+        const filters = {
+          zone: url.searchParams.get('zona') || '',
+          kind: url.searchParams.get('tipo') || '',
+          stage: url.searchParams.get('etapa') || '',
+        };
+        if (filters.kind && !pviews.KIND_LABELS[filters.kind]) filters.kind = '';
+        if (filters.stage && !pviews.STAGE_LABELS[filters.stage]) filters.stage = '';
+        const [zones, items] = await Promise.all([db.listZones(env.DB), db.listProjects(env.DB, { ...filters, limit: 60 })]);
+        return page(pviews.projectsPage(env, { zones, filters, items }), 200, { 'Cache-Control': 'public, max-age=120' });
+      }
+
+      const projectMatch = path.match(/^\/proyecto\/([a-z0-9-]{1,100})$/i);
+      if (method === 'GET' && projectMatch) {
+        const j = await db.getPublicProject(env.DB, projectMatch[1]);
+        if (!j) return page(views.notFoundPage(env), 404);
+        if (!BOT_UA.test(request.headers.get('User-Agent') || '') && !(await isAdmin(request, env))) {
+          ctx.waitUntil(db.recordProjectView(env.DB, j.id).catch((e) => console.error('Visita', e)));
+        }
+        return page(pviews.projectPage(env, { j, reading: await projectReading(env, j), utm: utmFrom(url) }));
+      }
+
+      if (method === 'GET' && path === '/comparar') {
+        const slugs = [...new Set((url.searchParams.get('p') || '').split(',').map((x) => x.trim()).filter((x) => /^[a-z0-9-]{1,100}$/i.test(x)))].slice(0, 3);
+        const items = await db.getPublicProjects(env.DB, slugs);
+        const readings = new Map();
+        for (const j of items) readings.set(j.id, await projectReading(env, j));
+        return page(pviews.comparePage(env, { items, readings }), 200, { 'Cache-Control': 'no-store' });
+      }
+
+      const zoneMatch = path.match(/^\/zona\/([a-z0-9-]{1,60})$/);
+      if (method === 'GET' && zoneMatch) {
+        const zone = await db.getZone(env.DB, zoneMatch[1]);
+        if (!zone) return page(views.notFoundPage(env), 404);
+        const min = minComparables(env);
+        const [casa, apartamento, terreno, projects, list] = await Promise.all([
+          db.zoneValue(env.DB, zone.slug, 'casa', min),
+          db.zoneValue(env.DB, zone.slug, 'apartamento', min),
+          db.zoneValue(env.DB, zone.slug, 'terreno', min),
+          db.listProjects(env.DB, { zone: zone.slug, limit: 6 }),
+          db.listProperties(env.DB, { zone: zone.slug, limit: 6 }),
+        ]);
+        const positions = await db.positionsFor(env.DB, list.items, min);
+        return page(
+          pviews.zonePage(env, { zone, values: { casa, apartamento, terreno }, projects, properties: list.items, positions }),
+          200,
+          { 'Cache-Control': 'public, max-age=300' }
+        );
+      }
+
+      if (method === 'GET' && path === '/desarrolladoras') {
+        return page(pviews.developersPage(env, { utm: utmFrom(url), stats: await siteStats(env) }));
+      }
+
+      if (method === 'GET' && path === '/desarrolladoras/gracias') {
+        const text = 'Hola, descargué la guía para desarrolladoras de inmuhub y quiero revisar cómo quedaría nuestro proyecto.';
+        return page(pviews.developersThanksPage(env, { waUrl: waLink(env.WHATSAPP_DEFAULT, text) }), 200, { 'Cache-Control': 'no-store' });
+      }
+
       if (method === 'GET' && path === '/valor') {
         const zones = await db.listZones(env.DB);
         const zone = url.searchParams.get('zona') ? await db.getZone(env.DB, url.searchParams.get('zona')) : null;
@@ -568,7 +820,7 @@ export default {
       }
 
       // Fotografías subidas desde /admin (Workers KV)
-      const mediaMatch = path.match(/^\/media\/((?:p\/\d+|site)\/[a-z0-9-]+\.(?:webp|jpg|png))$/);
+      const mediaMatch = path.match(/^\/media\/((?:p\/\d+|pr\/\d+|site)\/[a-z0-9-]+\.(?:webp|jpg|png))$/);
       if ((method === 'GET' || method === 'HEAD') && mediaMatch && env.MEDIA) {
         const { value, metadata } = await env.MEDIA.getWithMetadata(mediaMatch[1], { type: 'stream', cacheTtl: 3600 });
         if (!value) return page(views.notFoundPage(env), 404);
@@ -675,6 +927,44 @@ export default {
           return redirect('/admin?ok=portada');
         }
 
+        const projectAdmin = path.match(/^\/admin\/proyecto\/(\d+)\/(editar|guardar|fotos|foto|accion|reporte)$/);
+        if (projectAdmin) return handleAdminProject(request, env, url, Number(projectAdmin[1]), projectAdmin[2]);
+
+        if (method === 'GET' && path === '/admin/proyectos') {
+          const [projects, developers] = await Promise.all([db.adminListProjects(env.DB), db.listDevelopers(env.DB)]);
+          const devId = Number(url.searchParams.get('desarrolladora'));
+          const editDeveloper = devId ? developers.find((d) => d.id === devId) : null;
+          const notice = { accion: 'Proyecto actualizado.', desarrolladora: 'Desarrolladora guardada.' }[url.searchParams.get('ok')];
+          return page(aviews.adminProjectsPage(env, { projects, developers, notice, editDeveloper }), 200, { 'Cache-Control': 'no-store' });
+        }
+
+        if (method === 'POST' && path === '/admin/proyectos/nuevo') {
+          const id = await db.adminCreateProject(env.DB, `nuevo-${crypto.randomUUID().slice(0, 8)}`);
+          return redirect(`/admin/proyecto/${id}/editar?ok=nuevo`);
+        }
+
+        if (method === 'POST' && path === '/admin/desarrolladora') {
+          const form = await request.formData();
+          const name = cleanText(field(form, 'name', 120));
+          if (!name) return redirect('/admin/proyectos');
+          const plan = field(form, 'plan', 12);
+          const trial = field(form, 'trial_until', 10);
+          const website = field(form, 'website', 200);
+          const id = Number(field(form, 'id', 10)) || null;
+          await db.saveDeveloper(env.DB, id, {
+            name,
+            slug: `${slugify(name)}-${crypto.randomUUID().slice(0, 4)}`,
+            contact_name: cleanText(field(form, 'contact_name', 120)) || null,
+            whatsapp: normalizeWhatsapp(field(form, 'whatsapp', 20)),
+            email: field(form, 'email', 120) || null,
+            website: /^https:\/\/\S+$/.test(website) ? website : null,
+            plan: ['prueba', 'proyecto', 'destacado', 'pausado'].includes(plan) ? plan : 'prueba',
+            trial_until: /^\d{4}-\d{2}-\d{2}$/.test(trial) ? trial : null,
+            notes: cleanText(field(form, 'notes', 1000)) || null,
+          });
+          return redirect('/admin/proyectos?ok=desarrolladora');
+        }
+
         if (method === 'POST' && path === '/admin/nueva') {
           const id = await db.adminCreateProperty(env.DB, `nueva-${crypto.randomUUID().slice(0, 8)}`);
           return redirect(`/admin/propiedad/${id}/editar?ok=nueva`);
@@ -702,8 +992,17 @@ export default {
       }
 
       if (method === 'GET' && path === '/sitemap.xml') {
-        const { items } = await db.listProperties(env.DB, { limit: 1000 });
-        const own = ['/', '/propiedades', '/valor', '/planes', '/publicar', ...items.map((p) => `/propiedad/${p.slug}`)].map(
+        const [{ items }, projects, zones] = await Promise.all([
+          db.listProperties(env.DB, { limit: 1000 }),
+          db.listProjects(env.DB, { limit: 1000 }),
+          db.listZones(env.DB),
+        ]);
+        const own = [
+          '/', '/propiedades', '/proyectos', '/valor', '/planes', '/publicar', '/desarrolladoras',
+          ...zones.map((z) => `/zona/${z.slug}`),
+          ...items.map((p) => `/propiedad/${p.slug}`),
+          ...projects.map((j) => `/proyecto/${j.slug}`),
+        ].map(
           (u) => `${env.SITE_URL}${u}`
         );
         // Páginas del sitio anterior que siguen vivas (blog, herramientas, zonas, asesores).

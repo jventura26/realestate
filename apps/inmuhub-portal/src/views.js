@@ -2,9 +2,9 @@ import {
   html, raw, escape, formatMoney, formatNumber, TYPE_LABELS, OPERATION_LABELS, POSITION_LABELS, firstImage, parseJsonArray,
 } from './html.js';
 
-const CHECK = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>');
-const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>');
-const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
+export const CHECK = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>');
+export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>');
+export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // ---------- Layout ----------
 
@@ -43,11 +43,27 @@ ${pixel}
     <a class="brand" href="/">inmuhub <span>Guatemala</span></a>
     <nav class="main-nav" aria-label="Principal">
       <a href="/propiedades">Propiedades</a>
+      <a href="/proyectos">Proyectos nuevos</a>
       <a href="/valor">Valor por zona</a>
-      <a href="/publicar">Para propietarios</a>
-      <a href="/planes">Para inmobiliarias</a>
+      <a href="/publicar">Propietarios</a>
+      <a href="/planes">Inmobiliarias</a>
+      <a href="/desarrolladoras">Desarrolladoras</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="/publicar"><span class="only-desktop">Publicar propiedad</span><span class="only-mobile">Publicar</span></a>
+    <div class="header-actions">
+      <a class="btn btn-primary btn-sm" href="/publicar"><span class="only-desktop">Publicar propiedad</span><span class="only-mobile">Publicar</span></a>
+      <details class="menu">
+        <summary aria-label="Menú">Menú</summary>
+        <nav class="menu-panel" aria-label="Menú">
+          <a href="/propiedades">Propiedades</a>
+          <a href="/proyectos">Proyectos nuevos</a>
+          <a href="/comparar">Comparar proyectos</a>
+          <a href="/valor">Valor por zona</a>
+          <a href="/publicar">Propietarios</a>
+          <a href="/planes">Inmobiliarias</a>
+          <a href="/desarrolladoras">Desarrolladoras</a>
+        </nav>
+      </details>
+    </div>
   </div>
 </header>
 <main>${body}</main>
@@ -58,8 +74,8 @@ ${pixel}
       <p class="muted">Portal inmobiliario curado en Guatemala.</p>
     </div>
     <div class="footer-cols">
-      <div><strong>Explorar</strong><a href="/propiedades">Propiedades</a><a href="/valor">Valor por zona</a></div>
-      <div><strong>Publicar</strong><a href="/publicar">Propietarios</a><a href="/planes">Inmobiliarias</a></div>
+      <div><strong>Explorar</strong><a href="/propiedades">Propiedades</a><a href="/proyectos">Proyectos nuevos</a><a href="/comparar">Comparar proyectos</a><a href="/valor">Valor por zona</a></div>
+      <div><strong>Publicar</strong><a href="/publicar">Propietarios</a><a href="/planes">Inmobiliarias</a><a href="/desarrolladoras">Desarrolladoras</a></div>
       <div><strong>Legal</strong><a href="/privacidad">Aviso de privacidad</a></div>
     </div>
   </div>
@@ -72,7 +88,7 @@ ${scripts.map((src) => html`<script src="${src}" defer></script>`)}
 
 // ---------- Componentes ----------
 
-function zoneOptions(zones, selected, { includeAll = true } = {}) {
+export function zoneOptions(zones, selected, { includeAll = true } = {}) {
   return html`${includeAll ? html`<option value="">Todas</option>` : ''}${zones.map(
     (z) => html`<option value="${z.slug}"${selected === z.slug ? raw(' selected') : ''}>${z.name}</option>`
   )}`;
@@ -99,7 +115,7 @@ function specsLine(p) {
 }
 
 // "Carretera a El Salvador" + "Carretera a El Salvador km 16.5" -> solo el más específico.
-function placeLabel(p) {
+export function placeLabel(p) {
   const zone = p.zone_name || '';
   const loc = p.location_label || '';
   if (loc && zone && loc.toLowerCase().includes(zone.toLowerCase())) return loc;
@@ -135,7 +151,7 @@ export function propertyCard(p, pos) {
 </article>`;
 }
 
-function valueBar(range, ppu) {
+export function valueBar(range, ppu) {
   if (!range?.enough) return '';
   // Escala centrada en el rango P25–P75 para que un valor atípico no lo comprima.
   const pad = Math.max((range.high - range.low) * 0.75, range.median * 0.1);
@@ -151,12 +167,12 @@ function valueBar(range, ppu) {
 </div>`;
 }
 
-function utmInputs(utm) {
+export function utmInputs(utm) {
   return html`<input type="hidden" name="utm_source" value="${utm.utm_source || ''}"><input type="hidden" name="utm_campaign" value="${utm.utm_campaign || ''}"><input type="hidden" name="utm_content" value="${utm.utm_content || ''}">`;
 }
 
-const PRIVACY_NOTE = raw('<p class="small muted form-legal">Al enviar acepta el <a href="/privacidad">aviso de privacidad</a>.</p>');
-const HONEYPOT = raw('<div class="hp" aria-hidden="true"><label>No llenar<input type="text" name="empresa" tabindex="-1" autocomplete="off"></label></div>');
+export const PRIVACY_NOTE = raw('<p class="small muted form-legal">Al enviar acepta el <a href="/privacidad">aviso de privacidad</a>.</p>');
+export const HONEYPOT = raw('<div class="hp" aria-hidden="true"><label>No llenar<input type="text" name="empresa" tabindex="-1" autocomplete="off"></label></div>');
 
 // Descripción con formato simple: párrafos, «## Título» para secciones y «- punto» para listas.
 // Los párrafos antes de la primera sección son la presentación; las secciones van en rejilla.
@@ -189,7 +205,7 @@ export function renderDescription(text) {
 
 // ---------- Páginas ----------
 
-export function homePage(env, { zones, featured, positions, heroImage }) {
+export function homePage(env, { zones, featured, positions, heroImage, projectsSection = '' }) {
   const featuredZones = zones.filter((z) => z.featured);
   const hero = heroImage || '/portada.webp';
   const illustrative = hero === '/portada.webp';
@@ -240,6 +256,7 @@ export function homePage(env, { zones, featured, positions, heroImage }) {
   </div>
   <div class="cards">${featured.map((p) => propertyCard(p, positions.get(p.id)))}</div>
 </section>
+${projectsSection}
 
 <section class="wrap section steps-section">
   <div class="section-head"><h2 class="display-md">Qué significa «Verificada»</h2><span class="tagline">No se trata de publicar por publicar.</span></div>
@@ -266,7 +283,7 @@ export function homePage(env, { zones, featured, positions, heroImage }) {
     <a class="btn btn-brass" href="/planes">Ver planes</a>
   </div>
 </section>`;
-  return layout(env, { path: '/', body, image: hero || null });
+  return layout(env, { path: '/', body, image: hero || null, scripts: projectsSection ? ['/compare.js'] : [] });
 }
 
 export function listingPage(env, { zones, filters, items, total, positions }) {
@@ -444,7 +461,7 @@ export function zoneValuePage(env, { zones, zone, type, value, utm, error }) {
 const PLANS = [
   { id: 'asesor', name: 'Asesor', who: 'Para asesores independientes.', price: 'Q350', items: ['Hasta 10 propiedades activas', 'Perfil verificado', 'Lectura de valor en cada ficha', 'Consultas directas a su WhatsApp'] },
   { id: 'agencia', name: 'Agencia', who: 'Para inmobiliarias con equipo.', price: 'Q950', featured: true, items: ['Hasta 50 propiedades activas', 'Hasta 5 asesores con perfil propio', 'Panel de consultas por propiedad y asesor', '2 propiedades destacadas al mes', 'Página de agencia con su marca'] },
-  { id: 'agencia_pro', name: 'Agencia Pro', who: 'Para desarrolladoras e inventarios grandes.', price: 'Q2,200', items: ['Propiedades y asesores ilimitados', 'Todo lo del plan Agencia', '1 tour 360° incluido al mes', '5 propiedades destacadas al mes', 'Reporte mensual de consultas'] },
+  { id: 'agencia_pro', name: 'Agencia Pro', who: 'Para inventarios grandes y equipos comerciales.', price: 'Q2,200', items: ['Propiedades y asesores ilimitados', 'Todo lo del plan Agencia', '1 tour 360° incluido al mes', '5 propiedades destacadas al mes', 'Reporte mensual de consultas'] },
 ];
 
 export function plansPage(env, { utm, error, selected }) {
@@ -463,6 +480,7 @@ export function plansPage(env, { utm, error, selected }) {
     <a class="btn ${pl.featured ? 'btn-brass' : 'btn-outline'} btn-block" href="/planes?plan=${pl.id}#contacto">Elegir ${pl.name}</a>
   </article>`)}
 </section>
+<p class="wrap small muted center-text">¿Desarrolla un proyecto nuevo? Vea los <a href="/desarrolladoras">planes por proyecto para desarrolladoras</a>.</p>
 <section class="wrap section">
   <div class="section-head"><div><div class="eyebrow">Complementos</div><h2 class="display-md">Producción y pauta, cuando las necesite</h2></div></div>
   <div class="addons">
@@ -582,7 +600,7 @@ export function adminPage(env, { counts, props, leads, zones, filter, heroImage,
   const waLink = (n) => (n ? `https://wa.me/${n}` : null);
   const body = html`
 <section class="wrap section admin">
-  <div class="section-head"><h1 class="display-sm">Panel inmuhub</h1><form method="post" action="/admin/logout"><button class="btn btn-outline btn-sm" type="submit">Salir</button></form></div>
+  <div class="section-head"><h1 class="display-sm">Panel inmuhub</h1><div class="admin-links"><a class="btn btn-primary btn-sm" href="/admin/proyectos">Proyectos y desarrolladoras</a><form method="post" action="/admin/logout"><button class="btn btn-outline btn-sm" type="submit">Salir</button></form></div></div>
   ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
   <div class="kpis">
     <div><span>En revisión</span><strong>${counts.pendientes}</strong></div>
@@ -642,7 +660,7 @@ export function adminPage(env, { counts, props, leads, zones, filter, heroImage,
       <td>${l.kind}</td>
       <td>${l.name || '—'}</td>
       <td><a href="https://wa.me/${l.whatsapp}" target="_blank" rel="noopener">${l.whatsapp}</a></td>
-      <td class="small">${l.property_title ? html`<a href="/propiedad/${l.property_slug}" target="_blank">${l.property_title}</a>` : l.zone_slug || ''} ${l.intent ? `· ${l.intent}` : ''} ${l.message ? `· ${l.message}` : ''}</td>
+      <td class="small">${l.property_title ? html`<a href="/propiedad/${l.property_slug}" target="_blank">${l.property_title}</a>` : l.project_name ? html`<a href="/proyecto/${l.project_slug}" target="_blank">${l.project_name}</a>` : l.zone_slug || ''} ${l.intent ? `· ${l.intent}` : ''} ${l.message ? `· ${l.message}` : ''}</td>
       <td class="small muted">${[l.utm_source, l.utm_campaign, l.utm_content].filter(Boolean).join(' / ') || 'directo'}</td>
     </tr>`)}</tbody>
   </table></div>
