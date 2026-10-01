@@ -91,8 +91,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-<link rel="preload" href="/assets/zona-styles.css" as="style">
-<link rel="stylesheet" href="/assets/zona-styles.css">
+<link rel="preload" href="/assets/zona-styles.css?v=20261001" as="style">
+<link rel="stylesheet" href="/assets/zona-styles.css?v=20261001">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -113,6 +113,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <li><a href="/propiedades.html?tipo=Casa"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Casas &amp; Residencias</a></li>
               <li><a href="/propiedades.html?tipo=Apartamento"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2M9 18h6"/></svg> Apartamentos</a></li>
               <li><a href="/propiedades.html?tipo=Finca"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6M9 9h.01M15 9h.01"/></svg> Fincas</a></li>
+              <li><a href="/diagnostico.html"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg> Diagn&oacute;stico en 1 minuto</a></li>
               <li><a href="/propiedades.html?tipo=Terreno"><svg class="mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20L9 8l4 6 3-4 6 10H2z"/><circle cx="17" cy="6" r="2"/></svg> Terrenos</a></li>
             </ul>
           </div>
@@ -129,11 +130,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div class="mega-cta">
             <a href="/propiedades.html">Ver todas las propiedades <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="/comparar.html">Comparar guardadas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
             <a href="/zonas/index.html">Explorar zonas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
           </div>
         </div>
       </li>
-      <li><a href="/propiedades.html?tipo=Finca">Fincas</a></li>
       <li data-mega="zonas">
         <a href="/zonas/index.html">Zonas <span class="dd-arrow">&#9660;</span></a>
         <ul class="simple-dd">
@@ -147,9 +148,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </ul>
       </li>
       <li><a href="/valor-por-zona.html">Valor por zona</a></li>
+      <li><a href="/indice.html">&Iacute;ndice</a></li>
+      <li><a href="/vender.html">Vender</a></li>
       <li><a href="/blog.html">Blog</a></li>
       <li><a href="/about.html">Nosotros</a></li>
-      <li><a href="/faq.html">FAQ</a></li>
     </ul>
     <a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="nav-cta">Asesor&iacute;a</a>
   </div>
@@ -167,7 +169,7 @@ ${body}
   <div class="footer-top">
     <div class="footer-brand-block">
       <div class="footer-logo"><em>ZONA</em> INNmueble</div>
-      <p class="footer-tagline">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
+      <p class="footer-tagline">Asesor&iacute;a inmobiliaria con an&aacute;lisis, valores y claridad. No se trata de vender por vender.</p>
       <div class="footer-social">
         <a href="https://www.facebook.com/Zona-INNmueble-1616853578595692/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
         <a href="https://www.instagram.com/zona_innmueble/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg></a>
@@ -202,7 +204,11 @@ ${body}
       <h4>Recursos</h4>
       <ul>
         <li><a href="/valor-por-zona.html">Valor por zona</a></li>
-      <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/indice.html">&Iacute;ndice Zona-INNmueble</a></li>
+        <li><a href="/diagnostico.html">Diagn&oacute;stico inmobiliario</a></li>
+        <li><a href="/vender.html">Vender mi propiedad</a></li>
+        <li><a href="/comparar.html">Comparar propiedades</a></li>
+        <li><a href="/blog.html">Blog</a></li>
         <li><a href="/faq.html">Preguntas Frecuentes</a></li>
         <li><a href="/about.html">Nosotros</a></li>
         <li><a href="/privacidad.html">Privacidad</a></li>
@@ -422,42 +428,38 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // Mega-menu handles all dropdown logic above
 </script>
-<script src="/assets/zona-fase1.js" defer></script>
-<!-- Lead Capture Pop-up -->
-<div id="zpPopup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(13,27,62,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center">
-<div style="background:linear-gradient(145deg,#0D1B3E 0%,#142240 100%);border:1px solid rgba(193,145,75,.3);border-radius:20px;padding:40px 32px;max-width:420px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5)">
-<button onclick="document.getElementById('zpPopup').style.display='none';sessionStorage.setItem('zpPopDismissed','1')" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(255,255,255,.4);font-size:22px;cursor:pointer;line-height:1">&times;</button>
-<div style="text-align:center">
-<div style="font-size:28px;margin-bottom:12px">🏡</div>
-<div style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#F5820D;margin-bottom:14px">Acceso exclusivo</div>
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,1.8rem);font-weight:300;color:#fff;line-height:1.3;margin-bottom:12px">Recibe propiedades <em style="color:#F5820D;font-style:italic">antes que nadie</em></h3>
-<p style="font-size:.82rem;color:#8A9BB0;line-height:1.7;margin-bottom:24px">Nuevas propiedades, oportunidades de inversi&oacute;n y propiedades exclusivas directamente a tu WhatsApp. Sin spam.</p>
-<a href="https://wa.me/50245542088?text=Hola%2C%20quiero%20recibir%20propiedades%20nuevas%20y%20oportunidades%20de%20inversi%C3%B3n." style="display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;padding:14px 24px;border-radius:10px;font-size:.85rem;font-weight:600;text-decoration:none;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(37,211,102,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-${WA_SVG} Quiero recibir propiedades
-</a>
-<p style="font-size:.65rem;color:rgba(138,155,176,.5);margin-top:14px">Respuesta en menos de 2 horas &middot; Sin compromiso</p>
-</div>
+<script src="/assets/zona-fase1.js?v=20261001" defer></script>
+<!-- Lead Capture Pop-up: Índice Zona-INNmueble -->
+<div id="zpPopup" role="dialog" aria-modal="true" aria-label="Índice Zona-INNmueble" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(8,16,38,.72);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px">
+<div style="background:linear-gradient(150deg,#122a5a 0%,#0D1B3E 70%);border:1px solid rgba(59,158,255,.25);border-radius:18px;padding:38px 32px 30px;max-width:430px;width:100%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden">
+<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#C9A35B,#3B9EFF)"></div>
+<button onclick="zpClose()" aria-label="Cerrar" style="position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,.45);font-size:24px;cursor:pointer;line-height:1">&times;</button>
+<div style="font-size:.56rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#3B9EFF;margin-bottom:14px">&Iacute;ndice Zona-INNmueble</div>
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2rem);font-weight:300;color:#fff;line-height:1.15;margin-bottom:12px">Antes de comprar, conoce <em style="color:#C9A35B;font-style:italic">el valor real de la zona.</em></h3>
+<p style="font-size:.82rem;color:#8A9BB0;line-height:1.75;margin-bottom:22px">Precio por m&sup2;, precio t&iacute;pico y rendimiento de renta por zona en Guatemala. Te lo enviamos por WhatsApp, junto con las propiedades nuevas que encajen contigo.</p>
+<a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero recibir el Índice Zona-INNmueble y propiedades nuevas.')}" target="_blank" rel="noopener" onclick="try{fbq('track','Lead',{content_name:'Popup Indice'})}catch(e){};zpClose()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#C9A35B;color:#0D1B3E;padding:14px 22px;border-radius:8px;font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none">${WA_SVG} Recibir el &iacute;ndice</a>
+<a href="/indice.html" onclick="zpClose()" style="display:block;text-align:center;margin-top:12px;font-size:.68rem;color:#8A9BB0;text-decoration:underline;text-underline-offset:3px">Prefiero verlo en la web</a>
 </div>
 </div>
 <script>
+function zpClose(){var p=document.getElementById('zpPopup');if(p)p.style.display='none';try{sessionStorage.setItem('zpPopDismissed','1')}catch(e){}}
 (function(){
-if(sessionStorage.getItem('zpPopDismissed')) return;
-var shown=false;
-var scrolledEnough=false;
+try{if(sessionStorage.getItem('zpPopDismissed'))return;}catch(e){}
+if(['vender','diagnostico','indice','comparar','gracias'].some(function(k){return location.pathname.indexOf(k)>=0}))return;
+var shown=false,deep=false,t0=Date.now();
 function showPop(){if(shown)return;shown=true;document.getElementById('zpPopup').style.display='flex';}
-function closePop(){document.getElementById('zpPopup').style.display='none';sessionStorage.setItem('zpPopDismissed','1');}
-function checkScroll(){
-  var doc=document.documentElement;
-  var max=(doc.scrollHeight-doc.clientHeight)||1;
-  var pct=(window.scrollY||doc.scrollTop)/max;
-  if(pct>=0.45) scrolledEnough=true;
-}
-window.addEventListener('scroll',checkScroll,{passive:true});
-setTimeout(function(){ if(scrolledEnough) showPop(); },20000);
-setTimeout(showPop,45000);
-document.addEventListener('mouseout',function(e){if(!e.relatedTarget&&e.clientY<5)showPop();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop();});
+window.addEventListener('scroll',function(){var d=document.documentElement,m=(d.scrollHeight-d.clientHeight)||1;if((window.scrollY||d.scrollTop)/m>=0.5)deep=true;if(deep&&Date.now()-t0>25000)showPop();},{passive:true});
+document.addEventListener('mouseout',function(e){if(!e.relatedTarget&&e.clientY<5&&Date.now()-t0>8000)showPop();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')zpClose();});
+document.getElementById('zpPopup').addEventListener('click',function(e){if(e.target===this)zpClose();});
 })();
+</script>
+<!-- Comparador: píldora flotante -->
+<a href="/comparar.html" class="cmp-pill" id="cmpPill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h7v14H4zM13 4h7v16h-7z"/></svg> Comparar &middot; <span id="cmpN">0</span></a>
+<script>
+function cmpRefresh(){var n=0;try{n=JSON.parse(localStorage.getItem('zona_favoritos_v1')||'[]').length}catch(e){}var p=document.getElementById('cmpPill');if(!p||/comparar/.test(location.pathname))return;document.getElementById('cmpN').textContent=n;p.classList.toggle('on',n>=2);}
+document.addEventListener('DOMContentLoaded',function(){cmpRefresh();document.querySelectorAll('.pc-fav-detail').forEach(function(b){if(isFav(b.dataset.slug)){var s=b.querySelector('span');if(s)s.textContent='En tu comparación';}});});
+document.addEventListener('click',function(e){if(e.target.closest('.pc-fav,.pc-fav-detail'))setTimeout(cmpRefresh,50);});
 </script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}

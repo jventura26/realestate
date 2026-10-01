@@ -93,7 +93,7 @@
 }
 </script>
 <style>
-:root{--ink:#0D1B3E;--ink2:#0F2A52;--or:#F5820D;--wh:#fff;--sv:#8A9BB0;--mt:#56647A;--bd:rgba(255,255,255,.08);--gl:rgba(245,130,13,.25);--wa:#25D366}
+:root{--ink:#0D1B3E;--ink2:#0F2A52;--or:#C9A35B;--wh:#fff;--sv:#8A9BB0;--mt:#56647A;--bd:rgba(255,255,255,.08);--gl:rgba(201,163,91,.25);--wa:#25D366}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Montserrat',sans-serif;background:var(--ink);color:var(--wh);overflow-x:hidden}
@@ -114,9 +114,9 @@ section{padding:20px 6%}
 .st em{font-style:italic;color:var(--or)}
 .faq-container{max-width:800px;margin:0 auto}
 .faq-item{border:1px solid var(--bd);margin-bottom:16px;border-radius:4px;overflow:hidden;transition:all .3s}
-.faq-item.active{border-color:var(--or);background:rgba(245,130,13,.08)}
+.faq-item.active{border-color:var(--or);background:rgba(201,163,91,.08)}
 .faq-header{padding:20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--ink2);transition:all .3s;user-select:none}
-.faq-header:hover{background:rgba(245,130,13,.12)}
+.faq-header:hover{background:rgba(201,163,91,.12)}
 .faq-title{font-size:.95rem;font-weight:600;letter-spacing:.05em;color:var(--wh)}
 .faq-icon{font-size:1.4rem;color:var(--or);transition:transform .3s}
 .faq-item.active .faq-icon{transform:rotate(180deg)}
@@ -143,6 +143,7 @@ section{padding:20px 6%}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;500;600;700&display=swap" rel="stylesheet">
+<style>@media(max-width:700px){.zf-grid{grid-template-columns:1fr 1fr!important;gap:28px!important}.zf-grid>div:first-child{grid-column:1/-1}}</style>
 </head>
 <body>
 <nav>
@@ -151,12 +152,11 @@ section{padding:20px 6%}
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="nav-links">
       <li><a href="/propiedades.html">Propiedades</a></li>
-      <li><a href="/propiedades.html?tipo=Casa">Casas</a></li>
-      <li><a href="/propiedades.html?tipo=Apartamento">Apartamentos</a></li>
-      <li><a href="/propiedades.html?tipo=Finca">Fincas</a></li>
+      <li><a href="/zonas/index.html">Zonas</a></li>
+      <li><a href="/valor-por-zona.html">Valor por zona</a></li>
+      <li><a href="/indice.html">&Iacute;ndice</a></li>
+      <li><a href="/vender.html">Vender</a></li>
       <li><a href="/blog.html">Blog</a></li>
-      <li><a href="/zonas/guatemala.html">Zonas</a></li>
-      <li><a href="/faq.html">FAQ</a></li>
       <li><a href="/about.html">Nosotros</a></li>
     </ul>
     
@@ -209,10 +209,10 @@ section{padding:20px 6%}
 </section>
 
 <footer style="background:var(--ink);border-top:1px solid var(--gl)">
-  <div style="max-width:1200px;margin:0 auto;padding:60px 6% 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px">
+  <div style="max-width:1200px;margin:0 auto;padding:60px 6% 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px" class="zf-grid">
     <div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--wh);margin-bottom:16px"><em style="color:var(--or);font-style:normal">ZONA</em> INNmueble</div>
-      <p style="font-size:.82rem;color:var(--sv);line-height:1.8;max-width:280px;margin-bottom:24px">Donde las oportunidades inmobiliarias se convierten en patrimonio. Guatemala Premium Real Estate.</p>
+      <p style="font-size:.82rem;color:var(--sv);line-height:1.8;max-width:280px;margin-bottom:24px">Asesor&iacute;a inmobiliaria con an&aacute;lisis, valores y claridad. No se trata de vender por vender.</p>
       
     </div>
     <div>

@@ -35,7 +35,7 @@ function sharePage(prop) {
 
   const charsHtml = (prop.caracteristicas && prop.caracteristicas.length && !isPrivada)
     ? '<div style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)">'
-      + '<div style="font-size:.54rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,130,13,.8);margin-bottom:8px">Características</div>'
+      + '<div style="font-size:.54rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,163,91,.8);margin-bottom:8px">Características</div>'
       + '<div style="display:flex;flex-wrap:wrap;gap:5px">'
       + prop.caracteristicas.slice(0,8).map(function(ch){ return '<span style="font-size:.64rem;padding:4px 9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;color:rgba(255,255,255,.65)">✓ ' + esc(ch) + '</span>'; }).join('')
       + '</div></div>'
@@ -53,7 +53,7 @@ function sharePage(prop) {
     + '<div class="form-field"><input type="tel" id="f-telefono" placeholder="Tu telefono (WhatsApp)" required></div>'
     + '<div class="form-field"><select id="f-tipo"><option value="">Soy...</option><option value="Interesado">Comprador interesado</option><option value="Asesor">Asesor inmobiliario</option><option value="Inversionista">Inversionista</option></select></div>'
     + '<button class="btn-pdf" onclick="submitLead()" id="btn-submit">Acceder a la ficha completa</button>'
-    + '<p id="form-error" style="color:#F5820D;font-size:.72rem;margin-top:8px;display:none">Por favor completa todos los campos.</p>'
+    + '<p id="form-error" style="color:#C9A35B;font-size:.72rem;margin-top:8px;display:none">Por favor completa todos los campos.</p>'
     + '</div>'
     + '<div id="form-success" style="display:none">'
     + (pdfTarget
@@ -108,19 +108,19 @@ function sharePage(prop) {
     + '.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,17,31,.3) 0%,rgba(8,17,31,.7) 100%);}'
     + '.hero-top{position:absolute;top:0;left:0;right:0;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;}'
     + '.logo{font-family:\'Cormorant Garamond\',serif;font-size:1rem;color:rgba(255,255,255,.85);text-decoration:none;letter-spacing:.04em;}'
-    + '.logo em{color:#F5820D;font-style:normal;}'
-    + '.badge-offmarket{display:inline-flex;align-items:center;gap:6px;background:rgba(8,17,31,.7);border:1px solid rgba(245,130,13,.5);border-radius:4px;padding:4px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#F5820D;backdrop-filter:blur(8px);}'
+    + '.logo em{color:#C9A35B;font-style:normal;}'
+    + '.badge-offmarket{display:inline-flex;align-items:center;gap:6px;background:rgba(8,17,31,.7);border:1px solid rgba(201,163,91,.5);border-radius:4px;padding:4px 12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C9A35B;backdrop-filter:blur(8px);}'
     + '.hero-bottom{position:absolute;bottom:0;left:0;right:0;padding:20px 24px;}'
     + '.tipo-listing{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px;}'
     + '.precio-tag{display:inline-block;font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;color:rgba(255,255,255,.6);font-style:italic;letter-spacing:.02em;}'
-    + '.precio-visible{color:#F5820D;font-style:normal;font-weight:500;}'
+    + '.precio-visible{color:#C9A35B;font-style:normal;font-weight:500;}'
 
     /* CONTENIDO */
     + '.content{padding:28px 24px 40px;max-width:680px;margin:0 auto;}'
     + '.ubicacion{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:16px;}'
     + '.hook{font-family:\'Cormorant Garamond\',serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:300;line-height:1.1;color:white;margin-bottom:16px;}'
     + '.desc{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.85;margin-bottom:24px;font-weight:300;}'
-    + '.divider{width:32px;height:1px;background:#F5820D;margin-bottom:24px;}'
+    + '.divider{width:32px;height:1px;background:#C9A35B;margin-bottom:24px;}'
     + '.datos{font-size:.78rem;color:rgba(255,255,255,.55);letter-spacing:.06em;margin-bottom:28px;line-height:1.8;}'
     + '.datos strong{color:rgba(255,255,255,.8);font-weight:600;}'
 
@@ -128,7 +128,7 @@ function sharePage(prop) {
     + '.pkg-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:20px;margin-bottom:16px;}'
     + '.pkg-title{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px;}'
     + '.pkg-desc{font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:16px;line-height:1.6;}'
-    + '.btn-pdf{display:flex;align-items:center;justify-content:center;gap:8px;background:#F5820D;color:#08111f;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:13px 20px;border-radius:6px;text-decoration:none;}'
+    + '.btn-pdf{display:flex;align-items:center;justify-content:center;gap:8px;background:#C9A35B;color:#08111f;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:13px 20px;border-radius:6px;text-decoration:none;}'
     + '.btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.12);font-size:.72rem;font-weight:500;padding:11px 20px;border-radius:6px;text-decoration:none;margin-top:10px;}'
     + '.btn-wa:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7);}'
     + '.confidential{text-align:center;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:28px;line-height:1.8;}'
@@ -136,7 +136,7 @@ function sharePage(prop) {
     + '.form-field{margin-bottom:10px;}'
     + '.form-field input,.form-field select{width:100%;padding:11px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;color:white;font-size:.82rem;font-family:inherit;outline:none;}'
     + '.form-field input::placeholder{color:rgba(255,255,255,.3);}'
-    + '.form-field input:focus,.form-field select:focus{border-color:#F5820D;}'
+    + '.form-field input:focus,.form-field select:focus{border-color:#C9A35B;}'
     + '.form-field select{cursor:pointer;}'
     + '.form-field select option{background:#08111f;color:white;}'
     + '@media(max-width:480px){'

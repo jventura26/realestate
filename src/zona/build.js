@@ -213,6 +213,27 @@ copyAssets();  console.log('   ✔  assets copiados');
 write(path.join(OUT,'index.html'),        indexPage(props));   console.log('   ✔  index.html');
 write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   ✔  propiedades.html');
 
+// ── Rediseño 2026-10: páginas de análisis y captación ──
+const EX = require('./templates/extra-pages');
+const BL = require('./templates/blocks');
+write(path.join(OUT,'vender.html'),      EX.venderPage());          console.log('   ✔  vender.html');
+write(path.join(OUT,'diagnostico.html'), EX.diagnosticoPage(props)); console.log('   ✔  diagnostico.html');
+write(path.join(OUT,'indice.html'),      EX.indicePage());          console.log('   ✔  indice.html');
+write(path.join(OUT,'comparar.html'),    EX.compararPage());        console.log('   ✔  comparar.html');
+write(path.join(OUT,'assets','props-lite.json'), JSON.stringify(BL.propsLite(props))); console.log('   ✔  assets/props-lite.json');
+// Reporte de calidad de datos (no se publica): coordenadas dudosas, sin zona de comparación
+(function(){
+  const ANA = require('./analysis');
+  const issues = [];
+  props.forEach(p => {
+    const a = ANA.analyze(p);
+    if (a && a.coordsSuspect) issues.push(`  · ${p.slug}: el pin del mapa no coincide con "${a.zone.lugar.nombre}" (revisar lat/lng en el admin)`);
+    if (['Casa','Terreno'].includes(ANA.tipoKey(p)) && a && !a.zone) issues.push(`  · ${p.slug}: sin zona comparable en el índice`);
+    if ((ANA.tipoKey(p)==='Terreno'||ANA.tipoKey(p)==='Finca') && (parseInt(p.habitaciones)>0)) issues.push(`  · ${p.slug}: es ${p.tipo} pero tiene habitaciones cargadas (se ocultan en la web)`);
+  });
+  if (issues.length) console.log('   ⚠️  Calidad de datos:\n' + issues.join('\n'));
+})();
+
 // Copiar FAQ y About
 const faqSrc = path.join(__dirname, 'faq.html');
 // Copiar dynamic-grid.js
@@ -394,6 +415,9 @@ const urls = [
   { loc:'/faq.html',         priority:'0.6', changefreq:'monthly', lastmod:'2026-06-10' },
   { loc:'/privacidad.html',  priority:'0.3', changefreq:'yearly',  lastmod:'2026-06-21' },
   { loc:'/valor-por-zona.html', priority:'0.9', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/indice.html',      priority:'0.9', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/vender.html',      priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/diagnostico.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
   { loc:'/cuanto-cuesta-casa-fraijanes-2026.html',   priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/como-comprar-finca-guatemala.html',         priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/mejores-zonas-vivir-guatemala.html',        priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },

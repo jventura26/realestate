@@ -2841,6 +2841,10 @@ var index_default = {
       const data2 = raw2 ? JSON.parse(raw2) : [];
       const pub2 = data2.filter((p) => p.estado !== "Pausada" && p.estado !== "Eliminada").map((p) => {
         const out = { ...p };
+        delete out.precioReal;
+        delete out.contactoVendedor;
+        delete out.notasInternas;
+        delete out.estadoLegal;
         if (p.privConfig) {
           if (p.privConfig.precio) delete out.precio;
           if (p.privConfig.direccion) {
@@ -2869,6 +2873,10 @@ var index_default = {
       const data2 = raw2 ? JSON.parse(raw2) : [];
       const pub2 = data2.filter((p) => p.estado !== "Pausada" && p.estado !== "Eliminada").map((p) => {
         const out = { ...p };
+        delete out.precioReal;
+        delete out.contactoVendedor;
+        delete out.notasInternas;
+        delete out.estadoLegal;
         if (p.privConfig) {
           if (p.privConfig.precio) delete out.precio;
           if (p.privConfig.direccion) {

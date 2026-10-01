@@ -1129,6 +1129,21 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
           <div class="side-card">
             <div class="side-card-title"><i class="ti ti-video"></i> Video</div>
             <div class="fg"><label>URL del video (YouTube/Vimeo)</label><input type="url" id="fVideoUrl" placeholder="https://youtube.com/watch?v=..."></div>
+            <div class="fg"><label>Recorrido 360° (URL para insertar)</label><input type="url" id="fTour360" placeholder="https://... (Insta360, Kuula, Matterport)"></div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title"><i class="ti ti-chart-dots"></i> Ficha de an&aacute;lisis</div>
+            <div class="fg"><label>Puntos fuertes (uno por l&iacute;nea, opcional)</label><textarea id="fPuntosFuertes" rows="3" placeholder="Si se deja vac&iacute;o se generan desde las caracter&iacute;sticas"></textarea></div>
+            <div class="fg"><label>A considerar (uno por l&iacute;nea, opcional)</label><textarea id="fAConsiderar" rows="3" placeholder="Si se deja vac&iacute;o se generan desde los datos"></textarea></div>
+            <div class="fg"><label>Traslado a Zona 10 (opcional)</label><input type="text" id="fTiempoZona10" placeholder="Ej. 20 min fuera de hora pico / 50 min en hora pico"></div>
+            <div class="fg"><label>Debida diligencia verificada</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:.8rem"><input type="checkbox" id="vEscritura"> Escritura y Registro</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:.8rem"><input type="checkbox" id="vGravamenes"> Libertad de grav&aacute;menes</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:.8rem"><input type="checkbox" id="vIusi"> IUSI al d&iacute;a</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:.8rem"><input type="checkbox" id="vServicios"> Servicios sin saldos</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:.8rem"><input type="checkbox" id="vMedidas"> Medidas registrales vs. f&iacute;sicas</label>
+            </div>
           </div>
 
           <div class="side-card">
@@ -2726,8 +2741,9 @@ function clearForm() {
   ['fTitulo','fPrecio','fCodigo','fZona','fMunicipio','fUbicacionGeneral',
    'fArea','fAreaV2','fHabitaciones','fBanos','fMediosBanos','fParqueos','fNiveles','fDatosTecnicos',
    'fAnioConstruccion','fDescripcion','fHook','fDescCorta','fPdfUrl',
-   'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen','fVideoUrl','fGoogleMaps','fWhatsappProp'
+   'fPrecioReal','fContactoVendedor','fNotasInternas','fEstadoLegal','fSlug','fLat','fLng','fImagen','fVideoUrl','fGoogleMaps','fWhatsappProp','fTour360','fPuntosFuertes','fAConsiderar','fTiempoZona10'
   ].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['vEscritura','vGravamenes','vIusi','vServicios','vMedidas'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});
   ['fEstadoConstruccion','fTipoConstruccion','fTecho','fPiso','fAcabados','fDepartamento'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('fBrokerId').value='';
   document.getElementById('fTipo').value='Casa';
@@ -2765,6 +2781,9 @@ function loadForm(p) {
   sel('fTipo',p.tipo); sel('fOperacion',p.operacion); sel('fTipoListing',p.tipoListing); sel('fDepartamento',p.departamento);
   sel('fMoneda',p.moneda);
   set('fVideoUrl',p.videoUrl); set('fGoogleMaps',p.googleMapsUrl); set('fWhatsappProp',p.whatsappProp);
+  set('fTour360',p.tour360); set('fAConsiderar',p.aConsiderar); set('fTiempoZona10',p.tiempoZona10);
+  set('fPuntosFuertes',Array.isArray(p.puntosFuertes)?p.puntosFuertes.join('\n'):(p.puntosFuertes||''));
+  (function(v){v=v||{};[['vEscritura','escritura'],['vGravamenes','gravamenes'],['vIusi','iusi'],['vServicios','servicios'],['vMedidas','medidas']].forEach(function(x){var el=document.getElementById(x[0]);if(el)el.checked=v[x[1]]===true;});})(p.verificacion);
   sel('fBrokerId',p.broker_id);
   document.getElementById('fDestacada').checked=!!p.destacada;
   descBloques=p.descBloques||[]; renderDescBlocks();
@@ -2848,7 +2867,10 @@ async function saveProp() {
     imagen:g('fImagen'),gallery:galUrls,
     estado:currentStatus,cinta:currentCinta,caracteristicas:chars,sitios,
     moneda:g('fMoneda'),destacada:document.getElementById('fDestacada').checked,
-    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),slug:g('fSlug'),broker_id:g('fBrokerId'),
+    videoUrl:g('fVideoUrl'),googleMapsUrl:g('fGoogleMaps'),whatsappProp:g('fWhatsappProp'),
+    tour360:g('fTour360'),aConsiderar:g('fAConsiderar'),tiempoZona10:g('fTiempoZona10'),
+    puntosFuertes:(g('fPuntosFuertes')||'').split('\n').map(function(x){return x.trim()}).filter(Boolean),
+    verificacion:{escritura:document.getElementById('vEscritura').checked,gravamenes:document.getElementById('vGravamenes').checked,iusi:document.getElementById('vIusi').checked,servicios:document.getElementById('vServicios').checked,medidas:document.getElementById('vMedidas').checked},iusi:g('fIusi'),cuotaMantenimiento:g('fCuotaMant'),slug:g('fSlug'),broker_id:g('fBrokerId'),
     descBloques:getDescBloques(),
     privConfig: {
       hidePrecio: document.getElementById('pcHidePrecio')?.checked || false,

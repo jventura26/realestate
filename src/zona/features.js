@@ -16,7 +16,7 @@
         <input type="number" id="calcYears" placeholder="20" value="20" style="width:100%;padding:12px;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--wh);border-radius:3px;font-size:.9rem">
       </div>
     </div>
-    <div id="calcResults" style="background:rgba(245,130,13,.08);padding:30px;border-radius:4px;display:none">
+    <div id="calcResults" style="background:rgba(201,163,91,.08);padding:30px;border-radius:4px;display:none">
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:center">
         <div>
           <p style="font-size:.7rem;color:var(--sv);margin-bottom:8px">CUOTA MENSUAL</p>

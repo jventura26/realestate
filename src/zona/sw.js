@@ -18,7 +18,7 @@
 // (la URL final), no a /offline.html - este bug ya se encontro y corrigio
 // en InmuHub, aqui se aplica el fix desde el principio.
 
-const CACHE_VERSION = 'zona-v1';
+const CACHE_VERSION = 'zona-v2';
 const STATIC_CACHE = CACHE_VERSION + '-static';
 const OFFLINE_URL = '/offline';
 
