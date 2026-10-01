@@ -624,6 +624,11 @@ export function adminPage(env, { counts, props, leads, zones, filter, heroImage,
     </div>
   </section>
 
+  <section class="admin-switch">
+    <a class="admin-switch-card" href="/admin/proyectos"><span class="eyebrow">Obra nueva</span><strong>Proyectos y desarrolladoras</strong><span class="small muted">Crear, publicar y ver el reporte mensual de cada proyecto</span></a>
+    <form method="post" action="/admin/proyectos/nuevo" class="admin-switch-card admin-switch-new"><button type="submit"><span class="eyebrow">Atajo</span><strong>+ Nuevo proyecto</strong><span class="small muted">Se crea como borrador</span></button></form>
+  </section>
+
   <div class="section-head"><h2>Propiedades</h2><form method="post" action="/admin/nueva"><button class="btn btn-primary btn-sm" type="submit">Nueva propiedad</button></form></div>
   <nav class="tabs">${[['', 'Todas'], ['revision', 'En revisión'], ['publicada', 'Publicadas'], ['pausada', 'Pausadas'], ['rechazada', 'Rechazadas']].map(
     ([k, l]) => html`<a href="/admin${k ? '?estado=' + k : ''}"${filter === k ? raw(' aria-current="page"') : ''}>${l}</a>`

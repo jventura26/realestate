@@ -435,3 +435,10 @@ h1, h2, h3 { text-wrap: balance; }
 .menu-sep { height: 14px; }
 .header-actions { gap: 4px; }
 @media (min-width: 720px) { .menu-panel { padding: 8px 40px 24px; } }
+
+.admin-switch { display: grid; gap: 12px; margin-top: 8px; }
+.admin-switch-card { display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1.5px solid var(--ink); border-radius: 14px; padding: 18px 20px; text-decoration: none; }
+.admin-switch-card strong { font-family: var(--display); font-weight: 400; font-size: 22px; }
+.admin-switch-new { padding: 0; border-style: dashed; }
+.admin-switch-new button { all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; }
+@media (min-width: 720px) { .admin-switch { grid-template-columns: 2fr 1fr; } }
