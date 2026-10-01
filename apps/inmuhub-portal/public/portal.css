@@ -401,3 +401,10 @@ input[type=file]::file-selector-button:hover { background: #1b2c45; }
 .compare thead th:first-child, .compare tbody th { width: 150px; }
 .compare-ph { width: 100%; aspect-ratio: 4 / 3; background: var(--ph); border-radius: 10px; margin-bottom: 10px; }
 .zone-cta { align-self: flex-start; }
+@media (max-width: 479px) {
+  .brand span { display: none; }
+  .header-row { gap: 10px; }
+  .header-actions { gap: 8px; }
+  .header-actions .btn-sm { padding: 0 14px; }
+  .menu summary { padding: 0 12px; }
+}
