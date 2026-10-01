@@ -250,7 +250,7 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
   return layout({
     title: null,
     desc: `Propiedades en Guatemala analizadas por ubicación, valor y potencial. ${activas} propiedades con ficha de análisis, índice de valores por zona y asesoría honesta en Zona 10, 14, 15, 16, Fraijanes y Carretera a El Salvador.`,
-    canonical: '/', body,
+    canonical: '/', body, alternates: { es: '/', en: '/en/' },
   });
 }
 

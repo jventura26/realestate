@@ -989,8 +989,9 @@ function dv3CalcHipoteca(){
   if(elMonto)elMonto.textContent=dv3FmtMoneda(monto);
   if(elCuota)elCuota.textContent=dv3FmtMoneda(cuota)+' / mes';
 }
-function dv3CalcTotal(){
+function dv3CalcTotal(ev){
   if(!_dv3PrecioBase||!document.getElementById('ctTipo'))return;
+  if(window.event&&window.event.isTrusted&&!window.__ctT){window.__ctT=1;try{zTrack('CalculoCostoTotal',{content_ids:[location.pathname.split('/').pop().replace('.html','')],content_type:'product'})}catch(e){}}
   var t=document.getElementById('ctTipo').value,P=_dv3PrecioBase;
   var imp=t==='primera'?0:P*0.03;
   document.getElementById('ctImpLbl').textContent=t==='primera'?'IVA 12% (normalmente incluido en el precio)':'Impuesto de timbres fiscales (3%)';
@@ -1720,7 +1721,7 @@ function tipoPage(tipo, props, allProps) {
   });
 }
 
-module.exports = { indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO, zonasIndexPage, tipoPage };
+module.exports = { card, indexPage, catalogPage, detailPage, zonaPage, zonaSlug, ZONA_INFO, zonasIndexPage, tipoPage };
 
 // ── TESTIMONIOS SECTION (FASE 1) ───────────────────────────────────
 // testimonialsSection eliminada (2026-10): los testimonios no eran de clientes reales.

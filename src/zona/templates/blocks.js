@@ -26,10 +26,11 @@ const I = {
 // ── Datos compactos para el cliente ─────────────────────────────────
 function zoneDataLite() {
   const D = A.loadZoneData();
+  const byId = {}; D.lugares.forEach(l => { byId[l.id] = l; });
   return {
     f: D.fecha, n: D.n_anuncios, r: D.n_rentas,
     l: D.lugares.map(l => ({
-      i: l.id, n: l.nombre, c: l.clase, a: l.alias || [],
+      i: l.id, n: A.zoneTitle(l, byId), c: l.clase, a: (l.alias || []).concat(l.clase === 'Tramo' ? [l.nombre] : []), s: A.zoneSlugOf(l, byId),
       t: Object.fromEntries(Object.entries(l.tipos).map(([k, v]) => [k, {
         n: v.n, p: v.precio, m: v.m2 || null, b: v.base, q: v.conf, r: v.renta || null, y: v.rend || null,
       }])),
@@ -123,6 +124,22 @@ function diagnosticoWidget(props, opts = {}) {
     <div class="dx-matches" id="${id}-matches"></div>
     <a class="btn-gold" id="${id}-wa" href="#" target="_blank" rel="noopener" style="width:100%">${I.wa} Recibir mi análisis por WhatsApp</a>
     <p class="src-note" style="margin-top:10px;text-align:center">Un asesor revisa tu caso y te responde con opciones concretas. Sin compromiso.</p>
+    <form class="dx-alert" id="${id}-af" novalidate>
+      <div class="za-h" style="margin-bottom:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg> Avísame cuando entre algo así</div>
+      <p class="src-note" style="margin-bottom:12px">Cuando publiquemos una propiedad que coincida con tu búsqueda, te escribimos por WhatsApp. Solo eso.</p>
+      <div class="h2-row">
+        <div><label class="h2-label" for="${id}-an">Nombre</label><input class="h2-in" id="${id}-an" autocomplete="given-name" required></div>
+        <div><label class="h2-label" for="${id}-at">WhatsApp</label><input class="h2-in" id="${id}-at" type="tel" autocomplete="tel" placeholder="+502" required></div>
+      </div>
+      <div class="h2-row" style="margin-top:10px">
+        <div><label class="h2-label" for="${id}-az">Zona</label><select class="h2-sel" id="${id}-az" required>
+          <option value="">Elige una zona</option><option>Zona 10</option><option>Zona 14</option><option>Zona 15</option><option value="Zona 16">Zona 16 / Cayalá</option><option value="Carretera a El Salvador">Carretera a El Salvador / Fraijanes</option><option value="Mixco">Mixco / San Cristóbal</option></select></div>
+        <div><label class="h2-label" for="${id}-ak">Tipo</label><select class="h2-sel" id="${id}-ak"><option>Casa</option><option>Apartamento</option><option>Terreno</option><option>Finca</option><option value="">Cualquiera</option></select></div>
+      </div>
+      <label class="dx-consent"><input type="checkbox" id="${id}-ac" required> Acepto recibir por WhatsApp avisos de propiedades que coincidan con mi búsqueda. Puedo pedir que se detengan en cualquier momento. <a href="/privacidad.html" target="_blank">Privacidad</a></label>
+      <button class="btn-ghost" type="submit" style="width:100%;margin-top:12px">Activar alerta</button>
+      <p class="dx-amsg" id="${id}-am" role="status"></p>
+    </form>
   </div>
   <div class="dx-nav"><button class="dx-back" id="${id}-back" style="visibility:hidden">&larr; Anterior</button><span class="src-note" id="${id}-step">1 / 4</span></div>
 </div>
@@ -170,9 +187,34 @@ function diagnosticoWidget(props, opts = {}) {
     document.getElementById('${id}-wa').href='https://wa.me/${WA}?text='+encodeURIComponent(msg);
     document.getElementById('${id}-res').classList.add('on');
     document.getElementById('${id}-step').textContent='Listo';
-    try{ if(window.fbq) fbq('trackCustom','DiagnosticoCompletado',{objetivo:ans.obj,zona:ans.zona,plazo:ans.plazo}); if(window.dataLayer) dataLayer.push({event:'diagnostico_completado',objetivo:ans.obj,zona:ans.zona}); }catch(e){}
+    var zsel=document.getElementById('${id}-az');if(zsel&&!zsel.value){zsel.value=ans.zona==='caes'?'Carretera a El Salvador':ans.zona==='occidente'?'Mixco':'';}
+    var ksel=document.getElementById('${id}-ak');if(ksel){ksel.value=ans.obj==='Patrimonio'?'':'Casa';}
+    try{ if(window.zTrack) zTrack('DiagnosticoCompletado',{objetivo:ans.obj,zona:ans.zona,plazo:ans.plazo,presupuesto:ans.ppto,resultados:m.length}); }catch(e){}
   }
-  document.getElementById('${id}-wa').addEventListener('click',function(){try{if(window.fbq)fbq('track','Lead',{content_name:'Diagnostico'});}catch(e){}});
+  document.getElementById('${id}-af').addEventListener('submit',function(e){
+    e.preventDefault();
+    var g=function(k){return (document.getElementById('${id}-'+k).value||'').trim()},msg=document.getElementById('${id}-am');
+    var tel=g('at').replace(/[^0-9]/g,'');
+    if(!g('an')||tel.length<8){msg.textContent='Escribe tu nombre y un número de WhatsApp válido.';msg.className='dx-amsg err';return;}
+    if(!g('az')){msg.textContent='Elige la zona que te interesa.';msg.className='dx-amsg err';return;}
+    if(!document.getElementById('${id}-ac').checked){msg.textContent='Necesitamos tu autorización para escribirte por WhatsApp.';msg.className='dx-amsg err';return;}
+    var r=ans.ppto?ans.ppto.split('-'):['',''],eid='ld'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+    var ck=function(n){var mm=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return mm?mm[2]:''};
+    var body={alerta:true,consentimiento:true,nombre:g('an'),telefono:tel,zona_interes:g('az'),tipo_propiedad:g('ak'),
+      presupuesto:r[0]?('US$'+Math.round(r[0]/1000)+'K'+(+r[1]<9e7?' - US$'+Math.round(r[1]/1000)+'K':' o más')):'',
+      diagnostico:{objetivo:ans.obj,zona:ans.zona,plazo:ans.plazo,presupuesto:ans.ppto},
+      source:'Diagnóstico web',utm_source:sessionStorage.getItem('zi_utm_source')||'',utm_campaign:sessionStorage.getItem('zi_utm_campaign')||'',
+      page_url:location.href,user_agent:navigator.userAgent,fbp:ck('_fbp'),fbc:ck('_fbc'),event_id:eid};
+    var btn=this.querySelector('button');btn.disabled=true;msg.textContent='Activando…';msg.className='dx-amsg';
+    fetch('https://zona-inmu.tours-virtuales-gt.workers.dev/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(res){return res.json().then(function(j){return {ok:res.ok,j:j}})})
+      .then(function(x){
+        if(!x.ok)throw new Error(x.j&&x.j.error||'error');
+        msg.textContent='Listo. Te avisaremos por WhatsApp cuando entre una propiedad así en '+g('az')+'.';msg.className='dx-amsg ok';
+        try{if(window.fbq)fbq('track','Lead',{content_name:'Alerta diagnostico',content_category:g('az')},{eventID:eid});if(window.zTrack)zTrack('AlertaRegistrada',{zona:g('az'),tipo:g('ak')});}catch(e2){}
+      })
+      .catch(function(){btn.disabled=false;msg.textContent='No pudimos activar la alerta. Escríbenos por WhatsApp y la activamos por ti.';msg.className='dx-amsg err';});
+  });
 })();
 </script>`;
 }
@@ -223,9 +265,9 @@ function valorZonaWidget(opts = {}) {
     else k.push('<div class="vz-kpi"><b>'+d.n+'</b><span>Anuncios</span></div>');
     box.innerHTML='<h4>'+t+'s en '+sel.n+'</h4><div class="vz-kpis">'+k.join('')+'</div>'+
       '<p class="src-note">Rango típico '+usd(d.p[0])+' – '+usd(d.p[2])+(d.m?' · $'+d.m[0].toLocaleString('en-US')+'–$'+d.m[2].toLocaleString('en-US')+'/m²':'')+(d.y?' · rendimiento bruto '+(d.y*100).toFixed(1)+'%':'')+'. Basado en '+d.n+' anuncios publicados (precios de oferta, no avalúo).</p>'+
-      '<div class="vz-actions"><a href="/propiedades.html?q='+encodeURIComponent(sel.n)+'">Ver propiedades &rarr;</a><a href="/valor-por-zona.html">Análisis completo &rarr;</a><a href="https://wa.me/${WA}?text='+encodeURIComponent('Hola, consulté el valor de '+t.toLowerCase()+'s en '+sel.n+(area?' ('+area+' m²)':'')+' en zona-innmueble.com. Me gustaría un análisis de una propiedad específica.')+'" target="_blank" rel="noopener">Pedir análisis &rarr;</a></div>';
+      '<div class="vz-actions"><a href="/valor/'+sel.s+'.html">Ver la zona &rarr;</a><a href="/propiedades.html?q='+encodeURIComponent(sel.n.split(',')[0])+'">Ver propiedades &rarr;</a><a href="https://wa.me/${WA}?text='+encodeURIComponent('Hola, consulté el valor de '+t.toLowerCase()+'s en '+sel.n+(area?' ('+area+' m²)':'')+' en zona-innmueble.com. Me gustaría un análisis de una propiedad específica.')+'" target="_blank" rel="noopener">Pedir análisis &rarr;</a></div>';
     box.classList.add('on');
-    try{if(window.fbq)fbq('trackCustom','ConsultaValorZona',{zona:sel.n,tipo:t});if(window.dataLayer)dataLayer.push({event:'consulta_valor_zona',zona:sel.n,tipo:t});}catch(e){}
+    try{if(window.zTrack)zTrack(${withArea ? "'EstimacionPropietario'" : "'ConsultaValorZona'"},{zona:sel.n,tipo:t${withArea ? ',area:area' : ''}});}catch(e){}
   }
 })();
 </script>`;

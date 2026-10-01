@@ -96,7 +96,7 @@ function venderPage() {
 document.getElementById('vform').addEventListener('submit',function(e){e.preventDefault();
   var g=function(i){return (document.getElementById(i).value||'').trim()};
   var msg='Hola, quiero una evaluación para promocionar mi propiedad.\\nNombre: '+g('vf-n')+'\\nWhatsApp: '+g('vf-tel')+'\\nTipo: '+g('vf-t')+' · '+g('vf-o')+'\\nZona: '+g('vf-z')+(g('vf-a')?'\\nÁrea: '+g('vf-a')+' m²':'')+(g('vf-p')?'\\nPrecio esperado: '+g('vf-p'):'');
-  try{if(window.fbq)fbq('track','Lead',{content_name:'Captacion propietario'});if(window.dataLayer)dataLayer.push({event:'lead_propietario'});}catch(x){}
+  try{if(window.zTrack)zTrack('Lead',{content_name:'Captacion propietario',content_category:g('vf-t')},true);}catch(x){}
   window.open('https://wa.me/${WA}?text='+encodeURIComponent(msg),'_blank');
 });
 </script>`;
@@ -130,13 +130,14 @@ function indicePage() {
   const fecha = fechaLarga();
   const order = { 'Macro-zona': 0, 'Tramo': 1, 'Sector': 2, 'Zona': 3, 'Municipio': 4 };
   const PRI = ['M:Zona 10', 'M:Zona 14', 'M:Zona 15', 'M:Zona 16', 'M:Carretera a El Salvador', 'M:Fraijanes', 'M:San Cristóbal', 'M:Mixco (otros)', 'M:Zona 13', 'M:Ciudad de Guatemala (otras zonas)', 'M:Área metropolitana (otros)', 'M:Antigua Guatemala / Sacatepéquez'];
+  const byIdI = {}; D.lugares.forEach(x => { byIdI[x.id] = x; });
   const macros = D.lugares.filter(l => l.clase === 'Macro-zona').sort((a, b) => ((PRI.indexOf(a.id) + 1) || 99) - ((PRI.indexOf(b.id) + 1) || 99));
   const kids = id => D.lugares.filter(l => l.padre === id).sort((a, b) => (order[a.clase] - order[b.clase]) || a.nombre.localeCompare(b.nombre));
   const tipos = ['Casa', 'Apartamento', 'Terreno', 'Finca'];
   const usd = n => A.fmtUSD(n);
   const row = (l, t, sub) => {
     const d = l.tipos[t]; if (!d) return '';
-    return `<tr class="${sub ? 'sub' : ''}" data-t="${t}"><td>${escapeHtml(l.nombre)}${sub ? ` <span class="src-note">${escapeHtml(l.clase)}</span>` : ''}</td>
+    return `<tr class="${sub ? 'sub' : ''}" data-t="${t}"><td><a href="/valor/${A.zoneSlugOf(l, byIdI)}.html" style="color:inherit;text-decoration:underline;text-decoration-color:rgba(201,163,91,.35);text-underline-offset:3px">${escapeHtml(l.nombre)}</a>${sub ? ` <span class="src-note">${escapeHtml(l.clase)}</span>` : ''}</td>
       <td>${d.m2 ? `<b>$${d.m2[1].toLocaleString('en-US')}</b>` : '–'}</td>
       <td>${d.m2 ? `$${d.m2[0].toLocaleString('en-US')} – $${d.m2[2].toLocaleString('en-US')}` : '–'}</td>
       <td>${usd(d.precio[1])} <span class="src-note">(${usd(d.precio[0])}–${usd(d.precio[2])})</span></td>
@@ -154,7 +155,7 @@ function indicePage() {
     <h1 class="pg-h1">Valores de referencia <em>por zona</em> en Guatemala</h1>
     <p class="pg-lead">Precio por m², precio típico, renta y rendimiento bruto por zona, sector y tramo de carretera. Calculado con ${(D.n_anuncios || 0).toLocaleString('en-US')} anuncios en venta y ${(D.n_rentas || 0).toLocaleString('en-US')} en alquiler. Datos al ${escapeHtml(fecha)}.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px" class="no-print">
-      <a href="${waLink('Hola, quiero recibir el Índice Zona-INNmueble cada mes por WhatsApp.')}" target="_blank" rel="noopener" class="btn-gold" onclick="try{fbq('track','Lead',{content_name:'Indice'})}catch(e){}">${I.wa} Recibir cada mes</a>
+      <a href="${waLink('Hola, quiero recibir el Índice Zona-INNmueble cada mes por WhatsApp.')}" target="_blank" rel="noopener" class="btn-gold">${I.wa} Recibir cada mes</a>
       <button class="btn-ghost" onclick="window.print()">${I.doc} Descargar PDF</button>
       <a href="/valor-por-zona.html" class="btn-ghost">Buscador por zona</a>
     </div>
@@ -186,13 +187,14 @@ function indicePage() {
   </div>
 </section>
 <script>
+document.addEventListener('DOMContentLoaded',function(){try{zTrack('VerIndice',{})}catch(e){}});
 (function(){var seg=document.getElementById('idxSeg'),rows=document.querySelectorAll('#idxTbl tbody tr');
 function f(t){rows.forEach(function(r){r.style.display=r.dataset.t===t?'':'none'});seg.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});}
 seg.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){f(b.dataset.t)})});f('Casa');
 window.addEventListener('beforeprint',function(){rows.forEach(function(r){r.style.display=''})});
 window.addEventListener('afterprint',function(){var on=seg.querySelector('button.on');f(on?on.dataset.t:'Casa')});})();
 </script>`;
-  return layout({ title: 'Índice de valores por zona en Guatemala', desc: `Precio por m², precio típico, renta y rendimiento por zona en Guatemala: Zona 10, 14, 15, 16, Carretera a El Salvador, Fraijanes, Mixco y más. ${D.n_anuncios} anuncios analizados.`, canonical: '/indice.html', body });
+  return layout({ title: 'Índice de valores por zona en Guatemala', desc: `Precio por m², precio típico, renta y rendimiento por zona en Guatemala: Zona 10, 14, 15, 16, Carretera a El Salvador, Fraijanes, Mixco y más. ${D.n_anuncios} anuncios analizados.`, canonical: '/indice.html', body, alternates: { es: '/indice.html', en: '/en/price-index.html' } });
 }
 
 // ── COMPARAR ────────────────────────────────────────────────────────
@@ -227,6 +229,7 @@ function compararPage() {
       box.querySelectorAll('.cmp-x').forEach(function(b){b.addEventListener('click',function(){var f=favs().filter(function(x){return x!==b.dataset.s});try{localStorage.setItem(K,JSON.stringify(f))}catch(e){}render();});});
       document.getElementById('cmpWa').href='https://wa.me/${WA}?text='+encodeURIComponent('Hola, estoy comparando estas propiedades en zona-innmueble.com:\\n'+list.map(function(p){return '• '+p.t+' ('+p.pf+')'}).join('\\n')+'\\n¿Me ayudan a analizarlas?');
       document.getElementById('cmpCta').style.display='block';
+      try{if(!window.__cmpT){window.__cmpT=1;zTrack('CompararPropiedades',{content_ids:list.map(function(p){return p.s}),content_type:'product',num_items:list.length});}}catch(e){}
     }
     render();
   }).catch(function(){document.getElementById('cmpBox').innerHTML='<p class="src-note">No se pudo cargar el comparador. Intenta de nuevo.</p>'});

@@ -598,11 +598,36 @@ function normalizeZonaForMatch(z) {
   if (t.indexOf("cayal") >= 0) return "Cayal\xE1";
   if (t.indexOf("fraijanes") >= 0) return "Fraijanes";
   if (t.indexOf("salvador") >= 0) return "Carretera a El Salvador";
+  if (t.indexOf("mixco") >= 0 || t.indexOf("cristobal") >= 0 || t.indexOf("crist\xF3bal") >= 0) return "Mixco";
   var depto = detectDepartamentoNacional(z);
   if (depto) return depto;
   return "";
 }
 __name(normalizeZonaForMatch, "normalizeZonaForMatch");
+// Zona de una PROPIEDAD: revisa titulo/zona/municipio/ubicacion. Carretera a
+// El Salvador y Fraijanes se revisan primero porque titulos como "Km 16.5"
+// confundian el detector numerico de normalizeZonaForMatch (lo leia como Zona 16).
+function normalizeZonaForProp(p) {
+  var t = [p.titulo, p.zona, p.municipio, p.ubicacionGeneral].join(" ").toLowerCase();
+  if (/salvador|caes|\bces\b|pinula|socorro|muxbal|hacienda nueva/.test(t)) return "Carretera a El Salvador";
+  if (t.indexOf("fraijanes") >= 0) return "Fraijanes";
+  if (t.indexOf("cayal") >= 0) return "Cayal\xE1";
+  var m = t.match(/zona\s*(10|14|15|16)\b/);
+  if (m) return "Zona " + m[1];
+  if (/kanajuy|san isidro/.test(t)) return "Zona 16";
+  if (/vista hermosa/.test(t)) return "Zona 15";
+  if (/mixco|crist[o\xF3]bal/.test(t)) return "Mixco";
+  return normalizeZonaForMatch(p.zona || p.municipio || p.departamento || "");
+}
+__name(normalizeZonaForProp, "normalizeZonaForProp");
+// Familias de zona: un lead que pidio "Fraijanes" tambien quiere ver la
+// Carretera a El Salvador (y viceversa); "Cayala" es parte de Zona 16.
+function zonaFamily(z) {
+  if (z === "Fraijanes" || z === "Carretera a El Salvador") return "CAES";
+  if (z === "Cayal\xE1" || z === "Zona 16") return "Z16";
+  return z;
+}
+__name(zonaFamily, "zonaFamily");
 function normalizeTipoForMatch(t) {
   var s = (t || "").toString().toLowerCase();
   if (s.indexOf("finca") >= 0) return "Finca";
@@ -624,7 +649,7 @@ async function notifyMatchingLeadsForNewProperty(env, prop) {
   try {
     if (!prop || prop.estado !== "Activa") return;
     if (Array.isArray(prop.sitios) && prop.sitios.length && prop.sitios.indexOf("zona") < 0) return;
-    var propZona = normalizeZonaForMatch(prop.zona || prop.municipio || prop.departamento || "");
+    var propZona = normalizeZonaForProp(prop);
     var propTipo = normalizeTipoForMatch(prop.tipo || "");
     if (!propZona) return;
     var raw = await env.DB.get("leads");
@@ -639,7 +664,7 @@ async function notifyMatchingLeadsForNewProperty(env, prop) {
       if (!lead.wa_from) continue;
       if (WA_FOLLOWUP_STOP_STAGES.indexOf(lead.stage) >= 0) continue;
       var leadZona = normalizeZonaForMatch(lead.zona_interes || "");
-      if (!leadZona || leadZona !== propZona) continue;
+      if (!leadZona || zonaFamily(leadZona) !== zonaFamily(propZona)) continue;
       var leadTipo = normalizeTipoForMatch(lead.tipo_propiedad || "");
       if (leadTipo && propTipo && leadTipo !== propTipo) continue;
       if (!Array.isArray(lead.notifiedListings)) lead.notifiedListings = [];
@@ -3141,6 +3166,38 @@ var index_default = {
       } catch {
         return jsonRes({ error: "JSON inv\xE1lido" }, 400);
       }
+      // Alerta de propiedades desde el diagnostico web: solo con consentimiento
+      // explicito. Se guarda wa_from para que notifyMatchingLeadsForNewProperty
+      // avise por WhatsApp cuando se publique algo que coincida.
+      if (body2 && body2.alerta === true) {
+        if (body2.consentimiento !== true) return jsonRes({ error: "Se requiere consentimiento" }, 400);
+        var aPh = String(body2.telefono || body2.phone || "").replace(/[^0-9]/g, "");
+        if (aPh.length === 8) aPh = "502" + aPh;
+        if (aPh.length < 10 || aPh.length > 15) return jsonRes({ error: "Tel\xE9fono inv\xE1lido" }, 400);
+        body2.wa_from = aPh;
+        body2.phone = aPh;
+        body2.telefono = aPh;
+        body2.alertaDesde = (/* @__PURE__ */ new Date()).toISOString();
+        var aRaw = await env.DB.get("leads");
+        var aData = aRaw ? JSON.parse(aRaw) : [];
+        var aLast8 = aPh.slice(-8);
+        var aEx = aData.find(function(l) {
+          var lp = String(l.wa_from || l.phone || l.telefono || "").replace(/[^0-9]/g, "");
+          return lp && lp.slice(-8) === aLast8;
+        });
+        if (aEx) {
+          if (body2.zona_interes) aEx.zona_interes = body2.zona_interes;
+          if (body2.tipo_propiedad) aEx.tipo_propiedad = body2.tipo_propiedad;
+          if (body2.presupuesto) aEx.presupuesto = body2.presupuesto;
+          if (body2.diagnostico) aEx.diagnostico = body2.diagnostico;
+          if (!aEx.wa_from) aEx.wa_from = aPh;
+          aEx.alerta = true;
+          aEx.consentimiento = true;
+          aEx.alertaDesde = body2.alertaDesde;
+          await env.DB.put("leads", JSON.stringify(aData));
+          return jsonRes({ ok: true, id: aEx.id, updated: true });
+        }
+      }
       var raw = await env.DB.get("leads");
       var data = raw ? JSON.parse(raw) : [];
       var lead = { ...body2, id: String(Date.now()), createdAt: (/* @__PURE__ */ new Date()).toISOString(), fecha: (/* @__PURE__ */ new Date()).toISOString() };
@@ -3182,6 +3239,7 @@ var index_default = {
         var eventData = {
           data: [{
             event_name: "Lead",
+            event_id: lead.event_id || void 0,
             event_time: Math.floor(Date.now() / 1e3),
             event_source_url: lead.page_url || "",
             action_source: "website",
@@ -3895,14 +3953,18 @@ var index_default = {
         if (body.external_id) {
           pvUserData.external_id = [await hashSHA256(body.external_id)];
         }
+        var PV_ALLOWED = ["PageView", "ViewContent", "Lead", "Contact", "Search", "AddToWishlist", "Schedule", "DiagnosticoCompletado", "ConsultaValorZona", "CompararPropiedades", "AlertaRegistrada", "EstimacionPropietario", "VerIndice", "CalculoCostoTotal"];
+        var pvName = PV_ALLOWED.indexOf(body.event_name) >= 0 ? body.event_name : "PageView";
+        var pvCustom = body.custom_data && typeof body.custom_data === "object" ? body.custom_data : {};
         var pvEvent = {
           data: [{
-            event_name: body.event_name || "PageView",
+            event_name: pvName,
+            event_id: typeof body.event_id === "string" ? body.event_id.slice(0, 64) : void 0,
             event_time: Math.floor(Date.now() / 1e3),
             event_source_url: body.page_url || "",
             action_source: "website",
             user_data: pvUserData,
-            custom_data: body.custom_data || {}
+            custom_data: pvCustom
           }]
         };
         ctx.waitUntil(

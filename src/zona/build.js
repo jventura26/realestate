@@ -221,6 +221,19 @@ write(path.join(OUT,'diagnostico.html'), EX.diagnosticoPage(props)); console.log
 write(path.join(OUT,'indice.html'),      EX.indicePage());          console.log('   ✔  indice.html');
 write(path.join(OUT,'comparar.html'),    EX.compararPage());        console.log('   ✔  comparar.html');
 write(path.join(OUT,'assets','props-lite.json'), JSON.stringify(BL.propsLite(props))); console.log('   ✔  assets/props-lite.json');
+// Páginas SEO por zona (/valor/*.html) desde el Índice
+const ZV = require('./templates/zona-valor');
+const { card: cardFn } = require('./templates/pages');
+const zvCtx = ZV.zoneIndex();
+zvCtx.list.forEach(e => write(path.join(OUT,'valor',e.slug+'.html'), ZV.valorZonaPage(e, zvCtx, props, cardFn)));
+write(path.join(OUT,'valor','index.html'), ZV.valorIndexPage(zvCtx));
+console.log('   ✔  ' + zvCtx.list.length + ' páginas /valor/');
+// Sección en inglés (/en/)
+const EN = require('./templates/en-pages');
+write(path.join(OUT,'en','index.html'),       EN.enHome(props));
+write(path.join(OUT,'en','properties.html'),  EN.enProperties(props));
+write(path.join(OUT,'en','price-index.html'), EN.enIndex());
+console.log('   ✔  /en/ (3 páginas)');
 // Reporte de calidad de datos (no se publica): coordenadas dudosas, sin zona de comparación
 (function(){
   const ANA = require('./analysis');
@@ -416,6 +429,11 @@ const urls = [
   { loc:'/privacidad.html',  priority:'0.3', changefreq:'yearly',  lastmod:'2026-06-21' },
   { loc:'/valor-por-zona.html', priority:'0.9', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
   { loc:'/indice.html',      priority:'0.9', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/valor/index.html', priority:'0.8', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/en/',                 priority:'0.8', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/en/properties.html',  priority:'0.7', changefreq:'daily',  lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/en/price-index.html', priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) },
+  ...require('./templates/zona-valor').zoneIndex().list.map(e => ({ loc:'/valor/'+e.slug+'.html', priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) })),
   { loc:'/vender.html',      priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
   { loc:'/diagnostico.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
   { loc:'/cuanto-cuesta-casa-fraijanes-2026.html',   priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },

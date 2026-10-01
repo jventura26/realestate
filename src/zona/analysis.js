@@ -371,4 +371,12 @@ function zoneSummaries(ids) {
   }).filter(Boolean);
 }
 
-module.exports = { loadZoneData, analyze, fichaAnalisis, cardTag, zoneSummaries, fmtUSD, fmtQ, priceInfo, tipoKey, matchZone, HOME_ZONES, RATE };
+function zoneTitle(l, byId) {
+  if (l.clase === 'Tramo' && l.padre && byId[l.padre] && l.nombre.indexOf(byId[l.padre].nombre) < 0) return byId[l.padre].nombre + ', ' + l.nombre;
+  if (l.clase === 'Municipio') return l.nombre.replace(/(^|\s)([a-záéíóúñ])/g, (m, a, c) => a + c.toUpperCase());
+  return l.nombre;
+}
+function zoneSlugOf(l, byId) {
+  return zoneTitle(l, byId).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+module.exports = { zoneTitle, zoneSlugOf, loadZoneData, analyze, fichaAnalisis, cardTag, zoneSummaries, fmtUSD, fmtQ, priceInfo, tipoKey, matchZone, HOME_ZONES, RATE };

@@ -318,8 +318,9 @@
   // ═══════════════════════════════════════
   var stickyBar = document.createElement('div');
   stickyBar.className = 'zi-sticky-cta';
-  stickyBar.innerHTML = '<a href="https://wa.me/50245542088?text=Hola%2C%20me%20interesa%20una%20propiedad%20de%20Zona%20INNmueble." target="_blank" rel="noopener" class="zi-scta-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-3px;margin-right:6px"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 2.5 1.1 3 .9 3.6.8.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 7 2.9 1.9 1.9 2.9 4.3 2.9 7 0 5.4-4.4 9.7-9.9 9.7z"/></svg>WhatsApp</a>'
-    + '<a href="tel:+50245542088" class="zi-scta-call"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:6px"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Llamar</a>';
+  var __en = document.documentElement.lang === 'en';
+  stickyBar.innerHTML = '<a href="https://wa.me/50245542088?text=' + (__en ? 'Hi%2C%20I%20am%20interested%20in%20a%20property%20in%20Guatemala.' : 'Hola%2C%20me%20interesa%20una%20propiedad%20de%20Zona%20INNmueble.') + '" target="_blank" rel="noopener" class="zi-scta-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-3px;margin-right:6px"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 2.5 1.1 3 .9 3.6.8.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 7 2.9 1.9 1.9 2.9 4.3 2.9 7 0 5.4-4.4 9.7-9.9 9.7z"/></svg>WhatsApp</a>'
+    + '<a href="tel:+50245542088" class="zi-scta-call"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:6px"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>' + (__en ? 'Call' : 'Llamar') + '</a>';
   document.body.appendChild(stickyBar);
 
   // ═══════════════════════════════════════
@@ -348,23 +349,25 @@
     }, 500);
   }
 
-  // --- ViewContent on detail pages ---
-  if (isDetailPage) {
-    var detTitle = document.querySelector('.det-title');
-    var detPrice = document.querySelector('.det-price');
+  // --- ViewContent on detail pages (ficha dv3 actual o legado) ---
+  if (isDetailPage || document.querySelector('.dv3-hero-img')) {
+    var detTitle = document.querySelector('.dv3-title') || document.querySelector('.det-title');
+    var detPrice = document.querySelector('.dv3-price') || document.querySelector('.det-price');
     var propTitle = detTitle ? detTitle.textContent.trim() : '';
     var propPrice = detPrice ? detPrice.textContent.trim() : '';
     var propSlug = location.pathname.replace('/propiedades/', '').replace('.html', '');
 
+    propSlug = propSlug.replace(/\/$/, '');
     whenFbq(function() {
-      fbq('track', 'ViewContent', {
+      var vcData = {
         content_name: propTitle,
         content_category: 'property',
         content_ids: [propSlug],
         content_type: 'product',
         value: parseFloat(propPrice.replace(/[^0-9.]/g, '')) || 0,
         currency: propPrice.indexOf('Q') >= 0 ? 'GTQ' : 'USD'
-      });
+      };
+      if (window.zTrack) zTrack('ViewContent', vcData, true); else fbq('track', 'ViewContent', vcData);
     });
 
     whenGtag(function() {
@@ -404,10 +407,10 @@
   // --- Lead event on WhatsApp clicks ---
   function fireLeadEvent(source, propName) {
     whenFbq(function() {
-      fbq('track', 'Lead', {
-        content_name: propName || 'WhatsApp Click',
-        content_category: source || 'whatsapp'
-      });
+      var ld = { content_name: propName || 'WhatsApp Click', content_category: source || 'whatsapp' };
+      var slugM = location.pathname.match(/\/propiedades\/([^\/.]+)/);
+      if (slugM) { ld.content_ids = [slugM[1]]; ld.content_type = 'product'; }
+      if (window.zTrack) zTrack('Lead', ld, true); else fbq('track', 'Lead', ld);
     });
     whenGtag(function() {
       gtag('event', 'generate_lead', {
@@ -429,8 +432,12 @@
     else if (link.closest('nav')) source = 'nav_cta';
     else if (link.closest('#zpPopup')) source = 'popup';
     else if (link.closest('footer')) source = 'footer';
+    else if (link.closest('.dx-card')) source = 'diagnostico';
+    else if (link.closest('.vz-res')) source = 'valor_zona';
+    else if (link.closest('#cmpCta')) source = 'comparador';
+    else if (link.closest('.dv3-side,.dv3-wa-float')) source = 'ficha';
     var propName = '';
-    var dt = document.querySelector('.det-title');
+    var dt = document.querySelector('.dv3-title') || document.querySelector('.det-title');
     if (dt) propName = dt.textContent.trim();
     fireLeadEvent(source, propName);
   });
@@ -440,7 +447,7 @@
     var link = e.target.closest('a[href^="tel:"]');
     if (!link) return;
     whenFbq(function() {
-      fbq('track', 'Contact', { content_category: 'phone_call' });
+      if (window.zTrack) zTrack('Contact', { content_category: 'phone_call' }, true); else fbq('track', 'Contact', { content_category: 'phone_call' });
     });
     whenGtag(function() {
       gtag('event', 'contact', { method: 'phone', event_category: 'engagement' });
@@ -498,7 +505,8 @@
       fbc: getCk('_fbc'),
       fbp: getCk('_fbp'),
       external_id: getCk('_fbp') || String(Date.now()),
-      event_name: 'PageView'
+      event_name: 'PageView',
+      event_id: window.__pvId || undefined
     };
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');

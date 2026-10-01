@@ -833,3 +833,14 @@ section[style*="min-height:93vh"] div[style*="backdrop-filter:blur(12px)"] butto
   .filter-bar.open>*:not(#fq):not(.f-toggle):not(.f-count){display:block!important;width:100%}
   .f-toggle{display:block;width:100%;padding:11px;background:transparent;border:1px solid var(--or);color:var(--or);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 }
+/* Alerta del diagnóstico */
+.dx-alert{margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)}
+.dx-consent{display:flex;gap:9px;align-items:flex-start;margin-top:12px;font-size:.68rem;color:var(--sv);line-height:1.55;cursor:pointer}
+.dx-consent input{margin-top:2px;accent-color:#C9A35B;flex-shrink:0}
+.dx-consent a{color:var(--sv);text-decoration:underline}
+.dx-amsg{font-size:.74rem;margin-top:10px;min-height:1em;color:var(--sv)}
+.dx-amsg.ok{color:var(--ok)}.dx-amsg.err{color:var(--warn)}
+
+.method.m5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:1024px){.method.m5{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.method.m5{grid-template-columns:1fr}}

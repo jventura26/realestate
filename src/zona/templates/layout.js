@@ -6,7 +6,7 @@ const WA        = '50245542088';
 const WA_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
 // CAMBIO 3: ogType = 'website' como parámetro por defecto
-function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scripts = '',
+function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scripts = '', lang = 'es', alternates = null,
                   pixelId = '1668269500330907', ga4Id = 'G-5KVQZYZ7B3' }) {
   const pageTitle = title
     ? `${escapeHtml(title)} | Zona INNmueble`
@@ -15,7 +15,7 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
   const ogImg     = ogImage || 'https://zona-innmueble.com/assets/og.jpg';
   const canon     = `${DOMAIN}${canonical || '/'}`;
 
-  return `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -25,6 +25,9 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <meta name="description" content="${metaDesc}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${canon}">
+${alternates ? `<link rel="alternate" hreflang="es" href="${DOMAIN}${alternates.es}">
+<link rel="alternate" hreflang="en" href="${DOMAIN}${alternates.en}">
+<link rel="alternate" hreflang="x-default" href="${DOMAIN}${alternates.es}">` : ''}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -67,7 +70,19 @@ function layout({ title, desc, canonical, ogImage, ogType = 'website', body, scr
 <meta name="apple-mobile-web-app-title" content="Zona INNmueble">
 
 <!-- Meta Pixel (inline para _fbp cookie inmediata) -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','` + pixelId + `');fbq('track','PageView');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','` + pixelId + `');window.__pvId='pv'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__pvId});</script>
+<script>
+/* zTrack: evento en el Pixel y en la API de Conversiones con el mismo eventID (Meta deduplica) */
+window.zTrack=function(name,data,standard){
+  var id='ev'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);data=data||{};
+  try{if(window.fbq)fbq(standard?'track':'trackCustom',name,data,{eventID:id});}catch(e){}
+  try{(window.dataLayer=window.dataLayer||[]).push(Object.assign({event:'z_'+name},data));}catch(e){}
+  try{var ck=function(n){var m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return m?m[2]:''};
+    var x=new XMLHttpRequest();x.open('POST','https://zona-inmu.tours-virtuales-gt.workers.dev/api/pageview');x.setRequestHeader('Content-Type','application/json');
+    x.send(JSON.stringify({event_name:name,event_id:id,custom_data:data,page_url:location.href,user_agent:navigator.userAgent,fbc:ck('_fbc'),fbp:ck('_fbp'),external_id:ck('_fbp')||undefined}));}catch(e){}
+  return id;
+};
+</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=` + pixelId + `&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 
@@ -152,6 +167,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/vender.html">Vender</a></li>
       <li><a href="/blog.html">Blog</a></li>
       <li><a href="/about.html">Nosotros</a></li>
+      <li><a href="/en/" hreflang="en" lang="en" title="English">EN</a></li>
     </ul>
     <a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="nav-cta">Asesor&iacute;a</a>
   </div>
@@ -412,7 +428,7 @@ function toggleFav(slug,btn){
   event.preventDefault();event.stopPropagation();
   var favs=getFavs();
   var idx=favs.indexOf(slug);
-  if(idx>=0){favs.splice(idx,1);}else{favs.push(slug);}
+  if(idx>=0){favs.splice(idx,1);}else{favs.push(slug);try{zTrack('AddToWishlist',{content_ids:[slug],content_type:'product'},true);}catch(e){}}
   try{localStorage.setItem(FAV_KEY,JSON.stringify(favs));}catch(e){}
   if(btn)btn.classList.toggle('active',idx<0);
   var counter=document.getElementById('favCounter');
@@ -437,7 +453,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <div style="font-size:.56rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#3B9EFF;margin-bottom:14px">&Iacute;ndice Zona-INNmueble</div>
 <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2rem);font-weight:300;color:#fff;line-height:1.15;margin-bottom:12px">Antes de comprar, conoce <em style="color:#C9A35B;font-style:italic">el valor real de la zona.</em></h3>
 <p style="font-size:.82rem;color:#8A9BB0;line-height:1.75;margin-bottom:22px">Precio por m&sup2;, precio t&iacute;pico y rendimiento de renta por zona en Guatemala. Te lo enviamos por WhatsApp, junto con las propiedades nuevas que encajen contigo.</p>
-<a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero recibir el Índice Zona-INNmueble y propiedades nuevas.')}" target="_blank" rel="noopener" onclick="try{fbq('track','Lead',{content_name:'Popup Indice'})}catch(e){};zpClose()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#C9A35B;color:#0D1B3E;padding:14px 22px;border-radius:8px;font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none">${WA_SVG} Recibir el &iacute;ndice</a>
+<a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero recibir el Índice Zona-INNmueble y propiedades nuevas.')}" target="_blank" rel="noopener" onclick="zpClose()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#C9A35B;color:#0D1B3E;padding:14px 22px;border-radius:8px;font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none">${WA_SVG} Recibir el &iacute;ndice</a>
 <a href="/indice.html" onclick="zpClose()" style="display:block;text-align:center;margin-top:12px;font-size:.68rem;color:#8A9BB0;text-decoration:underline;text-underline-offset:3px">Prefiero verlo en la web</a>
 </div>
 </div>
@@ -465,6 +481,48 @@ document.addEventListener('click',function(e){if(e.target.closest('.pc-fav,.pc-f
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
 </html>`;
+  return lang === 'en' ? toEnglish(html) : html;
+}
+
+// Versión en inglés: mismo layout con navegación, pie y textos fijos traducidos.
+function toEnglish(html) {
+  const wa = (m) => `https://wa.me/${WA}?text=${encodeURIComponent(m)}`;
+  const NAV = `<nav>
+  <div class="nav-inner">
+    <a href="/en/" class="logo"><img src="https://ik.imagekit.io/Zona/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="mega-nav" id="nav-links">
+      <li><a href="/en/">Buy from abroad</a></li>
+      <li><a href="/en/properties.html">Properties</a></li>
+      <li><a href="/en/price-index.html">Price index</a></li>
+      <li><a href="/">Espa&ntilde;ol</a></li>
+    </ul>
+    <a href="${wa('Hi, I live abroad and I am interested in buying property in Guatemala.')}" target="_blank" rel="noopener" class="nav-cta">Talk to us</a>
+  </div>
+</nav>`;
+  const FOOT = `<footer class="footer-premium">
+  <div class="footer-top">
+    <div class="footer-brand-block">
+      <div class="footer-logo"><em>ZONA</em> INNmueble</div>
+      <p class="footer-tagline">Real estate advisory in Guatemala with analysis, values and clarity. We don&rsquo;t sell for the sake of selling.</p>
+    </div>
+    <div class="footer-col"><h4>Explore</h4><ul>
+      <li><a href="/en/properties.html">Properties</a></li><li><a href="/en/price-index.html">Price index</a></li><li><a href="/en/">How remote buying works</a></li></ul></div>
+    <div class="footer-col"><h4>Espa&ntilde;ol</h4><ul>
+      <li><a href="/">Inicio</a></li><li><a href="/indice.html">&Iacute;ndice</a></li><li><a href="/privacidad.html">Privacidad</a></li></ul></div>
+    <div class="footer-newsletter"><h4>WhatsApp</h4><p>Message us on WhatsApp from anywhere: +502 4554 2088.</p>
+      <a href="${wa('Hi, I would like to receive new properties in Guatemala.')}" target="_blank" rel="noopener" class="footer-wa-btn">${WA_SVG} Message us</a></div>
+  </div>
+  <div class="footer-bottom"><span>&copy; 2026 Zona INNmueble Real Estate &middot; Guatemala</span></div>
+</footer>`;
+  return html
+    .replace('<html lang="es">', '<html lang="en">')
+    .replace(/<meta property="og:locale"\s+content="es_GT">/, '<meta property="og:locale" content="en_US">')
+    .replace(/<nav>[\s\S]*?<\/nav>/, NAV)
+    .replace(/<footer class="footer-premium">[\s\S]*?<\/footer>/, FOOT)
+    .replace(/<!-- Lead Capture Pop-up[\s\S]*?<!-- Comparador: píldora flotante -->/, '<!-- Comparador: píldora flotante -->')
+    .replace(/Comparar &middot; /, 'Compare &middot; ')
+    .replace(encodeURIComponent('Hola, me interesa una propiedad de Zona INNmueble.'), encodeURIComponent('Hi, I am interested in a property in Guatemala.'));
 }
 
 module.exports = { layout, WA };
