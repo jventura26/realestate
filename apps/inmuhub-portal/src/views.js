@@ -52,12 +52,13 @@ ${pixel}
     <div class="header-actions">
       <a class="btn btn-primary btn-sm" href="/publicar"><span class="only-desktop">Publicar propiedad</span><span class="only-mobile">Publicar</span></a>
       <details class="menu">
-        <summary aria-label="Menú">Menú</summary>
+        <summary aria-label="Abrir menú"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span></summary>
         <nav class="menu-panel" aria-label="Menú">
           <a href="/propiedades">Propiedades</a>
           <a href="/proyectos">Proyectos nuevos</a>
           <a href="/comparar">Comparar proyectos</a>
           <a href="/valor">Valor por zona</a>
+          <span class="menu-sep"></span>
           <a href="/publicar">Propietarios</a>
           <a href="/planes">Inmobiliarias</a>
           <a href="/desarrolladoras">Desarrolladoras</a>
@@ -212,7 +213,7 @@ export function homePage(env, { zones, featured, positions, heroImage, projectsS
   const body = html`
 <section class="hero wrap">
   <div class="hero-copy">
-    <div class="eyebrow">Portal inmobiliario curado · Guatemala</div>
+    <div class="eyebrow">Portal inmobiliario · Guatemala</div>
     <h1 class="display">Propiedades con información, no solo con precio.</h1>
     <p class="lead">Cada propiedad se revisa antes de publicarse y muestra cómo se compara su precio con el valor de su zona. Menos ruido, mejores decisiones.</p>
     <form class="search" action="/propiedades" method="get">

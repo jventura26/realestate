@@ -83,13 +83,13 @@ export function projectCard(j) {
 
 export function projectsPage(env, { zones, filters, items }) {
   const zoneName = zones.find((z) => z.slug === filters.zone)?.name;
-  const heading = `Proyectos nuevos ${zoneName ? `en ${zoneName}` : 'en Guatemala'}`;
+  const heading = zoneName ? `Proyectos nuevos en ${zoneName}` : 'Proyectos nuevos';
   const sel = (cur, v) => (cur === v ? raw(' selected') : '');
   const body = html`
 <section class="wrap section">
   <div class="section-head">
     <div>
-      <div class="eyebrow">${items.length} ${items.length === 1 ? 'proyecto' : 'proyectos'} · preventa, construcción y entrega inmediata</div>
+      <div class="eyebrow">Obra nueva · Guatemala</div>
       <h1 class="display-md">${heading}</h1>
     </div>
     <span class="tagline">Explore, compare y decida con información.</span>
