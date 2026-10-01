@@ -6,6 +6,9 @@ export const CHECK = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 
 export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>');
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
+// Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
+export const ASSET_VERSION = '2026-10-01a';
+
 // ---------- Layout ----------
 
 export function layout(env, { title, description, image, path = '/', body, noindex = false, bodyClass = '', scripts = [] }) {
@@ -34,7 +37,7 @@ ${image ? html`<meta property="og:image" content="${image.startsWith('/') ? site
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/portal.css">
+<link rel="stylesheet" href="/portal.css?v=${ASSET_VERSION}">
 ${pixel}
 </head>
 <body class="${bodyClass}">
@@ -82,7 +85,7 @@ ${pixel}
   </div>
   <div class="wrap footer-legal muted">© ${new Date().getFullYear()} inmuhub. Los rangos de valor son referenciales y no sustituyen un avalúo profesional.</div>
 </footer>
-${scripts.map((src) => html`<script src="${src}" defer></script>`)}
+${scripts.map((src) => html`<script src="${src}?v=${ASSET_VERSION}" defer></script>`)}
 </body>
 </html>`;
 }
