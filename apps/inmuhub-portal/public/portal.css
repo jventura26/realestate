@@ -408,3 +408,4 @@ input[type=file]::file-selector-button:hover { background: #1b2c45; }
   .header-actions .btn-sm { padding: 0 14px; }
   .menu summary { padding: 0 12px; }
 }
+.footer-cols { flex-wrap: wrap; gap: 28px 40px; }
