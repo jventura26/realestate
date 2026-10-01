@@ -31,11 +31,12 @@ function indexPage(props, card) {
   ].filter(t => t[5] > 0);
 
   const zones = A.zoneSummaries();
+  const heroPoster = premium ? ikTransform(premium.p.mainImage || premium.p.gallery[0], { w: 1600, q: 70 }) : '/assets/finca-premium.jpg';
 
   const body = `
 <!-- HERO -->
 <section class="h2-hero">
-  <video autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+  <video autoplay muted loop playsinline preload="metadata" aria-hidden="true" poster="${escapeHtml(heroPoster)}">
     <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
   </video>
   <div class="h2-ov"></div>
