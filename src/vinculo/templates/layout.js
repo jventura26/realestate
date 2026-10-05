@@ -1037,6 +1037,7 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
         <li><a href="/herramientas/simulador-inversion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Simulador de Inversi&oacute;n</a></li>
         <li><a href="/herramientas/guia-compra.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Gu&iacute;a de Compra</a></li>
         <li><a href="/herramientas/datos-mercado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>Datos de Mercado</a></li>
+        <li><a href="/mercado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V10l7-6 7 6v11"/><path d="M9 21v-6h6v6"/></svg>Precio por m&sup2; por zona</a></li>
       </ul>
     </li>
     <li><a href="/asesores.html" id="navAsesores">Asesores</a></li>
@@ -1085,6 +1086,7 @@ ${body}
         <li><a href="/herramientas/simulador-inversion.html">Simulador</a></li>
         <li><a href="/herramientas/guia-compra.html">Gu&iacute;a de Compra</a></li>
         <li><a href="/herramientas/datos-mercado.html">Datos de Mercado</a></li>
+        <li><a href="/mercado.html">Precio por m&sup2; por zona</a></li>
         <li><a href="/blog/">Blog</a></li>
       </ul>
     </div>

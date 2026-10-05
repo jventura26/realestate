@@ -249,6 +249,7 @@ const urls = [
   { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/guia-compra.html', priority:'0.85', changefreq:'monthly' },
   { loc:'/herramientas/datos-mercado.html', priority:'0.85', changefreq:'weekly' },
+  { loc:'/mercado.html', priority:'0.9', changefreq:'monthly' },
   ...zonaUrls,
   { loc:'/blog/', priority:'0.9', changefreq:'weekly' },
   ...articles.map(a=>({ loc:"/blog/"+a.slug+".html", priority:'0.85', changefreq:'monthly' })),
@@ -284,6 +285,13 @@ console.log(' simulador-inversion.html');
 
 write(path.join(HERRAMIENTAS, 'datos-mercado.html'), dashboardInversionistasPage(props));
 console.log(' datos-mercado.html');
+// Precio por m² por zona (datos de anuncios reales, se actualiza mensualmente en src/vinculo/mercado/data.json)
+{
+  const mTpl = fs.readFileSync(path.join(__dirname, 'mercado/template.html'), 'utf-8');
+  const mData = fs.readFileSync(path.join(__dirname, 'mercado/data.json'), 'utf-8');
+  write(path.join(OUT, 'mercado.html'), mTpl.replace('/*__DATA__*/null', mData));
+  console.log(' mercado.html');
+}
 
 // Registro asesor page
 const { registroAsesorPage } = require('./templates/registro-asesor-page');
