@@ -552,7 +552,13 @@ var WA_FOLLOWUP_TEMPLATE_LANG = "es";
 var WA_NEWLISTING_TEMPLATE_NAME = "seguimiento_2_zona_innmueble";
 var WA_NEWLISTING_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
-var WA_ALERT_PHONE_DEFAULT = "50247692366";
+var WA_ALERT_PHONE_DEFAULT = "50247692366,50245542088";
+// Numeros que reciben los avisos (separados por coma). Se puede cambiar con la variable WA_ALERT_PHONE.
+function alertPhones(env, from) {
+  return String(env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT).split(",").map(function(x) { return x.replace(/\D/g, ""); })
+    .filter(function(x, i, arr) { return x && x !== from && arr.indexOf(x) === i; });
+}
+__name(alertPhones, "alertPhones");
 var WA_REVIEW_DELAY_DAYS = 10;
 var WA_REVIEW_URL_DEFAULT = "https://g.page/r/REEMPLAZAR-CON-TU-LINK-DE-RESENAS/review";
 var DEFAULT_FOLLOWUP_TEMPLATES = [
@@ -1070,11 +1076,11 @@ async function maybeSendPropertyMedia(env, from, userText, reply, catalogo, hist
 __name(maybeSendPropertyMedia, "maybeSendPropertyMedia");
 async function notifyBusquedaMedida(env, from, lead) {
   try {
-    var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
-    if (!alertPhone || alertPhone === from) return;
+    var phones = alertPhones(env, from);
+    if (!phones.length) return;
     var det = [lead.tipo_propiedad, lead.zona_interes ? "en " + lead.zona_interes : "", lead.presupuesto ? "presupuesto " + lead.presupuesto : ""].filter(Boolean).join(", ");
     var txt = "B\u00FAsqueda a la medida: " + (lead.nombre || "Contacto") + " (+" + from + ")" + (det ? ": " + det : "") + ". https://wa.me/" + from;
-    await sendWhatsAppMessage(env, alertPhone, txt);
+    for (var i = 0; i < phones.length; i++) await sendWhatsAppMessage(env, phones[i], txt);
   } catch (e) {
     await logWaError(env, "notifyBusquedaMedida", e);
   }
@@ -1082,12 +1088,12 @@ async function notifyBusquedaMedida(env, from, lead) {
 __name(notifyBusquedaMedida, "notifyBusquedaMedida");
 async function notifyLeadAlert(env, from, contactName, userText, adRef) {
   try {
-    var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
-    if (!alertPhone || alertPhone === from) return;
+    var phones = alertPhones(env, from);
+    if (!phones.length) return;
     var nombreMostrar = contactName || ("+" + from);
     var textoCorto = String(userText || "").slice(0, 300);
     var alertText = "Nuevo mensaje en WhatsApp de " + nombreMostrar + " (+" + from + ")" + (adRef ? " desde el anuncio \u00AB" + (adRef.headline || "Meta Ads") + "\u00BB" : "") + ":\n\"" + textoCorto + "\"";
-    await sendWhatsAppMessage(env, alertPhone, alertText);
+    for (var i = 0; i < phones.length; i++) await sendWhatsAppMessage(env, phones[i], alertText);
   } catch (eAlert) {
     await logWaError(env, "notifyLeadAlert", eAlert);
   }
