@@ -80,3 +80,22 @@ Cambios de datos: siempre con una migración nueva (0005, 0006…), nunca editan
 - Panel: `/admin/proyectos` (proyectos, desarrolladoras, imágenes) y `/admin/proyecto/:id/reporte`
   (reporte mensual imprimible de visitas y consultas para la desarrolladora).
 - Las consultas de un proyecto van al WhatsApp de la sala de ventas de su desarrolladora (o al de inmuhub si no tiene).
+
+
+## Cuentas de propietarios y asesores
+
+| Ruta | Qué hace |
+|---|---|
+| `/registro?tipo=propietario` · `/registro?tipo=asesor` | Crear cuenta. Las de asesor quedan *en revisión* hasta aprobarlas en `/admin/cuentas`. |
+| `/ingresar` · `/salir` | Inicio y cierre de sesión (cookie `inmu_s`, 30 días). |
+| `/mi-cuenta` | Propiedades de la cuenta, su estado y consultas recibidas. |
+| `/admin/cuentas` | Aprobar, suspender, reactivar y generar clave temporal. |
+
+Contraseñas con PBKDF2-SHA256 (100 000 iteraciones). En D1 solo se guarda el sha256 del token de sesión.
+Tras 6 intentos fallidos en 15 minutos se bloquea el ingreso de ese correo.
+
+## Publicación automática
+
+El Worker está conectado a GitHub (Workers Builds): cada push a `main` publica `apps/inmuhub-portal`
+con `npx wrangler deploy`. Las migraciones de D1 no corren solas: aplíquelas antes del push con
+`npx wrangler d1 migrations apply inmuhub --remote`.
