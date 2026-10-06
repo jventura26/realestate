@@ -966,6 +966,12 @@ img{max-width:100%;display:block}
 .zp-topbar-brand{font-weight:800;font-size:16px;letter-spacing:.08em;color:#1a1a1a}
 .zp-topbar-brand span{color:#F5820D}
 </style>
+<script>if(location.hostname.indexOf('red.')===0)document.documentElement.classList.add('ih-red');</script>
+<style>
+/* red.inmuhub.com: ficha para colegas, sin formulario ni WhatsApp */
+.ih-red #zpContactForm,.ih-red .zp-share-grid a[href*="wa.me"],.ih-red a[href*="wa.me"],.ih-red a[href*="api.whatsapp"]{display:none!important}
+.ih-red .zp-share-grid{grid-template-columns:1fr!important}
+</style>
 </head>
 <body>
 
