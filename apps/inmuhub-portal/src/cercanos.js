@@ -3,7 +3,7 @@
 import { distanceKm } from './traslados.js';
 
 const TTL = 60 * 60 * 24 * 30;
-const ENDPOINT = 'https://overpass-api.de/api/interpreter';
+const ENDPOINTS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
 export const POI_GROUPS = [
   ['colegios', 'Colegios'],
   ['universidades', 'Universidades'],
@@ -11,7 +11,7 @@ export const POI_GROUPS = [
   ['comercio', 'Centros comerciales'],
 ];
 
-const keyFor = (pt) => `poi:v1:${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
+const keyFor = (pt) => `poi:v2:${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
 
 function classify(tags) {
   if (tags.shop === 'mall') return 'comercio';
@@ -38,13 +38,30 @@ export async function refreshNearby(env, pt) {
     nwr["amenity"~"^(school|university|college|hospital)$"]["name"](around:3500,${pt.lat},${pt.lng});
     nwr["shop"="mall"]["name"](around:5000,${pt.lat},${pt.lng});
   );out center 120;`;
-  const res = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'inmuhub.com (portal inmobiliario)' },
-    body: 'data=' + encodeURIComponent(q),
-  });
-  if (!res.ok) throw new Error(`Overpass ${res.status}`);
-  const data = await res.json();
+  let data = null;
+  const errors = [];
+  for (const ep of ENDPOINTS) {
+    try {
+      const res = await fetch(ep, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: 'application/json',
+          'User-Agent': 'inmuhub.com/1.0 (+https://inmuhub.com; portal inmobiliario)',
+        },
+        body: 'data=' + encodeURIComponent(q),
+      });
+      if (!res.ok) { errors.push(`${new URL(ep).host} ${res.status}`); continue; }
+      data = await res.json();
+      break;
+    } catch (e) {
+      errors.push(`${new URL(ep).host} ${String(e.message || e).slice(0, 60)}`);
+    }
+  }
+  if (!data) {
+    await env.MEDIA.put(keyFor(pt), JSON.stringify({ groups: null, error: errors.join('; ') }), { expirationTtl: 900 });
+    return;
+  }
   const groups = {};
   const seen = new Set();
   for (const el of data.elements || []) {

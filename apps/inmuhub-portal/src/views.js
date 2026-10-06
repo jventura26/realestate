@@ -462,7 +462,7 @@ function saveRow(p, account, fav, notice) {
 
 function locationBlock(p, place, pt, nearby) {
   const groups = nearby?.groups ? POI_GROUPS.filter(([k]) => nearby.groups[k]?.length) : [];
-  return html`<section class="block location">
+  return html`${nearby?.error ? raw(`<!-- cercanos: ${String(nearby.error).replace(/--/g, '')} -->`) : ''}<section class="block location">
   <h2>Ubicación</h2>
   <p class="muted">${place}. ${pt?.fromZone ? 'El mapa muestra la zona.' : 'El círculo muestra el sector.'} La ubicación exacta se comparte al agendar la visita.</p>
   ${pt ? html`<div class="map-box" data-map data-lat="${pt.lat}" data-lng="${pt.lng}" data-r="${pt.radius}" role="img" aria-label="Mapa aproximado de ${place}"><span class="map-ph">Cargando mapa…</span></div>` : ''}
