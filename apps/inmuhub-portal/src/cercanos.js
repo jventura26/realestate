@@ -3,7 +3,7 @@
 import { distanceKm } from './traslados.js';
 
 const TTL = 60 * 60 * 24 * 30;
-const ENDPOINTS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
+const ENDPOINTS = ['https://maps.mail.ru/osm/tools/overpass/api/interpreter', 'https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
 export const POI_GROUPS = [
   ['colegios', 'Colegios'],
   ['universidades', 'Universidades'],
@@ -11,7 +11,7 @@ export const POI_GROUPS = [
   ['comercio', 'Centros comerciales'],
 ];
 
-const keyFor = (pt) => `poi:v3:${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
+const keyFor = (pt) => `poi:v4:${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
 
 function classify(tags) {
   if (tags.shop === 'mall') return 'comercio';
@@ -50,7 +50,7 @@ export async function refreshNearby(env, pt) {
           'User-Agent': 'inmuhub.com/1.0 (+https://inmuhub.com; portal inmobiliario)',
         },
         body: 'data=' + encodeURIComponent(q),
-        signal: AbortSignal.timeout(8000),
+        signal: AbortSignal.timeout(9000),
       });
       if (!res.ok) { errors.push(`${new URL(ep).host} ${res.status}`); continue; }
       data = await res.json();
