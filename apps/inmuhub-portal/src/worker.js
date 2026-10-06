@@ -6,6 +6,8 @@ import * as pviews from './views-projects.js';
 import * as aviews from './views-admin-projects.js';
 import * as acviews from './views-account.js';
 import * as auth from './auth.js';
+import * as sviews from './views-services.js';
+import { serviceBySlug, SERVICES } from './services.js';
 import {
   normalizeWhatsapp, parseNumber, mapType, cleanText, projectPricePerM2, parseTypologies, PROJECT_COMPARABLE, valuePosition,
 } from './normalize.js';
@@ -353,7 +355,7 @@ async function handlePublicar(request, env, ctx) {
 // ---------- Cuentas ----------
 
 function safeNext(next) {
-  return /^\/(?!\/)[a-z0-9/_-]*$/i.test(next || '') && !next.startsWith('/admin') ? next : '/mi-cuenta';
+  return /^\/(?!\/)[a-z0-9/_-]*(#[a-z0-9-]+)?$/i.test(next || '') && !next.startsWith('/admin') ? next : '/mi-cuenta';
 }
 
 async function handleAccounts(request, env, url, path, method) {
@@ -361,7 +363,7 @@ async function handleAccounts(request, env, url, path, method) {
   const ip = request.headers.get('CF-Connecting-IP') || '';
 
   if (path === '/ingresar' && method === 'GET') {
-    if (await auth.currentAccount(request, env.DB)) return redirect('/mi-cuenta');
+    if (await auth.currentAccount(request, env.DB)) return redirect(safeNext(url.searchParams.get('next') || ''));
     const notice = { salida: 'Cerró su sesión.' }[url.searchParams.get('ok')];
     return page(acviews.loginPage(env, { next: url.searchParams.get('next') || '', notice }), 200, noStore);
   }
@@ -385,9 +387,11 @@ async function handleAccounts(request, env, url, path, method) {
   }
 
   if (path === '/registro' && method === 'GET') {
-    if (await auth.currentAccount(request, env.DB)) return redirect('/mi-cuenta');
-    const role = url.searchParams.get('tipo') === 'asesor' ? 'asesor' : 'propietario';
-    return page(acviews.registerPage(env, { role }), 200, noStore);
+    if (await auth.currentAccount(request, env.DB)) return redirect(safeNext(url.searchParams.get('next') || ''));
+    const tipo = url.searchParams.get('tipo');
+    const role = ['asesor', 'propietario', 'comprador'].includes(tipo) ? tipo : 'comprador';
+    const next = safeNext(url.searchParams.get('next') || '');
+    return page(acviews.registerPage(env, { role, next: next === '/mi-cuenta' ? '' : next }), 200, noStore);
   }
 
   if (path === '/registro' && method === 'POST') {
@@ -397,9 +401,11 @@ async function handleAccounts(request, env, url, path, method) {
       const { success } = await env.PUBLISH_LIMITER.limit({ key: `reg:${ip || 'local'}` });
       if (!success) return new Response('Demasiados registros seguidos. Intente en un minuto.', { status: 429 });
     }
-    const role = field(form, 'tipo', 12) === 'asesor' ? 'asesor' : 'propietario';
+    const tipo = field(form, 'tipo', 12);
+    const role = ['asesor', 'propietario', 'comprador'].includes(tipo) ? tipo : 'comprador';
+    const next = safeNext(field(form, 'next', 200));
     const values = { nombre: field(form, 'nombre', 80), whatsapp: field(form, 'whatsapp', 20), correo: field(form, 'correo', 120), empresa: field(form, 'empresa', 80) };
-    const fail = (error) => page(acviews.registerPage(env, { role, values, error }), 422, noStore);
+    const fail = (error) => page(acviews.registerPage(env, { role, values, error, next: next === '/mi-cuenta' ? '' : next }), 422, noStore);
     const name = cleanText(values.nombre);
     const email = values.correo.toLowerCase();
     const whatsapp = normalizeWhatsapp(values.whatsapp);
@@ -419,7 +425,8 @@ async function handleAccounts(request, env, url, path, method) {
       company: role === 'asesor' ? cleanText(values.empresa) || null : null,
       password_hash: await auth.hashPassword(password),
     });
-    return redirect('/mi-cuenta?ok=bienvenida', 303, { 'Set-Cookie': await auth.createSession(env.DB, id) });
+    const dest = next === '/mi-cuenta' ? '/mi-cuenta?ok=bienvenida' : next;
+    return redirect(dest, 303, { 'Set-Cookie': await auth.createSession(env.DB, id) });
   }
 
   if (path === '/mi-cuenta' && method === 'GET') {
@@ -451,6 +458,11 @@ async function projectReading(env, j) {
   if (!comparable || !ppm2 || !j.zone_slug) return null;
   const range = await db.zoneValue(env.DB, j.zone_slug, comparable, minComparables(env));
   return { comparable, ppm2, range, position: valuePosition(ppm2, range) };
+}
+
+async function publicStats(env) {
+  const [base, zones] = await Promise.all([siteStats(env), db.listZones(env.DB)]);
+  return { ...base, zones: zones.filter((z) => z.slug !== 'interior').length };
 }
 
 async function siteStats(env) {
@@ -807,18 +819,54 @@ export default {
         }
       }
       if (method === 'GET' && path === '/') {
-        const [zones, featured, heroImage, projects] = await Promise.all([
+        const [zones, heroImage, stats] = await Promise.all([
           db.listZones(env.DB),
-          db.featuredProperties(env.DB, 3),
           db.getSetting(env.DB, 'hero_image'),
-          db.listProjects(env.DB, { limit: 3 }),
+          publicStats(env),
         ]);
-        const positions = await db.positionsFor(env.DB, featured, minComparables(env));
-        const projectsSection = pviews.homeProjectsSection(projects);
-        return page(views.homePage(env, { zones, featured, positions, heroImage, projectsSection }), 200, { 'Cache-Control': 'public, max-age=120' });
+        return page(views.homePage(env, { zones, heroImage, stats, servicesSection: sviews.serviceCards() }), 200, { 'Cache-Control': 'public, max-age=120' });
+      }
+
+      if (method === 'GET' && path === '/servicios') return page(sviews.servicesIndexPage(env));
+
+      if (method === 'GET' && path === '/inmuhub') {
+        return page(sviews.aboutPage(env, { stats: await publicStats(env) }), 200, { 'Cache-Control': 'public, max-age=300' });
+      }
+
+      const serviceMatch = path.match(/^\/servicios\/([a-z0-9-]{1,80})$/);
+      if (serviceMatch && (method === 'GET' || method === 'POST')) {
+        const s = serviceBySlug(serviceMatch[1]);
+        if (!s) return page(views.notFoundPage(env), 404);
+        const account = await auth.currentAccount(request, env.DB);
+        if (method === 'GET') {
+          const notice = url.searchParams.get('ok') === 'enviada' ? 'Recibimos su solicitud. Le escribiremos por WhatsApp con la propuesta.' : null;
+          return page(sviews.servicePage(env, { s, account, notice }), 200, { 'Cache-Control': 'no-store' });
+        }
+        if (!account) return redirect(`/ingresar?next=${encodeURIComponent('/servicios/' + s.slug)}`);
+        const form = await request.formData();
+        const message = cleanText(field(form, 'mensaje', 1000));
+        const whatsapp = account.whatsapp || normalizeWhatsapp('');
+        if (!whatsapp) return page(sviews.servicePage(env, { s, account, error: 'Su cuenta no tiene WhatsApp. Escríbanos para completarlo.' }), 422);
+        const leadId = await db.insertLead(env.DB, {
+          kind: 'plan',
+          name: account.name,
+          whatsapp,
+          intent: `servicio:${s.slug}`,
+          message: [s.name, `${account.role} · ${account.email}`, message].filter(Boolean).join(' · '),
+        });
+        ctx.waitUntil(forwardToCrm(env, { id: leadId, kind: 'servicio', name: account.name, whatsapp, title: s.name, message }).catch(() => {}));
+        ctx.waitUntil(
+          notifyByEmail(env, { kind: 'plan', name: account.name, whatsapp, ref: s.name, message: message || s.name }).catch((e) => console.error('Aviso por correo', e))
+        );
+        return redirect(`/servicios/${s.slug}?ok=enviada#solicitar`);
       }
 
       if (method === 'GET' && path === '/propiedades') {
+        // El inventario completo es para usuarios registrados.
+        if (!(await auth.currentAccount(request, env.DB)) && !(await isAdmin(request, env))) {
+          const [stats, zones] = await Promise.all([publicStats(env), db.listZones(env.DB)]);
+          return page(sviews.catalogGatePage(env, { stats, zones }), 200, { 'Cache-Control': 'no-store' });
+        }
         const filters = {
           zone: url.searchParams.get('zona') || '',
           type: url.searchParams.get('tipo') || '',
@@ -827,7 +875,7 @@ export default {
         if (filters.type && !TYPE_LABELS[filters.type]) filters.type = '';
         const [zones, list] = await Promise.all([db.listZones(env.DB), db.listProperties(env.DB, filters)]);
         const positions = await db.positionsFor(env.DB, list.items, minComparables(env));
-        return page(views.listingPage(env, { zones, filters, items: list.items, total: list.total, positions }));
+        return page(views.listingPage(env, { zones, filters, items: list.items, total: list.total, positions }), 200, { 'Cache-Control': 'no-store' });
       }
 
       const propMatch = path.match(/^\/propiedad\/([a-z0-9-]{1,100})$/i);
@@ -935,6 +983,7 @@ export default {
 
       if (method === 'GET' && path === '/publicar') {
         const account = await auth.currentAccount(request, env.DB);
+        if (!account) return redirect('/servicios/publicacion-de-propiedades#solicitar');
         const values = account ? { nombre: account.name, whatsapp: account.whatsapp ? `+${account.whatsapp}` : '', correo: account.email } : {};
         return page(views.publishPage(env, { zones: await db.listZones(env.DB), values }), 200, { 'Cache-Control': 'no-store' });
       }
@@ -944,7 +993,10 @@ export default {
       if (acct) return acct;
 
       if (method === 'POST' && path === '/consulta') return handleConsulta(request, env, ctx);
-      if (method === 'POST' && path === '/publicar') return handlePublicar(request, env, ctx);
+      if (method === 'POST' && path === '/publicar') {
+        if (!(await auth.currentAccount(request, env.DB))) return redirect('/servicios/publicacion-de-propiedades#solicitar');
+        return handlePublicar(request, env, ctx);
+      }
 
       if (method === 'GET' && path === '/publicar/gracias') {
         const ref = /^IH-\d{1,8}$/.test(url.searchParams.get('ref') || '') ? url.searchParams.get('ref') : null;
@@ -1122,7 +1174,8 @@ export default {
           db.listZones(env.DB),
         ]);
         const own = [
-          '/', '/propiedades', '/proyectos', '/valor', '/planes', '/publicar', '/desarrolladoras',
+          '/', '/propiedades', '/proyectos', '/valor', '/planes', '/publicar', '/desarrolladoras', '/inmuhub', '/servicios',
+          ...SERVICES.map((sv) => `/servicios/${sv.slug}`),
           ...zones.map((z) => `/zona/${z.slug}`),
           ...items.map((p) => `/propiedad/${p.slug}`),
           ...projects.map((j) => `/proyecto/${j.slug}`),

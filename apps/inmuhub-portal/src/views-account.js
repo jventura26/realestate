@@ -2,26 +2,28 @@
 import { html, raw, formatMoney } from './html.js';
 import { layout, CHECK, STATUS_LABEL } from './views.js';
 
-const ROLE = { propietario: 'Propietario', asesor: 'Asesor inmobiliario' };
+export const ROLE = { comprador: 'Comprador', propietario: 'Propietario', asesor: 'Asesor inmobiliario' };
 const ACC_STATUS = { activa: 'Activa', pendiente: 'En revisión', suspendida: 'Suspendida' };
 
-function roleCards(selected) {
+function roleCards(selected, next = '') {
+  const q = next ? `&next=${encodeURIComponent(next)}` : '';
   const card = (role, title, text) => html`
-    <a class="role-card${selected === role ? raw(' is-on') : ''}" href="/registro?tipo=${role}">
+    <a class="role-card${selected === role ? raw(' is-on') : ''}" href="/registro?tipo=${role}${raw(q)}">
       <strong>${title}</strong><span class="small muted">${text}</span>
     </a>`;
-  return html`<div class="role-cards">
+  return html`<div class="role-cards role-cards-3">
+    ${card('comprador', 'Busco propiedad', 'Accedo al inventario completo, a la lectura de valor y a la búsqueda asistida.')}
     ${card('propietario', 'Soy propietario', 'Publico mi casa, apartamento, terreno o finca y sigo su revisión.')}
     ${card('asesor', 'Soy asesor', 'Publico el inventario de mis clientes y comparto fichas con colegas.')}
   </div>`;
 }
 
-export function loginPage(env, { error, email = '', next = '', notice }) {
+export function loginPage(env, { error, email = '', next = '', notice, intro }) {
   const body = html`
 <section class="wrap section narrow auth">
   <div class="eyebrow">Mi cuenta</div>
   <h1 class="display-md">Ingresar a inmuhub</h1>
-  <p class="lead">Propietarios y asesores entran por aquí para publicar y dar seguimiento a sus propiedades.</p>
+  <p class="lead">${intro || 'Compradores, propietarios y asesores ingresan con su correo para ver el inventario completo, publicar y dar seguimiento a cada propiedad.'}</p>
   <form class="form-card" method="post" action="/ingresar">
     ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
     ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
@@ -33,24 +35,30 @@ export function loginPage(env, { error, email = '', next = '', notice }) {
   </form>
   <div class="auth-alt">
     <h2 class="display-sm">¿Aún no tiene cuenta?</h2>
-    ${roleCards('')}
+    ${roleCards('', next)}
   </div>
 </section>`;
   return layout(env, { title: 'Ingresar', path: '/ingresar', body, noindex: true });
 }
 
-export function registerPage(env, { role = 'propietario', values = {}, error }) {
+const REGISTER_COPY = {
+  comprador: ['Cuenta de comprador', 'Acceda al inventario completo de propiedades revisadas, a la lectura de valor de cada una y a la búsqueda asistida. La cuenta es gratuita.'],
+  propietario: ['Cuenta de propietario', 'Publique su propiedad y vea en qué etapa está: revisión, publicada y consultas recibidas.'],
+  asesor: ['Cuenta de asesor', 'Publique el inventario de sus clientes con lectura de valor, comparta fichas en la red de asesores y siga cada propiedad desde su panel. Revisamos cada cuenta de asesor antes de activarla.'],
+};
+
+export function registerPage(env, { role = 'comprador', values = {}, error, next = '' }) {
   const v = (k) => values[k] ?? '';
   const asesor = role === 'asesor';
+  const [heading, intro] = REGISTER_COPY[role] || REGISTER_COPY.comprador;
   const body = html`
 <section class="wrap section narrow auth">
   <div class="eyebrow">Crear cuenta</div>
-  <h1 class="display-md">${asesor ? 'Cuenta de asesor' : 'Cuenta de propietario'}</h1>
-  <p class="lead">${asesor
-    ? 'Publique el inventario de sus clientes con lectura de valor y siga cada propiedad desde su panel. Revisamos cada cuenta de asesor antes de activarla.'
-    : 'Publique su propiedad y vea en qué etapa está: revisión, publicada y consultas recibidas.'}</p>
-  ${roleCards(role)}
+  <h1 class="display-md">${heading}</h1>
+  <p class="lead">${intro}</p>
+  ${roleCards(role, next)}
   <form class="form-card" method="post" action="/registro">
+    <input type="hidden" name="next" value="${next}">
     ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
     <input type="hidden" name="tipo" value="${role}">
     <div class="hp" aria-hidden="true"><label>No llenar<input type="text" name="empresa_web" tabindex="-1" autocomplete="off"></label></div>
@@ -63,14 +71,15 @@ export function registerPage(env, { role = 'propietario', values = {}, error }) 
     <label>Contraseña<input type="password" name="clave" autocomplete="new-password" minlength="8" maxlength="200" required></label>
     <p class="small muted">Mínimo 8 caracteres.</p>
     <button class="btn btn-primary btn-block" type="submit">Crear cuenta</button>
-    <p class="small muted">¿Ya tiene cuenta? <a href="/ingresar">Ingresar</a></p>
+    <p class="small muted">¿Ya tiene cuenta? <a href="/ingresar${next ? raw('?next=' + encodeURIComponent(next)) : ''}">Ingresar</a></p>
     <p class="small muted form-legal">Al crear su cuenta acepta el <a href="/privacidad">aviso de privacidad</a>. Su correo y WhatsApp no se publican.</p>
   </form>
 </section>`;
-  return layout(env, { title: asesor ? 'Cuenta de asesor' : 'Cuenta de propietario', path: '/registro', body, noindex: true });
+  return layout(env, { title: heading, path: '/registro', body, noindex: true });
 }
 
 export function accountPage(env, { account, props, notice }) {
+  if (account.role === 'comprador') return buyerAccountPage(env, { account, notice });
   const asesor = account.role === 'asesor';
   const pending = account.status === 'pendiente';
   const body = html`
@@ -140,10 +149,10 @@ export function adminAccountsPage(env, { accounts, notice, tempPassword }) {
   ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
   ${tempPassword ? html`<p class="notice" role="status">Clave temporal para <strong>${tempPassword.email}</strong>: <code style="user-select:all">${tempPassword.value}</code> · Envíesela por WhatsApp. No se volverá a mostrar.</p>` : ''}
   <div class="kpis">
+    <div><span>Compradores</span><strong>${accounts.filter((a) => a.role === 'comprador').length}</strong></div>
     <div><span>Propietarios</span><strong>${accounts.filter((a) => a.role === 'propietario').length}</strong></div>
     <div><span>Asesores</span><strong>${accounts.filter((a) => a.role === 'asesor').length}</strong></div>
     <div><span>Asesores por aprobar</span><strong>${pending}</strong></div>
-    <div><span>Total</span><strong>${accounts.length}</strong></div>
   </div>
   <div class="table-wrap"><table>
     <thead><tr><th>Nombre</th><th>Tipo</th><th>Contacto</th><th>Propiedades</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -165,4 +174,30 @@ export function adminAccountsPage(env, { accounts, notice, tempPassword }) {
   ${accounts.length ? '' : html`<p class="muted">Todavía no hay cuentas.</p>`}
 </section>`;
   return layout(env, { title: 'Cuentas', body, noindex: true });
+}
+
+function buyerAccountPage(env, { account, notice }) {
+  const body = html`
+<section class="wrap section account">
+  <div class="section-head">
+    <div><div class="eyebrow">Comprador</div><h1 class="display-sm">Hola, ${account.name.split(' ')[0]}</h1></div>
+    <div class="row-actions">
+      <a class="btn btn-primary btn-sm" href="/propiedades">Ver propiedades</a>
+      <form method="post" action="/salir"><button class="btn btn-outline btn-sm" type="submit">Salir</button></form>
+    </div>
+  </div>
+  ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
+  <div class="how">
+    <article class="how-card"><div class="eyebrow">Inventario</div><h3>Propiedades revisadas</h3><p>Explore todo el inventario con la lectura de valor de cada propiedad.</p><a class="btn btn-primary btn-sm" href="/propiedades">Ver propiedades</a></article>
+    <article class="how-card"><div class="eyebrow">A su medida</div><h3>Búsqueda asistida</h3><p>Defina zona y presupuesto, y le avisamos cuando entre una opción que encaje.</p><a class="btn btn-outline btn-sm" href="/servicios/busqueda-asistida">Activar búsqueda</a></article>
+    <article class="how-card"><div class="eyebrow">Proyectos</div><h3>Obra nueva</h3><p>Compare proyectos en preventa y construcción por precio por m² y zona.</p><a class="btn btn-outline btn-sm" href="/proyectos">Ver proyectos</a></article>
+    <article class="how-card"><div class="eyebrow">Datos</div><h3>Precio por m²</h3><p>Rangos por zona actualizados cada mes con anuncios reales.</p><a class="btn btn-outline btn-sm" href="/mercado">Ver datos de mercado</a></article>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Sus datos</div>
+    <p class="small">${account.email}<br>${account.whatsapp ? `+${account.whatsapp}` : ''}</p>
+    <p class="small muted">Para cambiar sus datos o su contraseña, escríbanos por WhatsApp.</p>
+  </div>
+</section>`;
+  return layout(env, { title: 'Mi cuenta', path: '/mi-cuenta', body, noindex: true });
 }

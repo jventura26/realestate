@@ -47,10 +47,9 @@ ${pixel}
     <nav class="main-nav" aria-label="Principal">
       <a href="/propiedades">Propiedades</a>
       <a href="/proyectos">Proyectos nuevos</a>
+      <a href="/servicios">Servicios</a>
       <a href="/valor">Valor por zona</a>
-      <a href="/publicar">Propietarios</a>
-      <a href="/planes">Inmobiliarias</a>
-      <a href="/desarrolladoras">Desarrolladoras</a>
+      <a href="/inmuhub">Qué es inmuhub</a>
     </nav>
     <div class="header-actions">
       <a class="header-login" href="/ingresar">Ingresar</a>
@@ -62,6 +61,8 @@ ${pixel}
           <a href="/proyectos">Proyectos nuevos</a>
           <a href="/comparar">Comparar proyectos</a>
           <a href="/valor">Valor por zona</a>
+          <a href="/servicios">Servicios</a>
+          <a href="/inmuhub">Qué es inmuhub</a>
           <span class="menu-sep"></span>
           <a href="/publicar">Propietarios</a>
           <a href="/planes">Inmobiliarias</a>
@@ -82,9 +83,10 @@ ${pixel}
       <p class="muted">Portal inmobiliario curado en Guatemala.</p>
     </div>
     <div class="footer-cols">
+      <div><strong>inmuhub</strong><a href="/inmuhub">Qué es inmuhub</a><a href="/servicios">Servicios</a><a href="/mercado">Datos de mercado</a></div>
       <div><strong>Explorar</strong><a href="/propiedades">Propiedades</a><a href="/proyectos">Proyectos nuevos</a><a href="/comparar">Comparar proyectos</a><a href="/valor">Valor por zona</a></div>
       <div><strong>Publicar</strong><a href="/publicar">Propietarios</a><a href="/planes">Inmobiliarias</a><a href="/desarrolladoras">Desarrolladoras</a></div>
-      <div><strong>Mi cuenta</strong><a href="/ingresar">Ingresar</a><a href="/registro?tipo=propietario">Cuenta de propietario</a><a href="/registro?tipo=asesor">Cuenta de asesor</a></div>
+      <div><strong>Mi cuenta</strong><a href="/ingresar">Ingresar</a><a href="/registro?tipo=comprador">Cuenta de comprador</a><a href="/registro?tipo=propietario">Cuenta de propietario</a><a href="/registro?tipo=asesor">Cuenta de asesor</a></div>
       <div><strong>Legal</strong><a href="/privacidad">Aviso de privacidad</a></div>
     </div>
   </div>
@@ -214,7 +216,7 @@ export function renderDescription(text) {
 
 // ---------- Páginas ----------
 
-export function homePage(env, { zones, featured, positions, heroImage, projectsSection = '' }) {
+export function homePage(env, { zones, heroImage, stats = {}, servicesSection = '' }) {
   const featuredZones = zones.filter((z) => z.featured);
   const hero = heroImage || '/portada.webp';
   const illustrative = hero === '/portada.webp';
@@ -269,28 +271,28 @@ export function homePage(env, { zones, featured, positions, heroImage, projectsS
       <h3>Compare antes de visitar</h3>
       <p>Cada ficha indica si el precio está por debajo, dentro o por encima del rango de su zona.</p>
       <ul class="checks"><li>${CHECK}Propiedades revisadas antes de publicarse</li><li>${CHECK}Rango de precio por m² en cada zona</li><li>${CHECK}Consulta directa, con la propiedad identificada</li></ul>
-      <a class="btn btn-outline btn-sm" href="/propiedades">Ver propiedades</a>
+      <a class="btn btn-outline btn-sm" href="/servicios/busqueda-asistida">Conocer la búsqueda asistida</a>
     </article>
     <article class="how-card">
       <div class="eyebrow">Propietarios</div>
       <h3>Publique con análisis de valor</h3>
       <p>Cree su cuenta, envíe su propiedad y siga su revisión y las consultas desde su panel.</p>
       <ul class="checks"><li>${CHECK}Publicación básica sin costo</li><li>${CHECK}Lectura de valor de su zona</li><li>${CHECK}Fotografía editada y tour 360° opcionales</li></ul>
-      <a class="btn btn-primary btn-sm" href="/registro?tipo=propietario">Crear cuenta de propietario</a>
+      <a class="btn btn-primary btn-sm" href="/servicios/publicacion-de-propiedades">Conocer el servicio</a>
     </article>
     <article class="how-card">
       <div class="eyebrow">Asesores e inmobiliarias</div>
       <h3>Su inventario, con criterio</h3>
       <p>Publique el inventario de sus clientes y comparta fichas con colegas desde la red de asesores.</p>
       <ul class="checks"><li>${CHECK}Panel con estado y consultas por propiedad</li><li>${CHECK}Enlaces para colegas en red.inmuhub.com</li><li>${CHECK}Planes mensuales para agencias</li></ul>
-      <a class="btn btn-primary btn-sm" href="/registro?tipo=asesor">Crear cuenta de asesor</a>
+      <a class="btn btn-primary btn-sm" href="/servicios/planes-para-inmobiliarias">Conocer el servicio</a>
     </article>
     <article class="how-card">
       <div class="eyebrow">Desarrolladoras</div>
       <h3>Proyectos nuevos, comparables</h3>
       <p>Presente su proyecto junto a otros de la zona, con precio por m² y reporte mensual de interés.</p>
       <ul class="checks"><li>${CHECK}Ficha de proyecto y tipologías</li><li>${CHECK}Comparador de proyectos</li><li>${CHECK}Reporte mensual de visitas y consultas</li></ul>
-      <a class="btn btn-outline btn-sm" href="/desarrolladoras">Ver opciones</a>
+      <a class="btn btn-outline btn-sm" href="/servicios/proyectos-para-desarrolladoras">Conocer el servicio</a>
     </article>
   </div>
 </section>
@@ -307,13 +309,25 @@ export function homePage(env, { zones, featured, positions, heroImage, projectsS
 </section>
 
 <section class="wrap section">
-  <div class="section-head">
-    <div><div class="eyebrow">Selección curada</div><h2 class="display-md">Propiedades de la semana</h2></div>
-    <a class="link-underline" href="/propiedades">Ver todas las propiedades</a>
+  <div class="see-more">
+    <div>
+      <div class="eyebrow">Inventario completo</div>
+      <h2 class="display-md">Propiedades revisadas, con lectura de valor en cada una.</h2>
+      <p class="lead">El inventario completo está disponible para usuarios registrados: casas, apartamentos, terrenos y fincas, cada uno comparado con el rango de precio de su zona.</p>
+      <div class="row-actions"><a class="btn btn-primary" href="/propiedades">Ver más propiedades</a><a class="btn btn-outline" href="/registro?tipo=comprador&amp;next=%2Fpropiedades">Crear cuenta gratuita</a></div>
+    </div>
+    <div class="see-more-stats">
+      ${[[stats.properties, 'propiedades revisadas'], [stats.zones, 'zonas con lectura de valor'], [stats.projects, 'proyectos nuevos']]
+        .filter(([v]) => v > 0)
+        .map(([v, l]) => html`<div><strong>${v}</strong><span>${l}</span></div>`)}
+    </div>
   </div>
-  <div class="cards">${featured.map((p) => propertyCard(p, positions.get(p.id)))}</div>
 </section>
-${projectsSection}
+
+<section class="wrap section">
+  <div class="section-head"><div><div class="eyebrow">Servicios</div><h2 class="display-md">Servicios para cada etapa de la operación</h2></div><a class="link-underline" href="/servicios">Ver todos los servicios</a></div>
+  ${servicesSection}
+</section>
 
 <section class="wrap section steps-section">
   <div class="section-head"><h2 class="display-md">Qué significa «Verificada»</h2><span class="tagline">No se trata de publicar por publicar.</span></div>
@@ -326,11 +340,11 @@ ${projectsSection}
 
 <section class="wrap section">
   <div class="cta-band">
-    <div><div class="eyebrow">Mi cuenta</div><h2 class="display-sm">Publique y dé seguimiento desde un solo lugar.</h2><p class="muted">Propietarios y asesores ingresan con su correo para ver el estado de cada propiedad.</p></div>
+    <div><div class="eyebrow">Mi cuenta</div><h2 class="display-sm">Publique y dé seguimiento desde un solo lugar.</h2><p class="muted">Compradores, propietarios y asesores ingresan con su correo para ver el inventario completo, publicar y dar seguimiento a cada propiedad.</p></div>
     <div class="row-actions"><a class="btn btn-primary" href="/registro">Crear cuenta</a><a class="btn btn-outline" href="/ingresar">Ingresar</a></div>
   </div>
 </section>`;
-  return layout(env, { path: '/', body, image: hero || null, scripts: projectsSection ? ['/compare.js'] : [] });
+  return layout(env, { path: '/', body, image: hero || null });
 }
 
 export function listingPage(env, { zones, filters, items, total, positions }) {
