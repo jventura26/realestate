@@ -13,6 +13,8 @@ workers_dev = true
 routes = [
   { pattern = "inmuhub.com/*", zone_name = "inmuhub.com" },
   { pattern = "www.inmuhub.com/*", zone_name = "inmuhub.com" },
+  # Red de asesores: solo fichas con enlace limpio; lo demás se redirige a inmuhub.com.
+  { pattern = "red.inmuhub.com/*", zone_name = "inmuhub.com" },
 ]
 
 [assets]

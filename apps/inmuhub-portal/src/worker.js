@@ -915,11 +915,43 @@ async function handleAdminEdit(request, env, url, id, action) {
 
 // ---------- Router ----------
 
+// red.inmuhub.com: solo sirve las fichas para colegas (enlaces limpios y cortos) y sus archivos.
+// Cualquier otra página se redirige al portal en inmuhub.com.
+const RED_ASSET = /^\/(assets\/.*|sw\.js|manifest\.json|favicon\.ico|.*\.(?:css|js|mjs|png|jpe?g|webp|avif|gif|svg|ico|woff2?|ttf|map))$/i;
+
+async function handleRed(request, env, url) {
+  const toPortal = () => redirect(`${env.SITE_URL}${url.pathname === '/' ? '/' : url.pathname}${url.search}`, 301);
+  if (url.pathname === '/robots.txt') {
+    return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+  }
+  if (!['GET', 'HEAD'].includes(request.method) || url.pathname === '/') return toPortal();
+  if (RED_ASSET.test(url.pathname)) return (await legacyFetch(request, env)) || toPortal();
+  // Solo se muestran fichas de propiedad: se reconocen por la marca de presentación para colegas.
+  const res = await legacyFetch(new Request(request.url, { method: 'GET', headers: request.headers }), env);
+  if (!res || res.status !== 200 || !(res.headers.get('Content-Type') || '').includes('text/html')) return toPortal();
+  const body = await res.text();
+  if (!body.includes('ih-red')) return toPortal();
+  const headers = new Headers(res.headers);
+  headers.delete('Content-Length');
+  headers.set('X-Robots-Tag', 'noindex');
+  headers.set('Cache-Control', 'public, max-age=300');
+  return new Response(request.method === 'HEAD' ? null : body, { status: 200, headers });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, '') || '/';
     const method = request.method;
+
+    if (url.hostname.startsWith('red.')) {
+      try {
+        return await handleRed(request, env, url);
+      } catch (e) {
+        console.error('red', e);
+        return redirect(`${env.SITE_URL}/`, 302);
+      }
+    }
 
     // www.inmuhub.com -> inmuhub.com
     if (url.hostname.startsWith('www.')) {
