@@ -12,6 +12,7 @@ export const SERVICES = [
     includes: [
       'Revisión de datos, áreas y precio antes de publicar',
       'Ficha con lectura de valor frente al rango de su zona',
+      'Estimado de traslado a Zona 10 en hora pico y fuera de ella',
       'Enlace limpio para compartir y vista previa cuidada en WhatsApp y redes',
       'Seguimiento del estado de la publicación desde su cuenta',
       'Opción de sello «Verificada» tras revisión documental',
@@ -153,6 +154,28 @@ export const SERVICES = [
       ['Entrega', 'Tour integrado en la ficha y enlace para compartir.'],
     ],
     action: 'Cotizar tour 360°',
+  },
+  {
+    slug: 'traslados-en-hora-pico',
+    name: 'Traslados medidos en hora pico',
+    eyebrow: 'Ubicación',
+    role: 'propietario',
+    summary: 'Medimos en horario real cuánto toma llegar de la propiedad a Zona 10, en hora pico y fuera de ella, y lo mostramos en la ficha.',
+    lead: 'En Guatemala, la pregunta que decide una compra suele ser «¿cuánto me toma llegar?». Cada ficha de inmuhub ya muestra un estimado. Con este servicio hacemos el recorrido en horario real y la ficha muestra el tiempo medido, con el sello «Medido por inmuhub».',
+    includes: [
+      'Recorrido real en hora pico de la mañana (6:30–8:30) y de la tarde (17:00–19:30)',
+      'Medición fuera de hora pico como referencia',
+      'Tiempo medido visible en la ficha con el sello «Medido por inmuhub»',
+      'Ruta sugerida y accesos principales para compartir con el comprador',
+      'La ubicación exacta de la propiedad no se publica',
+    ],
+    forWho: ['Carretera a El Salvador, Fraijanes y Pinula', 'Compradores que trabajan en Zona 10, 14 o 15', 'Asesores que quieren responder con datos y no con aproximaciones'],
+    steps: [
+      ['Cree su cuenta', 'Para identificar la propiedad que vamos a medir.'],
+      ['Recorrido en horario real', 'Medimos en días hábiles, en hora pico y fuera de ella.'],
+      ['Ficha actualizada', 'Los tiempos medidos reemplazan el estimado en la ficha.'],
+    ],
+    action: 'Solicitar medición',
   },
   {
     slug: 'fotografia-y-video',

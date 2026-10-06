@@ -5,6 +5,7 @@ import { zoneRange, valuePosition } from './normalize.js';
 const PUBLIC_COLUMNS = `p.id, p.slug, p.title, p.status, p.verified, p.operation, p.type, p.zone_slug, p.location_label,
   p.municipality, p.price_amount, p.currency, p.price_gtq, p.area_built_m2, p.area_land_v2, p.bedrooms, p.bathrooms,
   p.parking, p.levels, p.description, p.features, p.images, p.tour_url, p.video_url, p.lat, p.lng, p.featured_until,
+  p.commute_valle_min, p.commute_pico_min, p.commute_measured_at,
   p.published_at, p.whatsapp_enabled, p.contact_mode, z.name AS zone_name, a.name AS agency_name, a.verified AS agency_verified,
   g.name AS agent_name, COALESCE(g.whatsapp, a.whatsapp) AS contact_whatsapp`;
 
@@ -131,12 +132,12 @@ export async function insertSubmission(db, s) {
   const r = await db
     .prepare(`INSERT INTO properties (slug, title, status, operation, type, zone_slug, location_label, municipality,
         price_amount, currency, price_gtq, area_built_m2, area_land_v2, bedrooms, bathrooms, parking, description,
-        owner_name, owner_whatsapp, owner_email, source, images, features, account_id)
-      VALUES (?, ?, 'revision', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'portal', '[]', '[]', ?) RETURNING id`)
+        owner_name, owner_whatsapp, owner_email, source, images, features, account_id, lat, lng)
+      VALUES (?, ?, 'revision', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'portal', '[]', '[]', ?, ?, ?) RETURNING id`)
     .bind(
       s.slug, s.title, s.operation, s.type, s.zone_slug, s.location_label, s.municipality, s.price_amount, s.currency,
       s.price_gtq, s.area_built_m2, s.area_land_v2, s.bedrooms, s.bathrooms, s.parking, s.description, s.owner_name,
-      s.owner_whatsapp, s.owner_email, s.account_id ?? null
+      s.owner_whatsapp, s.owner_email, s.account_id ?? null, s.lat ?? null, s.lng ?? null
     )
     .first();
   return r.id;
@@ -226,7 +227,8 @@ export async function adminGetProperty(db, id) {
 const EDITABLE = [
   'title', 'operation', 'type', 'zone_slug', 'location_label', 'municipality', 'price_amount', 'currency', 'price_gtq',
   'area_built_m2', 'area_land_v2', 'bedrooms', 'bathrooms', 'parking', 'levels', 'description', 'features', 'tour_url',
-  'video_url', 'whatsapp_enabled', 'contact_mode', 'verified', 'slug',
+  'video_url', 'whatsapp_enabled', 'contact_mode', 'verified', 'slug', 'lat', 'lng', 'commute_valle_min', 'commute_pico_min',
+  'commute_measured_at',
 ];
 
 export async function adminSaveProperty(db, id, fields) {

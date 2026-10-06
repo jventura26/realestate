@@ -1,13 +1,14 @@
 import {
   html, raw, escape, formatMoney, formatNumber, TYPE_LABELS, OPERATION_LABELS, POSITION_LABELS, firstImage, parseJsonArray,
 } from './html.js';
+import { commuteFor, mapsLink } from './traslados.js';
 
 export const CHECK = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>');
 export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>');
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
-export const ASSET_VERSION = '2026-10-06b';
+export const ASSET_VERSION = '2026-10-06c';
 
 // ---------- Layout ----------
 
@@ -377,6 +378,28 @@ export function lockBlock(title, text, next, { light = false } = {}) {
   </div>`;
 }
 
+// Traslado a Zona 10: medido por inmuhub o estimado por distancia.
+function commuteBlock(p) {
+  const c = commuteFor(p);
+  if (!c) return '';
+  const span = (a) => (Array.isArray(a) ? (a[0] === a[1] ? `${a[0]}` : `${a[0]}–${a[1]}`) : `${a}`);
+  if (c.far) {
+    return html`<section class="block commute"><h2>Ubicación</h2><p class="muted">A unos ${c.km} km por carretera de la Ciudad de Guatemala.</p></section>`;
+  }
+  const measured = c.measured;
+  return html`<section class="block commute">
+  <div class="commute-head"><h2>Traslado a Zona 10</h2><span class="badge badge-line">${measured ? 'Medido por inmuhub' : 'Estimado'}</span></div>
+  <div class="commute-grid">
+    ${c.valle ? html`<div><span class="small muted">Fuera de hora pico</span><strong>${span(c.valle)} min</strong></div>` : ''}
+    ${c.pico ? html`<div class="peak"><span class="small muted">Hora pico</span><strong>${span(c.pico)} min</strong></div>` : ''}
+  </div>
+  <p class="small muted">${measured
+    ? `Tiempo en carro hasta Zona Viva medido en horario real${c.at ? ` (${c.at})` : ''}. Hora pico: 6:30–8:30 y 17:00–19:30 en días hábiles.`
+    : `Estimado en carro hasta Zona Viva según la distancia por carretera (≈ ${c.km} km${c.source === 'zona' ? ', desde el centro de la zona' : ''}). Hora pico: 6:30–8:30 y 17:00–19:30 en días hábiles. El tiempo real varía según la ruta y el día.`}</p>
+  <a class="small" href="${mapsLink(p)}" target="_blank" rel="noopener">Ver la ruta en Google Maps</a>
+</section>`;
+}
+
 function saveRow(p, account, fav, notice) {
   const next = `/propiedad/${p.slug}`;
   if (!account) {
@@ -450,6 +473,7 @@ export function propertyPage(env, { p, reading, utm, error, account = null, fav 
       <div class="price-row"><span class="price-lg">${formatMoney(p.price_amount, p.currency)}</span>${p.currency === 'USD' && p.price_gtq ? html`<span class="muted small">≈ Q ${formatNumber(p.price_gtq)}</span>` : ''}</div>
       ${shownSpecs.length ? html`<dl class="specs">${shownSpecs.map(([k, v]) => html`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl>` : ''}
       ${readingBlock}
+      ${commuteBlock(p)}
       ${p.description ? html`<section class="block"><h2>Sobre la propiedad</h2>${renderDescription(p.description)}</section>` : ''}
       ${features.length ? html`<section class="block"><h2>Amenidades y equipamiento</h2><ul class="tags">${features.map((f) => html`<li>${f}</li>`)}</ul></section>` : ''}
       <section class="block"><h2>Ubicación</h2><p class="muted">${place}. La ubicación exacta se comparte al agendar la visita.</p></section>
@@ -638,6 +662,7 @@ export function publishPage(env, { zones, values = {}, error }) {
         <label>Operación<select name="operacion"><option value="venta">Venta</option><option value="renta"${v('operacion') === 'renta' ? raw(' selected') : ''}>Renta</option></select></label>
         <label>Zona<select name="zona" required>${zoneOptions(zones, v('zona'), { includeAll: false })}</select></label>
         <label>Colonia o condominio<input type="text" name="ubicacion" maxlength="120" value="${v('ubicacion')}" placeholder="Ej. Vista Hermosa III"></label>
+        <label>Ubicación en Google Maps (opcional)<input type="text" name="mapa" maxlength="600" value="${v('mapa')}" placeholder="Pegue el enlace de la ubicación"><span class="small muted">No se publica. La usamos para calcular el traslado a Zona 10.</span></label>
         <label>Precio<input type="text" name="precio" inputmode="numeric" maxlength="20" value="${v('precio')}" required placeholder="Ej. 2,450,000"></label>
         <label>Moneda<select name="moneda"><option value="GTQ">Quetzales</option><option value="USD"${v('moneda') === 'USD' ? raw(' selected') : ''}>Dólares</option></select></label>
         <label>Construcción (m²)<input type="text" name="area_m2" inputmode="decimal" maxlength="10" value="${v('area_m2')}"></label>
@@ -841,6 +866,16 @@ export function adminEditPage(env, { p, zones, heroImage, notice, error }) {
       <p class="small muted">Formato: párrafos separados por una línea en blanco. «## Título» crea una sección y «- texto» un punto de lista.</p>
       <label>Características (separadas por coma)<input type="text" name="features" maxlength="1500" value="${features.join(', ')}"></label>
       <label>Enlace del tour 360°<input type="url" name="tour_url" maxlength="500" value="${v('tour_url')}" placeholder="https://"></label>
+    </fieldset>
+    <fieldset><legend>Ubicación y traslados</legend>
+      <label>Ubicación exacta (enlace de Google Maps o «lat, lng»)<input type="text" name="ubicacion_mapa" maxlength="600" value="${p.lat && p.lng ? `${p.lat}, ${p.lng > 0 ? -p.lng : p.lng}` : ''}" placeholder="https://maps.app.goo.gl/… o 14.5995, -90.5085"></label>
+      <p class="small muted">No se muestra en la ficha. Sirve para calcular el traslado a Zona 10. Los enlaces cortos (maps.app.goo.gl) se abren para leer las coordenadas.</p>
+      <div class="grid-2">
+        <label>Traslado medido fuera de hora pico (min)<input type="number" name="commute_valle_min" min="1" max="300" value="${v('commute_valle_min')}"></label>
+        <label>Traslado medido en hora pico (min)<input type="number" name="commute_pico_min" min="1" max="300" value="${v('commute_pico_min')}"></label>
+        <label>Fecha de la medición<input type="text" name="commute_measured_at" maxlength="40" value="${v('commute_measured_at')}" placeholder="Ej. octubre 2026"></label>
+      </div>
+      <p class="small muted">Si deja los minutos vacíos, la ficha muestra un estimado según la ubicación.</p>
     </fieldset>
     <fieldset><legend>Contacto y confianza</legend>
       <label>Forma de contacto en la ficha<select name="contact_mode">${opt('whatsapp', 'Formulario que abre WhatsApp', p.contact_mode)}${opt('formulario', 'Formulario (la consulta solo se guarda en este panel)', p.contact_mode)}${opt('ninguno', 'Sin contacto (ficha solo informativa)', p.contact_mode)}</select></label>

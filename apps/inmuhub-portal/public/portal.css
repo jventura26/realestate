@@ -510,3 +510,10 @@ h1, h2, h3 { text-wrap: balance; }
 .save-box form { margin: 0; }
 .check-line { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 14px; }
 .check-line input { width: auto; margin-top: 3px; }
+.commute-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.commute-head h2 { margin: 0; }
+.commute-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 14px 0 10px; }
+.commute-grid > div { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.commute-grid strong { font-family: var(--display); font-weight: 500; font-size: 24px; white-space: nowrap; }
+.commute-grid .peak { background: var(--ink); border-color: var(--ink); color: #fff; }
+.commute-grid .peak .muted { color: var(--light); }

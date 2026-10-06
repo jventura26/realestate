@@ -8,6 +8,7 @@ import * as acviews from './views-account.js';
 import * as auth from './auth.js';
 import * as sviews from './views-services.js';
 import { serviceBySlug, SERVICES } from './services.js';
+import { parseCoords } from './traslados.js';
 import {
   normalizeWhatsapp, parseNumber, mapType, cleanText, projectPricePerM2, parseTypologies, PROJECT_COMPARABLE, valuePosition,
 } from './normalize.js';
@@ -268,6 +269,20 @@ async function handleConsulta(request, env, ctx) {
   return redirect(waLink(destination, text));
 }
 
+// Lee coordenadas de un enlace de Google Maps. Los enlaces cortos se siguen una vez para leer la dirección final.
+async function resolveCoords(text) {
+  const direct = parseCoords(text);
+  if (direct || !text) return direct;
+  if (!/^https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/.test(text.trim())) return null;
+  try {
+    const r = await fetch(text.trim(), { redirect: 'manual' });
+    const loc = r.headers.get('Location') || '';
+    return parseCoords(decodeURIComponent(loc));
+  } catch {
+    return null;
+  }
+}
+
 async function handlePublicar(request, env, ctx) {
   const form = await request.formData();
   const zones = await db.listZones(env.DB);
@@ -310,8 +325,11 @@ async function handlePublicar(request, env, ctx) {
   const slug = `${slugify(`${TYPE_LABELS[type]} ${location || ''} ${zone.name}`)}-${crypto.randomUUID().slice(0, 6)}`;
 
   const account = await auth.currentAccount(request, env.DB);
+  const coords = await resolveCoords(field(form, 'mapa', 600));
   const id = await db.insertSubmission(env.DB, {
     account_id: account ? account.id : null,
+    lat: coords?.lat ?? null,
+    lng: coords?.lng ?? null,
     slug,
     title,
     operation,
@@ -741,7 +759,22 @@ async function handleAdminEdit(request, env, url, id, action) {
       tour_url: /^https:\/\/\S+$/.test(tour) ? tour : null,
       contact_mode: ['whatsapp', 'formulario', 'ninguno'].includes(field(form, 'contact_mode', 12)) ? field(form, 'contact_mode', 12) : 'whatsapp',
       verified: form.get('verified') ? 1 : 0,
+      commute_valle_min: int('commute_valle_min') || null,
+      commute_pico_min: int('commute_pico_min') || null,
+      commute_measured_at: cleanText(field(form, 'commute_measured_at', 40)) || null,
     };
+    const mapa = field(form, 'ubicacion_mapa', 600);
+    if (!mapa) {
+      fields.lat = null;
+      fields.lng = null;
+    } else {
+      const coords = await resolveCoords(mapa);
+      if (!coords) {
+        return page(views.adminEditPage(env, { p, zones, heroImage: await db.getSetting(env.DB, 'hero_image'), error: 'No pudimos leer la ubicación. Pegue el enlace completo de Google Maps o las coordenadas «lat, lng».' }), 422);
+      }
+      fields.lat = coords.lat;
+      fields.lng = coords.lng;
+    }
     // Una propiedad nueva recibe una URL definitiva con su primer título real.
     if (p.slug.startsWith('nueva-') && title !== 'Nueva propiedad') {
       fields.slug = `${slugify(title)}-${crypto.randomUUID().slice(0, 4)}`;
