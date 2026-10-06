@@ -8,7 +8,7 @@ export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 2
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
-export const ASSET_VERSION = '2026-10-06c';
+export const ASSET_VERSION = '2026-10-06d';
 
 // ---------- Layout ----------
 
@@ -53,7 +53,7 @@ ${pixel}
       <a href="/inmuhub">Qué es inmuhub</a>
     </nav>
     <div class="header-actions">
-      <a class="header-login" href="/ingresar">Ingresar</a>
+      <a class="header-login" href="/ingresar" aria-label="Ingresar a mi cuenta"><svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="only-desktop">Ingresar</span></a>
       <a class="btn btn-primary btn-sm" href="/publicar"><span class="only-desktop">Publicar propiedad</span><span class="only-mobile">Publicar</span></a>
       <details class="menu">
         <summary aria-label="Abrir menú"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span></summary>
