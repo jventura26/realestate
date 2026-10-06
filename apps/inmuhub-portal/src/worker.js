@@ -1105,7 +1105,8 @@ export default {
         }[url.searchParams.get('ok')] || '';
         const pt = approxPoint(p);
         const nearby = pt ? await cachedNearby(env, pt) : null;
-        if (pt && !nearby) ctx.waitUntil(refreshNearby(env, pt).catch((e) => console.error('Cercanos', e)));
+        // Los servidores públicos de OpenStreetMap no responden de forma estable desde Cloudflare: se activa con POI_ENABLED=1.
+        if (pt && !nearby && env.POI_ENABLED === '1') ctx.waitUntil(refreshNearby(env, pt).catch((e) => console.error('Cercanos', e)));
         return page(views.propertyPage(env, { p, reading, utm: utmFrom(url), account, fav, notice, pt, nearby }), 200, { 'Cache-Control': 'private, no-cache' });
       }
 
