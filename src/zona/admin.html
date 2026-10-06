@@ -1890,7 +1890,7 @@ function buildTable(data, sortable) {
       <td>
         ${p.destacada?'<span class="star-cell"><i class="ti ti-star-filled"></i></span> ':''}<div class="prop-name">${esc(p.titulo||'')}</div>
         <div class="prop-loc">${esc(p.municipio||p.zona||'')}</div>
-        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}${(p.sitios&&p.sitios.includes('colegas'))?'<span class="site-dot ih" style="background:#0E1F3A;color:#C9A96E" title="Solo colegas">IH&middot;C</span>':''}${(!p.sitios||p.sitios.includes('inmu')||p.sitios.includes('colegas'))&&p.id?'<span class="ih-link" title="Copiar enlace de inmuhub" onclick="event.stopPropagation();ihCopy(this)" style="margin-left:6px;font:500 11px/1 ui-monospace,monospace;color:#8a93a3;cursor:copy">inmuhub.com/p/'+ihCode(p.id)+'</span>':''}</div>
+        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}${(p.sitios&&p.sitios.includes('colegas'))?'<span class="site-dot ih" style="background:#0E1F3A;color:#C9A96E" title="Solo colegas">IH&middot;C</span>':''}${(!p.sitios||p.sitios.includes('inmu')||p.sitios.includes('colegas'))&&p.id?'<span class="ih-link" title="Copiar enlace para colegas" onclick="event.stopPropagation();ihCopy(this)" style="margin-left:6px;font:500 11px/1 ui-monospace,monospace;color:#8a93a3;cursor:copy">red.inmuhub.com/'+ihCode(p.id)+'</span>':''}</div>
       </td>
       <td>${esc(p.tipo||'—')}</td>
       <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>

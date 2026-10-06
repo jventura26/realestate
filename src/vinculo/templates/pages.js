@@ -1154,6 +1154,27 @@ function zpSendMsg(){
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}
 </script>
+<script>
+// red.inmuhub.com: misma ficha, presentada como ficha para asesores
+(function(){
+  if (location.hostname.indexOf('red.') !== 0) return;
+  var m=document.createElement('meta'); m.name='robots'; m.content='noindex, nofollow'; document.head.appendChild(m);
+  if (!document.getElementById('ihRedBar')) {
+    var b=document.createElement('div'); b.id='ihRedBar';
+    b.style.cssText='background:#0E1F3A;color:#F3F5F8;font:500 13px/1.5 system-ui,sans-serif;text-align:center;padding:9px 16px';
+    b.innerHTML='Red de asesores inmuhub &middot; Ficha compartida entre colegas';
+    document.body.insertBefore(b, document.body.firstChild);
+  }
+  var code=${JSON.stringify(prop.shortCode||'')};
+  if (code) {
+    var redUrl='https://red.inmuhub.com/'+code;
+    document.querySelectorAll('.zp-share-btn').forEach(function(btn){
+      btn.onclick=function(){navigator.clipboard.writeText(redUrl).then(function(){btn.innerHTML='<i class="ti ti-check"></i> Copiado';setTimeout(function(){btn.innerHTML='<i class="ti ti-link"></i> Copiar enlace'},2000)})};
+    });
+    document.querySelectorAll('.zp-code span[style*="user-select"]').forEach(function(s){ s.textContent='red.inmuhub.com/'+code; });
+  }
+})();
+</script>
 </body></html>`;
 }
 function mortgageCalcPage(props) {

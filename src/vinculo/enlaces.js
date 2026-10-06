@@ -2,6 +2,7 @@
 // Cada propiedad recibe:
 //   cleanPath  -> /casas/zona-16/kanajuyu   (legible, para colegas y clientes)
 //   shortCode  -> k7q2                       (inmuhub.com/p/k7q2, para WhatsApp)
+//                                            (red.inmuhub.com/k7q2, version para colegas)
 // Ambos se sirven como reescritura (200) hacia /propiedades/<slug>, asi la
 // barra del navegador conserva el enlace limpio.
 const fs = require('fs');
@@ -14,6 +15,8 @@ const OVERRIDES = (() => {
 
 const TIPOS = { casa: 'casas', apartamento: 'apartamentos', terreno: 'terrenos', finca: 'fincas',
   local: 'locales', oficina: 'oficinas', bodega: 'bodegas', edificio: 'edificios' };
+// Nombres de paginas del sitio que un codigo corto nunca debe tapar (red.inmuhub.com/<codigo>)
+const RESERVED = new Set(['blog','mapa','tipos','zonas','sw','index','planes','mercado','asesores','dashboard','favoritos','offline','assets','herramientas','propiedades','casas','fincas','terrenos','p']);
 const ALPHA = '23456789abcdefghjkmnpqrstuvwxyz'; // sin 0/o, 1/l/i para que se pueda dictar
 
 function slugify(s) {
@@ -53,7 +56,7 @@ function assignCleanLinks(props, domain) {
     if (usedPaths.has(cp)) { let n = 2; while (usedPaths.has(cp + '-' + n)) n++; cp = cp + '-' + n; }
     usedPaths.add(cp);
     let len = 4, code = hashCode(p.id, len);
-    while (usedCodes.has(code)) code = hashCode(p.id, ++len);
+    while (usedCodes.has(code) || RESERVED.has(code)) code = hashCode(p.id, ++len);
     usedCodes.add(code);
     p.cleanPath = cp;
     p.shortCode = code;
@@ -71,6 +74,8 @@ function cleanLinkRedirects(props) {
     lines.push(`${p.cleanPath}  ${target}  200`);
     lines.push(`/p/${p.shortCode}  ${target}  200`);
     lines.push(`/p/${p.shortCode.toUpperCase()}  ${target}  200`);
+    lines.push(`/${p.shortCode}  ${target}  200`);
+    lines.push(`/${p.shortCode.toUpperCase()}  ${target}  200`);
   });
   lines.push('');
   return lines.join('\n');

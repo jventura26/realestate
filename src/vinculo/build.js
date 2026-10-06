@@ -133,7 +133,7 @@ write(path.join(OUT,'propiedades.html'), catalogPage(props)); console.log(' prop
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(` ${props.length} detail pages`);
 colegaProps.forEach(p => {
-  const banner = '<div style="background:#0E1F3A;color:#F3F5F8;font:500 13px/1.5 system-ui,sans-serif;text-align:center;padding:9px 16px">Ficha para asesores &middot; Esta propiedad no aparece en el cat&aacute;logo p&uacute;blico de inmuhub</div>';
+  const banner = '<div id="ihRedBar" style="background:#0E1F3A;color:#F3F5F8;font:500 13px/1.5 system-ui,sans-serif;text-align:center;padding:9px 16px">Ficha para asesores &middot; Esta propiedad no aparece en el cat&aacute;logo p&uacute;blico de inmuhub</div>';
   let html = detailPage(p, props)
     .replace(/<meta name="robots"[^>]*>/gi, '')
     .replace(/<head([^>]*)>/i, '<head$1>\n<meta name="robots" content="noindex, nofollow">')
