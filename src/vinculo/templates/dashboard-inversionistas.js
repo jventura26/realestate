@@ -119,7 +119,7 @@ module.exports = () => `<!DOCTYPE html>
       <h2 style="color:#fff;border-bottom-color:#fff">¿Listo para invertir?</h2>
       <p>Descarga nuestro reporte de análisis o accede a nuestras herramientas</p>
       <button onclick="descargarPDF()" class="btn">📥 Descargar Reporte PDF</button>
-      <a href="/vinculo/herramientas/valuador.html" class="btn">🏠 Ir a Valuador</a>
+      <a href="/vinculo/valuador" class="btn">🏠 Ir a Valuador</a>
     </div>
   </div>
 

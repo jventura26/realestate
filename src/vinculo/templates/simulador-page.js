@@ -5,7 +5,7 @@ function simuladorInversionPage() {
   return layout({
     title: 'Simulador de Inversion Inmobiliaria | INMUHUB',
     desc: 'Simula el retorno de inversion (ROI) en propiedades guatemaltecas.',
-    canonical: '/herramientas/simulador-inversion.html',
+    canonical: '/simulador-inversion',
     body: investmentSimulator()
   });
 }

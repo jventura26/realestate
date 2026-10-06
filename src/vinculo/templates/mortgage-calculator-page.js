@@ -4,7 +4,7 @@ const { layout } = require('./layout');
 function mortgageCalculatorPage() {
   const title = 'Calcula tu hipoteca real en Guatemala | Tasas 2026';
   const desc = 'Descubre cuánto pagas mensualmente según tu enganche. Simulador con tasas actuales de G&T, BAC e Industrial.';
-  const canonical = '/herramientas/calculadora-hipotecaria.html';
+  const canonical = '/calculadora-hipotecaria';
   
   const schemaMarkup = {
     "@context": "https://schema.org",

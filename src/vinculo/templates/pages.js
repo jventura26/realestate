@@ -117,10 +117,10 @@ const statsBar = [
 ].map(([n,l])=>`<div style="flex:1;min-width:140px;padding:20px 0;border-right:1px solid rgba(255,255,255,.08);text-align:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:500;color:var(--gold);line-height:1;margin-bottom:4px">${n}</div><div style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4)">${l}</div></div>`).join('');
 
 const herramientas = [
-  ['🏠','Valuador','/herramientas/valuador.html','Calcula el valor estimado de cualquier propiedad'],
-  ['🧮','Calculadora','/herramientas/calculadora-hipotecaria.html','Simula tu cuota hipotecaria mensual'],
-  ['📈','Simulador','/herramientas/simulador-inversion.html','Analiza ROI y rentabilidad antes de invertir'],
-  ['📚','Guia de Compra','/herramientas/guia-compra.html','Guia premium para comprar sin errores'],
+  ['🏠','Valuador','/valuador','Calcula el valor estimado de cualquier propiedad'],
+  ['🧮','Calculadora','/calculadora-hipotecaria','Simula tu cuota hipotecaria mensual'],
+  ['📈','Simulador','/simulador-inversion','Analiza ROI y rentabilidad antes de invertir'],
+  ['📚','Guia de Compra','/guia-de-compra','Guia premium para comprar sin errores'],
 ].map(([ic,nm,hr,ds])=>`<a href="${hr}" style="display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:#f8f9fb;border:1.5px solid #eef0f3;border-radius:12px;text-decoration:none;text-align:left;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.background='white';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='#eef0f3';this.style.background='#f8f9fb';this.style.transform='none';this.style.boxShadow='none'"><div style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;color:var(--gold)">${ic}</div><div style="font-size:15px;font-weight:700;color:#0a1628;margin-bottom:8px">${nm}</div><div style="font-size:13px;color:#64748b;line-height:1.6;flex:1">${ds}</div><div style="margin-top:16px;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.04em">Ir a herramienta &rarr;</div></a>`).join('');
 
 const body = `
@@ -1006,7 +1006,7 @@ ${mobGalHTML}${galHTML}
 
     ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
 
-    ${prop.priceNumeric > 0 ? '<a href="/herramientas/calculadora-hipotecaria.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f0f4fa;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none;margin-bottom:24px"><i class="ti ti-calculator" style="font-size:18px"></i> Calcular cuota hipotecaria</a>' : ''}
+    ${prop.priceNumeric > 0 ? '<a href="/calculadora-hipotecaria" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f0f4fa;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8rem;font-weight:600;color:#1a3a5c;text-decoration:none;margin-bottom:24px"><i class="ti ti-calculator" style="font-size:18px"></i> Calcular cuota hipotecaria</a>' : ''}
 
     ${(prop.hook && prop.hook.trim()) ? `<div class="zp-section"><div style="padding:16px 20px;border-left:3px solid var(--gold,#F5820D);background:rgba(245,130,13,.06);border-radius:0 8px 8px 0"><div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;line-height:1.8;font-style:italic;color:#334155">&ldquo;${esc(prop.hook)}&rdquo;</div></div></div>` : ''}
 
@@ -1188,7 +1188,7 @@ function mortgageCalcPage(props) {
   return layout({
     title: 'Calculadora Hipotecaria',
     desc: 'Calcula tu cuota hipotecaria mensual para propiedades en Guatemala',
-    canonical: '/herramientas/calculadora-hipotecaria.html',
+    canonical: '/calculadora-hipotecaria',
     body
   });
 }
@@ -1199,7 +1199,7 @@ function investmentSimulatorPage(props) {
   return layout({
     title: 'Simulador de Inversión',
     desc: 'Analiza el ROI de invertir en propiedades guatemaltecas',
-    canonical: '/herramientas/simulador-inversion.html',
+    canonical: '/simulador-inversion',
     body
   });
 }
@@ -1210,7 +1210,7 @@ function guiaCompraPage(props) {
   return layout({
     title: 'Guía Completa de Compra',
     desc: 'Descarga la guía premium para invertir en real estate sin errores',
-    canonical: '/herramientas/guia-compra.html',
+    canonical: '/guia-de-compra',
     body
   });
 }

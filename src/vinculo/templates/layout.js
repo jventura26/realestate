@@ -1032,11 +1032,11 @@ a[style*="padding:14px 28px"],a[style*="padding:15px 32px"]{padding:12px 20px !i
     <li data-hub="herramientas">
       <a href="#">Herramientas <span class="dd-arrow">&#9662;</span></a>
       <ul class="hub-dropdown">
-        <li><a href="/herramientas/valuador.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Valuador</a></li>
-        <li><a href="/herramientas/calculadora-hipotecaria.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>Calculadora Hipotecaria</a></li>
-        <li><a href="/herramientas/simulador-inversion.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Simulador de Inversi&oacute;n</a></li>
-        <li><a href="/herramientas/guia-compra.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Gu&iacute;a de Compra</a></li>
-        <li><a href="/herramientas/datos-mercado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>Datos de Mercado</a></li>
+        <li><a href="/valuador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Valuador</a></li>
+        <li><a href="/calculadora-hipotecaria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>Calculadora Hipotecaria</a></li>
+        <li><a href="/simulador-inversion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Simulador de Inversi&oacute;n</a></li>
+        <li><a href="/guia-de-compra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Gu&iacute;a de Compra</a></li>
+        <li><a href="/datos-de-mercado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>Datos de Mercado</a></li>
         <li><a href="/mercado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V10l7-6 7 6v11"/><path d="M9 21v-6h6v6"/></svg>Precio por m&sup2; por zona</a></li>
       </ul>
     </li>
@@ -1081,11 +1081,11 @@ ${body}
     <div class="fh-col">
       <h5>Herramientas</h5>
       <ul>
-        <li><a href="/herramientas/valuador.html">Valuador</a></li>
-        <li><a href="/herramientas/calculadora-hipotecaria.html">Calculadora</a></li>
-        <li><a href="/herramientas/simulador-inversion.html">Simulador</a></li>
-        <li><a href="/herramientas/guia-compra.html">Gu&iacute;a de Compra</a></li>
-        <li><a href="/herramientas/datos-mercado.html">Datos de Mercado</a></li>
+        <li><a href="/valuador">Valuador</a></li>
+        <li><a href="/calculadora-hipotecaria">Calculadora</a></li>
+        <li><a href="/simulador-inversion">Simulador</a></li>
+        <li><a href="/guia-de-compra">Gu&iacute;a de Compra</a></li>
+        <li><a href="/datos-de-mercado">Datos de Mercado</a></li>
         <li><a href="/mercado.html">Precio por m&sup2; por zona</a></li>
         <li><a href="/blog/">Blog</a></li>
       </ul>

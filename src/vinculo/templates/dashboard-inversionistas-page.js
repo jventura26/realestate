@@ -74,7 +74,7 @@ function computeMarketStats(props) {
 function dashboardInversionistasPage(props) {
   const title = 'Datos de Mercado Inmobiliario en Guatemala 2026 | InmuHub';
   const desc = 'Precio promedio, rangos y distribución por zona del inventario real de propiedades activas en InmuHub.';
-  const canonical = '/herramientas/datos-mercado.html';
+  const canonical = '/datos-de-mercado';
   const stats = computeMarketStats(props || []);
 
   const schemaMarkup = {

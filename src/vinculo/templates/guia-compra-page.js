@@ -4,7 +4,7 @@ const { layout } = require('./layout');
 function guiaCompraPae() {
   const title = 'Guía Premium de Inversión Inmobiliaria | INMUHUB 2026';
   const desc = 'Cómo comprar propiedades sin errores costosos. Análisis de mercado, financiamiento, zonas y negociación.';
-  const canonical = '/herramientas/guia-compra.html';
+  const canonical = '/guia-de-compra';
   
   const schemaMarkup = {
     "@context": "https://schema.org",

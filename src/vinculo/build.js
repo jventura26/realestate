@@ -260,10 +260,10 @@ const urls = [
   { loc:'/registro-asesor.html', priority:'0.8', changefreq:'monthly' },
   { loc:'/dashboard.html', priority:'0.7', changefreq:'monthly' },
   ...brokerUrls,
-  { loc:'/herramientas/calculadora-hipotecaria.html', priority:'0.85', changefreq:'monthly' },
-  { loc:'/herramientas/valuador.html', priority:'0.85', changefreq:'monthly' },
-  { loc:'/herramientas/guia-compra.html', priority:'0.85', changefreq:'monthly' },
-  { loc:'/herramientas/datos-mercado.html', priority:'0.85', changefreq:'weekly' },
+  { loc:'/calculadora-hipotecaria', priority:'0.85', changefreq:'monthly' },
+  { loc:'/valuador', priority:'0.85', changefreq:'monthly' },
+  { loc:'/guia-de-compra', priority:'0.85', changefreq:'monthly' },
+  { loc:'/datos-de-mercado', priority:'0.85', changefreq:'weekly' },
   { loc:'/mercado.html', priority:'0.9', changefreq:'monthly' },
   ...zonaUrls,
   { loc:'/blog/', priority:'0.9', changefreq:'weekly' },
@@ -276,7 +276,7 @@ const src404 = require('path').join(__dirname, '404.html');
 if(fs.existsSync(src404)){fs.copyFileSync(src404, require('path').join(OUT,'404.html'));console.log(' 404.html');}
 
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
-write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN) + require('./enlaces').cleanLinkRedirects(props.concat(colegaProps))); console.log(' _redirects (+ enlaces limpios)');
+write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN) + require('./enlaces').cleanLinkRedirects(props.concat(colegaProps)) + ['# Herramientas con enlace limpio','/calculadora-hipotecaria  /herramientas/calculadora-hipotecaria  200','/valuador  /herramientas/valuador  200','/simulador-inversion  /herramientas/simulador-inversion  200','/guia-de-compra  /herramientas/guia-compra  200','/datos-de-mercado  /herramientas/datos-mercado  200',''].join('\n')); console.log(' _redirects (+ enlaces limpios)');
 
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
 const { simuladorInversionPage } = require('./templates/simulador-page');

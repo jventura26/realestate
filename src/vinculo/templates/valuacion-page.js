@@ -4,7 +4,7 @@ const { layout } = require('./layout');
 function valuacionPage() {
   const title = '¿Cuánto vale tu propiedad? | Valuador profesional Guatemala';
   const desc = 'Estima el valor de tu casa, apartamento o terreno en 20 zonas premium de Guatemala. Gratis y sin compromiso.';
-  const canonical = '/herramientas/valuador.html';
+  const canonical = '/valuador';
   
   const schemaMarkup = {
     "@context": "https://schema.org",
