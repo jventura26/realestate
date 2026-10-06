@@ -205,7 +205,74 @@ async function getValoresZonaTexto(env) {
   return txt;
 }
 __name(getValoresZonaTexto, "getValoresZonaTexto");
-async function buildWhatsAppSystemPrompt(env, catalogo) {
+// ---- Campanas de Meta Ads (Click to WhatsApp) ----
+// Mensajes aprobados por anuncio. Se puede reemplazar sin desplegar guardando un texto en KV "wa_campaigns".
+var DEFAULT_WA_CAMPAIGNS = [
+  "Campana activa: \"Zona-INNmueble | Vizcaya + Olmeca | Mensajes WhatsApp\" (Reels con boton de WhatsApp).",
+  "",
+  "ANUNCIO 1 -- \"Vizcaya - valor con criterio\":",
+  "- Propiedad: casa en Condominio Vizcaya, Km. 16.5 Carretera a El Salvador, Santa Catarina Pinula. 325 m2, 3 habitaciones, condominio cerrado con seguridad y jardines amplios. US$275,000.",
+  "- Idea central del anuncio: \"Hay zonas donde el valor no miente.\" El precio esta por debajo del rango promedio de su zona segun el analisis comparativo de Zona-INNmueble.",
+  "- Perfil probable: familia que busca seguridad y espacio verde, o comprador que valora pagar con criterio. Conecta con tranquilidad, seguridad y valor; si preguntan por que el precio, explica que es por la comparacion con la oferta publicada de la zona (precios publicados, no avaluo).",
+  "",
+  "ANUNCIO 2 -- \"Carretera a Olmeca - versatilidad con criterio\":",
+  "- Propiedad: casa a 2 km de la entrada a Olmeca, Carretera a El Salvador, Fraijanes. 400 m2, 4 habitaciones, frente a carretera; funciona para vivienda, negocio o inversion. US$320,000. Impuesto predial (IUSI) bajo.",
+  "- Idea central del anuncio: \"Una propiedad que puede ser hogar, negocio o inversion. La decision es suya, no nuestra.\"",
+  "- El anuncio dice \"precio negociable\": puedes confirmar con elegancia que el propietario esta abierto a escuchar propuestas serias, sin dar montos, porcentajes ni contraofertas -- eso lo platica un asesor. Esta es la unica excepcion a la regla 12.",
+  "- Lo clave aqui es saber el uso: vivir, negocio (local, oficina, bodega, comercio con frente a carretera) o inversion. Esa es la primera pregunta de calificacion."
+].join("\n");
+async function getWaCampaigns(env) {
+  try {
+    var custom = await env.DB.get("wa_campaigns");
+    if (custom && custom.trim()) return custom;
+  } catch (e) {}
+  return DEFAULT_WA_CAMPAIGNS;
+}
+__name(getWaCampaigns, "getWaCampaigns");
+var WA_REF_TTL = 60 * 60 * 24 * 30;
+async function rememberWaReferral(env, from, referral) {
+  if (!referral) return null;
+  var ref = {
+    headline: String(referral.headline || "").slice(0, 200),
+    body: String(referral.body || "").slice(0, 600),
+    source_id: String(referral.source_id || ""),
+    source_type: String(referral.source_type || ""),
+    source_url: String(referral.source_url || "").slice(0, 300),
+    ctwa_clid: String(referral.ctwa_clid || ""),
+    at: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  try { await env.DB.put("wa_ref:" + from, JSON.stringify(ref), { expirationTtl: WA_REF_TTL }); } catch (e) {}
+  return ref;
+}
+__name(rememberWaReferral, "rememberWaReferral");
+async function getWaReferral(env, from) {
+  try {
+    var raw = await env.DB.get("wa_ref:" + from);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+__name(getWaReferral, "getWaReferral");
+function adContextBlock(ref, isFirstReply, contactName) {
+  if (!ref) return "";
+  return [
+    "",
+    "ORIGEN DE ESTA CONVERSACION: la persona escribio desde un anuncio de Meta (Facebook o Instagram).",
+    contactName ? "Nombre de perfil de WhatsApp: " + String(contactName).split(" ")[0] + " (usalo solo si parece un nombre real de persona)." : "",
+    "Titulo del anuncio: " + (ref.headline || "(sin titulo)"),
+    "Texto del anuncio: " + (ref.body || "(sin texto)"),
+    "Como responder a quien viene de un anuncio (tiene prioridad sobre las reglas 10 y 18):",
+    "- Ya sabes que propiedad le intereso: la del anuncio. No le preguntes que busca en general ni le ofrezcas otras propiedades en el primer mensaje.",
+    isFirstReply
+      ? "- PRIMERA RESPUESTA (esta): saluda con calidez (usa su nombre si lo sabes), confirma la propiedad del anuncio por su nombre, aporta UN dato de valor que conecte con la idea del anuncio, incluye el link de su ficha del catalogo y cierra con UNA pregunta breve para calificar (si la busca para vivir, negocio o invertir, o para cuando). No incluyas la herramienta de valor por zona en este primer mensaje."
+      : "- Mantente en la propiedad del anuncio mientras la persona siga interesada en ella. Si pide otras opciones o la propiedad no le encaja, aplica la busqueda a la medida (regla 2).",
+    "- Si pregunta por visitas, horarios o precio final, un asesor de Zona-INNmueble le escribe para coordinarlo (regla 3).",
+    "- El tono debe ser coherente con el anuncio: sobrio, premium, sin presion."
+  ].join("\n");
+}
+__name(adContextBlock, "adContextBlock");
+async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
   var valoresTexto = await getValoresZonaTexto(env);
   var catalogoTexto = catalogo.length ? catalogo.map(function(p) {
     var precioTxt = String(p.precio || "").trim();
@@ -245,6 +312,10 @@ async function buildWhatsAppSystemPrompt(env, catalogo) {
     "18. HERRAMIENTA \"\u00BFCU\u00C1NTO VALE SU ZONA?\": en TODAS las conversaciones comparte una vez la herramienta gratuita https://zona-innmueble.com/valor-por-zona?utm_source=whatsapp, de preferencia en tu primera respuesta, integrada con naturalidad en una frase breve (por ejemplo: \"Si le sirve de referencia, aqu\u00ED puede consultar el valor por m\u00B2 de cualquier zona: <link>\"). \u00DAsala con m\u00E1s \u00E9nfasis cuando la persona quiere vender o rentar su propiedad, pregunta por precios o rentas de una zona, compara zonas para invertir o acaba de pedir una b\u00FAsqueda a la medida. No la repitas si ya la compartiste en la conversaci\u00F3n. Aclara que muestra precios publicados, no de cierre. Si la persona es propietaria, ofr\u00E9cele adem\u00E1s un an\u00E1lisis personalizado de su propiedad con un asesor.",
     "19. VALORES DE REFERENCIA POR ZONA: abajo tienes los valores por zona que publica Zona-INNmueble (si el bloque viene vac\u00EDo, no des cifras). \u00DAsalos solo cuando pregunten por el valor del metro cuadrado, la renta t\u00EDpica o el rendimiento de una zona, o cuando comparen zonas. Da la cifra t\u00EDpica redondeada y, si ayuda, el rango; di siempre que son precios publicados (no de cierre ni un aval\u00FAo). Nunca los uses para valuar una propiedad espec\u00EDfica de la persona: para eso ofrece el an\u00E1lisis con un asesor. Nunca los presentes como propiedades disponibles. Si la zona no aparece, no inventes: ofrece el an\u00E1lisis con un asesor.",
     "20. MARCA INTERNA: cada vez que ofrezcas o confirmes una b\u00FAsqueda a la medida (regla 2), agrega al final de tu mensaje, en una l\u00EDnea aparte, exactamente el texto [BUSQUEDA_MEDIDA]. Es una marca interna que el sistema quita antes de enviar el mensaje; nunca la expliques ni la uses en otro caso.",
+    "",
+    "CAMPANAS ACTIVAS EN META ADS (mensajes aprobados; si alguien pregunta por estas propiedades, se coherente con esto):",
+    await getWaCampaigns(env),
+    adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : "",
     "",
     "VALORES DE REFERENCIA POR ZONA (precios publicados, no de cierre):",
     valoresTexto || "(sin datos disponibles en este momento)",
@@ -405,6 +476,19 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo, o
     if (signals.presupuesto && lead.presupuesto !== signals.presupuesto) { lead.presupuesto = signals.presupuesto; changed = true; }
     if (propMention && lead.propiedad !== propMention) { lead.propiedad = propMention; changed = true; }
     if (contactName && lead.nombre === "Contacto WhatsApp" && contactName !== lead.nombre) { lead.nombre = contactName; changed = true; }
+    if (opts.adRef && !lead.ad_headline) {
+      lead.fuente = "Meta Ads \u00B7 WhatsApp";
+      lead.source = "Meta Ads WhatsApp";
+      lead.ad_headline = opts.adRef.headline || "";
+      lead.ad_id = opts.adRef.source_id || "";
+      lead.ctwa_clid = opts.adRef.ctwa_clid || "";
+      lead.campana = "Vizcaya + Olmeca";
+      var adProp = matchCatalogPropertyMention(catalogo, (opts.adRef.headline || "") + " " + (opts.adRef.body || ""));
+      if (adProp && !lead.propiedad) lead.propiedad = adProp;
+      lead.etiquetas = Array.isArray(lead.etiquetas) ? lead.etiquetas : [];
+      if (lead.etiquetas.indexOf("Anuncio Meta") < 0) lead.etiquetas.push("Anuncio Meta");
+      changed = true;
+    }
     var nuevaBusquedaMedida = false;
     if (opts.busquedaMedida && !lead.busqueda_medida) {
       lead.busqueda_medida = true;
@@ -996,33 +1080,35 @@ async function notifyBusquedaMedida(env, from, lead) {
   }
 }
 __name(notifyBusquedaMedida, "notifyBusquedaMedida");
-async function notifyLeadAlert(env, from, contactName, userText) {
+async function notifyLeadAlert(env, from, contactName, userText, adRef) {
   try {
     var alertPhone = env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT;
     if (!alertPhone || alertPhone === from) return;
     var nombreMostrar = contactName || ("+" + from);
     var textoCorto = String(userText || "").slice(0, 300);
-    var alertText = "Nuevo mensaje en WhatsApp de " + nombreMostrar + " (+" + from + "):\n\"" + textoCorto + "\"";
+    var alertText = "Nuevo mensaje en WhatsApp de " + nombreMostrar + " (+" + from + ")" + (adRef ? " desde el anuncio \u00AB" + (adRef.headline || "Meta Ads") + "\u00BB" : "") + ":\n\"" + textoCorto + "\"";
     await sendWhatsAppMessage(env, alertPhone, alertText);
   } catch (eAlert) {
     await logWaError(env, "notifyLeadAlert", eAlert);
   }
 }
 __name(notifyLeadAlert, "notifyLeadAlert");
-async function processWhatsAppTurn(env, from, userText, contactName) {
+async function processWhatsAppTurn(env, from, userText, contactName, referral) {
   var catalogo = await buildWhatsAppCatalogContext(env);
-  notifyLeadAlert(env, from, contactName, userText).catch(function() {});
+  var adRef = referral ? await rememberWaReferral(env, from, referral) : await getWaReferral(env, from);
+  notifyLeadAlert(env, from, contactName, userText, referral ? adRef : null).catch(function() {});
   var paused = await isAiPausedForHuman(env, from);
   if (paused) {
     var pausedHistory = await getWaHistory(env, from);
     pausedHistory.push({ role: "user", content: userText });
     await saveWaHistory(env, from, pausedHistory);
     var pausedConvoText = pausedHistory.map(function(h) { return h.content; }).join(" ");
-    await upsertWhatsAppLead(env, from, contactName, pausedConvoText, catalogo);
+    await upsertWhatsAppLead(env, from, contactName, pausedConvoText, catalogo, { adRef });
     return;
   }
   var history = await getWaHistory(env, from);
-  var systemPrompt = await buildWhatsAppSystemPrompt(env, catalogo);
+  var isFirstReply = !history.some(function(h) { return h.role === "assistant"; });
+  var systemPrompt = await buildWhatsAppSystemPrompt(env, catalogo, adRef ? { ref: adRef, isFirstReply: isFirstReply || !!referral, contactName: contactName } : null);
   var fillerTimer = setTimeout(function() {
     sendWhatsAppMessage(env, from, WA_FILLER_MESSAGE).catch(function() {});
   }, WA_FILLER_TIMEOUT_MS);
@@ -1037,15 +1123,17 @@ async function processWhatsAppTurn(env, from, userText, contactName) {
   if (violatesSchedulingGuardrail(reply)) {
     reply = WA_SCHEDULING_GUARDRAIL_MESSAGE;
   }
-  reply = ensureValorZonaLink(reply, history);
+  // A quien viene de un anuncio no se le agrega la herramienta en la primera respuesta.
+  if (!(adRef && (isFirstReply || referral))) reply = ensureValorZonaLink(reply, history);
   await sendWhatsAppMessage(env, from, reply);
-  maybeSendRecommendedPhotos(env, from, reply, catalogo, history).catch(function() {});
+  // Si viene de un anuncio, la foto acompana la primera respuesta aunque la propiedad ya se haya nombrado.
+  maybeSendRecommendedPhotos(env, from, reply, catalogo, (adRef && isFirstReply) ? [] : history).catch(function() {});
   maybeSendPropertyMedia(env, from, userText, reply, catalogo, history).catch(function() {});
   history.push({ role: "user", content: userText });
   history.push({ role: "assistant", content: reply });
   await saveWaHistory(env, from, history);
   var convoText = history.map(function(h) { return h.content; }).join(" ");
-  await upsertWhatsAppLead(env, from, contactName, convoText, catalogo, { busquedaMedida });
+  await upsertWhatsAppLead(env, from, contactName, convoText, catalogo, { busquedaMedida, adRef });
 }
 __name(processWhatsAppTurn, "processWhatsAppTurn");
 var WaConversationDO = class {
@@ -1056,7 +1144,7 @@ var WaConversationDO = class {
   async fetch(request) {
     try {
       var body = await request.json();
-      await processWhatsAppTurn(this.env, body.from, body.userText, body.contactName);
+      await processWhatsAppTurn(this.env, body.from, body.userText, body.contactName, body.referral || null);
       return new Response("ok");
     } catch (e) {
       await logWaError(this.env, "WaConversationDO.fetch", e);
@@ -1101,10 +1189,10 @@ async function handleWhatsAppMessage(body, env) {
               await stub.fetch("https://wa-convo.internal/process", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ from, userText, contactName })
+                body: JSON.stringify({ from, userText, contactName, referral: msg.referral || null })
               });
             } else {
-              await processWhatsAppTurn(env, from, userText, contactName);
+              await processWhatsAppTurn(env, from, userText, contactName, msg.referral || null);
             }
           } catch (eDispatch) {
             await logWaError(env, "handleWhatsAppMessage.dispatch", eDispatch);
