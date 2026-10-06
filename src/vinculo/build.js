@@ -113,6 +113,7 @@ allProps = allProps.filter(p => {
 });
 allProps.sort((a, b) => (b.destacada ? 1 : 0) - (a.destacada ? 1 : 0));
 const props = allProps;
+require('./enlaces').assignCleanLinks(props, DOMAIN);
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 
@@ -261,7 +262,7 @@ const src404 = require('path').join(__dirname, '404.html');
 if(fs.existsSync(src404)){fs.copyFileSync(src404, require('path').join(OUT,'404.html'));console.log(' 404.html');}
 
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
-write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN)); console.log(' _redirects');
+write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN) + require('./enlaces').cleanLinkRedirects(props)); console.log(' _redirects (+ enlaces limpios)');
 
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
 const { simuladorInversionPage } = require('./templates/simulador-page');

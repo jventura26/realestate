@@ -727,7 +727,11 @@ function detailPage(prop, allProps) {
   const exclHTML = prop.esExclusiva ? `<span class="zp-badge zp-badge-gold">Exclusiva</span>` : '';
 
   // Sidebar WA share
-  const propUrl = `https://inmuhub.com/propiedades/${esc(prop.slug||prop.id||'')}.html`;
+  const propUrl = prop.cleanUrl ? esc(prop.cleanUrl) : `https://inmuhub.com/propiedades/${esc(prop.slug||prop.id||'')}.html`;
+  const shortUrl = prop.shortUrl || propUrl;
+  const ogOper = String(prop.operacion||'').toLowerCase().split('/').join(' / ');
+  const ogLead = [[prop.tipo, ogOper].filter(Boolean).join(' en '), prop.priceFormatted||prop.precio, prop.habitaciones ? prop.habitaciones + ' hab.' : '', prop.municipio].filter(Boolean).join(' \u00b7 ');
+  const ogDesc = (ogLead + (cleanDesc && cleanDesc !== prop.titulo ? '. ' + cleanDesc : '')).substring(0,180);
   const waMsg = encodeURIComponent(`Hola, me interesa esta propiedad en INMUHUB:\n${prop.titulo}\n${propUrl}`);
   const waHref = `https://wa.me/?text=${waMsg}`;
   // Schema RealEstateListing
@@ -815,7 +819,7 @@ function detailPage(prop, allProps) {
 <meta name="apple-mobile-web-app-title" content="InmuHub">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(prop.titulo||'Propiedad')} | INMUHUB.COM">
-<meta property="og:description" content="${esc((cleanDesc||prop.titulo||'').substring(0,160))}">
+<meta property="og:description" content="${esc(ogDesc)}">
 <meta property="og:url" content="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
 <meta property="og:image" content="${esc(prop.mainImage||'')}">
 <meta property="og:locale" content="es_GT">
@@ -1063,7 +1067,7 @@ ${mobGalHTML}${galHTML}
         <a href="https://wa.me/?text=${encodeURIComponent(prop.titulo+'\n'+propUrl)}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid #25D366;border-radius:10px;font-size:13px;font-weight:600;color:#25D366;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#25D366';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#25D366'"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>
         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(propUrl)}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid #1877F2;border-radius:10px;font-size:13px;font-weight:600;color:#1877F2;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#1877F2';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#1877F2'"><i class="ti ti-brand-facebook"></i> Facebook</a>
       </div>
-      <button class="zp-share-btn" onclick="navigator.clipboard.writeText(location.href).then(function(){var b=event.target.closest('.zp-share-btn');b.innerHTML='<i class=\'ti ti-check\'></i> Copiado';setTimeout(function(){b.innerHTML='<i class=\'ti ti-link\'></i> Copiar enlace'},2000)})">
+      <button class="zp-share-btn" onclick="navigator.clipboard.writeText('${shortUrl}').then(function(){var b=event.target.closest('.zp-share-btn');b.innerHTML='<i class=\'ti ti-check\'></i> Copiado';setTimeout(function(){b.innerHTML='<i class=\'ti ti-link\'></i> Copiar enlace'},2000)})">
         <i class="ti ti-link"></i> Copiar enlace
       </button>
 
@@ -1072,6 +1076,7 @@ ${mobGalHTML}${galHTML}
       <hr class="zp-divider">
 
       ${prop.codigo ? `<div class="zp-code">Código <span>${esc(prop.codigo)}</span></div>` : ''}
+      ${prop.shortUrl ? `<div class="zp-code">Enlace <span style="user-select:all">${esc(prop.shortUrl.replace('https://',''))}</span></div>` : ''}
 
       ${(prop.iusi || prop.cuotaMantenimiento) ? `<div style="border-top:1px solid #eef0f3;padding-top:14px;margin-top:14px">
         ${prop.iusi ? `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:.78rem;color:#64748b">IUSI</span><span style="font-size:.82rem;font-weight:600;color:#0a1628">${esc(prop.iusi)}</span></div>` : ''}
