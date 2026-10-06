@@ -1180,7 +1180,8 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
           <div class="side-card">
             <div class="side-card-title"><i class="ti ti-world"></i> Publicar en</div>
             <label class="sitio-row"><input type="checkbox" id="sZona" checked><div><div class="sitio-label">Zona INNmueble</div><div class="sitio-url">zona-innmueble.com</div></div></label>
-            <label class="sitio-row"><input type="checkbox" id="sInmu" checked><div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div></label>
+            <label class="sitio-row"><input type="checkbox" id="sInmu" checked onchange="if(this.checked)document.getElementById('sColegas').checked=false"><div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div></label>
+            <label class="sitio-row"><input type="checkbox" id="sColegas" onchange="if(this.checked)document.getElementById('sInmu').checked=false"><div><div class="sitio-label">InmuHub &middot; solo colegas</div><div class="sitio-url">Enlace privado, fuera del cat&aacute;logo y de Google</div></div></label>
           </div>
 
           <div class="side-card">
@@ -1268,6 +1269,10 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
 <div class="toast" id="toast"></div>
 
 <script>
+// Codigo corto de inmuhub: mismo calculo que src/vinculo/enlaces.js (FNV-1a sobre el id)
+function ihCode(id){var A='23456789abcdefghjkmnpqrstuvwxyz',h=0x811c9dc5,s=String(id),o='';for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}for(var j=0;j<4;j++){o+=A[h%A.length];h=Math.floor(h/A.length)||((h^0x9e3779b9)>>>0);}return o;}
+function ihCopy(el){var t='https://'+el.textContent;var done=function(){var o=el.textContent;el.textContent='Copiado';setTimeout(function(){el.textContent=o},1500)};if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,function(){prompt('Copia el enlace:',t)});else prompt('Copia el enlace:',t);}
+
 const API = 'https://zona-inmu.tours-virtuales-gt.workers.dev';
 let props = [];
 let leads = [];
@@ -1885,7 +1890,7 @@ function buildTable(data, sortable) {
       <td>
         ${p.destacada?'<span class="star-cell"><i class="ti ti-star-filled"></i></span> ':''}<div class="prop-name">${esc(p.titulo||'')}</div>
         <div class="prop-loc">${esc(p.municipio||p.zona||'')}</div>
-        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}</div>
+        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}${(p.sitios&&p.sitios.includes('colegas'))?'<span class="site-dot ih" style="background:#0E1F3A;color:#C9A96E" title="Solo colegas">IH&middot;C</span>':''}${(!p.sitios||p.sitios.includes('inmu')||p.sitios.includes('colegas'))&&p.id?'<span class="ih-link" title="Copiar enlace de inmuhub" onclick="event.stopPropagation();ihCopy(this)" style="margin-left:6px;font:500 11px/1 ui-monospace,monospace;color:#8a93a3;cursor:copy">inmuhub.com/p/'+ihCode(p.id)+'</span>':''}</div>
       </td>
       <td>${esc(p.tipo||'—')}</td>
       <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>
@@ -2756,6 +2761,7 @@ function clearForm() {
   ['pcHidePrecio','pcHideGallery','pcHideDireccion','pcHideSpecs','pcHideContacto','pcHideCalc'].forEach(id=>{const el=document.getElementById(id);if(el){el.checked=false;el.closest('.priv-toggle').classList.remove('active');}});
   document.getElementById('sZona').checked=true;
   document.getElementById('sInmu').checked=true;
+  document.getElementById('sColegas').checked=false;
   document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.char-item').classList.remove('checked');});
   setStatus('Activa'); setCinta(''); galUrls=[]; renderGallery(); descBloques=[]; renderDescBlocks();
   const imgPrev=document.getElementById('imgPreview');
@@ -2790,6 +2796,7 @@ function loadForm(p) {
   document.getElementById('fPrivada').checked=!!p.privada;
   document.getElementById('sZona').checked=p.sitios?p.sitios.includes('zona'):true;
   document.getElementById('sInmu').checked=p.sitios?p.sitios.includes('inmu'):true;
+  document.getElementById('sColegas').checked=!!(p.sitios&&p.sitios.includes('colegas'));
   setStatus(p.estado||'Activa'); setCinta(p.cinta||'');
   // Load privacy config
   if(p.privConfig){
@@ -2848,6 +2855,7 @@ async function saveProp() {
   const sitios=[];
   if(document.getElementById('sZona').checked)sitios.push('zona');
   if(document.getElementById('sInmu').checked)sitios.push('inmu');
+  if(document.getElementById('sColegas').checked&&!document.getElementById('sInmu').checked)sitios.push('colegas');
   const g=id=>{const el=document.getElementById(id);return el?el.value.trim():'';};
   const data={
     titulo,precio:g('fPrecio'),codigo:g('fCodigo'),

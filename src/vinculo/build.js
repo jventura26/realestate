@@ -108,12 +108,17 @@ const brokers = brokersData || [];
 let allProps = kvData ? normalizeKV(kvData) : parseProperties(CSV);
 allProps = allProps.filter(p => {
   if (p.estado && p.estado !== 'Activa') return false;
-  if (p.sitios && Array.isArray(p.sitios) && !p.sitios.includes('inmu')) return false;
+  if (p.sitios && Array.isArray(p.sitios) && !p.sitios.includes('inmu') && !p.sitios.includes('colegas')) return false;
   return true;
 });
 allProps.sort((a, b) => (b.destacada ? 1 : 0) - (a.destacada ? 1 : 0));
-const props = allProps;
-require('./enlaces').assignCleanLinks(props, DOMAIN);
+// Publicas: aparecen en catalogo, zonas, mapa y sitemap.
+// Solo colegas: tienen ficha y enlace limpio, pero no se listan en ningun lado y no se indexan.
+const isColegaOnly = p => Array.isArray(p.sitios) && p.sitios.includes('colegas') && !p.sitios.includes('inmu');
+const props = allProps.filter(p => !isColegaOnly(p));
+const colegaProps = allProps.filter(isColegaOnly);
+require('./enlaces').assignCleanLinks(props.concat(colegaProps), DOMAIN);
+console.log(` ${colegaProps.length} propiedades solo para colegas`);
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
 
@@ -127,6 +132,15 @@ write(path.join(OUT,'propiedades.html'), catalogPage(props)); console.log(' prop
 
 props.forEach(p => write(path.join(PROPS,`${p.slug}.html`), detailPage(p, props)));
 console.log(` ${props.length} detail pages`);
+colegaProps.forEach(p => {
+  const banner = '<div style="background:#0E1F3A;color:#F3F5F8;font:500 13px/1.5 system-ui,sans-serif;text-align:center;padding:9px 16px">Ficha para asesores &middot; Esta propiedad no aparece en el cat&aacute;logo p&uacute;blico de inmuhub</div>';
+  let html = detailPage(p, props)
+    .replace(/<meta name="robots"[^>]*>/gi, '')
+    .replace(/<head([^>]*)>/i, '<head$1>\n<meta name="robots" content="noindex, nofollow">')
+    .replace(/<body([^>]*)>/i, '<body$1>' + banner);
+  write(path.join(PROPS, `${p.slug}.html`), html);
+});
+if (colegaProps.length) console.log(` ${colegaProps.length} fichas solo colegas`);
 
 const zonas = [...new Set(props.map(p => p.municipio).filter(Boolean))];
 zonas.forEach(zona => {
@@ -262,7 +276,7 @@ const src404 = require('path').join(__dirname, '404.html');
 if(fs.existsSync(src404)){fs.copyFileSync(src404, require('path').join(OUT,'404.html'));console.log(' 404.html');}
 
 write(path.join(OUT,'robots.txt'), generateRobots(DOMAIN)); console.log(' robots.txt');
-write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN) + require('./enlaces').cleanLinkRedirects(props)); console.log(' _redirects (+ enlaces limpios)');
+write(path.join(OUT,'_redirects'), generateRedirects(props, DOMAIN) + require('./enlaces').cleanLinkRedirects(props.concat(colegaProps))); console.log(' _redirects (+ enlaces limpios)');
 
 const { mortgageCalculatorPage } = require('./templates/mortgage-calculator-page');
 const { simuladorInversionPage } = require('./templates/simulador-page');
