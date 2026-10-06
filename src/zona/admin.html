@@ -1182,6 +1182,14 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
             <label class="sitio-row"><input type="checkbox" id="sZona" checked><div><div class="sitio-label">Zona INNmueble</div><div class="sitio-url">zona-innmueble.com</div></div></label>
             <label class="sitio-row"><input type="checkbox" id="sInmu" checked onchange="if(this.checked)document.getElementById('sColegas').checked=false"><div><div class="sitio-label">InmuHub</div><div class="sitio-url">inmuhub.com</div></div></label>
             <label class="sitio-row"><input type="checkbox" id="sColegas" onchange="if(this.checked)document.getElementById('sInmu').checked=false"><div><div class="sitio-label">InmuHub &middot; solo colegas</div><div class="sitio-url">Enlace privado, fuera del cat&aacute;logo y de Google</div></div></label>
+            <div id="ihLinksBox" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:#0E1F3A;color:#F3F5F8">
+              <div style="font:600 12px/1.2 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#C9A96E;margin-bottom:8px">Enlaces para compartir</div>
+              <div style="font-size:12px;opacity:.75;margin-bottom:4px">Para colegas (sin formulario ni WhatsApp)</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><code id="ihLinkRed" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:#fff"></code><button type="button" onclick="ihCopyText(document.getElementById('ihLinkRed').textContent,this)" style="padding:6px 10px;border:0;border-radius:6px;background:#C9A96E;color:#0E1F3A;font-weight:700;cursor:pointer">Copiar</button></div>
+              <div style="font-size:12px;opacity:.75;margin-bottom:4px">Para clientes</div>
+              <div style="display:flex;gap:8px;align-items:center"><code id="ihLinkPub" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:#fff"></code><button type="button" onclick="ihCopyText(document.getElementById('ihLinkPub').textContent,this)" style="padding:6px 10px;border:1px solid #C9A96E;border-radius:6px;background:transparent;color:#C9A96E;font-weight:700;cursor:pointer">Copiar</button></div>
+              <div style="font-size:11px;opacity:.6;margin-top:8px">Si la propiedad es nueva, los enlaces funcionan unos 2 minutos despu&eacute;s de guardar.</div>
+            </div>
           </div>
 
           <div class="side-card">
@@ -1271,7 +1279,8 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
 <script>
 // Codigo corto de inmuhub: mismo calculo que src/vinculo/enlaces.js (FNV-1a sobre el id)
 function ihCode(id){var A='23456789abcdefghjkmnpqrstuvwxyz',h=0x811c9dc5,s=String(id),o='';for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}for(var j=0;j<4;j++){o+=A[h%A.length];h=Math.floor(h/A.length)||((h^0x9e3779b9)>>>0);}return o;}
-function ihCopy(el){var t='https://'+el.textContent;var done=function(){var o=el.textContent;el.textContent='Copiado';setTimeout(function(){el.textContent=o},1500)};if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,function(){prompt('Copia el enlace:',t)});else prompt('Copia el enlace:',t);}
+function ihCopyText(t,btn){t='https://'+String(t).replace(/^https?:\/\//,'');var ok=function(){if(!btn)return;var o=btn.innerHTML;btn.innerHTML='Copiado &#10003;';setTimeout(function(){btn.innerHTML=o},1600)};if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){prompt('Copia el enlace:',t)});else prompt('Copia el enlace:',t);}
+function ihCopy(el){var u=el.querySelector('.ih-url');ihCopyText(u?u.textContent:el.textContent,el.firstElementChild||el);}
 
 const API = 'https://zona-inmu.tours-virtuales-gt.workers.dev';
 let props = [];
@@ -1890,7 +1899,7 @@ function buildTable(data, sortable) {
       <td>
         ${p.destacada?'<span class="star-cell"><i class="ti ti-star-filled"></i></span> ':''}<div class="prop-name">${esc(p.titulo||'')}</div>
         <div class="prop-loc">${esc(p.municipio||p.zona||'')}</div>
-        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}${(p.sitios&&p.sitios.includes('colegas'))?'<span class="site-dot ih" style="background:#0E1F3A;color:#C9A96E" title="Solo colegas">IH&middot;C</span>':''}${(!p.sitios||p.sitios.includes('inmu')||p.sitios.includes('colegas'))&&p.id?'<span class="ih-link" title="Copiar enlace para colegas" onclick="event.stopPropagation();ihCopy(this)" style="margin-left:6px;font:500 11px/1 ui-monospace,monospace;color:#8a93a3;cursor:copy">red.inmuhub.com/'+ihCode(p.id)+'</span>':''}</div>
+        <div class="site-badges">${(!p.sitios||p.sitios.includes('zona'))?'<span class="site-dot zi">ZI</span>':''}${(!p.sitios||p.sitios.includes('inmu'))?'<span class="site-dot ih">IH</span>':''}${(p.sitios&&p.sitios.includes('colegas'))?'<span class="site-dot ih" style="background:#0E1F3A;color:#C9A96E" title="Solo colegas">IH&middot;C</span>':''}${(!p.sitios||p.sitios.includes('inmu')||p.sitios.includes('colegas'))&&p.id?'<span class="ih-link" title="Copiar enlace para colegas" onclick="event.stopPropagation();ihCopy(this)" style="display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:4px 10px;border-radius:999px;background:#0E1F3A;color:#F3F5F8;font:600 11.5px/1.3 system-ui,sans-serif;cursor:pointer;white-space:nowrap"><span style="color:#C9A96E">&#128279; Copiar enlace colegas</span><span class="ih-url" style="font-family:ui-monospace,monospace;font-weight:500;opacity:.85">red.inmuhub.com/'+ihCode(p.id)+'</span></span>':''}</div>
       </td>
       <td>${esc(p.tipo||'—')}</td>
       <td class="price-cell">${esc(p.priceFormatted||p.precio||'—')}</td>
@@ -2762,6 +2771,7 @@ function clearForm() {
   document.getElementById('sZona').checked=true;
   document.getElementById('sInmu').checked=true;
   document.getElementById('sColegas').checked=false;
+  (function(){var b=document.getElementById('ihLinksBox');if(b)b.style.display='none';})();
   document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.char-item').classList.remove('checked');});
   setStatus('Activa'); setCinta(''); galUrls=[]; renderGallery(); descBloques=[]; renderDescBlocks();
   const imgPrev=document.getElementById('imgPreview');
@@ -2797,6 +2807,7 @@ function loadForm(p) {
   document.getElementById('sZona').checked=p.sitios?p.sitios.includes('zona'):true;
   document.getElementById('sInmu').checked=p.sitios?p.sitios.includes('inmu'):true;
   document.getElementById('sColegas').checked=!!(p.sitios&&p.sitios.includes('colegas'));
+  (function(){var box=document.getElementById('ihLinksBox');if(!box)return;var onIH=!p.sitios||p.sitios.includes('inmu')||p.sitios.includes('colegas');if(!p.id||!onIH){box.style.display='none';return;}document.getElementById('ihLinkRed').textContent='red.inmuhub.com/'+ihCode(p.id);document.getElementById('ihLinkPub').textContent='inmuhub.com/p/'+ihCode(p.id);box.style.display='block';})();
   setStatus(p.estado||'Activa'); setCinta(p.cinta||'');
   // Load privacy config
   if(p.privConfig){
