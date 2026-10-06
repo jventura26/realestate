@@ -2,7 +2,7 @@
 import { html, raw, formatMoney, formatNumber, parseJsonArray } from './html.js';
 import {
   layout, CHECK, WA_ICON, GLOBE, zoneOptions, valueBar, utmInputs, PRIVACY_NOTE, HONEYPOT, placeLabel, propertyCard,
-  renderDescription, lockBlock,
+  renderDescription, lockBlock, imgUrl, imgSrcset,
 } from './views.js';
 
 export const KIND_LABELS = { apartamentos: 'Apartamentos', casas: 'Casas', lotes: 'Lotes', oficinas: 'Oficinas', mixto: 'Uso mixto' };
@@ -58,7 +58,7 @@ export function projectCard(j) {
   return html`<article class="card">
   <a class="card-link" href="/proyecto/${j.slug}">
     <div class="card-media">
-      ${img ? html`<img src="${img}" alt="${j.name}" loading="lazy">` : html`<div class="ph">Sin fotografía</div>`}
+      ${img ? html`<img src="${imgUrl(img, 800)}" alt="${j.name}" loading="lazy" decoding="async" width="800" height="600">` : html`<div class="ph">Sin fotografía</div>`}
       <div class="badges">
         <span class="badge badge-ink">${STAGE_LABELS[j.stage]}</span>
         ${featured ? html`<span class="badge">${CHECK}Destacado</span>` : ''}
@@ -159,7 +159,7 @@ export function projectPage(env, { j, reading, utm, error, account = null }) {
   const body = html`
 <article class="ficha">
   <div class="gallery" aria-label="Fotografías">
-    ${images.length ? images.map((src, i) => html`<img src="${src}" alt="${j.name} — imagen ${i + 1}" ${i ? raw('loading="lazy"') : ''}>`) : html`<div class="ph">Sin fotografía</div>`}
+    ${images.length ? images.map((src, i) => html`<img src="${imgUrl(src, 1200)}"${imgSrcset(src) ? raw(` srcset="${imgSrcset(src)}" sizes="(min-width: 1024px) 48vw, (min-width: 720px) 70vw, 100vw"`) : ''} alt="${j.name} — imagen ${i + 1}" width="1200" height="800" ${i ? raw('loading="lazy" decoding="async"') : raw('fetchpriority="high"')}>`) : html`<div class="ph">Sin fotografía</div>`}
   </div>
   ${images.length > 1 ? html`<p class="wrap small muted gallery-hint">${images.length} imágenes · deslice para ver más. Las imágenes de proyectos en preventa pueden ser renders.</p>` : ''}
   <div class="wrap ficha-grid">

@@ -2,13 +2,24 @@ import {
   html, raw, escape, formatMoney, formatNumber, TYPE_LABELS, OPERATION_LABELS, POSITION_LABELS, firstImage, parseJsonArray,
 } from './html.js';
 import { commuteFor, mapsLink } from './traslados.js';
+import { POI_GROUPS } from './cercanos.js';
 
 export const CHECK = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>');
 export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.5A8.4 8.4 0 1 1 21 11.5z"/></svg>');
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
-export const ASSET_VERSION = '2026-10-06d';
+// Imágenes de ImageKit: se piden al ancho necesario (más livianas en celular).
+export function imgUrl(src, w) {
+  if (!src || !/^https:\/\/ik\.imagekit\.io\//.test(src)) return src;
+  return src + (src.includes('?') ? '&' : '?') + `tr=w-${w},q-78`;
+}
+export function imgSrcset(src, widths = [480, 800, 1200]) {
+  if (!src || !/^https:\/\/ik\.imagekit\.io\//.test(src)) return null;
+  return widths.map((w) => `${imgUrl(src, w)} ${w}w`).join(', ');
+}
+
+export const ASSET_VERSION = '2026-10-06e';
 
 // ---------- Layout ----------
 
@@ -16,6 +27,11 @@ export function layout(env, { title, description, image, path = '/', body, noind
   const site = env.SITE_URL || '';
   const fullTitle = title ? `${title} · inmuhub` : 'inmuhub · Portal inmobiliario curado en Guatemala';
   const desc = description || 'Propiedades revisadas en Guatemala, con lectura de valor por zona y contacto directo por WhatsApp.';
+  // Imagen para compartir: la de la página o una imagen de marca de 1200×630 según la sección.
+  const ogDefault = /^\/(valor|zona)/.test(path) ? 'valor' : /^\/servicios/.test(path) ? 'servicios'
+    : /^\/(proyecto|comparar|desarrolladoras)/.test(path) ? 'proyectos' : /^\/verificacion/.test(path) ? 'verificacion' : 'inmuhub';
+  const ogImage = image && image !== '/portada.webp' ? image : `/og/${ogDefault}.jpg`;
+  const ogIsDefault = ogImage.startsWith('/og/');
   const pixel = env.META_PIXEL_ID
     ? raw(`<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${escape(env.META_PIXEL_ID)}');fbq('track','PageView');document.addEventListener('submit',function(e){if(e.target.dataset.lead)fbq('track','Lead');});</script>`)
     : '';
@@ -30,14 +46,20 @@ ${noindex ? raw('<meta name="robots" content="noindex">') : ''}
 <link rel="canonical" href="${site + path}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="inmuhub">
-<meta property="og:title" content="${title || 'inmuhub'}">
+<meta property="og:locale" content="es_GT">
+<meta property="og:title" content="${title ? `${title} · inmuhub` : 'inmuhub · Portal inmobiliario curado en Guatemala'}">
 <meta property="og:description" content="${desc}">
 <meta property="og:url" content="${site + path}">
-${image ? html`<meta property="og:image" content="${image.startsWith('/') ? site + image : image}">` : ''}
+<meta property="og:image" content="${ogImage.startsWith('/') ? site + ogImage : ogImage}">
+${ogIsDefault ? raw('<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:type" content="image/jpeg">') : ''}
+<meta property="og:image:alt" content="${title || 'inmuhub'}">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="preload" href="/fonts/fraunces-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/manrope-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0F1B2D">
 <link rel="stylesheet" href="/portal.css?v=${ASSET_VERSION}">
 ${pixel}
 </head>
@@ -84,7 +106,7 @@ ${pixel}
       <p class="muted">Portal inmobiliario curado en Guatemala.</p>
     </div>
     <div class="footer-cols">
-      <div><strong>inmuhub</strong><a href="/inmuhub">Qué es inmuhub</a><a href="/servicios">Servicios</a><a href="/mercado">Datos de mercado</a></div>
+      <div><strong>inmuhub</strong><a href="/inmuhub">Qué es inmuhub</a><a href="/verificacion">Cómo verificamos</a><a href="/servicios">Servicios</a><a href="/mercado">Datos de mercado</a></div>
       <div><strong>Explorar</strong><a href="/propiedades">Propiedades</a><a href="/proyectos">Proyectos nuevos</a><a href="/comparar">Comparar proyectos</a><a href="/valor">Valor por zona</a></div>
       <div><strong>Publicar</strong><a href="/publicar">Propietarios</a><a href="/planes">Inmobiliarias</a><a href="/desarrolladoras">Desarrolladoras</a></div>
       <div><strong>Mi cuenta</strong><a href="/ingresar">Ingresar</a><a href="/registro?tipo=comprador">Cuenta de comprador</a><a href="/registro?tipo=propietario">Cuenta de propietario</a><a href="/registro?tipo=asesor">Cuenta de asesor</a></div>
@@ -93,6 +115,7 @@ ${pixel}
   </div>
   <div class="wrap footer-legal muted">© ${new Date().getFullYear()} inmuhub. Los rangos de valor son referenciales y no sustituyen un avalúo profesional.</div>
 </footer>
+<script src="/site.js?v=${ASSET_VERSION}" defer></script>
 ${scripts.map((src) => html`<script src="${src}?v=${ASSET_VERSION}" defer></script>`)}
 </body>
 </html>`;
@@ -103,6 +126,15 @@ ${scripts.map((src) => html`<script src="${src}?v=${ASSET_VERSION}" defer></scri
 export function zoneOptions(zones, selected, { includeAll = true } = {}) {
   return html`${includeAll ? html`<option value="">Todas</option>` : ''}${zones.map(
     (z) => html`<option value="${z.slug}"${selected === z.slug ? raw(' selected') : ''}>${z.name}</option>`
+  )}`;
+}
+
+// Presupuesto máximo en dólares (las propiedades se comparan en quetzales al tipo de cambio del portal).
+export const BUDGETS = [150000, 250000, 400000, 600000, 1000000];
+function budgetOptions(selected) {
+  const sel = Number(selected) || 0;
+  return html`<option value="">Cualquier precio</option>${BUDGETS.map(
+    (b) => html`<option value="${b}"${sel === b ? raw(' selected') : ''}>Hasta US$ ${b >= 1000000 ? `${b / 1000000} M` : `${b / 1000}K`}</option>`
   )}`;
 }
 
@@ -144,7 +176,7 @@ export function propertyCard(p, pos) {
   return html`<article class="card">
   <a class="card-link" href="/propiedad/${p.slug}">
     <div class="card-media">
-      ${img ? html`<img src="${img}" alt="${p.title}" loading="lazy">` : html`<div class="ph">Sin fotografía</div>`}
+      ${img ? html`<img src="${imgUrl(img, 800)}"${imgSrcset(img, [480, 800]) ? raw(` srcset="${imgSrcset(img, [480, 800])}" sizes="(min-width: 1024px) 30vw, (min-width: 720px) 45vw, 100vw"`) : ''} alt="${p.title}" loading="lazy" decoding="async" width="800" height="600">` : html`<div class="ph">Sin fotografía</div>`}
       <div class="badges">
         ${p.verified ? html`<span class="badge">${CHECK}Verificada</span>` : ''}
         ${p.tour_url ? html`<span class="badge badge-ink">Tour 360°</span>` : ''}
@@ -230,8 +262,9 @@ export function homePage(env, { zones, heroImage, stats = {}, servicesSection = 
     <form class="search" action="/propiedades" method="get">
       <label>Zona<select name="zona">${zoneOptions(zones, '')}</select></label>
       <label>Tipo<select name="tipo">${typeOptions('')}</select></label>
-      <label>Operación<select name="op"><option value="venta">Venta</option><option value="renta">Renta</option></select></label>
-      <button class="btn btn-primary" type="submit">Buscar</button>
+      <label>Presupuesto<select name="hasta">${budgetOptions('')}</select></label>
+      <input type="hidden" name="op" value="venta">
+      <button class="btn btn-primary" type="submit">Ver opciones</button>
     </form>
     <ul class="trust">
       <li>${CHECK}Propiedades revisadas</li>
@@ -331,7 +364,7 @@ export function homePage(env, { zones, heroImage, stats = {}, servicesSection = 
 </section>
 
 <section class="wrap section steps-section">
-  <div class="section-head"><h2 class="display-md">Qué significa «Verificada»</h2><span class="tagline">No se trata de publicar por publicar.</span></div>
+  <div class="section-head"><h2 class="display-md">Qué significa «Verificada»</h2><a class="link-underline" href="/verificacion">Cómo verificamos</a></div>
   <div class="steps">
     <div><span class="num">01</span><h3>Revisión antes de publicar</h3><p>Datos, fotos y precio se revisan antes de que la propiedad aparezca. Si algo no cuadra, no se publica.</p></div>
     <div><span class="num">02</span><h3>Lectura de valor en cada ficha</h3><p>Cada propiedad indica si su precio está por debajo, dentro o por encima del rango de su zona.</p></div>
@@ -348,7 +381,7 @@ export function homePage(env, { zones, heroImage, stats = {}, servicesSection = 
   return layout(env, { path: '/', body, image: hero || null });
 }
 
-export function listingPage(env, { zones, filters, items, total, positions }) {
+export function listingPage(env, { zones, filters, items, total, positions, notice = '' }) {
   const zoneName = zones.find((z) => z.slug === filters.zone)?.name;
   const heading = [filters.type ? TYPE_LABELS[filters.type] + 's' : 'Propiedades', zoneName ? `en ${zoneName}` : 'en Guatemala'].join(' ');
   const body = html`
@@ -359,13 +392,21 @@ export function listingPage(env, { zones, filters, items, total, positions }) {
     <label>Zona<select name="zona">${zoneOptions(zones, filters.zone)}</select></label>
     <label>Tipo<select name="tipo">${typeOptions(filters.type)}</select></label>
     <label>Operación<select name="op"><option value="">Venta o renta</option><option value="venta"${filters.operation === 'venta' ? raw(' selected') : ''}>Venta</option><option value="renta"${filters.operation === 'renta' ? raw(' selected') : ''}>Renta</option></select></label>
+    <label>Presupuesto<select name="hasta">${budgetOptions(filters.budget)}</select></label>
     <button class="btn btn-primary" type="submit">Filtrar</button>
+  </form>
+  ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
+  <form class="save-search" method="post" action="/busqueda/guardar">
+    <input type="hidden" name="zona" value="${filters.zone || ''}"><input type="hidden" name="tipo" value="${filters.type || ''}">
+    <input type="hidden" name="op" value="${filters.operation || ''}"><input type="hidden" name="hasta" value="${filters.budget || ''}">
+    <span class="small muted">¿No encuentra lo que busca? Guarde esta búsqueda y le avisamos cuando entre una propiedad que coincida.</span>
+    <button class="btn btn-outline btn-sm" type="submit">Guardar búsqueda</button>
   </form>
   ${items.length
     ? html`<div class="cards">${items.map((p) => propertyCard(p, positions.get(p.id)))}</div>`
-    : html`<div class="empty"><h2>Aún no hay propiedades con estos filtros.</h2><p class="muted">Pruebe otra zona o tipo, o déjenos su búsqueda y le avisamos por WhatsApp cuando llegue una opción que encaje.</p><a class="btn btn-primary" href="/valor${filters.zone ? `?zona=${encodeURIComponent(filters.zone)}` : ''}">Dejar mi búsqueda</a></div>`}
+    : html`<div class="empty"><h2>Aún no hay propiedades con estos filtros.</h2><p class="muted">Pruebe otra zona o tipo, o guarde la búsqueda con el botón de arriba y le avisamos cuando entre una opción que encaje.</p></div>`}
 </section>`;
-  const qs = new URLSearchParams(Object.entries({ zona: filters.zone, tipo: filters.type, op: filters.operation }).filter(([, v]) => v)).toString();
+  const qs = new URLSearchParams(Object.entries({ zona: filters.zone, tipo: filters.type, op: filters.operation, hasta: filters.budget }).filter(([, v]) => v)).toString();
   return layout(env, { title: heading, path: '/propiedades' + (qs ? '?' + qs : ''), body });
 }
 
@@ -419,7 +460,20 @@ function saveRow(p, account, fav, notice) {
   </div>`;
 }
 
-export function propertyPage(env, { p, reading, utm, error, account = null, fav = false, notice = '' }) {
+function locationBlock(p, place, pt, nearby) {
+  const groups = nearby?.groups ? POI_GROUPS.filter(([k]) => nearby.groups[k]?.length) : [];
+  return html`<section class="block location">
+  <h2>Ubicación</h2>
+  <p class="muted">${place}. ${pt?.fromZone ? 'El mapa muestra la zona.' : 'El círculo muestra el sector.'} La ubicación exacta se comparte al agendar la visita.</p>
+  ${pt ? html`<div class="map-box" data-map data-lat="${pt.lat}" data-lng="${pt.lng}" data-r="${pt.radius}" role="img" aria-label="Mapa aproximado de ${place}"><span class="map-ph">Cargando mapa…</span></div>` : ''}
+  ${groups.length ? html`<div class="poi">
+    ${groups.map(([k, label]) => html`<div><h3>${label}</h3><ul>${nearby.groups[k].map((x) => html`<li><span>${x.name}</span><span class="muted">${x.km < 1 ? `${Math.round(x.km * 1000 / 50) * 50} m` : `${formatNumber(x.km, 1)} km`}</span></li>`)}</ul></div>`)}
+  </div>
+  <p class="small muted">Distancias aproximadas en línea recta desde el sector. Fuente: OpenStreetMap.</p>` : ''}
+</section>`;
+}
+
+export function propertyPage(env, { p, reading, utm, error, account = null, fav = false, notice = '', pt = null, nearby = null }) {
   const mode = p.contact_mode || (p.whatsapp_enabled === 0 ? 'formulario' : 'whatsapp');
   const wa = mode === 'whatsapp';
   const contact = mode !== 'ninguno';
@@ -458,13 +512,13 @@ export function propertyPage(env, { p, reading, utm, error, account = null, fav 
   const body = html`
 <article class="ficha">
   <div class="gallery" aria-label="Fotografías">
-    ${images.length ? images.map((src, i) => html`<img src="${src}" alt="${p.title} — foto ${i + 1}" ${i ? raw('loading="lazy"') : ''}>`) : html`<div class="ph">Sin fotografía</div>`}
+    ${images.length ? images.map((src, i) => html`<img src="${imgUrl(src, 1200)}"${imgSrcset(src) ? raw(` srcset="${imgSrcset(src)}" sizes="(min-width: 1024px) 48vw, (min-width: 720px) 70vw, 100vw"`) : ''} alt="${p.title} — foto ${i + 1}" width="1200" height="800" ${i ? raw('loading="lazy" decoding="async"') : raw('fetchpriority="high"')}>`) : html`<div class="ph">Sin fotografía</div>`}
   </div>
   ${images.length > 1 ? html`<p class="wrap small muted gallery-hint">${images.length} fotografías · deslice para ver más</p>` : ''}
   <div class="wrap ficha-grid">
     <div class="ficha-main">
       <div class="badges-row">
-        ${p.verified ? html`<span class="badge badge-line">${CHECK}Verificada</span>` : ''}
+        ${p.verified ? html`<a class="badge badge-line" href="/verificacion" title="Qué significa el sello">${CHECK}Verificada</a>` : ''}
         <span class="badge badge-line">${OPERATION_LABELS[p.operation]}</span>
         ${p.tour_url ? html`<a class="badge badge-ink" href="${p.tour_url}" target="_blank" rel="noopener">${GLOBE}Recorrer en 360°</a>` : ''}
       </div>
@@ -473,10 +527,10 @@ export function propertyPage(env, { p, reading, utm, error, account = null, fav 
       <div class="price-row"><span class="price-lg">${formatMoney(p.price_amount, p.currency)}</span>${p.currency === 'USD' && p.price_gtq ? html`<span class="muted small">≈ Q ${formatNumber(p.price_gtq)}</span>` : ''}</div>
       ${shownSpecs.length ? html`<dl class="specs">${shownSpecs.map(([k, v]) => html`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl>` : ''}
       ${readingBlock}
-      ${commuteBlock(p)}
       ${p.description ? html`<section class="block"><h2>Sobre la propiedad</h2>${renderDescription(p.description)}</section>` : ''}
       ${features.length ? html`<section class="block"><h2>Amenidades y equipamiento</h2><ul class="tags">${features.map((f) => html`<li>${f}</li>`)}</ul></section>` : ''}
-      <section class="block"><h2>Ubicación</h2><p class="muted">${place}. La ubicación exacta se comparte al agendar la visita.</p></section>
+      ${locationBlock(p, place, pt, nearby)}
+      ${commuteBlock(p)}
     </div>
     <aside class="ficha-side">
       ${p.agency_name ? html`<div class="advisor"><div class="avatar">${(p.agent_name || p.agency_name).charAt(0)}</div><div><strong>${p.agent_name || p.agency_name}</strong><span class="small muted">${p.agent_name ? p.agency_name + ' · ' : ''}${p.agency_verified ? 'Perfil verificado' : 'Asesor'}</span></div></div>` : ''}
@@ -752,6 +806,7 @@ export function adminPage(env, { counts, props, leads, zones, filter, heroImage,
 
   <section class="admin-switch">
     <a class="admin-switch-card" href="/admin/cuentas"><span class="eyebrow">Usuarios</span><strong>Cuentas</strong><span class="small muted">Propietarios y asesores registrados, aprobación y claves temporales</span></a>
+    <a class="admin-switch-card" href="/admin/alertas"><span class="eyebrow">Compradores</span><strong>Alertas</strong><span class="small muted">Propiedades nuevas que coinciden con búsquedas guardadas, para avisar por WhatsApp</span></a>
     <a class="admin-switch-card" href="/admin/proyectos"><span class="eyebrow">Obra nueva</span><strong>Proyectos y desarrolladoras</strong><span class="small muted">Crear, publicar y ver el reporte mensual de cada proyecto</span></a>
     <form method="post" action="/admin/proyectos/nuevo" class="admin-switch-card admin-switch-new"><button type="submit"><span class="eyebrow">Atajo</span><strong>+ Nuevo proyecto</strong><span class="small muted">Se crea como borrador</span></button></form>
   </section>

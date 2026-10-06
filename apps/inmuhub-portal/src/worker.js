@@ -8,7 +8,9 @@ import * as acviews from './views-account.js';
 import * as auth from './auth.js';
 import * as sviews from './views-services.js';
 import { serviceBySlug, SERVICES } from './services.js';
-import { parseCoords } from './traslados.js';
+import { parseCoords, approxPoint } from './traslados.js';
+import { cachedNearby, refreshNearby } from './cercanos.js';
+import * as alertas from './alertas.js';
 import {
   normalizeWhatsapp, parseNumber, mapType, cleanText, projectPricePerM2, parseTypologies, PROJECT_COMPARABLE, valuePosition,
 } from './normalize.js';
@@ -20,8 +22,9 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'DENY',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Content-Security-Policy':
-    "default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; " +
-    "script-src 'self' 'unsafe-inline' https://connect.facebook.net; connect-src 'self' https://www.facebook.com; " +
+    "default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://static.cloudflareinsights.com; " +
+    "connect-src 'self' https://www.facebook.com https://cloudflareinsights.com; " +
     "form-action 'self' https://wa.me https://*.whatsapp.com; frame-ancestors 'none'; base-uri 'self'",
 };
 
@@ -378,6 +381,37 @@ async function handlePublicar(request, env, ctx) {
 
 // Correo transaccional (enlace para nueva contraseña) vía Resend. Sin RESEND_API_KEY no se envía
 // y la solicitud queda marcada en /admin/cuentas para enviarla por WhatsApp.
+async function sendMail(env, to, subject, text) {
+  if (!env.RESEND_API_KEY || !to) return false;
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: env.ACCOUNT_MAIL_FROM || 'inmuhub <cuentas@inmuhub.com>', to: [to], subject, text }),
+  });
+  if (!res.ok) console.error('Resend', res.status, await res.text().catch(() => ''));
+  return res.ok;
+}
+
+function alertMailer(env) {
+  return (s, p) => {
+    const first = (s.name || '').split(' ')[0];
+    const text = [
+      `Hola${first ? ', ' + first : ''}:`,
+      '',
+      'Entró a inmuhub una propiedad que coincide con su búsqueda guardada:',
+      '',
+      `${p.title}`,
+      `${p.zone_name || ''} · ${formatMoney(p.price_amount, p.currency)}`,
+      `${env.SITE_URL}/propiedad/${p.slug}`,
+      '',
+      `Puede ver o borrar sus búsquedas en ${env.SITE_URL}/mi-cuenta`,
+      '',
+      'inmuhub · Portal inmobiliario curado en Guatemala',
+    ].join('\n');
+    return sendMail(env, s.email, 'Nueva propiedad para su búsqueda', text);
+  };
+}
+
 async function sendResetEmail(env, acc, link) {
   if (!env.RESEND_API_KEY) return false;
   const first = (acc.name || '').split(' ')[0];
@@ -408,7 +442,7 @@ async function sendResetEmail(env, acc, link) {
 }
 
 function safeNext(next) {
-  return /^\/(?!\/)[a-z0-9/_-]*(#[a-z0-9-]+)?$/i.test(next || '') && !next.startsWith('/admin') ? next : '/mi-cuenta';
+  return /^\/(?!\/)[a-z0-9/_-]*(\?[a-z0-9=&_.-]{0,200})?(#[a-z0-9-]+)?$/i.test(next || '') && !next.startsWith('/admin') ? next : '/mi-cuenta';
 }
 
 async function handleAccounts(request, env, url, path, method) {
@@ -540,10 +574,18 @@ async function handleAccounts(request, env, url, path, method) {
     const notice = {
       bienvenida: 'Su cuenta está lista.',
       clave: 'Su nueva contraseña quedó guardada.',
+      busqueda: 'Quitamos esa búsqueda.',
       publicada: `Recibimos su propiedad${ref ? ` (${ref})` : ''}. La revisamos y le escribimos por WhatsApp.`,
     }[url.searchParams.get('ok')];
-    const [props, favs] = await Promise.all([db.accountProperties(env.DB, account.id), db.accountFavorites(env.DB, account.id)]);
-    return page(acviews.accountPage(env, { account, props, notice, favs }), 200, noStore);
+    const [props, favs, searches, matches] = await Promise.all([
+      db.accountProperties(env.DB, account.id),
+      db.accountFavorites(env.DB, account.id),
+      alertas.accountSearches(env.DB, account.id),
+      alertas.accountMatches(env.DB, account.id),
+    ]);
+    if (matches.some((m) => !m.seen_at)) await alertas.markMatchesSeen(env.DB, account.id);
+    const searchItems = searches.map((x) => ({ id: x.id, label: alertas.searchLabel(x), url: alertas.searchUrl(x) }));
+    return page(acviews.accountPage(env, { account, props, notice, favs, searches: searchItems, matches }), 200, noStore);
   }
 
   if (path === '/salir' && method === 'POST') {
@@ -981,6 +1023,10 @@ export default {
 
       if (method === 'GET' && path === '/servicios') return page(sviews.servicesIndexPage(env));
 
+      if (method === 'GET' && path === '/verificacion') {
+        return page(sviews.verificationPage(env), 200, { 'Cache-Control': 'public, max-age=600' });
+      }
+
       if (method === 'GET' && path === '/inmuhub') {
         return page(sviews.aboutPage(env, { stats: await publicStats(env) }), 200, { 'Cache-Control': 'public, max-age=300' });
       }
@@ -1017,23 +1063,38 @@ export default {
         // El inventario completo es para usuarios registrados.
         if (!(await auth.currentAccount(request, env.DB)) && !(await isAdmin(request, env))) {
           const [stats, zones] = await Promise.all([publicStats(env), db.listZones(env.DB)]);
-          return page(sviews.catalogGatePage(env, { stats, zones }), 200, { 'Cache-Control': 'no-store' });
+          const keep = new URLSearchParams();
+          for (const k of ['zona', 'tipo', 'op', 'hasta']) {
+            const v = (url.searchParams.get(k) || '').replace(/[^a-z0-9-]/gi, '').slice(0, 40);
+            if (v) keep.set(k, v);
+          }
+          const next = '/propiedades' + (keep.toString() ? '?' + keep.toString() : '');
+          return page(sviews.catalogGatePage(env, { stats, zones, next }), 200, { 'Cache-Control': 'no-store' });
         }
         const filters = {
           zone: url.searchParams.get('zona') || '',
           type: url.searchParams.get('tipo') || '',
           operation: url.searchParams.get('op') || '',
+          budget: views.BUDGETS.includes(Number(url.searchParams.get('hasta'))) ? Number(url.searchParams.get('hasta')) : '',
         };
+        if (filters.budget) filters.maxPrice = Math.round(filters.budget * usdRate(env));
         if (filters.type && !TYPE_LABELS[filters.type]) filters.type = '';
         const [zones, list] = await Promise.all([db.listZones(env.DB), db.listProperties(env.DB, filters)]);
         const positions = await db.positionsFor(env.DB, list.items, minComparables(env));
-        return page(views.listingPage(env, { zones, filters, items: list.items, total: list.total, positions }), 200, { 'Cache-Control': 'no-store' });
+        const listNotice = {
+          busqueda: 'Búsqueda guardada. Le avisamos en «Mi cuenta» cuando entre una propiedad que coincida.',
+          limite: 'Ya tiene 10 búsquedas guardadas. Borre alguna en «Mi cuenta» para agregar otra.',
+        }[url.searchParams.get('ok')] || '';
+        return page(views.listingPage(env, { zones, filters, items: list.items, total: list.total, positions, notice: listNotice }), 200, { 'Cache-Control': 'no-store' });
       }
 
       const propMatch = path.match(/^\/propiedad\/([a-z0-9-]{1,100})$/i);
       if (method === 'GET' && propMatch) {
         const p = await db.getPublicProperty(env.DB, propMatch[1]);
         if (!p) return page(views.notFoundPage(env), 404);
+        if (!BOT_UA.test(request.headers.get('User-Agent') || '') && !(await isAdmin(request, env))) {
+          ctx.waitUntil(db.recordPropertyView(env.DB, p.id).catch((e) => console.error('Visita', e)));
+        }
         const reading = await db.propertyValueReading(env.DB, p, minComparables(env));
         const account = await auth.currentAccount(request, env.DB);
         const fav = account ? await db.isFavorite(env.DB, account.id, p.id) : false;
@@ -1042,7 +1103,10 @@ export default {
           quitada: 'La quitamos de sus guardadas.',
           similares: 'Listo. Le escribimos por WhatsApp cuando entre una propiedad parecida.',
         }[url.searchParams.get('ok')] || '';
-        return page(views.propertyPage(env, { p, reading, utm: utmFrom(url), account, fav, notice }), 200, { 'Cache-Control': 'no-store' });
+        const pt = approxPoint(p);
+        const nearby = pt ? await cachedNearby(env, pt) : null;
+        if (pt && !nearby) ctx.waitUntil(refreshNearby(env, pt).catch((e) => console.error('Cercanos', e)));
+        return page(views.propertyPage(env, { p, reading, utm: utmFrom(url), account, fav, notice, pt, nearby }), 200, { 'Cache-Control': 'private, no-cache' });
       }
 
       // Guardar en favoritos y pedir propiedades similares (requiere cuenta).
@@ -1074,10 +1138,40 @@ export default {
         return redirect(`/propiedad/${p.slug}?ok=similares#guardar`, 303);
       }
 
+      // Búsquedas guardadas
+      if (method === 'POST' && path === '/busqueda/guardar') {
+        const form = await request.formData();
+        const f = {
+          zone: field(form, 'zona', 60),
+          type: field(form, 'tipo', 20),
+          operation: ['venta', 'renta'].includes(field(form, 'op', 10)) ? field(form, 'op', 10) : '',
+          budget: views.BUDGETS.includes(Number(field(form, 'hasta', 10))) ? Number(field(form, 'hasta', 10)) : 0,
+        };
+        const zones = await db.listZones(env.DB);
+        if (!zones.some((z) => z.slug === f.zone)) f.zone = '';
+        if (f.type && !TYPE_LABELS[f.type]) f.type = '';
+        if (f.budget) f.maxPrice = Math.round(f.budget * usdRate(env));
+        const q = new URLSearchParams(Object.entries({ zona: f.zone, tipo: f.type, op: f.operation, hasta: f.budget || '' }).filter(([, v]) => v));
+        const back = '/propiedades' + (q.toString() ? '?' + q : '');
+        const account = await auth.currentAccount(request, env.DB);
+        if (!account) return redirect(`/ingresar?next=${encodeURIComponent(back)}`, 303);
+        const id = await alertas.saveSearch(env.DB, account.id, f);
+        q.set('ok', id ? 'busqueda' : 'limite');
+        return redirect(`/propiedades?${q}`, 303);
+      }
+      const delSearch = path.match(/^\/busqueda\/(\d+)\/borrar$/);
+      if (method === 'POST' && delSearch) {
+        const account = await auth.currentAccount(request, env.DB);
+        if (!account) return redirect('/ingresar?next=/mi-cuenta', 303);
+        await alertas.deleteSearch(env.DB, account.id, Number(delSearch[1]));
+        return redirect('/mi-cuenta?ok=busqueda#busquedas', 303);
+      }
+
       if (method === 'GET' && path === '/api/sesion') {
         const account = await auth.currentAccount(request, env.DB);
-        return new Response(JSON.stringify({ sesion: Boolean(account) }), {
-          headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...SECURITY_HEADERS },
+        const nombre = account ? (account.name || '').trim().split(/\s+/)[0] : '';
+        return new Response(JSON.stringify(account ? { sesion: true, nombre, rol: account.role } : { sesion: false }), {
+          headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'private, no-cache', ...SECURITY_HEADERS },
         });
       }
 
@@ -1246,10 +1340,14 @@ export default {
         if (method === 'POST' && actionMatch) {
           const form = await request.formData();
           const zoneSlug = field(form, 'zona', 60);
-          await db.adminUpdateProperty(env.DB, Number(actionMatch[1]), field(form, 'accion', 20), {
+          const accion = field(form, 'accion', 20);
+          await db.adminUpdateProperty(env.DB, Number(actionMatch[1]), accion, {
             zone_slug: zoneSlug || null,
             review_notes: field(form, 'nota', 200) || null,
           });
+          if (accion === 'publicar') {
+            ctx.waitUntil(alertas.processAlerts(env, Number(actionMatch[1]), { sendEmail: alertMailer(env) }).catch((e) => console.error('Alertas', e)));
+          }
           return redirect(request.headers.get('Referer')?.startsWith(env.SITE_URL) ? request.headers.get('Referer') : '/admin');
         }
 
@@ -1315,6 +1413,25 @@ export default {
             notes: cleanText(field(form, 'notes', 1000)) || null,
           });
           return redirect('/admin/proyectos?ok=desarrolladora');
+        }
+
+        if (method === 'GET' && path === '/admin/alertas') {
+          const items = await alertas.pendingWhatsappAlerts(env.DB);
+          return page(acviews.adminAlertsPage(env, { items }), 200, { 'Cache-Control': 'no-store' });
+        }
+        if (method === 'POST' && path === '/admin/alerta') {
+          const form = await request.formData();
+          const sid = Number(field(form, 's', 12));
+          const pid = Number(field(form, 'p', 12));
+          const row = await env.DB.prepare(
+            `SELECT a.name, a.whatsapp, p.slug, p.title FROM search_matches m JOIN saved_searches s ON s.id = m.search_id
+              JOIN accounts a ON a.id = s.account_id JOIN properties p ON p.id = m.property_id WHERE m.search_id = ? AND m.property_id = ?`
+          ).bind(sid, pid).first();
+          if (!row?.whatsapp) return redirect('/admin/alertas');
+          await alertas.markWhatsappSent(env.DB, sid, pid);
+          if (field(form, 'solo', 2) === '1') return redirect('/admin/alertas');
+          const first = (row.name || '').split(' ')[0];
+          return redirect(waLink(row.whatsapp, `Hola${first ? ' ' + first : ''}, entró a inmuhub una propiedad que coincide con su búsqueda: ${row.title} — ${env.SITE_URL}/propiedad/${row.slug}`));
         }
 
         if (method === 'GET' && path === '/admin/cuentas') {
@@ -1383,7 +1500,7 @@ export default {
           db.listZones(env.DB),
         ]);
         const own = [
-          '/', '/propiedades', '/proyectos', '/valor', '/planes', '/publicar', '/desarrolladoras', '/inmuhub', '/servicios',
+          '/', '/propiedades', '/proyectos', '/valor', '/planes', '/publicar', '/desarrolladoras', '/inmuhub', '/verificacion', '/servicios',
           ...SERVICES.map((sv) => `/servicios/${sv.slug}`),
           ...zones.map((z) => `/zona/${z.slug}`),
           ...items.map((p) => `/propiedad/${p.slug}`),

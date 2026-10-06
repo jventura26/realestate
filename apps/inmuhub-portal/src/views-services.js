@@ -148,8 +148,58 @@ export function aboutPage(env, { stats }) {
   });
 }
 
-export function catalogGatePage(env, { stats, zones }) {
-  const next = '/propiedades';
+export function verificationPage(env) {
+  const body = html`
+<section class="wrap section narrow">
+  <div class="eyebrow">Cómo verificamos</div>
+  <h1 class="display-md">Una propiedad en inmuhub no se publica por publicar.</h1>
+  <p class="lead">Todas las propiedades pasan por una revisión antes de aparecer. Las que además tienen el sello «Verificada» pasaron una revisión documental. Aquí explicamos qué significa cada nivel y qué no garantiza.</p>
+</section>
+
+<section class="wrap section verify">
+  <div class="verify-grid">
+    <article class="verify-card">
+      <span class="eyebrow">Todas las propiedades</span>
+      <h2 class="display-sm">Revisada</h2>
+      <p class="muted">Lo que revisamos antes de publicar cualquier propiedad:</p>
+      <ul class="checks">
+        <li>${CHECK}Datos completos y coherentes: tipo, zona, áreas, habitaciones y precio.</li>
+        <li>${CHECK}Fotografías actuales de la propiedad, sin imágenes de catálogo ni de otras propiedades.</li>
+        <li>${CHECK}Precio comparado con el rango de su zona, visible en la ficha.</li>
+        <li>${CHECK}Contacto confirmado: quien publica es el propietario o un asesor identificado.</li>
+        <li>${CHECK}Sin anuncios duplicados ni propiedades ya vendidas o rentadas.</li>
+      </ul>
+    </article>
+    <article class="verify-card verify-card-ink">
+      <span class="eyebrow eyebrow-light">Sello adicional</span>
+      <h2 class="display-sm">${CHECK}Verificada</h2>
+      <p class="light">Además de lo anterior, para otorgar el sello revisamos:</p>
+      <ul class="checks checks-light">
+        <li>${CHECK}Certificación reciente del Registro General de la Propiedad: titular, gravámenes y anotaciones.</li>
+        <li>${CHECK}Identidad de quien vende o renta, o la autorización escrita del propietario al asesor.</li>
+        <li>${CHECK}Concordancia entre las áreas publicadas y las del registro o plano.</li>
+        <li>${CHECK}Visita a la propiedad o recorrido virtual que confirme su estado actual.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="wrap section narrow">
+  <h2 class="display-sm">Lo que el sello no sustituye</h2>
+  <p>La verificación reduce riesgos y da claridad, pero no reemplaza el trabajo de un abogado o notario ni un avalúo profesional. Antes de firmar una promesa o entregar un anticipo, recomendamos un estudio legal completo de la propiedad y revisar que el precio tenga sentido frente a su zona.</p>
+  <p class="muted">Si encuentra información que no corresponde en una ficha, escríbanos y la revisamos de inmediato. Una propiedad puede perder el sello si cambian sus condiciones.</p>
+  <div class="row-actions"><a class="btn btn-primary" href="/propiedades">Ver propiedades</a><a class="btn btn-outline" href="/servicios/publicacion-de-propiedades">Publicar una propiedad</a></div>
+</section>`;
+  return layout(env, {
+    title: 'Cómo verificamos las propiedades',
+    description: 'Qué revisa inmuhub antes de publicar una propiedad y qué significa el sello «Verificada»: registro, identidad, áreas y estado actual.',
+    path: '/verificacion',
+    body,
+  });
+}
+
+export function catalogGatePage(env, { stats, zones, next = '/propiedades' }) {
+  const enc = encodeURIComponent(next);
   const body = html`
 <section class="wrap section gate-hero">
   <div class="gate-copy">
@@ -172,8 +222,8 @@ export function catalogGatePage(env, { stats, zones }) {
       <label>Contraseña<input type="password" name="clave" autocomplete="current-password" maxlength="200" required></label>
       <button class="btn btn-primary btn-block" type="submit">Ver propiedades</button>
       <p class="small muted">¿Aún no tiene cuenta? Es gratuita.</p>
-      <a class="btn btn-outline btn-block" href="/registro?tipo=comprador&amp;next=%2Fpropiedades">Crear cuenta de comprador</a>
-      <p class="small muted">¿Es propietario o asesor? <a href="/registro?tipo=propietario&amp;next=%2Fpropiedades">Cuenta de propietario</a> · <a href="/registro?tipo=asesor&amp;next=%2Fpropiedades">Cuenta de asesor</a></p>
+      <a class="btn btn-outline btn-block" href="/registro?tipo=comprador&amp;next=${enc}">Crear cuenta de comprador</a>
+      <p class="small muted">¿Es propietario o asesor? <a href="/registro?tipo=propietario&amp;next=${enc}">Cuenta de propietario</a> · <a href="/registro?tipo=asesor&amp;next=${enc}">Cuenta de asesor</a></p>
     </form>
   </div>
 </section>

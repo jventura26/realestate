@@ -456,11 +456,23 @@ export async function createAccount(db, a) {
   return r.id;
 }
 
+export async function recordPropertyView(db, id) {
+  await db
+    .prepare(`INSERT INTO property_views (property_id, day, views) VALUES (?, date('now'), 1)
+      ON CONFLICT(property_id, day) DO UPDATE SET views = views + 1`)
+    .bind(id)
+    .run();
+}
+
 export async function accountProperties(db, accountId) {
   const { results } = await db
     .prepare(`SELECT p.id, p.slug, p.title, p.status, p.price_amount, p.currency, p.review_notes, p.created_at, p.images,
         z.name AS zone_name,
-        (SELECT COUNT(*) FROM leads l WHERE l.property_id = p.id) AS leads
+        (SELECT COUNT(*) FROM leads l WHERE l.property_id = p.id) AS leads,
+        (SELECT COUNT(*) FROM leads l WHERE l.property_id = p.id AND l.created_at > datetime('now', '-30 days')) AS leads30,
+        (SELECT COALESCE(SUM(v.views), 0) FROM property_views v WHERE v.property_id = p.id AND v.day > date('now', '-30 days')) AS views30,
+        (SELECT COALESCE(SUM(v.views), 0) FROM property_views v WHERE v.property_id = p.id) AS views_total,
+        (SELECT COUNT(*) FROM favorites f WHERE f.property_id = p.id) AS saves
       FROM properties p LEFT JOIN zones z ON z.slug = p.zone_slug
       WHERE p.account_id = ? ORDER BY p.created_at DESC`)
     .bind(accountId)

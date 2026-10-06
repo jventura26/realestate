@@ -1,3 +1,10 @@
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/fraunces-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/fraunces-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 600; font-display: swap; src: url(/fonts/fraunces-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/manrope-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/manrope-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 600; font-display: swap; src: url(/fonts/manrope-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 700; font-display: swap; src: url(/fonts/manrope-latin-700-normal.woff2) format('woff2'); }
 /* inmuhub — estilos del portal. Mobile-first. */
 :root {
   --ink: #0F1B2D;
@@ -183,7 +190,7 @@ a.badge-ink:hover { color: var(--brass-light); }
 
 /* Ficha */
 .gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 4px; background: var(--ph); }
-.gallery img { flex: 0 0 100%; height: 340px; object-fit: cover; scroll-snap-align: start; }
+.gallery img { flex: 0 0 100%; width: 100%; height: 340px; object-fit: cover; scroll-snap-align: start; }
 .gallery .ph { min-height: 300px; }
 .gallery-hint { padding-top: 10px; }
 .ficha-grid { display: grid; gap: 32px; padding-top: 24px; padding-bottom: 32px; }
@@ -251,12 +258,13 @@ th { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var
   .wrap { padding: 0 40px; }
   .section { padding: 88px 40px; }
   .search { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: end; }
+  .search-inline { grid-template-columns: repeat(4, minmax(0, 1fr)) auto; }
   .grid-2 { grid-template-columns: 1fr 1fr; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .split { grid-template-columns: 1fr 1fr; }
   .addons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .kpis { grid-template-columns: repeat(4, 1fr); }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
   .gallery img { flex-basis: 70%; height: 480px; }
   .zone-form { grid-template-columns: 1fr 1fr auto; align-items: end; }
   .zone-form .chips { grid-column: 1 / -1; }
@@ -519,3 +527,35 @@ h1, h2, h3 { text-wrap: balance; }
 .commute-grid strong { font-family: var(--display); font-weight: 500; font-size: 24px; white-space: nowrap; }
 .commute-grid .peak { background: var(--ink); border-color: var(--ink); color: #fff; }
 .commute-grid .peak .muted { color: var(--light); }
+.header-login.is-in { padding-left: 6px; }
+.header-avatar { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: #fff; font-family: var(--display); font-size: 15px; font-weight: 500; }
+@media (max-width: 1023px) { .header-login.is-in { padding: 0; } }
+/* Ficha: ubicación aproximada y lugares cercanos */
+.map-box { position: relative; height: 280px; margin: 14px 0 6px; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--line-soft); z-index: 0; }
+@media (min-width: 720px) { .map-box { height: 340px; } }
+.map-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; }
+.map-box .leaflet-control-attribution { font-size: 10px; }
+.poi { display: grid; gap: 14px; margin: 16px 0 8px; }
+@media (min-width: 720px) { .poi { grid-template-columns: 1fr 1fr; } }
+.poi > div { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; background: var(--surface); }
+.poi h3 { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 8px; }
+.poi ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.poi li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.poi li span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.poi li span:last-child { white-space: nowrap; }
+/* Búsquedas guardadas */
+.save-search { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin: 14px 0 22px; padding: 14px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.save-search span { flex: 1 1 260px; }
+.search-list { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 8px; }
+.search-list li { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.search-list form { margin: 0; }
+.matches ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 10px; }
+.matches li { display: flex; flex-direction: column; gap: 2px; }
+/* Cómo verificamos */
+.verify-grid { display: grid; gap: 20px; }
+@media (min-width: 900px) { .verify-grid { grid-template-columns: 1fr 1fr; } }
+.verify-card { display: flex; flex-direction: column; gap: 14px; padding: 28px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+.verify-card-ink { background: var(--ink); border-color: var(--ink); color: #fff; }
+.verify-card-ink .light { color: var(--light); }
+.verify-card h2 { display: flex; align-items: center; gap: 10px; }
+.map-box .leaflet-tile-pane { filter: grayscale(.9) contrast(.92) brightness(1.05); }

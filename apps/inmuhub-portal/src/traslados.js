@@ -82,3 +82,32 @@ export function mapsLink(p) {
   const origin = [p.location_label, p.zone_name, 'Guatemala'].filter(Boolean).join(', ');
   return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent('Zona Viva, Zona 10, Guatemala')}&travelmode=driving`;
 }
+
+// Punto aproximado para el mapa público: nunca el pin exacto.
+// Se desplaza de forma estable (según el id) hasta ~250 m y se dibuja como un círculo.
+export function approxPoint(p) {
+  const c = CENTROIDS[p.zone_slug];
+  let point = cleanCoords(p.lat, p.lng);
+  let fromZone = false;
+  if (point && c && km(point, { lat: c[0], lng: c[1] }) > c[2]) point = null;
+  if (!point && c) {
+    point = { lat: c[0], lng: c[1] };
+    fromZone = true;
+  }
+  if (!point) return null;
+  let h = 2166136261;
+  for (const ch of String(p.id || p.slug || '')) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  const angle = ((h % 360) * Math.PI) / 180;
+  const dist = fromZone ? 0 : 0.0012 + ((h >>> 9) % 1000) / 1000 * 0.0011; // ~130–250 m en grados
+  const round = (x) => Math.round(x * 10000) / 10000;
+  return {
+    lat: round(point.lat + Math.sin(angle) * dist),
+    lng: round(point.lng + Math.cos(angle) * dist),
+    radius: fromZone ? 1500 : 600,
+    fromZone,
+  };
+}
+
+export function distanceKm(a, b) {
+  return km(a, b);
+}

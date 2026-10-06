@@ -78,6 +78,18 @@ export function registerPage(env, { role = 'comprador', values = {}, error, next
   return layout(env, { title: heading, path: '/registro', body, noindex: true });
 }
 
+function searchesBlock(searches = [], matches = []) {
+  return html`<h2 id="busquedas">Búsquedas guardadas</h2>
+  ${matches.length ? html`<div class="panel matches">
+    <div class="eyebrow">Novedades para usted</div>
+    <ul>${matches.map((m) => html`<li${m.seen_at ? '' : raw(' class="is-new"')}><a href="/propiedad/${m.slug}"><strong>${m.title}</strong></a><span class="small muted">${m.zone_name || ''} · ${formatMoney(m.price_amount, m.currency)}${m.seen_at ? '' : ' · Nueva'}</span></li>`)}</ul>
+  </div>` : ''}
+  ${searches.length
+    ? html`<ul class="search-list">${searches.map((x) => html`<li><a href="${x.url}">${x.label}</a>
+        <form method="post" action="/busqueda/${x.id}/borrar"><button class="btn btn-outline btn-xs" type="submit">Quitar</button></form></li>`)}</ul>`
+    : html`<p class="muted">Aún no tiene búsquedas guardadas. En <a href="/propiedades">Propiedades</a>, filtre por zona, tipo y presupuesto y pulse «Guardar búsqueda»: le avisamos aquí cuando entre una propiedad que coincida.</p>`}`;
+}
+
 function favoritesBlock(favs = []) {
   return html`<h2>Guardadas</h2>
   ${favs.length
@@ -91,8 +103,8 @@ function favoritesBlock(favs = []) {
     : html`<p class="muted">Aún no ha guardado propiedades. En cada ficha encontrará el botón «Guardar».</p>`}`;
 }
 
-export function accountPage(env, { account, props, notice, favs = [] }) {
-  if (account.role === 'comprador') return buyerAccountPage(env, { account, notice, favs });
+export function accountPage(env, { account, props, notice, favs = [], searches = [], matches = [] }) {
+  if (account.role === 'comprador' && !props.length) return buyerAccountPage(env, { account, notice, favs, searches, matches });
   const asesor = account.role === 'asesor';
   const pending = account.status === 'pendiente';
   const body = html`
@@ -114,21 +126,26 @@ export function accountPage(env, { account, props, notice, favs = [] }) {
     <div><span>Propiedades</span><strong>${props.length}</strong></div>
     <div><span>Publicadas</span><strong>${props.filter((p) => p.status === 'publicada').length}</strong></div>
     <div><span>En revisión</span><strong>${props.filter((p) => p.status === 'revision').length}</strong></div>
-    <div><span>Consultas recibidas</span><strong>${props.reduce((n, p) => n + (p.leads || 0), 0)}</strong></div>
+    <div><span>Visitas (30 días)</span><strong>${props.reduce((n, p) => n + (p.views30 || 0), 0)}</strong></div>
+    <div><span>Consultas (30 días)</span><strong>${props.reduce((n, p) => n + (p.leads30 || 0), 0)}</strong></div>
   </div>
 
   ${favs.length ? favoritesBlock(favs) : ''}
+  ${searches.length || matches.length ? searchesBlock(searches, matches) : ''}
 
   <h2>Mis propiedades</h2>
+  ${props.some((p) => p.status === 'publicada') ? html`<p class="small muted">Visitas: personas que abrieron la ficha (sin contar buscadores). Guardada: cuántas personas la tienen en favoritos.</p>` : ''}
   ${props.length
     ? html`<div class="table-wrap"><table>
-      <thead><tr><th>Propiedad</th><th>Precio</th><th>Estado</th><th>Consultas</th><th></th></tr></thead>
+      <thead><tr><th>Propiedad</th><th>Precio</th><th>Estado</th><th>Visitas<br><span class="small muted">30 días · total</span></th><th>Guardada</th><th>Consultas<br><span class="small muted">30 días · total</span></th><th></th></tr></thead>
       <tbody>${props.map((p) => html`<tr>
         <td><strong>${p.title}</strong><br><span class="small muted">${p.zone_name || ''} · Ref. IH-${String(p.id).padStart(4, '0')}</span>
           ${p.status === 'rechazada' && p.review_notes ? html`<br><span class="small">Observación: ${p.review_notes}</span>` : ''}</td>
         <td>${formatMoney(p.price_amount, p.currency)}</td>
         <td><span class="status status-${p.status}">${STATUS_LABEL[p.status] || p.status}</span></td>
-        <td>${p.leads || 0}</td>
+        <td>${p.status === 'publicada' ? html`<strong>${p.views30 || 0}</strong> · ${p.views_total || 0}` : '—'}</td>
+        <td>${p.saves || 0}</td>
+        <td><strong>${p.leads30 || 0}</strong> · ${p.leads || 0}</td>
         <td>${p.status === 'publicada' ? html`<a class="btn btn-outline btn-xs" href="/propiedad/${p.slug}" target="_blank" rel="noopener">Ver ficha</a>` : ''}</td>
       </tr>`)}</tbody></table></div>`
     : html`<div class="panel">
@@ -154,6 +171,29 @@ export function accountPage(env, { account, props, notice, favs = [] }) {
   </div>
 </section>`;
   return layout(env, { title: 'Mi cuenta', path: '/mi-cuenta', body, noindex: true });
+}
+
+export function adminAlertsPage(env, { items }) {
+  const body = html`
+<section class="wrap section admin">
+  <div class="section-head"><h1 class="display-sm">Alertas por enviar</h1><a class="btn btn-outline btn-sm" href="/admin">Volver al panel</a></div>
+  <p class="muted">Propiedades publicadas que coinciden con búsquedas guardadas y que la persona aún no ha visto en su cuenta. ${env.RESEND_API_KEY ? 'También se envían por correo automáticamente.' : 'El aviso por correo se activa al conectar Resend.'}</p>
+  ${items.length
+    ? html`<div class="table-wrap"><table>
+      <thead><tr><th>Persona</th><th>Propiedad</th><th>Desde</th><th></th></tr></thead>
+      <tbody>${items.map((m) => html`<tr>
+        <td><strong>${m.name}</strong><br><span class="small muted">+${m.whatsapp}</span></td>
+        <td><a href="/propiedad/${m.slug}" target="_blank" rel="noopener">${m.title}</a><br><span class="small muted">${m.zone_name || ''} · ${formatMoney(m.price_amount, m.currency)}</span></td>
+        <td class="small">${String(m.created_at).slice(0, 10)}${m.emailed_at ? html`<br><span class="muted">Correo enviado</span>` : ''}</td>
+        <td><form class="row-actions" method="post" action="/admin/alerta" target="_blank">
+          <input type="hidden" name="s" value="${m.search_id}"><input type="hidden" name="p" value="${m.property_id}">
+          <button class="btn btn-primary btn-xs" type="submit">Enviar por WhatsApp</button>
+        </form>
+        <form method="post" action="/admin/alerta"><input type="hidden" name="s" value="${m.search_id}"><input type="hidden" name="p" value="${m.property_id}"><input type="hidden" name="solo" value="1"><button class="btn btn-outline btn-xs" type="submit">Marcar como enviada</button></form></td>
+      </tr>`)}</tbody></table></div>`
+    : html`<p class="muted">No hay alertas pendientes.</p>`}
+</section>`;
+  return layout(env, { title: 'Alertas', body, noindex: true });
 }
 
 export function forgotPage(env, { sent = false, error, email = '', byWhatsapp = false }) {
@@ -243,7 +283,7 @@ export function adminAccountsPage(env, { accounts, notice, tempPassword, resetLi
   return layout(env, { title: 'Cuentas', body, noindex: true });
 }
 
-function buyerAccountPage(env, { account, notice, favs }) {
+function buyerAccountPage(env, { account, notice, favs, searches, matches }) {
   const body = html`
 <section class="wrap section account">
   <div class="section-head">
@@ -260,6 +300,7 @@ function buyerAccountPage(env, { account, notice, favs }) {
     <article class="how-card"><div class="eyebrow">Proyectos</div><h3>Obra nueva</h3><p>Compare proyectos en preventa y construcción por precio por m² y zona.</p><a class="btn btn-outline btn-sm" href="/proyectos">Ver proyectos</a></article>
     <article class="how-card"><div class="eyebrow">Datos</div><h3>Precio por m²</h3><p>Rangos por zona actualizados cada mes con anuncios reales.</p><a class="btn btn-outline btn-sm" href="/mercado">Ver datos de mercado</a></article>
   </div>
+  ${searchesBlock(searches, matches)}
   ${favoritesBlock(favs)}
   <div class="panel">
     <div class="eyebrow">Sus datos</div>
