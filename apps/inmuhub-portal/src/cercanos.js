@@ -11,7 +11,7 @@ export const POI_GROUPS = [
   ['comercio', 'Centros comerciales'],
 ];
 
-const keyFor = (pt) => `poi:v2:${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
+const keyFor = (pt) => `poi:v3:${pt.lat.toFixed(3)},${pt.lng.toFixed(3)}`;
 
 function classify(tags) {
   if (tags.shop === 'mall') return 'comercio';
@@ -34,7 +34,7 @@ export async function refreshNearby(env, pt) {
   if (!env.MEDIA || !pt) return;
   // Marca temporal para no repetir la consulta mientras se resuelve (o si falla).
   await env.MEDIA.put(keyFor(pt), JSON.stringify({ groups: null }), { expirationTtl: 900 });
-  const q = `[out:json][timeout:20];(
+  const q = `[out:json][timeout:7];(
     nwr["amenity"~"^(school|university|college|hospital)$"]["name"](around:3500,${pt.lat},${pt.lng});
     nwr["shop"="mall"]["name"](around:5000,${pt.lat},${pt.lng});
   );out center 120;`;
@@ -50,6 +50,7 @@ export async function refreshNearby(env, pt) {
           'User-Agent': 'inmuhub.com/1.0 (+https://inmuhub.com; portal inmobiliario)',
         },
         body: 'data=' + encodeURIComponent(q),
+        signal: AbortSignal.timeout(8000),
       });
       if (!res.ok) { errors.push(`${new URL(ep).host} ${res.status}`); continue; }
       data = await res.json();
