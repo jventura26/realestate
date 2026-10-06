@@ -7,7 +7,7 @@ export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 2
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
-export const ASSET_VERSION = '2026-10-01b';
+export const ASSET_VERSION = '2026-10-06a';
 
 // ---------- Layout ----------
 
@@ -53,6 +53,7 @@ ${pixel}
       <a href="/desarrolladoras">Desarrolladoras</a>
     </nav>
     <div class="header-actions">
+      <a class="header-login" href="/ingresar">Ingresar</a>
       <a class="btn btn-primary btn-sm" href="/publicar"><span class="only-desktop">Publicar propiedad</span><span class="only-mobile">Publicar</span></a>
       <details class="menu">
         <summary aria-label="Abrir menú"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span></summary>
@@ -65,6 +66,9 @@ ${pixel}
           <a href="/publicar">Propietarios</a>
           <a href="/planes">Inmobiliarias</a>
           <a href="/desarrolladoras">Desarrolladoras</a>
+          <span class="menu-sep"></span>
+          <a href="/ingresar">Ingresar</a>
+          <a href="/registro">Crear cuenta</a>
         </nav>
       </details>
     </div>
@@ -80,6 +84,7 @@ ${pixel}
     <div class="footer-cols">
       <div><strong>Explorar</strong><a href="/propiedades">Propiedades</a><a href="/proyectos">Proyectos nuevos</a><a href="/comparar">Comparar proyectos</a><a href="/valor">Valor por zona</a></div>
       <div><strong>Publicar</strong><a href="/publicar">Propietarios</a><a href="/planes">Inmobiliarias</a><a href="/desarrolladoras">Desarrolladoras</a></div>
+      <div><strong>Mi cuenta</strong><a href="/ingresar">Ingresar</a><a href="/registro?tipo=propietario">Cuenta de propietario</a><a href="/registro?tipo=asesor">Cuenta de asesor</a></div>
       <div><strong>Legal</strong><a href="/privacidad">Aviso de privacidad</a></div>
     </div>
   </div>
@@ -253,6 +258,54 @@ export function homePage(env, { zones, featured, positions, heroImage, projectsS
   </div>
 </section>
 
+<section class="wrap section" id="como-funciona">
+  <div class="section-head">
+    <div><div class="eyebrow">Cómo funciona</div><h2 class="display-md">Un portal para cada parte de la operación</h2></div>
+  </div>
+  <p class="lead">inmuhub reúne propiedades revisadas, datos de valor por zona y una red de asesores en Guatemala. Así funciona según lo que usted busque:</p>
+  <div class="how">
+    <article class="how-card">
+      <div class="eyebrow">Compradores</div>
+      <h3>Compare antes de visitar</h3>
+      <p>Cada ficha indica si el precio está por debajo, dentro o por encima del rango de su zona.</p>
+      <ul class="checks"><li>${CHECK}Propiedades revisadas antes de publicarse</li><li>${CHECK}Rango de precio por m² en cada zona</li><li>${CHECK}Consulta directa, con la propiedad identificada</li></ul>
+      <a class="btn btn-outline btn-sm" href="/propiedades">Ver propiedades</a>
+    </article>
+    <article class="how-card">
+      <div class="eyebrow">Propietarios</div>
+      <h3>Publique con análisis de valor</h3>
+      <p>Cree su cuenta, envíe su propiedad y siga su revisión y las consultas desde su panel.</p>
+      <ul class="checks"><li>${CHECK}Publicación básica sin costo</li><li>${CHECK}Lectura de valor de su zona</li><li>${CHECK}Fotografía editada y tour 360° opcionales</li></ul>
+      <a class="btn btn-primary btn-sm" href="/registro?tipo=propietario">Crear cuenta de propietario</a>
+    </article>
+    <article class="how-card">
+      <div class="eyebrow">Asesores e inmobiliarias</div>
+      <h3>Su inventario, con criterio</h3>
+      <p>Publique el inventario de sus clientes y comparta fichas con colegas desde la red de asesores.</p>
+      <ul class="checks"><li>${CHECK}Panel con estado y consultas por propiedad</li><li>${CHECK}Enlaces para colegas en red.inmuhub.com</li><li>${CHECK}Planes mensuales para agencias</li></ul>
+      <a class="btn btn-primary btn-sm" href="/registro?tipo=asesor">Crear cuenta de asesor</a>
+    </article>
+    <article class="how-card">
+      <div class="eyebrow">Desarrolladoras</div>
+      <h3>Proyectos nuevos, comparables</h3>
+      <p>Presente su proyecto junto a otros de la zona, con precio por m² y reporte mensual de interés.</p>
+      <ul class="checks"><li>${CHECK}Ficha de proyecto y tipologías</li><li>${CHECK}Comparador de proyectos</li><li>${CHECK}Reporte mensual de visitas y consultas</li></ul>
+      <a class="btn btn-outline btn-sm" href="/desarrolladoras">Ver opciones</a>
+    </article>
+  </div>
+</section>
+
+<section class="ink">
+  <div class="wrap section">
+    <div><div class="eyebrow eyebrow-light">Información, no solo precio</div><h2 class="display-md">Datos que respaldan cada decisión</h2></div>
+    <div class="pillars">
+      <div class="pillar"><strong>Precio por m² por zona</strong><span class="lead-light">Mediana y rango de Zona 10, 14, 15, 16, Cayalá, Fraijanes y Carretera a El Salvador, con anuncios reales y actualización mensual.</span><a href="/mercado">Ver datos de mercado</a></div>
+      <div class="pillar"><strong>Valor de su zona</strong><span class="lead-light">Consulte el rango de su sector antes de comprar, vender o fijar un precio. Sin registrarse.</span><a href="/valor">Consultar valor por zona</a></div>
+      <div class="pillar"><strong>Herramientas</strong><span class="lead-light">Calculadora hipotecaria, valuador y guía de compra para preparar cada paso de la operación.</span><a href="/calculadora-hipotecaria">Calcular mi cuota</a></div>
+    </div>
+  </div>
+</section>
+
 <section class="wrap section">
   <div class="section-head">
     <div><div class="eyebrow">Selección curada</div><h2 class="display-md">Propiedades de la semana</h2></div>
@@ -271,20 +324,10 @@ ${projectsSection}
   </div>
 </section>
 
-<section class="wrap split">
-  <div class="panel">
-    <div class="eyebrow">Propietarios</div>
-    <h3 class="display-sm">¿Vende o renta su propiedad?</h3>
-    <p class="muted">Publíquela con una ficha que genera confianza desde el primer vistazo.</p>
-    <ul class="checks"><li>${CHECK}Publicación revisada con lectura de valor</li><li>${CHECK}Opción de fotografía editada y tour 360°</li><li>${CHECK}Consultas directas a su WhatsApp</li></ul>
-    <a class="btn btn-primary" href="/publicar">Publicar mi propiedad</a>
-  </div>
-  <div class="panel panel-ink">
-    <div class="eyebrow eyebrow-light">Inmobiliarias y asesores</div>
-    <h3 class="display-sm">Su inventario, presentado con criterio.</h3>
-    <p class="lead-light">Un plan mensual con todo lo necesario para convertir consultas en visitas.</p>
-    <ul class="checks checks-light"><li>${CHECK}Perfil verificado de su agencia</li><li>${CHECK}Panel de consultas por propiedad</li><li>${CHECK}Tours 360° y campañas en Meta como complemento</li></ul>
-    <a class="btn btn-brass" href="/planes">Ver planes</a>
+<section class="wrap section">
+  <div class="cta-band">
+    <div><div class="eyebrow">Mi cuenta</div><h2 class="display-sm">Publique y dé seguimiento desde un solo lugar.</h2><p class="muted">Propietarios y asesores ingresan con su correo para ver el estado de cada propiedad.</p></div>
+    <div class="row-actions"><a class="btn btn-primary" href="/registro">Crear cuenta</a><a class="btn btn-outline" href="/ingresar">Ingresar</a></div>
   </div>
 </section>`;
   return layout(env, { path: '/', body, image: hero || null, scripts: projectsSection ? ['/compare.js'] : [] });
@@ -598,7 +641,7 @@ export function adminLoginPage(env, { error }) {
   return layout(env, { title: 'Administración', body, noindex: true });
 }
 
-const STATUS_LABEL = { revision: 'En revisión', publicada: 'Publicada', rechazada: 'Rechazada', pausada: 'Pausada', vendida: 'Vendida' };
+export const STATUS_LABEL = { revision: 'En revisión', publicada: 'Publicada', rechazada: 'Rechazada', pausada: 'Pausada', vendida: 'Vendida' };
 
 export function adminPage(env, { counts, props, leads, zones, filter, heroImage, notice }) {
   const waLink = (n) => (n ? `https://wa.me/${n}` : null);
@@ -628,6 +671,7 @@ export function adminPage(env, { counts, props, leads, zones, filter, heroImage,
   </section>
 
   <section class="admin-switch">
+    <a class="admin-switch-card" href="/admin/cuentas"><span class="eyebrow">Usuarios</span><strong>Cuentas</strong><span class="small muted">Propietarios y asesores registrados, aprobación y claves temporales</span></a>
     <a class="admin-switch-card" href="/admin/proyectos"><span class="eyebrow">Obra nueva</span><strong>Proyectos y desarrolladoras</strong><span class="small muted">Crear, publicar y ver el reporte mensual de cada proyecto</span></a>
     <form method="post" action="/admin/proyectos/nuevo" class="admin-switch-card admin-switch-new"><button type="submit"><span class="eyebrow">Atajo</span><strong>+ Nuevo proyecto</strong><span class="small muted">Se crea como borrador</span></button></form>
   </section>

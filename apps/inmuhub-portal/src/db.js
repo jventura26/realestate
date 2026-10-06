@@ -131,12 +131,12 @@ export async function insertSubmission(db, s) {
   const r = await db
     .prepare(`INSERT INTO properties (slug, title, status, operation, type, zone_slug, location_label, municipality,
         price_amount, currency, price_gtq, area_built_m2, area_land_v2, bedrooms, bathrooms, parking, description,
-        owner_name, owner_whatsapp, owner_email, source, images, features)
-      VALUES (?, ?, 'revision', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'portal', '[]', '[]') RETURNING id`)
+        owner_name, owner_whatsapp, owner_email, source, images, features, account_id)
+      VALUES (?, ?, 'revision', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'portal', '[]', '[]', ?) RETURNING id`)
     .bind(
       s.slug, s.title, s.operation, s.type, s.zone_slug, s.location_label, s.municipality, s.price_amount, s.currency,
       s.price_gtq, s.area_built_m2, s.area_land_v2, s.bedrooms, s.bathrooms, s.parking, s.description, s.owner_name,
-      s.owner_whatsapp, s.owner_email
+      s.owner_whatsapp, s.owner_email, s.account_id ?? null
     )
     .first();
   return r.id;
@@ -405,4 +405,51 @@ export async function projectMonthReport(db, id, month) {
     .bind(id, from, from)
     .all();
   return { views: views?.n ?? 0, leads, daily };
+}
+
+// ---- Cuentas ----
+
+export async function findAccountByEmail(db, email) {
+  return db.prepare('SELECT * FROM accounts WHERE email = ?').bind(email).first();
+}
+
+export async function createAccount(db, a) {
+  const r = await db
+    .prepare('INSERT INTO accounts (role, status, name, email, whatsapp, company, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id')
+    .bind(a.role, a.status, a.name, a.email, a.whatsapp, a.company, a.password_hash)
+    .first();
+  return r.id;
+}
+
+export async function accountProperties(db, accountId) {
+  const { results } = await db
+    .prepare(`SELECT p.id, p.slug, p.title, p.status, p.price_amount, p.currency, p.review_notes, p.created_at, p.images,
+        z.name AS zone_name,
+        (SELECT COUNT(*) FROM leads l WHERE l.property_id = p.id) AS leads
+      FROM properties p LEFT JOIN zones z ON z.slug = p.zone_slug
+      WHERE p.account_id = ? ORDER BY p.created_at DESC`)
+    .bind(accountId)
+    .all();
+  return results;
+}
+
+export async function adminListAccounts(db) {
+  const { results } = await db
+    .prepare(`SELECT a.id, a.role, a.status, a.name, a.email, a.whatsapp, a.company, a.created_at, a.last_login_at,
+        (SELECT COUNT(*) FROM properties p WHERE p.account_id = a.id) AS props
+      FROM accounts a ORDER BY CASE a.status WHEN 'pendiente' THEN 0 ELSE 1 END, a.created_at DESC LIMIT 200`)
+    .all();
+  return results;
+}
+
+export async function adminAccountAction(db, id, action) {
+  const status = { aprobar: 'activa', activar: 'activa', suspender: 'suspendida' }[action];
+  if (!status) return;
+  await db.prepare('UPDATE accounts SET status = ? WHERE id = ?').bind(status, id).run();
+  if (status === 'suspendida') await db.prepare('DELETE FROM sessions WHERE account_id = ?').bind(id).run();
+}
+
+export async function setAccountPassword(db, id, passwordHash) {
+  await db.prepare('UPDATE accounts SET password_hash = ? WHERE id = ?').bind(passwordHash, id).run();
+  await db.prepare('DELETE FROM sessions WHERE account_id = ?').bind(id).run();
 }

@@ -4,6 +4,8 @@ import * as db from './db.js';
 import * as views from './views.js';
 import * as pviews from './views-projects.js';
 import * as aviews from './views-admin-projects.js';
+import * as acviews from './views-account.js';
+import * as auth from './auth.js';
 import {
   normalizeWhatsapp, parseNumber, mapType, cleanText, projectPricePerM2, parseTypologies, PROJECT_COMPARABLE, valuePosition,
 } from './normalize.js';
@@ -301,7 +303,9 @@ async function handlePublicar(request, env, ctx) {
   const title = `${TYPE_LABELS[type]} en ${operation} · ${location ? location + ', ' : ''}${zone.name}`;
   const slug = `${slugify(`${TYPE_LABELS[type]} ${location || ''} ${zone.name}`)}-${crypto.randomUUID().slice(0, 6)}`;
 
+  const account = await auth.currentAccount(request, env.DB);
   const id = await db.insertSubmission(env.DB, {
+    account_id: account ? account.id : null,
     slug,
     title,
     operation,
@@ -342,7 +346,99 @@ async function handlePublicar(request, env, ctx) {
     )
   );
 
+  if (account) return redirect(`/mi-cuenta?ok=publicada&ref=${ref}`);
   return redirect(`/publicar/gracias?ref=${ref}&fotos=${photos.length}`);
+}
+
+// ---------- Cuentas ----------
+
+function safeNext(next) {
+  return /^\/(?!\/)[a-z0-9/_-]*$/i.test(next || '') && !next.startsWith('/admin') ? next : '/mi-cuenta';
+}
+
+async function handleAccounts(request, env, url, path, method) {
+  const noStore = { 'Cache-Control': 'no-store' };
+  const ip = request.headers.get('CF-Connecting-IP') || '';
+
+  if (path === '/ingresar' && method === 'GET') {
+    if (await auth.currentAccount(request, env.DB)) return redirect('/mi-cuenta');
+    const notice = { salida: 'Cerró su sesión.' }[url.searchParams.get('ok')];
+    return page(acviews.loginPage(env, { next: url.searchParams.get('next') || '', notice }), 200, noStore);
+  }
+
+  if (path === '/ingresar' && method === 'POST') {
+    const form = await request.formData();
+    const email = field(form, 'correo', 120).toLowerCase();
+    const password = typeof form.get('clave') === 'string' ? form.get('clave').slice(0, 200) : '';
+    const next = safeNext(field(form, 'next', 200));
+    const fail = (error, status = 401) => page(acviews.loginPage(env, { error, email, next }), status, noStore);
+    if (!email || !password) return fail('Escriba su correo y contraseña.', 422);
+    if (await auth.tooManyAttempts(env.DB, email)) return fail('Demasiados intentos. Espere 15 minutos o pídanos una clave temporal por WhatsApp.', 429);
+    const acc = await db.findAccountByEmail(env.DB, email);
+    if (!acc || !(await auth.verifyPassword(password, acc.password_hash))) {
+      await auth.recordFailure(env.DB, email, ip);
+      return fail('Correo o contraseña incorrectos.');
+    }
+    if (acc.status === 'suspendida') return fail('Esta cuenta está suspendida. Escríbanos por WhatsApp si cree que es un error.', 403);
+    await auth.clearFailures(env.DB, email);
+    return redirect(next, 303, { 'Set-Cookie': await auth.createSession(env.DB, acc.id) });
+  }
+
+  if (path === '/registro' && method === 'GET') {
+    if (await auth.currentAccount(request, env.DB)) return redirect('/mi-cuenta');
+    const role = url.searchParams.get('tipo') === 'asesor' ? 'asesor' : 'propietario';
+    return page(acviews.registerPage(env, { role }), 200, noStore);
+  }
+
+  if (path === '/registro' && method === 'POST') {
+    const form = await request.formData();
+    if (field(form, 'empresa_web')) return redirect('/');
+    if (env.PUBLISH_LIMITER) {
+      const { success } = await env.PUBLISH_LIMITER.limit({ key: `reg:${ip || 'local'}` });
+      if (!success) return new Response('Demasiados registros seguidos. Intente en un minuto.', { status: 429 });
+    }
+    const role = field(form, 'tipo', 12) === 'asesor' ? 'asesor' : 'propietario';
+    const values = { nombre: field(form, 'nombre', 80), whatsapp: field(form, 'whatsapp', 20), correo: field(form, 'correo', 120), empresa: field(form, 'empresa', 80) };
+    const fail = (error) => page(acviews.registerPage(env, { role, values, error }), 422, noStore);
+    const name = cleanText(values.nombre);
+    const email = values.correo.toLowerCase();
+    const whatsapp = normalizeWhatsapp(values.whatsapp);
+    const password = typeof form.get('clave') === 'string' ? form.get('clave') : '';
+    if (!name) return fail('Escriba su nombre.');
+    if (!whatsapp) return fail('Revise su número de WhatsApp: debe tener 8 dígitos (o incluir el código de país).');
+    if (!auth.validEmail(email)) return fail('Revise su correo.');
+    const pwProblem = auth.passwordProblem(password);
+    if (pwProblem) return fail(pwProblem);
+    if (await db.findAccountByEmail(env.DB, email)) return fail('Ya existe una cuenta con ese correo. Ingrese con su contraseña.');
+    const id = await db.createAccount(env.DB, {
+      role,
+      status: role === 'asesor' ? 'pendiente' : 'activa',
+      name,
+      email,
+      whatsapp,
+      company: role === 'asesor' ? cleanText(values.empresa) || null : null,
+      password_hash: await auth.hashPassword(password),
+    });
+    return redirect('/mi-cuenta?ok=bienvenida', 303, { 'Set-Cookie': await auth.createSession(env.DB, id) });
+  }
+
+  if (path === '/mi-cuenta' && method === 'GET') {
+    const account = await auth.currentAccount(request, env.DB);
+    if (!account) return redirect('/ingresar?next=/mi-cuenta');
+    const ref = (url.searchParams.get('ref') || '').replace(/[^A-Z0-9-]/gi, '').slice(0, 12);
+    const notice = {
+      bienvenida: 'Su cuenta está lista.',
+      publicada: `Recibimos su propiedad${ref ? ` (${ref})` : ''}. La revisamos y le escribimos por WhatsApp.`,
+    }[url.searchParams.get('ok')];
+    const props = await db.accountProperties(env.DB, account.id);
+    return page(acviews.accountPage(env, { account, props, notice }), 200, noStore);
+  }
+
+  if (path === '/salir' && method === 'POST') {
+    return redirect('/ingresar?ok=salida', 303, { 'Set-Cookie': await auth.destroySession(request, env.DB) });
+  }
+
+  return null;
 }
 
 const MAX_OWNER_PHOTOS = 10;
@@ -838,8 +934,14 @@ export default {
       }
 
       if (method === 'GET' && path === '/publicar') {
-        return page(views.publishPage(env, { zones: await db.listZones(env.DB) }));
+        const account = await auth.currentAccount(request, env.DB);
+        const values = account ? { nombre: account.name, whatsapp: account.whatsapp ? `+${account.whatsapp}` : '', correo: account.email } : {};
+        return page(views.publishPage(env, { zones: await db.listZones(env.DB), values }), 200, { 'Cache-Control': 'no-store' });
       }
+
+      // --- Cuentas de propietarios y asesores ---
+      const acct = await handleAccounts(request, env, url, path, method);
+      if (acct) return acct;
 
       if (method === 'POST' && path === '/consulta') return handleConsulta(request, env, ctx);
       if (method === 'POST' && path === '/publicar') return handlePublicar(request, env, ctx);
@@ -963,6 +1065,28 @@ export default {
             notes: cleanText(field(form, 'notes', 1000)) || null,
           });
           return redirect('/admin/proyectos?ok=desarrolladora');
+        }
+
+        if (method === 'GET' && path === '/admin/cuentas') {
+          const accounts = await db.adminListAccounts(env.DB);
+          const notice = { accion: 'Cuenta actualizada.' }[url.searchParams.get('ok')];
+          return page(acviews.adminAccountsPage(env, { accounts, notice }), 200, { 'Cache-Control': 'no-store' });
+        }
+
+        const accountAction = path.match(/^\/admin\/cuenta\/(\d+)$/);
+        if (method === 'POST' && accountAction) {
+          const form = await request.formData();
+          const id = Number(accountAction[1]);
+          const action = field(form, 'accion', 20);
+          if (action === 'clave') {
+            const temp = auth.temporaryPassword();
+            await db.setAccountPassword(env.DB, id, await auth.hashPassword(temp));
+            const acc = await env.DB.prepare('SELECT email FROM accounts WHERE id = ?').bind(id).first();
+            const accounts = await db.adminListAccounts(env.DB);
+            return page(acviews.adminAccountsPage(env, { accounts, tempPassword: { email: acc?.email || '', value: temp } }), 200, { 'Cache-Control': 'no-store' });
+          }
+          await db.adminAccountAction(env.DB, id, action);
+          return redirect('/admin/cuentas?ok=accion');
         }
 
         if (method === 'POST' && path === '/admin/nueva') {
