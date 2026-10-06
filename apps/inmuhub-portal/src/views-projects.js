@@ -2,7 +2,7 @@
 import { html, raw, formatMoney, formatNumber, parseJsonArray } from './html.js';
 import {
   layout, CHECK, WA_ICON, GLOBE, zoneOptions, valueBar, utmInputs, PRIVACY_NOTE, HONEYPOT, placeLabel, propertyCard,
-  renderDescription,
+  renderDescription, lockBlock,
 } from './views.js';
 
 export const KIND_LABELS = { apartamentos: 'Apartamentos', casas: 'Casas', lotes: 'Lotes', oficinas: 'Oficinas', mixto: 'Uso mixto' };
@@ -121,7 +121,7 @@ ${compareBar()}`;
 
 // ---------- Ficha ----------
 
-export function projectPage(env, { j, reading, utm, error }) {
+export function projectPage(env, { j, reading, utm, error, account = null }) {
   const mode = j.contact_mode || 'whatsapp';
   const wa = mode === 'whatsapp';
   const contact = mode !== 'ninguno';
@@ -172,20 +172,27 @@ export function projectPage(env, { j, reading, utm, error }) {
       <span class="eyebrow-sm">${place}${j.developer_name ? ` · ${j.developer_name}` : ''}</span>
       <h1 class="display-sm">${j.name}</h1>
       <div class="price-row"><span class="price-lg">${priceFrom(j)}</span>${j.currency === 'USD' && j.price_from_gtq ? html`<span class="muted small">≈ Q ${formatNumber(j.price_from_gtq)}</span>` : ''}</div>
-      ${j.down_payment ? html`<p class="callout">${j.down_payment}</p>` : ''}
+      ${j.down_payment && account ? html`<p class="callout">${j.down_payment}</p>` : ''}
       ${specs.length ? html`<dl class="specs">${specs.map(([k, v]) => html`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl>` : ''}
       ${readingBlock}
       ${typologies.length ? html`<section class="block"><h2>Tipologías</h2>
         <div class="table-wrap"><table class="typologies">
-          <thead><tr><th>Tipo</th><th>Hab.</th><th>Baños</th><th>Área</th><th>Precio</th><th>Por m²</th></tr></thead>
-          <tbody>${typologies.map((t) => html`<tr><td><strong>${t.name || '—'}</strong></td><td>${t.bedrooms ?? '—'}</td><td>${t.bathrooms ? formatNumber(t.bathrooms, 1) : '—'}</td><td>${t.m2 ? `${formatNumber(t.m2, 1)} m²` : '—'}</td><td>${t.price ? formatMoney(t.price, j.currency) : 'Consultar'}</td><td class="muted">${t.price && t.m2 ? formatMoney(t.price / t.m2, j.currency) : '—'}</td></tr>`)}</tbody>
+          <thead><tr><th>Tipo</th><th>Hab.</th><th>Baños</th><th>Área</th>${account ? html`<th>Precio</th><th>Por m²</th>` : ''}</tr></thead>
+          <tbody>${typologies.map((t) => html`<tr><td><strong>${t.name || '—'}</strong></td><td>${t.bedrooms ?? '—'}</td><td>${t.bathrooms ? formatNumber(t.bathrooms, 1) : '—'}</td><td>${t.m2 ? `${formatNumber(t.m2, 1)} m²` : '—'}</td>${account ? html`<td>${t.price ? formatMoney(t.price, j.currency) : 'Consultar'}</td><td class="muted">${t.price && t.m2 ? formatMoney(t.price / t.m2, j.currency) : '—'}</td>` : ''}</tr>`)}</tbody>
         </table></div>
-        <p class="small muted">Precios y disponibilidad sujetos a confirmación de la desarrolladora.</p>
+        ${account ? html`<p class="small muted">Precios y disponibilidad sujetos a confirmación de la desarrolladora.</p>` : ''}
       </section>` : ''}
+      ${!account && (typologies.some((t) => t.price) || j.down_payment || j.brochure_url)
+        ? lockBlock(
+            'Precios por tipología, plan de pagos y brochure',
+            'Con su cuenta gratuita accede al precio de cada tipología, su valor por m², las condiciones de enganche y el material completo del proyecto.',
+            `/proyecto/${j.slug}`
+          )
+        : ''}
       ${j.description ? html`<section class="block"><h2>Sobre el proyecto</h2>${renderDescription(j.description)}</section>` : ''}
       ${amenities.length ? html`<section class="block"><h2>Amenidades</h2><ul class="tags">${amenities.map((a) => html`<li>${a}</li>`)}</ul></section>` : ''}
       ${j.brochure_url || j.video_url ? html`<section class="block"><h2>Material del proyecto</h2><div class="row-actions">
-        ${j.brochure_url ? html`<a class="btn btn-outline btn-sm" href="${j.brochure_url}" target="_blank" rel="noopener">Ver brochure</a>` : ''}
+        ${j.brochure_url ? (account ? html`<a class="btn btn-outline btn-sm" href="${j.brochure_url}" target="_blank" rel="noopener">Ver brochure</a>` : html`<a class="btn btn-outline btn-sm" href="/ingresar?next=${encodeURIComponent('/proyecto/' + j.slug)}">Brochure (con cuenta)</a>`) : ''}
         ${j.video_url ? html`<a class="btn btn-outline btn-sm" href="${j.video_url}" target="_blank" rel="noopener">Ver video</a>` : ''}
       </div></section>` : ''}
       <section class="block"><h2>Ubicación</h2><p class="muted">${place}. ${j.zone_slug ? html`<a href="/zona/${j.zone_slug}">Ver todo sobre ${j.zone_name}</a>` : ''}</p></section>

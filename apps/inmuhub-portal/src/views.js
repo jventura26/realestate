@@ -7,7 +7,7 @@ export const WA_ICON = raw('<svg class="i" width="18" height="18" viewBox="0 0 2
 export const GLOBE = raw('<svg class="i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18"/></svg>');
 
 // Cambia en cada publicación para que los navegadores no usen estilos ni scripts viejos.
-export const ASSET_VERSION = '2026-10-06a';
+export const ASSET_VERSION = '2026-10-06b';
 
 // ---------- Layout ----------
 
@@ -368,7 +368,35 @@ export function listingPage(env, { zones, filters, items, total, positions }) {
   return layout(env, { title: heading, path: '/propiedades' + (qs ? '?' + qs : ''), body });
 }
 
-export function propertyPage(env, { p, reading, utm, error }) {
+// Bloque para contenido que se abre con una cuenta gratuita.
+export function lockBlock(title, text, next, { light = false } = {}) {
+  const q = `next=${encodeURIComponent(next)}`;
+  return html`<div class="lock${light ? ' lock-light' : ''}">
+    <div><strong>${title}</strong><p class="small muted">${text}</p></div>
+    <div class="row-actions"><a class="btn ${light ? 'btn-brass' : 'btn-primary'} btn-sm" href="/registro?tipo=comprador&amp;${raw(q)}">Crear cuenta gratuita</a><a class="btn ${light ? 'btn-outline' : 'btn-outline'} btn-sm" href="/ingresar?${raw(q)}">Ingresar</a></div>
+  </div>`;
+}
+
+function saveRow(p, account, fav, notice) {
+  const next = `/propiedad/${p.slug}`;
+  if (!account) {
+    return html`<div class="save-box" id="guardar">
+      <strong>Guárdela y reciba similares</strong>
+      <p class="small muted">Con una cuenta gratuita guarda esta propiedad y le avisamos cuando entre una parecida en ${p.zone_name || 'la zona'}.</p>
+      <div class="fav-row"><a class="btn btn-outline btn-sm" href="/registro?tipo=comprador&amp;${raw(`next=${encodeURIComponent(next)}`)}">Crear cuenta</a><a class="btn btn-outline btn-sm" href="/ingresar?${raw(`next=${encodeURIComponent(next)}`)}">Ingresar</a></div>
+    </div>`;
+  }
+  return html`<div class="save-box" id="guardar">
+    ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
+    <div class="fav-row">
+      <form method="post" action="/favorito/${p.slug}"><button class="btn ${fav ? 'btn-primary' : 'btn-outline'} btn-sm" type="submit">${fav ? 'Guardada ✓' : 'Guardar'}</button></form>
+      <form method="post" action="/similares/${p.slug}"><button class="btn btn-outline btn-sm" type="submit">Recibir similares</button></form>
+    </div>
+    <p class="small muted">${fav ? 'La encuentra en Mi cuenta.' : 'Las propiedades guardadas quedan en Mi cuenta.'}</p>
+  </div>`;
+}
+
+export function propertyPage(env, { p, reading, utm, error, account = null, fav = false, notice = '' }) {
   const mode = p.contact_mode || (p.whatsapp_enabled === 0 ? 'formulario' : 'whatsapp');
   const wa = mode === 'whatsapp';
   const contact = mode !== 'ninguno';
@@ -445,6 +473,7 @@ export function propertyPage(env, { p, reading, utm, error }) {
         <p class="small muted">${wa ? 'Sus datos solo se comparten con el asesor de esta propiedad.' : 'Un asesor le contactará para darle información y coordinar una visita.'}</p>
       ${PRIVACY_NOTE}
       </form>` : ''}
+      ${saveRow(p, account, fav, notice)}
     </aside>
   </div>
   ${contact ? html`<div class="sticky-cta"><a class="btn btn-primary btn-block" href="#consulta">${wa ? html`${WA_ICON}Consultar por WhatsApp` : 'Solicitar información'}</a></div>` : ''}
@@ -459,7 +488,7 @@ export function propertyPage(env, { p, reading, utm, error }) {
   });
 }
 
-export function zoneValuePage(env, { zones, zone, type, value, utm, error }) {
+export function zoneValuePage(env, { zones, zone, type, value, utm, error, account = null }) {
   const typeLabel = { casa: 'Casas', apartamento: 'Apartamentos', terreno: 'Terrenos' }[type] || 'Casas';
   const result = !zone
     ? html`<p class="lead-light">Elija una zona para ver su rango.</p>`
@@ -475,7 +504,7 @@ export function zoneValuePage(env, { zones, zone, type, value, utm, error }) {
       : html`<div class="result">
   <div class="result-head"><h2>${zone.name} · ${typeLabel}</h2></div>
   <p class="lead-light">Aún reunimos comparables en esta zona (hay ${value.count} de ${env.MIN_COMPARABLES || 5} necesarias para un rango confiable).</p>
-  <p class="small light">Déjenos su WhatsApp y le enviamos un análisis hecho por un asesor.</p>
+  <p class="small light">Mientras tanto, un asesor puede preparar el análisis de su propiedad.</p>
 </div>`;
 
   const body = html`
@@ -491,24 +520,36 @@ export function zoneValuePage(env, { zones, zone, type, value, utm, error }) {
       </form>
       ${result}
     </div>
-    <form class="form-card" method="post" action="/consulta" data-lead="1">
-      <h2>Reciba el análisis completo</h2>
-      <p class="small muted">Un asesor le envía por WhatsApp el detalle de la zona: comparables, tendencia y recomendación.</p>
+    ${account ? html`<form class="form-card" method="post" action="/consulta" data-lead="1">
+      <h2>Análisis de su propiedad</h2>
+      <p class="small muted">Un asesor revisa su caso y le envía por WhatsApp los comparables, la tendencia de la zona y una recomendación de precio.</p>
       ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
       <input type="hidden" name="tipo" value="valor_zona">
       <input type="hidden" name="zona" value="${zone?.slug || ''}">
       <input type="hidden" name="tipo_propiedad" value="${type}">
       ${utmInputs(utm)}
       ${HONEYPOT}
-      <label>Nombre<input type="text" name="nombre" autocomplete="name" maxlength="80" required></label>
-      <label>WhatsApp<input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="+502" maxlength="20" required></label>
+      <label>Nombre<input type="text" name="nombre" autocomplete="name" maxlength="80" value="${account.name || ''}" required></label>
+      <label>WhatsApp<input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="+502" maxlength="20" value="${account.whatsapp ? `+${account.whatsapp}` : ''}" required></label>
       <fieldset class="seg"><legend>Usted quiere</legend>
         <label><input type="radio" name="intencion" value="comprar" checked><span>Comprar</span></label>
         <label><input type="radio" name="intencion" value="vender"><span>Vender</span></label>
       </fieldset>
-      <button class="btn btn-primary btn-block" type="submit">${WA_ICON}Recibir por WhatsApp</button>
+      <label class="check-line"><input type="checkbox" name="alerta" value="1" checked> Avisarme cada mes si cambia el rango de la zona</label>
+      <button class="btn btn-primary btn-block" type="submit">${WA_ICON}Solicitar análisis</button>
     ${PRIVACY_NOTE}
-      </form>
+    </form>` : html`<div class="form-card">
+      <span class="eyebrow">Con cuenta gratuita</span>
+      <h2>Análisis de su propiedad</h2>
+      <ul class="checks">
+        <li>${CHECK}Comparables de su propiedad, no solo de la zona.</li>
+        <li>${CHECK}Recomendación de precio de un asesor por WhatsApp.</li>
+        <li>${CHECK}Aviso mensual si cambia el rango de la zona.</li>
+      </ul>
+      <a class="btn btn-primary btn-block" href="/registro?tipo=comprador&amp;next=%2Fvalor">Crear cuenta gratuita</a>
+      <a class="btn btn-outline btn-block" href="/ingresar?next=%2Fvalor">Ya tengo cuenta</a>
+      <p class="small muted">El rango de la zona es público. La cuenta sirve para darle seguimiento a su caso.</p>
+    </div>`}
   </div>
 </section>`;
   return layout(env, {

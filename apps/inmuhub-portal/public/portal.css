@@ -497,3 +497,16 @@ h1, h2, h3 { text-wrap: balance; }
 .see-more-stats div { display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 14px; background: var(--ground); }
 .see-more-stats strong { font-family: var(--display); font-weight: 500; font-size: 28px; }
 .see-more-stats span { font-size: 13px; color: var(--muted); }
+
+/* ---------- Contenido para usuarios registrados ---------- */
+.lock { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; padding: 20px 22px; border: 1.5px dashed var(--ink); border-radius: 18px; background: var(--surface); margin: 8px 0; }
+.lock > div:first-child { flex: 1 1 260px; display: flex; flex-direction: column; gap: 4px; }
+.lock strong { font-family: var(--display); font-weight: 500; font-size: 20px; }
+.lock-light { border-color: rgba(255,255,255,.5); background: transparent; color: #fff; }
+.lock-light .muted { color: var(--light); }
+.fav-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.save-box { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+.save-box strong { font-family: var(--display); font-weight: 500; font-size: 18px; }
+.save-box form { margin: 0; }
+.check-line { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 14px; }
+.check-line input { width: auto; margin-top: 3px; }

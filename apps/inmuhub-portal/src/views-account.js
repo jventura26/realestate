@@ -78,8 +78,21 @@ export function registerPage(env, { role = 'comprador', values = {}, error, next
   return layout(env, { title: heading, path: '/registro', body, noindex: true });
 }
 
-export function accountPage(env, { account, props, notice }) {
-  if (account.role === 'comprador') return buyerAccountPage(env, { account, notice });
+function favoritesBlock(favs = []) {
+  return html`<h2>Guardadas</h2>
+  ${favs.length
+    ? html`<div class="table-wrap"><table>
+      <thead><tr><th>Propiedad</th><th>Precio</th><th></th></tr></thead>
+      <tbody>${favs.map((p) => html`<tr>
+        <td><strong>${p.title}</strong><br><span class="small muted">${p.zone_name || ''}</span></td>
+        <td>${formatMoney(p.price_amount, p.currency)}</td>
+        <td><a class="btn btn-outline btn-xs" href="/propiedad/${p.slug}">Ver ficha</a></td>
+      </tr>`)}</tbody></table></div>`
+    : html`<p class="muted">Aún no ha guardado propiedades. En cada ficha encontrará el botón «Guardar».</p>`}`;
+}
+
+export function accountPage(env, { account, props, notice, favs = [] }) {
+  if (account.role === 'comprador') return buyerAccountPage(env, { account, notice, favs });
   const asesor = account.role === 'asesor';
   const pending = account.status === 'pendiente';
   const body = html`
@@ -103,6 +116,8 @@ export function accountPage(env, { account, props, notice }) {
     <div><span>En revisión</span><strong>${props.filter((p) => p.status === 'revision').length}</strong></div>
     <div><span>Consultas recibidas</span><strong>${props.reduce((n, p) => n + (p.leads || 0), 0)}</strong></div>
   </div>
+
+  ${favs.length ? favoritesBlock(favs) : ''}
 
   <h2>Mis propiedades</h2>
   ${props.length
@@ -176,7 +191,7 @@ export function adminAccountsPage(env, { accounts, notice, tempPassword }) {
   return layout(env, { title: 'Cuentas', body, noindex: true });
 }
 
-function buyerAccountPage(env, { account, notice }) {
+function buyerAccountPage(env, { account, notice, favs }) {
   const body = html`
 <section class="wrap section account">
   <div class="section-head">
@@ -193,6 +208,7 @@ function buyerAccountPage(env, { account, notice }) {
     <article class="how-card"><div class="eyebrow">Proyectos</div><h3>Obra nueva</h3><p>Compare proyectos en preventa y construcción por precio por m² y zona.</p><a class="btn btn-outline btn-sm" href="/proyectos">Ver proyectos</a></article>
     <article class="how-card"><div class="eyebrow">Datos</div><h3>Precio por m²</h3><p>Rangos por zona actualizados cada mes con anuncios reales.</p><a class="btn btn-outline btn-sm" href="/mercado">Ver datos de mercado</a></article>
   </div>
+  ${favoritesBlock(favs)}
   <div class="panel">
     <div class="eyebrow">Sus datos</div>
     <p class="small">${account.email}<br>${account.whatsapp ? `+${account.whatsapp}` : ''}</p>

@@ -404,7 +404,40 @@ export async function projectMonthReport(db, id, month) {
     .prepare(`SELECT day, views FROM project_views WHERE project_id = ? AND day >= ? AND day < date(?, '+1 month') ORDER BY day`)
     .bind(id, from, from)
     .all();
-  return { views: views?.n ?? 0, leads, daily };
+  const unlocks = await db
+    .prepare(`SELECT COUNT(*) AS n FROM project_unlocks WHERE project_id = ? AND created_at >= ? AND created_at < datetime(?, '+1 month')`)
+    .bind(id, from, from)
+    .first();
+  return { views: views?.n ?? 0, leads, daily, unlocks: unlocks?.n ?? 0 };
+}
+
+export async function recordProjectUnlock(db, projectId, accountId) {
+  await db.prepare('INSERT OR IGNORE INTO project_unlocks (project_id, account_id) VALUES (?, ?)').bind(projectId, accountId).run();
+}
+
+// ---- Favoritas ----
+
+export async function isFavorite(db, accountId, propertyId) {
+  return !!(await db.prepare('SELECT 1 AS x FROM favorites WHERE account_id = ? AND property_id = ?').bind(accountId, propertyId).first());
+}
+
+export async function toggleFavorite(db, accountId, propertyId) {
+  if (await isFavorite(db, accountId, propertyId)) {
+    await db.prepare('DELETE FROM favorites WHERE account_id = ? AND property_id = ?').bind(accountId, propertyId).run();
+    return false;
+  }
+  await db.prepare('INSERT INTO favorites (account_id, property_id) VALUES (?, ?)').bind(accountId, propertyId).run();
+  return true;
+}
+
+export async function accountFavorites(db, accountId) {
+  const { results } = await db
+    .prepare(`SELECT p.*, z.name AS zone_name FROM favorites f JOIN properties p ON p.id = f.property_id
+      LEFT JOIN zones z ON z.slug = p.zone_slug
+      WHERE f.account_id = ? AND p.status = 'publicada' ORDER BY f.created_at DESC`)
+    .bind(accountId)
+    .all();
+  return results;
 }
 
 // ---- Cuentas ----

@@ -191,7 +191,7 @@ footer p{opacity:.74;max-width:85ch}
     <div class="head">
       <span class="eyebrow">Precio por m² construido</span>
       <h2 id="d-title">Lo que se pide hoy</h2>
-      <p>Cada punto es un anuncio en venta. La franja dorada es el rango central (la mitad de los anuncios cae ahí) y la línea vertical es la mediana. Toca un punto para ver el anuncio.</p>
+      <p>Cada punto es un anuncio en venta. La franja dorada es el rango central (la mitad de los anuncios cae ahí) y la línea vertical es la mediana. Toca un punto para ver el anuncio (detalle con cuenta gratuita).</p>
     </div>
     <div class="panel">
       <div class="dist" id="dist"></div>
@@ -385,8 +385,15 @@ function axis(){
   var h="";[0,1000,2000,3000,4000,5000].forEach(function(v){h+='<span style="left:'+(v/AXIS_MAX*100)+'%">'+(v?"$"+v/1000+"K":"$0")+'</span>'});
   document.getElementById("axisx").innerHTML=h;
 }
+// El detalle de cada anuncio se abre con una cuenta gratuita de inmuhub.
+var SESION=false;
+try{fetch("/api/sesion",{credentials:"same-origin",cache:"no-store"}).then(function(r){return r.ok?r.json():{}}).then(function(j){SESION=!!(j&&j.sesion)}).catch(function(){})}catch(_){}
 document.getElementById("dist").addEventListener("click",function(e){
   var b=e.target.closest(".dotm"); if(!b) return;
+  if(!SESION){
+    document.getElementById("tip").innerHTML='<strong>'+fmt(+b.dataset.v)+'/m²</strong> · El detalle de cada anuncio (precio, área y descripción) está disponible con una cuenta gratuita. <a href="/registro?tipo=comprador&next=%2Fmercado">Crear cuenta</a> · <a href="/ingresar?next=%2Fmercado">Ingresar</a>';
+    return;
+  }
   document.getElementById("tip").innerHTML='<strong>'+b.dataset.t+'</strong> · '+fmt(+b.dataset.p)+' · '+(+b.dataset.m)+' m² · <b>'+fmt(+b.dataset.v)+'/m²</b>';
 });
 

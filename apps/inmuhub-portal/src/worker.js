@@ -11,7 +11,7 @@ import { serviceBySlug, SERVICES } from './services.js';
 import {
   normalizeWhatsapp, parseNumber, mapType, cleanText, projectPricePerM2, parseTypologies, PROJECT_COMPARABLE, valuePosition,
 } from './normalize.js';
-import { TYPE_LABELS, parseJsonArray } from './html.js';
+import { TYPE_LABELS, parseJsonArray, formatMoney } from './html.js';
 
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
@@ -170,19 +170,19 @@ async function handleConsulta(request, env, ctx) {
       const p = await db.getPublicProperty(env.DB, field(form, 'propiedad', 80));
       if (!p) return page(views.notFoundPage(env), 404);
       const reading = await db.propertyValueReading(env.DB, p, minComparables(env));
-      return page(views.propertyPage(env, { p, reading, utm: utmFrom(url), error }), 422);
+      return page(views.propertyPage(env, { p, reading, utm: utmFrom(url), error, account: await auth.currentAccount(request, env.DB) }), 422);
     }
     if (kind === 'valor_zona') {
       const zones = await db.listZones(env.DB);
       const zone = await db.getZone(env.DB, field(form, 'zona', 60));
       const type = mapType(field(form, 'tipo_propiedad', 20));
       const value = zone ? await db.zoneValue(env.DB, zone.slug, type, minComparables(env)) : null;
-      return page(views.zoneValuePage(env, { zones, zone, type, value, utm: {}, error }), 422);
+      return page(views.zoneValuePage(env, { zones, zone, type, value, utm: {}, error, account: await auth.currentAccount(request, env.DB) }), 422);
     }
     if (kind === 'proyecto') {
       const j = await db.getPublicProject(env.DB, field(form, 'proyecto', 100));
       if (!j) return page(views.notFoundPage(env), 404);
-      return page(pviews.projectPage(env, { j, reading: await projectReading(env, j), utm: utmFrom(url), error }), 422);
+      return page(pviews.projectPage(env, { j, reading: await projectReading(env, j), utm: utmFrom(url), error, account: await auth.currentAccount(request, env.DB) }), 422);
     }
     if (kind === 'desarrolladora') {
       return page(pviews.developersPage(env, { utm: {}, error, stats: await siteStats(env) }), 422);
@@ -192,6 +192,8 @@ async function handleConsulta(request, env, ctx) {
 
   if (field(form, 'empresa')) return redirect('/'); // honeypot: bot
   if (!['propiedad', 'valor_zona', 'plan', 'proyecto', 'desarrolladora'].includes(kind)) return redirect('/');
+  // El análisis de una propiedad y la alerta de zona son para usuarios registrados.
+  if (kind === 'valor_zona' && !(await auth.currentAccount(request, env.DB))) return redirect('/ingresar?next=/valor', 303);
 
   const whatsapp = normalizeWhatsapp(field(form, 'whatsapp', 20));
   const name = cleanText(field(form, 'nombre', 80));
@@ -227,7 +229,9 @@ async function handleConsulta(request, env, ctx) {
     lead.zone_slug = zone?.slug || null;
     lead.zone_name = zone?.name || null;
     const tipo = TYPE_LABELS[mapType(field(form, 'tipo_propiedad', 20))] || 'Casa';
-    text = `Hola, soy ${name}. Quiero el análisis de valor de ${zone?.name || 'mi zona'} (${tipo.toLowerCase()}). Mi interés es ${lead.intent === 'vender' ? 'vender' : 'comprar'}.`;
+    const alerta = field(form, 'alerta', 2) === '1';
+    if (alerta) lead.message = 'Activar aviso mensual del rango de la zona';
+    text = `Hola, soy ${name}. Quiero el análisis de valor de mi propiedad en ${zone?.name || 'mi zona'} (${tipo.toLowerCase()}). Mi interés es ${lead.intent === 'vender' ? 'vender' : 'comprar'}.${alerta ? ' También quiero el aviso mensual del rango de la zona.' : ''}`;
   } else if (kind === 'proyecto') {
     project = await db.getPublicProject(env.DB, field(form, 'proyecto', 100));
     if (!project) return page(views.notFoundPage(env), 404);
@@ -437,8 +441,8 @@ async function handleAccounts(request, env, url, path, method) {
       bienvenida: 'Su cuenta está lista.',
       publicada: `Recibimos su propiedad${ref ? ` (${ref})` : ''}. La revisamos y le escribimos por WhatsApp.`,
     }[url.searchParams.get('ok')];
-    const props = await db.accountProperties(env.DB, account.id);
-    return page(acviews.accountPage(env, { account, props, notice }), 200, noStore);
+    const [props, favs] = await Promise.all([db.accountProperties(env.DB, account.id), db.accountFavorites(env.DB, account.id)]);
+    return page(acviews.accountPage(env, { account, props, notice, favs }), 200, noStore);
   }
 
   if (path === '/salir' && method === 'POST') {
@@ -883,7 +887,50 @@ export default {
         const p = await db.getPublicProperty(env.DB, propMatch[1]);
         if (!p) return page(views.notFoundPage(env), 404);
         const reading = await db.propertyValueReading(env.DB, p, minComparables(env));
-        return page(views.propertyPage(env, { p, reading, utm: utmFrom(url) }));
+        const account = await auth.currentAccount(request, env.DB);
+        const fav = account ? await db.isFavorite(env.DB, account.id, p.id) : false;
+        const notice = {
+          guardada: 'Guardada en su cuenta.',
+          quitada: 'La quitamos de sus guardadas.',
+          similares: 'Listo. Le escribimos por WhatsApp cuando entre una propiedad parecida.',
+        }[url.searchParams.get('ok')] || '';
+        return page(views.propertyPage(env, { p, reading, utm: utmFrom(url), account, fav, notice }), 200, { 'Cache-Control': 'no-store' });
+      }
+
+      // Guardar en favoritos y pedir propiedades similares (requiere cuenta).
+      const saveMatch = path.match(/^\/(favorito|similares)\/([a-z0-9-]{1,100})$/i);
+      if (method === 'POST' && saveMatch) {
+        const [, action, slug] = saveMatch;
+        const account = await auth.currentAccount(request, env.DB);
+        if (!account) return redirect(`/ingresar?next=${encodeURIComponent(`/propiedad/${slug}`)}`);
+        const p = await db.getPublicProperty(env.DB, slug);
+        if (!p) return page(views.notFoundPage(env), 404);
+        if (action === 'favorito') {
+          const saved = await db.toggleFavorite(env.DB, account.id, p.id);
+          return redirect(`/propiedad/${p.slug}?ok=${saved ? 'guardada' : 'quitada'}#guardar`, 303);
+        }
+        if (!account.whatsapp) return redirect(`/servicios/busqueda-asistida#solicitar`, 303);
+        const lead = {
+          kind: 'plan',
+          name: account.name,
+          whatsapp: account.whatsapp,
+          intent: 'servicio:busqueda-asistida',
+          message: `Similares a "${p.title}" · ${p.zone_name || p.zone_slug} · ${formatMoney(p.price_amount, p.currency)}`.slice(0, 300),
+          property_id: p.id,
+          zone_slug: p.zone_slug,
+        };
+        const id = await db.insertLead(env.DB, lead);
+        const full = { id, ...lead, property_slug: p.slug, property_title: p.title };
+        ctx.waitUntil(forwardToCrm(env, full).then((ok) => ok && db.markLeadSynced(env.DB, id)).catch((e) => console.error('CRM webhook', e)));
+        ctx.waitUntil(notifyByEmail(env, full).catch((e) => console.error('Aviso por correo', e)));
+        return redirect(`/propiedad/${p.slug}?ok=similares#guardar`, 303);
+      }
+
+      if (method === 'GET' && path === '/api/sesion') {
+        const account = await auth.currentAccount(request, env.DB);
+        return new Response(JSON.stringify({ sesion: Boolean(account) }), {
+          headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...SECURITY_HEADERS },
+        });
       }
 
       if (method === 'GET' && path === '/proyectos') {
@@ -905,7 +952,9 @@ export default {
         if (!BOT_UA.test(request.headers.get('User-Agent') || '') && !(await isAdmin(request, env))) {
           ctx.waitUntil(db.recordProjectView(env.DB, j.id).catch((e) => console.error('Visita', e)));
         }
-        return page(pviews.projectPage(env, { j, reading: await projectReading(env, j), utm: utmFrom(url) }));
+        const account = await auth.currentAccount(request, env.DB);
+        if (account) ctx.waitUntil(db.recordProjectUnlock(env.DB, j.id, account.id).catch((e) => console.error('Acceso', e)));
+        return page(pviews.projectPage(env, { j, reading: await projectReading(env, j), utm: utmFrom(url), account }), 200, { 'Cache-Control': 'no-store' });
       }
 
       if (method === 'GET' && path === '/comparar') {
@@ -950,7 +999,8 @@ export default {
         const zone = url.searchParams.get('zona') ? await db.getZone(env.DB, url.searchParams.get('zona')) : null;
         const type = ['casa', 'apartamento', 'terreno'].includes(url.searchParams.get('tipo')) ? url.searchParams.get('tipo') : 'casa';
         const value = zone ? await db.zoneValue(env.DB, zone.slug, type, minComparables(env)) : null;
-        return page(views.zoneValuePage(env, { zones, zone, type, value, utm: utmFrom(url) }));
+        const account = await auth.currentAccount(request, env.DB);
+        return page(views.zoneValuePage(env, { zones, zone, type, value, utm: utmFrom(url), account }), 200, { 'Cache-Control': 'no-store' });
       }
 
       if (method === 'GET' && path === '/privacidad') {

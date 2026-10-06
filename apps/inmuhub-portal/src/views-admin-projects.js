@@ -202,6 +202,7 @@ export function adminProjectReportPage(env, { j, month, months, report }) {
     <div><span>Consultas</span><strong>${formatNumber(report.leads.length)}</strong></div>
     <div><span>Consultas por cada 100 visitas</span><strong>${rate ?? '—'}</strong></div>
     <div><span>Para invertir</span><strong>${formatNumber(byIntent.invertir || 0)}</strong></div>
+    <div><span>Personas registradas que vieron precios</span><strong>${formatNumber(report.unlocks || 0)}</strong></div>
   </div>
   ${report.views ? html`<div class="report-chart" role="img" aria-label="Visitas por día del mes">${days.map((d) => html`<span style="height:${d.views ? Math.max(4, (d.views / maxDay) * 100).toFixed(0) : 1}%" title="${d.day}: ${d.views}"></span>`)}</div><p class="small muted">Visitas por día del mes</p>` : ''}
   <div class="split">
