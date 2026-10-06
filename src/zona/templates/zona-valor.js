@@ -66,7 +66,7 @@ function valorZonaPage(entry, ctx, props, card) {
     `Según el Índice Zona-INNmueble (${fecha}), el precio típico de oferta es ${usd(d.precio[1])}, y la mitad de los anuncios está entre ${usd(d.precio[0])} y ${usd(d.precio[2])}. Son precios publicados, no de cierre.`]);
   if (d.m2) faqs.push([`¿Cuál es el precio por metro cuadrado en ${name}?`, `La mediana es ${money(d.m2[1])} por m² ${/terreno/.test(d.base || '') ? 'de terreno' : 'de construcción'} para ${TIPO_PL[main]}, con un rango típico de ${money(d.m2[0])} a ${money(d.m2[2])}.`]);
   if (rentT) faqs.push([`¿Cuánto se renta ${rentT === 'Casa' ? 'una casa' : 'un apartamento'} en ${name}?`, `La renta típica es de ${money(l.tipos[rentT].renta[1])} al mes (rango ${money(l.tipos[rentT].renta[0])}–${money(l.tipos[rentT].renta[2])}), con un rendimiento bruto anual cercano a ${(l.tipos[rentT].rend * 100).toFixed(1)}%.`]);
-  faqs.push([`¿Cómo sé si una propiedad en ${name} tiene buen precio?`, `Compara su precio y su precio por m² con el rango típico de la zona, y revisa estado, ubicación exacta y documentos. En Zona-INNmueble hacemos ese análisis contigo antes de cualquier oferta.`]);
+  faqs.push([`¿Cómo sé si una propiedad en ${name} tiene buen precio?`, `Compara su precio y su precio por m² con el rango típico de la zona, y revisa estado, ubicación exacta y documentos. En Zona-INNmueble hacemos ese análisis con usted antes de cualquier oferta.`]);
 
   const jsonLd = {
     '@context': 'https://schema.org', '@graph': [
@@ -112,7 +112,7 @@ function valorZonaPage(entry, ctx, props, card) {
       </div>
       <div class="h2-panel glass">
         <div class="za-ey">¿Evalúas una propiedad en ${escapeHtml(name)}?</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;margin:6px 0 12px">Te decimos si su precio está en rango</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;margin:6px 0 12px">Le decimos si su precio está en rango</h3>
         <p style="font-size:.82rem;color:var(--sv);line-height:1.75;margin-bottom:18px">Envíanos el enlace o los datos de la propiedad y la comparamos con el mercado de la zona, sin compromiso.</p>
         <a class="btn-gold" style="width:100%" href="${waLink('Hola, estoy evaluando una propiedad en ' + name + '. ¿Me ayudan a analizar si su precio está en rango?')}" target="_blank" rel="noopener">${I.wa} Pedir análisis</a>
         <div style="display:flex;gap:10px;margin-top:10px"><a class="btn-ghost" style="flex:1;padding:12px 10px" href="/diagnostico.html">Diagnóstico</a><a class="btn-ghost" style="flex:1;padding:12px 10px" href="/vender.html#estimador">Vender</a></div>
@@ -152,7 +152,7 @@ function valorIndexPage(ctx) {
   const body = `
 <section class="pg-hero grid-bg"><div class="sec-in">
   <div class="ey">Valor por zona</div>
-  <h1 class="pg-h1">¿Cuánto cuesta una propiedad <em>en tu zona?</em></h1>
+  <h1 class="pg-h1">¿Cuánto cuesta una propiedad <em>en su zona?</em></h1>
   <p class="pg-lead">${list.length} zonas, sectores y municipios de Guatemala con precio por m², precio típico y renta, calculados con ${(D.n_anuncios || 0).toLocaleString('en-US')} anuncios.</p>
 </div></section>
 <section class="sec" style="background:var(--ink2);padding-top:50px"><div class="sec-in">

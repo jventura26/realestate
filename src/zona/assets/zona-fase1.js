@@ -19,12 +19,12 @@
     '#fs{border-color:rgba(201,163,91,.25)!important;color:#C9A35B!important;font-weight:500!important}',
     '/* MOBILE STICKY CTA */',
     '.zi-sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:250;background:rgba(13,27,62,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid rgba(201,163,91,.25);padding:10px 4%;gap:8px}',
-    '.zi-sticky-cta a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 8px;font-family:Montserrat,sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .3s}',
+    '.zi-sticky-cta a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 8px;font-family:Montserrat,sans-serif;font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .3s}',
     '.zi-sticky-cta .zi-scta-wa{background:#25D366;color:#fff;border:none}',
     '.zi-sticky-cta .zi-scta-wa:hover{background:#1ebe5d}',
     '.zi-sticky-cta .zi-scta-call{background:transparent;color:#C9A35B;border:1px solid rgba(201,163,91,.25)}',
     '.zi-sticky-cta .zi-scta-call:hover{background:#C9A35B;color:#0D1B3E}',
-    '@media(max-width:768px){.zi-sticky-cta{display:flex}.wa-float{display:none!important}body{padding-bottom:64px}}',
+    '@media(max-width:768px){.zi-sticky-cta{display:flex;transform:translateY(110%);transition:transform .35s ease}.zi-sticky-cta.on{transform:none}.wa-float{display:none!important}body{padding-bottom:64px}}',
     '/* FULLSCREEN LIGHTBOX */',
     '.main-img{position:relative;cursor:pointer}',
     '.zi-fs-btn{position:absolute;top:14px;right:14px;background:rgba(13,27,62,.8);color:#fff;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);opacity:0;transition:opacity .3s;cursor:pointer;z-index:5}',
@@ -321,7 +321,11 @@
   var __en = document.documentElement.lang === 'en';
   stickyBar.innerHTML = '<a href="https://wa.me/50245542088?text=' + (__en ? 'Hi%2C%20I%20am%20interested%20in%20a%20property%20in%20Guatemala.' : 'Hola%2C%20me%20interesa%20una%20propiedad%20de%20Zona%20INNmueble.') + '" target="_blank" rel="noopener" class="zi-scta-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-3px;margin-right:6px"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 2.5 1.1 3 .9 3.6.8.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 7 2.9 1.9 1.9 2.9 4.3 2.9 7 0 5.4-4.4 9.7-9.9 9.7z"/></svg>WhatsApp</a>'
     + '<a href="tel:+50245542088" class="zi-scta-call"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:6px"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>' + (__en ? 'Call' : 'Llamar') + '</a>';
-  document.body.appendChild(stickyBar);
+  // En la ficha ya existe su propia barra (Informacion / Visita): no se duplican barras.
+  if (!document.querySelector('.dv3-wa-float')) document.body.appendChild(stickyBar);
+  // La barra aparece al bajar (no tapa la portada ni los formularios del primer pantallazo).
+  (function(){var on=false;function chk(){var v=window.scrollY>window.innerHeight*0.6;if(v!==on){on=v;stickyBar.classList.toggle('on',v);}}
+    window.addEventListener('scroll',chk,{passive:true});chk();})();
 
   // ═══════════════════════════════════════
   // 4. META PIXEL + GA4 CONVERSION EVENTS

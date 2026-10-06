@@ -69,8 +69,18 @@ ${alternates ? `<link rel="alternate" hreflang="es" href="${DOMAIN}${alternates.
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Zona INNmueble">
 
-<!-- Meta Pixel (inline para _fbp cookie inmediata) -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','` + pixelId + `');window.__pvId='pv'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__pvId});</script>
+<!-- Meta Pixel y Google Tag Manager diferidos: se cargan con la primera interaccion
+     (scroll, toque, clic o tecla) o a los 3.5 s de cargar la pagina. Los eventos que
+     ocurran antes quedan en cola y se envian igual (fbq y dataLayer son colas). -->
+<script>!function(f,b){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window,document);
+fbq('init','` + pixelId + `');window.__pvId='pv'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__pvId});
+window.dataLayer=window.dataLayer||[];window.dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+(function(w,d){var done=false;function add(src){var j=d.createElement('script');j.async=true;j.src=src;d.head.appendChild(j);}
+function go(){if(done)return;done=true;['scroll','pointerdown','keydown','touchstart'].forEach(function(e){w.removeEventListener(e,go,{passive:true});});
+add('https://connect.facebook.net/en_US/fbevents.js');add('https://www.googletagmanager.com/gtm.js?id=GTM-KH4VCQBZ');}
+['scroll','pointerdown','keydown','touchstart'].forEach(function(e){w.addEventListener(e,go,{passive:true,once:true});});
+w.addEventListener('load',function(){setTimeout(go,3500);});})(window,document);
+</script>
 <script>
 /* zTrack: evento en el Pixel y en la API de Conversiones con el mismo eventID (Meta deduplica) */
 window.zTrack=function(name,data,standard){
@@ -86,13 +96,7 @@ window.zTrack=function(name,data,standard){
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=` + pixelId + `&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KH4VCQBZ');</script>
-<!-- End Google Tag Manager -->
+<!-- Google Tag Manager: carga diferida arriba (GTM-KH4VCQBZ) -->
 
 <!-- GA4 manejado por GTM (GTM-KH4VCQBZ) | Meta Pixel ahora inline arriba -->
 
@@ -106,8 +110,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-<link rel="preload" href="/assets/zona-styles.css?v=20261001" as="style">
-<link rel="stylesheet" href="/assets/zona-styles.css?v=20261001">
+<link rel="preload" href="/assets/zona-styles.css?v=20261006" as="style">
+<link rel="stylesheet" href="/assets/zona-styles.css?v=20261006">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -165,6 +169,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/valor-por-zona.html">Valor por zona</a></li>
       <li><a href="/indice.html">&Iacute;ndice</a></li>
       <li><a href="/vender.html">Vender</a></li>
+      <li><a href="/servicios.html">Servicios</a></li>
       <li><a href="/blog.html">Blog</a></li>
       <li><a href="/about.html">Nosotros</a></li>
       <li><a href="/en/" hreflang="en" lang="en" title="English">EN</a></li>
@@ -219,6 +224,7 @@ ${body}
     <div class="footer-col">
       <h4>Recursos</h4>
       <ul>
+        <li><a href="/servicios.html">Servicios</a></li>
         <li><a href="/valor-por-zona.html">Valor por zona</a></li>
         <li><a href="/indice.html">&Iacute;ndice Zona-INNmueble</a></li>
         <li><a href="/diagnostico.html">Diagn&oacute;stico inmobiliario</a></li>
@@ -232,7 +238,7 @@ ${body}
     </div>
     <div class="footer-newsletter">
       <h4>Novedades</h4>
-      <p>Recibe propiedades nuevas y oportunidades de inversi&oacute;n directamente por WhatsApp.</p>
+      <p>Reciba propiedades nuevas y oportunidades de inversi&oacute;n directamente por WhatsApp.</p>
       <a href="https://wa.me/${WA}?text=Hola%2C%20quiero%20recibir%20propiedades%20nuevas%20y%20oportunidades%20de%20inversi%C3%B3n." target="_blank" rel="noopener" class="footer-wa-btn">
         ${WA_SVG} Recibir por WhatsApp
       </a>
@@ -444,17 +450,17 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // Mega-menu handles all dropdown logic above
 </script>
-<script src="/assets/zona-fase1.js?v=20261001" defer></script>
+<script src="/assets/zona-fase1.js?v=20261006" defer></script>
 <!-- Lead Capture Pop-up: Índice Zona-INNmueble -->
 <div id="zpPopup" role="dialog" aria-modal="true" aria-label="Índice Zona-INNmueble" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(8,16,38,.72);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px">
 <div style="background:linear-gradient(150deg,#122a5a 0%,#0D1B3E 70%);border:1px solid rgba(59,158,255,.25);border-radius:18px;padding:38px 32px 30px;max-width:430px;width:100%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden">
 <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#C9A35B,#3B9EFF)"></div>
 <button onclick="zpClose()" aria-label="Cerrar" style="position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,.45);font-size:24px;cursor:pointer;line-height:1">&times;</button>
-<div style="font-size:.56rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#3B9EFF;margin-bottom:14px">&Iacute;ndice Zona-INNmueble</div>
-<h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2rem);font-weight:300;color:#fff;line-height:1.15;margin-bottom:12px">Antes de comprar, conoce <em style="color:#C9A35B;font-style:italic">el valor real de la zona.</em></h3>
-<p style="font-size:.82rem;color:#8A9BB0;line-height:1.75;margin-bottom:22px">Precio por m&sup2;, precio t&iacute;pico y rendimiento de renta por zona en Guatemala. Te lo enviamos por WhatsApp, junto con las propiedades nuevas que encajen contigo.</p>
-<a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero recibir el Índice Zona-INNmueble y propiedades nuevas.')}" target="_blank" rel="noopener" onclick="zpClose()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#C9A35B;color:#0D1B3E;padding:14px 22px;border-radius:8px;font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none">${WA_SVG} Recibir el &iacute;ndice</a>
-<a href="/indice.html" onclick="zpClose()" style="display:block;text-align:center;margin-top:12px;font-size:.68rem;color:#8A9BB0;text-decoration:underline;text-underline-offset:3px">Prefiero verlo en la web</a>
+<div style="font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#3B9EFF;margin-bottom:14px">&Iacute;ndice Zona-INNmueble</div>
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2rem);font-weight:300;color:#fff;line-height:1.15;margin-bottom:12px">Antes de comprar, conozca <em style="color:#C9A35B;font-style:italic">el valor real de la zona.</em></h3>
+<p style="font-size:.82rem;color:#8A9BB0;line-height:1.75;margin-bottom:22px">Precio por m&sup2;, precio t&iacute;pico y rendimiento de renta por zona en Guatemala. Se lo enviamos por WhatsApp, junto con las propiedades nuevas que encajen con lo que busca.</p>
+<a href="https://wa.me/${WA}?text=${encodeURIComponent('Hola, quiero recibir el Índice Zona-INNmueble y propiedades nuevas.')}" target="_blank" rel="noopener" onclick="zpClose()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#C9A35B;color:#0D1B3E;padding:14px 22px;border-radius:8px;font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none">${WA_SVG} Recibir el &iacute;ndice</a>
+<a href="/indice.html" onclick="zpClose()" style="display:block;text-align:center;margin-top:12px;font-size:.76rem;color:#8A9BB0;text-decoration:underline;text-underline-offset:3px">Prefiero verlo en la web</a>
 </div>
 </div>
 <script>
@@ -474,7 +480,7 @@ document.getElementById('zpPopup').addEventListener('click',function(e){if(e.tar
 <a href="/comparar.html" class="cmp-pill" id="cmpPill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h7v14H4zM13 4h7v16h-7z"/></svg> Comparar &middot; <span id="cmpN">0</span></a>
 <script>
 function cmpRefresh(){var n=0;try{n=JSON.parse(localStorage.getItem('zona_favoritos_v1')||'[]').length}catch(e){}var p=document.getElementById('cmpPill');if(!p||/comparar/.test(location.pathname))return;document.getElementById('cmpN').textContent=n;p.classList.toggle('on',n>=2);}
-document.addEventListener('DOMContentLoaded',function(){cmpRefresh();document.querySelectorAll('.pc-fav-detail').forEach(function(b){if(isFav(b.dataset.slug)){var s=b.querySelector('span');if(s)s.textContent='En tu comparación';}});});
+document.addEventListener('DOMContentLoaded',function(){cmpRefresh();document.querySelectorAll('.pc-fav-detail').forEach(function(b){if(isFav(b.dataset.slug)){var s=b.querySelector('span');if(s)s.textContent='En su comparación';}});});
 document.addEventListener('click',function(e){if(e.target.closest('.pc-fav,.pc-fav-detail'))setTimeout(cmpRefresh,50);});
 </script>
 <script>

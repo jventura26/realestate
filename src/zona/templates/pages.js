@@ -39,7 +39,7 @@ function renderDescBloquesZona(bloques, esc) {
     if (!c) return '';
     if (b.type === 'destacado') {
       return '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(201,163,91,.04)">'
-        + '<div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div>'
+        + '<div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div>'
         + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic">' + esc(c) + '</div></div>';
     }
     if (b.type === 'lista') {
@@ -182,16 +182,16 @@ function renderCaracteristicas(chars) {
   const activas = grupos.map(g => ({ ...g, activos: g.items.filter(i => chars.includes(i)) })).filter(g => g.activos.length);
   if (!activas.length) return '';
   let html = `<div style="margin-top:36px;padding-top:32px;border-top:1px solid var(--bd)">
-    <div style="font-size:.57rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:24px">Características y amenidades</div>`;
+    <div style="font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:24px">Características y amenidades</div>`;
   activas.forEach(g => {
     html += `<div style="margin-bottom:20px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <span style="width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block"></span>
-        <span style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv)">${g.label}</span>
+        <span style="font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv)">${g.label}</span>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:7px">`;
     g.activos.forEach(item => {
-      html += `<span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(201,163,91,.06);border:1px solid rgba(201,163,91,.2);border-radius:4px;font-size:.72rem;color:var(--wh);font-weight:400;letter-spacing:.02em">✓ ${item}</span>`;
+      html += `<span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(201,163,91,.06);border:1px solid rgba(201,163,91,.2);border-radius:4px;font-size:.76rem;color:var(--wh);font-weight:400;letter-spacing:.02em">✓ ${item}</span>`;
     });
     html += `</div></div>`;
   });
@@ -201,7 +201,7 @@ function renderCaracteristicas(chars) {
 
 function renderDesc(desc) {
   if (!desc) return '';
-  const label = '<div style="font-size:.57rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripci&oacute;n</div>';
+  const label = '<div style="font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:12px">Descripci&oacute;n</div>';
   // JSON de Wix
   if (desc.trim().startsWith('{') || desc.includes('"nodes"')) {
     try {
@@ -349,15 +349,15 @@ function catalogPage(props) {
   <div style="position:relative;min-width:180px">
     <button onclick="document.getElementById('price-dropdown').style.display=document.getElementById('price-dropdown').style.display==='block'?'none':'block'" id="price-btn" style="padding:9px 14px;background:var(--ink2);border:1px solid var(--gl);border-radius:6px;color:var(--sv);font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap;width:100%;text-align:left">Precio: Cualquiera ▾</button>
     <div id="price-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;background:#0d1b3e;border:1px solid var(--gl);border-radius:8px;padding:16px;z-index:50;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.4)">
-      <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Rango de precio</div>
+      <div style="font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Rango de precio</div>
       <div style="display:flex;gap:8px;margin-bottom:12px">
-        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">Mínimo</div>
+        <div style="flex:1"><div style="font-size:.76rem;color:var(--mt);margin-bottom:4px">Mínimo</div>
         <input type="number" id="fp-min" placeholder="0" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
-        <div style="flex:1"><div style="font-size:.65rem;color:var(--mt);margin-bottom:4px">Máximo</div>
+        <div style="flex:1"><div style="font-size:.76rem;color:var(--mt);margin-bottom:4px">Máximo</div>
         <input type="number" id="fp-max" placeholder="Sin límite" min="0" step="10000" style="width:100%;padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:6px;color:white;font-size:.78rem;font-family:inherit" oninput="updatePriceBtn()"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-        ${[['Hasta $100K','0','100000'],['$100K–$300K','100000','300000'],['$300K–$600K','300000','600000'],['$600K–$1M','600000','1000000'],['Más de $1M','1000000',''],['Sin filtro','','']].map(([l,mn,mx])=>`<button onclick="document.getElementById('fp-min').value='${mn}';document.getElementById('fp-max').value='${mx}';updatePriceBtn();document.getElementById('price-dropdown').style.display='none';" style="padding:6px 8px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:5px;color:var(--sv);font-size:.72rem;cursor:pointer;text-align:center;font-family:inherit">${l}</button>`).join('')}
+        ${[['Hasta $100K','0','100000'],['$100K–$300K','100000','300000'],['$300K–$600K','300000','600000'],['$600K–$1M','600000','1000000'],['Más de $1M','1000000',''],['Sin filtro','','']].map(([l,mn,mx])=>`<button onclick="document.getElementById('fp-min').value='${mn}';document.getElementById('fp-max').value='${mx}';updatePriceBtn();document.getElementById('price-dropdown').style.display='none';" style="padding:6px 8px;background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:5px;color:var(--sv);font-size:.76rem;cursor:pointer;text-align:center;font-family:inherit">${l}</button>`).join('')}
       </div>
       <button onclick="applyPrice()" style="width:100%;padding:8px;background:var(--or);color:var(--ink);border:none;border-radius:6px;font-weight:700;font-size:.75rem;cursor:pointer;font-family:inherit">Aplicar</button>
     </div>
@@ -451,10 +451,10 @@ function detailPage(prop, all) {
     : prop.gallery;
   const gal    = galOrdered.slice(0, 10);
   const galHtml= gal.length > 1
-    ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="document.getElementById('mi').src=this.src">`).join('')}</div>` : '';
+    ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="var m=document.getElementById('mi');m.removeAttribute('srcset');m.src=this.src">`).join('')}</div>` : '';
 
   const relHtml = related.length
-    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">También te puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver más →</a></div><div class="prop-grid">${related.map((r,i)=>card(r,i)).join('')}</div></div>` : '';
+    ? `<div class="dv3-related"><div class="dv3-related-head"><div><div class="dv3-related-eyebrow">Propiedades relacionadas</div><div class="dv3-related-title">También le puede <em>interesar</em></div></div><a class="dv3-related-cta" href="/propiedades.html?tipo=${encodeURIComponent(prop.tipo)}">Ver más →</a></div><div class="prop-grid">${related.map((r,i)=>card(r,i)).join('')}</div></div>` : '';
 
   // JSON-LD structured data
   const cleanDesc = (esExclusiva||cfg.descripcion) ? '' : (prop.description||'').replace(/"nodes".*$/s,'').replace(/[{}"\\]/g,'').substring(0,300).trim();
@@ -491,7 +491,7 @@ function detailPage(prop, all) {
   // Banner exclusiva
   const exclusivaBanner = esExclusiva
     ? '<div style="background:linear-gradient(135deg,rgba(201,163,91,.12),rgba(201,163,91,.04));border:1px solid rgba(201,163,91,.3);border-radius:6px;padding:20px 24px;margin-bottom:24px;text-align:center">'
-      + '<div style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Propiedad exclusiva</div>'
+      + '<div style="font-size:.76rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Propiedad exclusiva</div>'
       + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:var(--sv);line-height:1.6;font-style:italic">Esta propiedad es de carácter exclusivo.<br>Para más información contacte directamente con su asesor.</div>'
       + '</div>'
     : '';
@@ -516,8 +516,8 @@ function detailPage(prop, all) {
 .dv3-hero-img{width:100%;max-height:580px;object-fit:cover;display:block;opacity:.92}
 .dv3-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 50%,transparent 100%)}
 .dv3-hero-content{position:absolute;bottom:0;left:0;right:0;padding:28px 5% 32px}
-.dv3-badge{display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#000;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px}
-.dv3-badge-new{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#000;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px;margin-left:6px}
+.dv3-badge{display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#000;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px}
+.dv3-badge-new{display:inline-flex;align-items:center;gap:6px;background:#22c55e;color:#000;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;margin-bottom:12px;margin-left:6px}
 .dv3-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:400;color:#fff;line-height:1.1;margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
 .dv3-loc{font-size:.75rem;color:rgba(255,255,255,.75);letter-spacing:.06em;display:flex;align-items:center;gap:6px}
 .dv3-gal{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#000}
@@ -526,36 +526,36 @@ function detailPage(prop, all) {
 .dv3-gal-more{position:relative;cursor:pointer;overflow:hidden}
 .dv3-gal-more img{width:100%;aspect-ratio:16/10;object-fit:cover;opacity:.4}
 .dv3-gal-more-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.06em}
-.dv3-bread{padding:14px 5%;display:flex;align-items:center;gap:8px;font-size:.68rem;color:var(--mt);border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.dv3-bread{padding:14px 5%;display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--mt);border-bottom:1px solid var(--bd);flex-wrap:wrap}
 .dv3-bread a{color:var(--mt);transition:color .2s}.dv3-bread a:hover{color:var(--or)}
 .dv3-wrap{display:grid;grid-template-columns:1fr 360px;gap:0;align-items:start;max-width:1400px;margin:0 auto;padding:0 5% 60px}
 .dv3-main{padding:36px 40px 36px 0;border-right:1px solid var(--bd)}
 .dv3-side{padding:32px 0 32px 36px;position:sticky;top:20px}
 .dv3-price-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--bd)}
 .dv3-price{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.4rem);color:var(--or);font-weight:400;line-height:1}
-.dv3-price-sub{font-size:.68rem;color:var(--mt);margin-top:4px}
-.dv3-share-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border:1px solid var(--bd);background:transparent;color:var(--sv);font-size:.65rem;font-weight:600;letter-spacing:.06em;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
+.dv3-price-sub{font-size:.76rem;color:var(--mt);margin-top:4px}
+.dv3-share-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border:1px solid var(--bd);background:transparent;color:var(--sv);font-size:.76rem;font-weight:600;letter-spacing:.06em;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
 .dv3-share-btn:hover{border-color:var(--or);color:var(--or)}
 .dv3-qs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px}
 .dv3-qs-item{display:flex;align-items:center;gap:7px;padding:9px 14px;background:var(--ink2);border:1px solid var(--bd);border-radius:4px;font-size:.8rem;font-weight:600;color:var(--sv)}
-.dv3-qs-item span{font-size:.62rem;font-weight:400;color:var(--mt)}
+.dv3-qs-item span{font-size:.76rem;font-weight:400;color:var(--mt)}
 .dv3-hook{font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic;padding:18px 20px;border-left:2px solid var(--or);margin-bottom:28px;background:rgba(201,163,91,.04)}
 .dv3-tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
 .dv3-tabs::-webkit-scrollbar{display:none}
-.dv3-tab{padding:12px 20px;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.dv3-tab{padding:12px 20px;font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
 .dv3-tab:hover{color:var(--sv)}
 .dv3-tab.on{color:var(--or);border-bottom-color:var(--or)}
 .dv3-tab-panel{display:none}.dv3-tab-panel.on{display:block}
 .dv3-specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin-bottom:24px}
 .dv3-spec{background:var(--ink2);padding:13px 16px}
-.dv3-spec-l{font-size:.56rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);margin-bottom:4px}
+.dv3-spec-l{font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mt);margin-bottom:4px}
 .dv3-spec-v{font-size:.9rem;font-weight:500;color:var(--sv)}
 .dv3-desc{font-size:.85rem;line-height:1.85;color:var(--sv)}
 .dv3-datos{padding:14px 18px;background:rgba(201,163,91,.06);border:1px solid rgba(201,163,91,.25);border-radius:5px;font-size:.82rem;color:var(--sv);line-height:1.7;margin-bottom:18px}
 .dv3-chars-group{margin-bottom:22px}
-.dv3-chars-group-title{display:flex;align-items:center;gap:8px;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv);margin-bottom:10px}
+.dv3-chars-group-title{display:flex;align-items:center;gap:8px;font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv);margin-bottom:10px}
 .dv3-chars-list{display:flex;flex-wrap:wrap;gap:7px}
-.dv3-char{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(201,163,91,.06);border:1px solid rgba(201,163,91,.18);border-radius:4px;font-size:.73rem;color:var(--sv)}
+.dv3-char{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(201,163,91,.06);border:1px solid rgba(201,163,91,.18);border-radius:4px;font-size:.76rem;color:var(--sv)}
 .dv3-char::before{content:'✓';color:var(--or);font-weight:700;font-size:.8rem}
 .dv3-video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:6px;border:1px solid var(--bd);margin-bottom:20px}
 .dv3-video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
@@ -565,28 +565,28 @@ function detailPage(prop, all) {
 .dv3-agent-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .dv3-agent-avatar{width:44px;height:44px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#000;flex-shrink:0}
 .dv3-agent-name{font-size:.82rem;font-weight:700;color:var(--sv)}
-.dv3-agent-role{font-size:.65rem;color:var(--mt);margin-top:2px}
+.dv3-agent-role{font-size:.76rem;color:var(--mt);margin-top:2px}
 .dv3-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#25D366;animation:lp 2s ease-in-out infinite;margin-right:6px;flex-shrink:0;vertical-align:middle}
-.dv3-avail{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#25D366;margin-bottom:16px;display:flex;align-items:center}
-.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:13px 16px;border-radius:4px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
+.dv3-avail{font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#25D366;margin-bottom:16px;display:flex;align-items:center}
+.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:13px 16px;border-radius:4px;font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
 .dv3-wa-btn:hover{filter:brightness(1.1)}
 .dv3-wa-btn.outline{background:transparent;border:1px solid rgba(37,211,102,.3);color:rgba(255,255,255,.7)}
 .dv3-wa-btn.outline:hover{background:#0d1b3e;border-color:rgba(37,211,102,.5);color:#fff}
 .dv3-divider{height:1px;background:var(--bd);margin:18px 0}
-.dv3-form-title{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
+.dv3-form-title{font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
 .dv3-input{width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit;margin-bottom:8px;outline:none;transition:border-color .2s;box-sizing:border-box}
 .dv3-input:focus{border-color:var(--or)}
-.dv3-submit{width:100%;padding:11px;background:var(--or);color:var(--ink);border:none;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:3px;font-family:inherit;transition:background .2s}
+.dv3-submit{width:100%;padding:11px;background:var(--or);color:var(--ink);border:none;font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:3px;font-family:inherit;transition:background .2s}
 .dv3-submit:hover{background:var(--or2)}
 .dv3-side-ref{background:var(--ink2);border:1px solid var(--bd);padding:16px 20px;border-radius:4px;margin-bottom:12px}
-.dv3-ref-l{font-size:.56rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.dv3-ref-l{font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
 .dv3-ref-v{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.08em;color:var(--sv)}
 .dv3-more-links{background:var(--ink2);border:1px solid var(--bd);padding:16px 20px;border-radius:4px}
-.dv3-more-link{display:block;font-size:.73rem;color:var(--sv);padding:7px 0;border-bottom:1px solid var(--bd);transition:color .2s}
+.dv3-more-link{display:block;font-size:.76rem;color:var(--sv);padding:7px 0;border-bottom:1px solid var(--bd);transition:color .2s}
 .dv3-more-link:last-child{border-bottom:none;padding-bottom:0}
 .dv3-more-link:hover{color:var(--or)}
 .dv3-wa-float{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 14px;background:var(--ink);border-top:1px solid var(--bd);gap:8px;align-items:center}
-.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:12px 8px;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
+.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:12px 8px;border-radius:4px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-decoration:none}
 .dv3-wa-float a.sec{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
 /* LIGHTBOX */
 .dv3-lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
@@ -600,7 +600,7 @@ function detailPage(prop, all) {
 .dv3-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.5rem;cursor:pointer;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s}
 .dv3-lb-nav:hover{background:rgba(255,255,255,.25)}
 .dv3-lb-prev{left:16px}.dv3-lb-next{right:16px}
-.dv3-lb-counter{position:absolute;top:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:.72rem;letter-spacing:.12em}
+.dv3-lb-counter{position:absolute;top:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:.76rem;letter-spacing:.12em}
 @media(max-width:1024px){
   .dv3-wrap{grid-template-columns:1fr;padding:0 4% 40px}
   .dv3-main{padding:28px 0;border-right:none;border-bottom:1px solid var(--bd)}
@@ -614,12 +614,12 @@ function detailPage(prop, all) {
   .dv3-hero-content{padding:14px 4% 18px}
   .dv3-title{font-size:1.45rem}
   .dv3-price{font-size:1.5rem}
-  .dv3-qs-item{padding:7px 11px;font-size:.74rem}
+  .dv3-qs-item{padding:7px 11px;font-size:.76rem}
   .dv3-specs-grid{grid-template-columns:1fr}
   .dv3-gal{grid-template-columns:repeat(3,1fr)}
   .dv3-tabs{flex-wrap:wrap!important;overflow-x:unset!important}
-  .dv3-tab{padding:8px 10px!important;font-size:.58rem!important;flex:1 1 auto!important;text-align:center!important}
-  .dv3-bread{padding:10px 4%;font-size:.62rem}
+  .dv3-tab{padding:8px 10px!important;font-size:.68rem!important;flex:1 1 auto!important;text-align:center!important}
+  .dv3-bread{padding:10px 4%;font-size:.76rem}
   .dv3-wrap{padding:0 4% 80px}
   .dv3-share-btn{display:none}
   /* Texto descriptivo — evita overflow horizontal */
@@ -656,7 +656,7 @@ function detailPage(prop, all) {
   }
   /* Caractéristicas wrapping */
   .dv3-chars-list{gap:5px}
-  .dv3-char{font-size:.68rem!important}
+  .dv3-char{font-size:.76rem!important}
   /* Quick specs en 2 filas si necesario */
   .dv3-qs{flex-wrap:wrap!important}
 }
@@ -666,17 +666,17 @@ function detailPage(prop, all) {
 .dv3-swiper-track::-webkit-scrollbar{display:none}
 .dv3-swiper-slide{flex:0 0 100%;scroll-snap-align:start;position:relative;cursor:pointer}
 .dv3-swiper-slide img{width:100%;height:68vw;max-height:320px;object-fit:cover;display:block}
-.dv3-swiper-counter{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.55);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:20px;pointer-events:none}
+.dv3-swiper-counter{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.55);color:#fff;font-size:.76rem;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:20px;pointer-events:none}
 .dv3-swiper-dots{display:flex;justify-content:center;align-items:center;gap:5px;padding:8px 0;background:#000}
 .dv3-swiper-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .25s;cursor:pointer;flex-shrink:0}
 .dv3-swiper-dot.on{background:var(--or);width:18px;border-radius:3px}
 /* RELATED PREMIUM */
 .dv3-related{max-width:1400px;margin:0 auto;padding:48px 5% 64px;border-top:1px solid var(--bd)}
 .dv3-related-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;gap:16px}
-.dv3-related-eyebrow{font-size:.56rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+.dv3-related-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
 .dv3-related-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:400;color:var(--sv);line-height:1.15}
 .dv3-related-title em{font-style:italic;color:var(--or)}
-.dv3-related-cta{font-size:.68rem;font-weight:600;color:var(--mt);text-decoration:none;border-bottom:1px solid var(--bd);padding-bottom:2px;white-space:nowrap;transition:color .2s;letter-spacing:.04em}
+.dv3-related-cta{font-size:.76rem;font-weight:600;color:var(--mt);text-decoration:none;border-bottom:1px solid var(--bd);padding-bottom:2px;white-space:nowrap;transition:color .2s;letter-spacing:.04em}
 .dv3-related-cta:hover{color:var(--or);border-color:var(--or)}
 @media(max-width:768px){
   .dv3-swiper{display:block}
@@ -695,7 +695,7 @@ function detailPage(prop, all) {
 </div>
 
 <div class="dv3-hero">
-  <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer" loading="eager" fetchpriority="high">
+  <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" srcset="${escapeHtml(ikTransform(imgRaw,{w:720,q:74}))} 720w, ${escapeHtml(img)} 1400w" sizes="(max-width: 768px) 400px, 100vw" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer" loading="eager" fetchpriority="high" width="1400" height="788">
   <div class="dv3-hero-overlay"></div>
   <div class="dv3-hero-content">
     <div class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</div>
@@ -710,7 +710,7 @@ function detailPage(prop, all) {
 
 ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){var srcSm=ikTransform(src,{w:700,q:72});if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcSm)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(srcSm)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
 
-${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){var srcMob=ikTransform(src,{w:900,q:72});return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcMob)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"'+(i===0?' fetchpriority="high"':'')+'></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
+${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){var srcMob=ikTransform(src,{w:720,q:70});return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcMob)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"'+(i===0?' fetchpriority="high"':'')+'></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
 
 <div class="dv3-wrap">
   <div class="dv3-main">
@@ -744,30 +744,30 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
 
     <div class="dv3-tab-panel on" id="dv3-det">
       ${exclusivaBanner}
-      ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
+      ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
       ${!esExclusiva && !cfg.specs ? '<div class="dv3-specs-grid">'+specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')+'</div>' : (!esExclusiva ? '' : '')}
       ${(prop.iusi || prop.cuotaMantenimiento) ? '<div class="dv3-datos" style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">'
-        + (prop.iusi ? '<div><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:4px">IUSI</span><span style="font-size:.85rem;color:var(--sv)">'+escapeHtml(prop.iusi)+'</span></div>' : '')
-        + (prop.cuotaMantenimiento ? '<div><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:4px">Mantenimiento</span><span style="font-size:.85rem;color:var(--sv)">'+escapeHtml(prop.cuotaMantenimiento)+'</span></div>' : '')
+        + (prop.iusi ? '<div><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:4px">IUSI</span><span style="font-size:.85rem;color:var(--sv)">'+escapeHtml(prop.iusi)+'</span></div>' : '')
+        + (prop.cuotaMantenimiento ? '<div><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:4px">Mantenimiento</span><span style="font-size:.85rem;color:var(--sv)">'+escapeHtml(prop.cuotaMantenimiento)+'</span></div>' : '')
         + '</div>' : ''}
-      ${prop.produccion ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Producci&oacute;n</span>'+escapeHtml(prop.produccion)+'</div>' : ''}
-      ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
+      ${prop.produccion ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Producci&oacute;n</span>'+escapeHtml(prop.produccion)+'</div>' : ''}
+      ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-desc">
       ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Descripción disponible previa consulta.</div>' : ''}
-      ${(!esExclusiva&&!cfg.descripcion&&prop.hook&&!GENERIC_HOOK.test(prop.hook)) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(201,163,91,.04)"><div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
-      <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
+      ${(!esExclusiva&&!cfg.descripcion&&prop.hook&&!GENERIC_HOOK.test(prop.hook)) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(201,163,91,.04)"><div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
       <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
       ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0 && !esExclusiva && !cfg.descripcion) ? '<div style="margin-top:20px">' + renderDescBloquesZona(prop.descBloques, escapeHtml) + '</div>' : ''}
-      ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
+      ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
 
     <div class="dv3-tab-panel" id="dv3-chars">
       ${(esExclusiva||cfg.caracteristicas) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Características disponibles previa consulta.</div>' : renderCaracteristicas(prop.caracteristicas||[])}
     </div>
 
-    ${prop.tour360 ? '<div class="dv3-tab-panel" id="dv3-t360"><div class="dv3-video-wrap" style="padding-bottom:62%"><iframe src="'+escapeHtml(prop.tour360)+'" allow="fullscreen; xr-spatial-tracking; gyroscope; accelerometer" allowfullscreen loading="lazy" title="Recorrido virtual 360°"></iframe></div><p style="font-size:.7rem;color:var(--mt)">Recorrido virtual 360° capturado por Zona-INNmueble. Arrastra para mirar alrededor.</p></div>' : ''}
+    ${prop.tour360 ? '<div class="dv3-tab-panel" id="dv3-t360"><div class="dv3-video-wrap" style="padding-bottom:62%"><iframe src="'+escapeHtml(prop.tour360)+'" allow="fullscreen; xr-spatial-tracking; gyroscope; accelerometer" allowfullscreen loading="lazy" title="Recorrido virtual 360°"></iframe></div><p style="font-size:.76rem;color:var(--mt)">Recorrido virtual 360° capturado por Zona-INNmueble. Arrastra para mirar alrededor.</p></div>' : ''}
 
     <div class="dv3-tab-panel" id="dv3-media">
       ${(function(){
@@ -796,19 +796,19 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       <div class="dv3-ref-l" style="margin-bottom:14px">Estimaci&oacute;n de cuota mensual</div>
       <div class="hip-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
         <div>
-          <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Enganche (%)</label>
+          <label style="font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Enganche (%)</label>
           <input type="range" id="hipEnganche" min="10" max="50" step="5" value="20" oninput="dv3CalcHipoteca()" style="width:100%">
           <div style="font-size:.78rem;color:var(--sv);margin-top:4px"><span id="hipEngancheVal">20</span>%</div>
         </div>
         <div>
-          <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Plazo (a&ntilde;os)</label>
+          <label style="font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Plazo (a&ntilde;os)</label>
           <input type="range" id="hipPlazo" min="5" max="30" step="5" value="20" oninput="dv3CalcHipoteca()" style="width:100%">
           <div style="font-size:.78rem;color:var(--sv);margin-top:4px"><span id="hipPlazoVal">20</span> a&ntilde;os</div>
         </div>
       </div>
       <div class="hip-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
         <div>
-          <label style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Tasa de inter&eacute;s anual (%)</label>
+          <label style="font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mt);display:block;margin-bottom:6px">Tasa de inter&eacute;s anual (%)</label>
           <input type="number" id="hipTasa" value="9.5" step="0.1" min="1" max="25" oninput="dv3CalcHipoteca()" style="width:100%;padding:8px 10px;background:var(--ink2);border:1px solid var(--bd);border-radius:4px;color:var(--wh);font-size:.85rem">
         </div>
       </div>
@@ -818,10 +818,10 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
         <div style="display:flex;justify-content:space-between"><span style="color:var(--mt);font-size:.75rem">Monto a financiar</span><strong id="hipMontoFinanciar" style="color:var(--sv)"></strong></div>
       </div>
       <div style="background:rgba(201,163,91,.1);border:1px solid rgba(201,163,91,.3);border-radius:6px;padding:18px;text-align:center;margin-bottom:10px">
-        <div style="font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Cuota mensual estimada</div>
+        <div style="font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Cuota mensual estimada</div>
         <div id="hipCuotaMensual" style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--wh)"></div>
       </div>
-      <p style="font-size:.68rem;color:var(--mt);line-height:1.6">Esta es una estimaci&oacute;n informativa basada en una tasa de referencia y no constituye una oferta de financiamiento. La aprobaci&oacute;n final, tasa real y condiciones dependen del banco y de tu perfil crediticio.</p>
+      <p style="font-size:.76rem;color:var(--mt);line-height:1.6">Esta es una estimaci&oacute;n informativa basada en una tasa de referencia y no constituye una oferta de financiamiento. La aprobaci&oacute;n final, tasa real y condiciones dependen del banco y de su perfil crediticio.</p>
       <div class="ct-box">
         <div class="dv3-ref-l" style="margin-bottom:10px">Costo total de compra (estimado)</div>
         <div class="ct-row"><span>Tipo de operaci&oacute;n</span>
@@ -832,8 +832,8 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
         <div class="ct-row"><span id="ctImpLbl">Impuesto de timbres fiscales</span><strong id="ctImp" style="color:var(--sv)"></strong></div>
         <div class="ct-row"><span>Honorarios notariales <input id="ctNot" type="number" step="0.1" min="0" value="1" oninput="dv3CalcTotal()">%</span><strong id="ctNotV" style="color:var(--sv)"></strong></div>
         <div class="ct-row"><span>Registro de la Propiedad <input id="ctReg" type="number" step="0.05" min="0" value="0.15" oninput="dv3CalcTotal()">%</span><strong id="ctRegV" style="color:var(--sv)"></strong></div>
-        <div class="ct-total"><span style="font-size:.7rem;color:var(--sv);letter-spacing:.1em;text-transform:uppercase">Inversi&oacute;n total estimada</span><b id="ctTotal"></b></div>
-        <p style="font-size:.64rem;color:var(--mt);line-height:1.6;margin-top:10px">En primera venta el IVA suele venir incluido en el precio publicado; conf&iacute;rmalo con el desarrollador. Porcentajes de referencia: confirma montos exactos con tu notario. Te acompa&ntilde;amos en ese proceso.</p>
+        <div class="ct-total"><span style="font-size:.76rem;color:var(--sv);letter-spacing:.1em;text-transform:uppercase">Inversi&oacute;n total estimada</span><b id="ctTotal"></b></div>
+        <p style="font-size:.76rem;color:var(--mt);line-height:1.6;margin-top:10px">En primera venta el IVA suele venir incluido en el precio publicado; conf&iacute;rmalo con el desarrollador. Porcentajes de referencia: confirme montos exactos con su notario. Le acompa&ntilde;amos en ese proceso.</p>
       </div>
     </div>` : ''}
 
@@ -858,19 +858,19 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Agendar visita privada
       </a>
-      <button type="button" class="dv3-wa-btn outline pc-fav-detail" data-slug="${escapeHtml(prop.slug)}" onclick="toggleFav('${escapeHtml(prop.slug)}',this);this.querySelector('span').textContent=isFav('${escapeHtml(prop.slug)}')?'En tu comparación':'Agregar a comparar'" style="width:100%;cursor:pointer;font-family:inherit">
+      <button type="button" class="dv3-wa-btn outline pc-fav-detail" data-slug="${escapeHtml(prop.slug)}" onclick="toggleFav('${escapeHtml(prop.slug)}',this);this.querySelector('span').textContent=isFav('${escapeHtml(prop.slug)}')?'En su comparación':'Agregar a comparar'" style="width:100%;cursor:pointer;font-family:inherit">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h7v14H4zM13 4h7v16h-7z"/></svg>
         <span>Agregar a comparar</span>
       </button>
       <div class="dv3-divider"></div>
-      <div class="dv3-form-title">O d&eacute;janos tus datos</div>
+      <div class="dv3-form-title">O d&eacute;jenos sus datos</div>
       <form onsubmit="var f=this,wa='${waNum}',t=encodeURIComponent('Nuevo lead - ${escapeHtml(prop.title)}\nNombre: '+f.nombre.value+'\nTel\u00e9fono: '+f.telefono.value+'\nMensaje: '+(f.mensaje.value||'Sin mensaje')+'\nURL: ${propUrl}');window.open('https://wa.me/'+wa+'?text='+t,'_blank');f.nextElementSibling.style.display='block';f.reset();return false;">
-        <input class="dv3-input" type="text" name="nombre" placeholder="Tu nombre completo" required>
-        <input class="dv3-input" type="tel" name="telefono" placeholder="Tu tel&eacute;fono / WhatsApp" required>
+        <input class="dv3-input" type="text" name="nombre" placeholder="Su nombre completo" required>
+        <input class="dv3-input" type="tel" name="telefono" placeholder="Su tel&eacute;fono / WhatsApp" required>
         <textarea class="dv3-input" name="mensaje" placeholder="&iquest;Qu&eacute; deseas saber?" rows="2" style="resize:none"></textarea>
         <button class="dv3-submit" type="submit">Enviar consulta</button>
       </form>
-      <p style="display:none;font-size:.72rem;color:#4ade80;text-align:center;margin:10px 0 0">&check; Enviado. Te contactamos pronto.</p>
+      <p style="display:none;font-size:.76rem;color:#4ade80;text-align:center;margin:10px 0 0">&check; Enviado. Le contactamos pronto.</p>
     </div>
 
     ${prop.pdfUrl ? '<a href="'+escapeHtml(prop.pdfUrl)+'" target="_blank" rel="noopener" class="dv3-wa-btn outline" style="margin-bottom:16px;text-decoration:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Descargar brochure</a>' : ''}
@@ -1103,8 +1103,8 @@ const ZONA_INFO = {
     inversion: { apreciacion: '10–14% anual', demanda: 'Muy Alta', perfil: 'Residencial · Inversión · Renta' },
     lifestyle: ['La Zona Viva — centro de entretenimiento','Hotel InterContinental, Marriott, Westin','Gastronomía: Sei, Tamarindos, Taninos','Centro comercial Oakland Mall','Embajada de EE.UU. y delegaciones diplomáticas','Clínicas y hospitales privados'],
     porque: [
-      { icon: '🍷', titulo: 'Lifestyle inigualable', texto: 'Restaurantes de autor, vida cultural activa y entretenimiento de primer nivel a pasos de tu puerta.' },
-      { icon: '💼', titulo: 'Hub corporativo', texto: 'Empresas Fortune 500, firmas legales, bancos internacionales y sedes corporativas en tu misma zona.' },
+      { icon: '🍷', titulo: 'Lifestyle inigualable', texto: 'Restaurantes de autor, vida cultural activa y entretenimiento de primer nivel a pasos de su puerta.' },
+      { icon: '💼', titulo: 'Hub corporativo', texto: 'Empresas Fortune 500, firmas legales, bancos internacionales y sedes corporativas en su misma zona.' },
       { icon: '🏠', titulo: 'Demanda de renta', texto: 'Alta demanda de ejecutivos expatriados sostiene una demanda de renta por encima del promedio del mercado.' },
       { icon: '📈', titulo: 'Mayor plusvalía de la capital', texto: 'Históricamente la zona con mayor apreciación de Guatemala. Demanda permanentemente insatisfecha.' },
     ]
@@ -1173,7 +1173,7 @@ const ZONA_INFO = {
     inversion: { apreciacion: '14–20% anual', demanda: 'Muy Alta', perfil: 'Inversión · Renta · Residencial premium' },
     lifestyle: ['Hotel Hyatt Centric','Plazas y calles peatonales','Restaurantes y cafés artesanales','Galería de arte y cultura local','Mercados y eventos semanales','Coworking y oficinas boutique'],
     porque: [
-      { icon: '🏛️', titulo: 'Arquitectura que te enamora', texto: 'Fachadas neoclásicas, calles adoquinadas y plazas diseñadas para la vida al aire libre — único en Guatemala.' },
+      { icon: '🏛️', titulo: 'Arquitectura con carácter', texto: 'Fachadas neoclásicas, calles adoquinadas y plazas diseñadas para la vida al aire libre — único en Guatemala.' },
       { icon: '💰', titulo: 'Mejor ROI del mercado', texto: 'Unidades en Cayalá generan renta superior al 8% anual con demanda de alquiler permanentemente insatisfecha.' },
       { icon: '🚶', titulo: 'Sin carro, sin estrés', texto: 'Todo a pie: restaurantes, tiendas, trabajo, cultura. El concepto de ciudad que el resto de Guatemala todavía no tiene.' },
       { icon: '🌍', titulo: 'Reconocimiento internacional', texto: 'Cayalá aparece en publicaciones de arquitectura y urbanismo de Nueva York, Madrid y Ciudad de México.' },
@@ -1265,7 +1265,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
   const slug = zonaSlug(zonaNombre);
   const info = ZONA_INFO[slug] || {
     titulo: zonaNombre, subtitulo: 'Propiedades disponibles',
-    desc: `Descubre las propiedades disponibles en ${zonaNombre}, Guatemala. Residencias, terrenos e inversiones seleccionadas con asesoría personalizada.`,
+    desc: `Conozca las propiedades disponibles en ${zonaNombre}, Guatemala. Residencias, terrenos e inversiones seleccionadas con asesoría personalizada.`,
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=70',
     datos: ['Ubicación estratégica','Propiedades verificadas','Asesoría personalizada','Respuesta rápida'],
     inversion: null, lifestyle: [], porque: []
@@ -1289,11 +1289,11 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,transparent 55%)"></div>
   </div>
   <div style="position:relative;z-index:2;padding:100px 6% 56px;max-width:1000px;width:100%">
-    <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px">
+    <div style="font-size:.76rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px">
       <a href="/" style="color:inherit;text-decoration:none">Inicio</a> / <a href="/propiedades.html" style="color:inherit;text-decoration:none">Propiedades</a> / ${escapeHtml(info.titulo)}
     </div>
     <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:18px">
-      <span style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Zona Premium · Guatemala</span>
+      <span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">Zona Premium · Guatemala</span>
     </div>
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:300;line-height:1.08;color:var(--wh);margin-bottom:14px">${escapeHtml(info.titulo)}</h1>
     <p style="font-size:.9rem;color:var(--sv);font-weight:300;max-width:560px;line-height:1.7;margin-bottom:0">${escapeHtml(info.subtitulo)}</p>
@@ -1310,7 +1310,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
       [info.inversion ? info.inversion.demanda : '—', 'Demanda'],
     ].map(([val,lab])=>`<div style="flex:1;min-width:160px;padding:22px 24px;border-right:1px solid var(--bd)">
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:5px">${val}</div>
-      <div style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mt)">${lab}</div>
+      <div style="font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mt)">${lab}</div>
     </div>`).join('')}
   </div>
 </div>
@@ -1326,7 +1326,7 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
       </h2>
       <p style="font-size:.88rem;color:var(--sv);line-height:2;margin-bottom:28px;font-weight:300">${escapeHtml(info.desc)}</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px">
-        ${info.datos.map(d=>`<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:5px 12px;font-size:.67rem;font-weight:600;color:var(--or);letter-spacing:.06em">
+        ${info.datos.map(d=>`<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:5px 12px;font-size:.76rem;font-weight:600;color:var(--or);letter-spacing:.06em">
           <svg width="8" height="8" viewBox="0 0 10 10"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           ${escapeHtml(d)}
         </span>`).join('')}
@@ -1334,30 +1334,30 @@ function zonaPage(zonaNombre, propsEnZona, allProps) {
     </div>
     <!-- SIDEBAR INVERSIÓN -->
     <div style="background:var(--ink2);border:1px solid var(--gl);border-radius:16px;padding:28px">
-      <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:18px">Datos de inversión</div>
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:18px">Datos de inversión</div>
       ${info.inversion ? `
       <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--bd)">
-          <span style="font-size:.72rem;color:var(--sv)">Valores de referencia</span>
-          <a href="/indice.html" style="font-size:.72rem;font-weight:700;color:var(--or)">Ver Índice &rarr;</a>
+          <span style="font-size:.76rem;color:var(--sv)">Valores de referencia</span>
+          <a href="/indice.html" style="font-size:.76rem;font-weight:700;color:var(--or)">Ver Índice &rarr;</a>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--bd)">
-          <span style="font-size:.72rem;color:var(--sv)">Demanda</span>
-          <span style="font-size:.72rem;font-weight:700;color:var(--wh)">${escapeHtml(info.inversion.demanda)}</span>
+          <span style="font-size:.76rem;color:var(--sv)">Demanda</span>
+          <span style="font-size:.76rem;font-weight:700;color:var(--wh)">${escapeHtml(info.inversion.demanda)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:.72rem;color:var(--sv)">Perfil de comprador</span>
-          <span style="font-size:.72rem;color:var(--sv);text-align:right;max-width:140px">${escapeHtml(info.inversion.perfil)}</span>
+          <span style="font-size:.76rem;color:var(--sv)">Perfil de comprador</span>
+          <span style="font-size:.76rem;color:var(--sv);text-align:right;max-width:140px">${escapeHtml(info.inversion.perfil)}</span>
         </div>
       </div>
       ` : ''}
       ${tiposEnZona.length ? `
       <div style="margin-bottom:20px">
-        <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Tipos disponibles</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">${tiposEnZona.map(t=>`<span style="background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:100px;padding:4px 10px;font-size:.65rem;color:var(--sv)">${escapeHtml(t)}</span>`).join('')}</div>
+        <div style="font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);margin-bottom:10px">Tipos disponibles</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${tiposEnZona.map(t=>`<span style="background:rgba(255,255,255,.06);border:1px solid var(--gl);border-radius:100px;padding:4px 10px;font-size:.76rem;color:var(--sv)">${escapeHtml(t)}</span>`).join('')}</div>
       </div>` : ''}
       
-      <p style="text-align:center;font-size:.62rem;color:var(--mt);margin:0">Respuesta en menos de 2 horas · Sin compromiso</p>
+      <p style="text-align:center;font-size:.76rem;color:var(--mt);margin:0">Respuesta en menos de 2 horas · Sin compromiso</p>
     </div>
   </div>
 </section>
@@ -1399,12 +1399,12 @@ ${info.lifestyle && info.lifestyle.length ? `
         </div>
       </div>
       <div style="background:var(--ink2);border:1px solid var(--gl);border-radius:16px;padding:32px">
-        <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:20px">¿Buscas algo específico?</div>
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mt);margin-bottom:20px">¿Busca algo específico?</div>
         <p style="font-size:.82rem;color:var(--sv);line-height:1.9;margin-bottom:24px;font-weight:300">
-          Nuestro equipo conoce cada propiedad, cada colonia y cada micro-mercado de ${escapeHtml(info.titulo.split('—')[0].trim())}. Dinos qué buscas.
+          Nuestro equipo conoce cada propiedad, cada colonia y cada micro-mercado de ${escapeHtml(info.titulo.split('—')[0].trim())}. Díganos qué busca.
         </p>
         
-        <a href="/propiedades.html" style="display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--gl);color:var(--sv);padding:11px 18px;border-radius:8px;font-size:.68rem;font-weight:600;text-decoration:none;letter-spacing:.06em;text-transform:uppercase">
+        <a href="/propiedades.html" style="display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--gl);color:var(--sv);padding:11px 18px;border-radius:8px;font-size:.76rem;font-weight:600;text-decoration:none;letter-spacing:.06em;text-transform:uppercase">
           Ver todas las propiedades
         </a>
       </div>
@@ -1426,7 +1426,7 @@ ${info.lifestyle && info.lifestyle.length ? `
     <div style="text-align:center;padding:48px 24px;background:var(--ink);border:1px solid var(--bd);border-radius:14px">
       <div style="font-size:2rem;margin-bottom:14px">🔔</div>
       <p style="font-size:.85rem;color:var(--sv);margin-bottom:6px">No hay propiedades activas en esta zona por el momento</p>
-      <small style="font-size:.72rem;color:var(--mt)">Contáctanos y te avisamos cuando haya disponibilidad</small>
+      <small style="font-size:.76rem;color:var(--mt)">Contáctenos y le avisamos cuando haya disponibilidad</small>
       <div style="margin-top:22px">
         
       </div>
@@ -1510,7 +1510,7 @@ function zonasIndexPage(zonasMap) {
       ${img ? `<img src="${img}" alt="${escapeHtml(nombre)}" style="width:100%;height:100%;object-fit:cover;filter:brightness(.65)" loading="lazy">` : '<div style="width:100%;height:100%;background:linear-gradient(135deg,var(--ink2),var(--ink3))"></div>'}
       <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,62,.95) 0%,transparent 60%)"></div>
       <div style="position:absolute;bottom:20px;left:20px;right:20px">
-        <div style="font-size:.56rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:4px">${count} propiedad${count!==1?'es':''}</div>
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:4px">${count} propiedad${count!==1?'es':''}</div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300">${escapeHtml(nombre)}</div>
       </div>
     </a>`;
@@ -1544,15 +1544,15 @@ function tipoPage(tipo, props, allProps) {
       subtitulo: 'Residencias premium verificadas en las mejores zonas de Guatemala. Desde casas familiares hasta residencias de lujo.',
       desc: 'Encuentra la casa ideal en Guatemala. Residencias en condominio, casas independientes y propiedades de lujo en Zona 10, Zona 14, Zona 15, Fraijanes, Cayala y Carretera a El Salvador. Todas las propiedades son verificadas con precios actualizados y asesoria personalizada.',
       faqs: [
-        { q: 'Cual es el precio promedio de una casa en Guatemala?', a: 'Los precios varian segun la zona. En Fraijanes puedes encontrar desde $125,000, mientras que en Zona 14 o Zona 10 los precios van desde $400,000 en adelante. Consulta nuestro catalogo para precios actualizados.' },
+        { q: 'Cual es el precio promedio de una casa en Guatemala?', a: 'Los precios varian segun la zona. En Fraijanes puede encontrar desde $125,000, mientras que en Zona 14 o Zona 10 los precios van desde $400,000 en adelante. Consulta nuestro catalogo para precios actualizados.' },
         { q: 'Que zonas son las mejores para comprar casa en Guatemala?', a: 'Las zonas mas demandadas son Zona 10, Zona 14, Zona 15, Zona 16, Cayala y Fraijanes. Cada una ofrece un estilo de vida diferente, desde urbano y exclusivo hasta residencial con naturaleza.' },
-        { q: 'Ofrecen asesoria para comprar casa?', a: 'Si, ofrecemos asesoria personalizada sin compromiso. Te acompanamos en todo el proceso, desde la busqueda hasta el cierre. Contactanos por WhatsApp para una respuesta rapida.' }
+        { q: 'Ofrecen asesoria para comprar casa?', a: 'Si, ofrecemos asesoria personalizada sin compromiso. Le acompanamos en todo el proceso, desde la busqueda hasta el cierre. Contactanos por WhatsApp para una respuesta rapida.' }
       ]
     },
     'apartamento': {
       titulo: 'Apartamentos en Venta en Guatemala',
       subtitulo: 'Apartamentos modernos y exclusivos en las mejores ubicaciones de Ciudad de Guatemala.',
-      desc: 'Descubre apartamentos en venta en Guatemala. Desde studios hasta penthouses en Zona 10, Zona 14, Zona 15 y Cayala. Edificios con amenidades, seguridad 24/7 y acabados premium. Ideales para vivir o invertir.',
+      desc: 'Apartamentos en venta en Guatemala. Desde studios hasta penthouses en Zona 10, Zona 14, Zona 15 y Cayala. Edificios con amenidades, seguridad 24/7 y acabados premium. Ideales para vivir o invertir.',
       faqs: [
         { q: 'Donde estan los mejores apartamentos en Guatemala?', a: 'Las zonas con mayor oferta de apartamentos premium son Zona 10, Zona 14, Zona 15 y Cayala. Cada zona ofrece diferentes amenidades y estilos de vida.' },
         { q: 'Es buena inversion comprar un apartamento?', a: 'Si, especialmente en zonas de alta demanda como Zona 10 y Cayala. Los apartamentos ofrecen buena plusvalia y pueden generar ingresos por renta.' }
@@ -1573,7 +1573,7 @@ function tipoPage(tipo, props, allProps) {
       desc: 'Terrenos en venta en Guatemala ideales para construccion residencial, desarrollo inmobiliario o inversion a largo plazo. Lotes en condominios cerrados, terrenos en zonas de alta plusvalia y parcelas con vistas panoramicas.',
       faqs: [
         { q: 'Que tamanos de terrenos tienen disponibles?', a: 'Los terrenos varian desde lotes en condominio de 200-500 m2 hasta terrenos de desarrollo de varias manzanas. Consulta nuestro catalogo para opciones actualizadas.' },
-        { q: 'Se puede construir en todos los terrenos?', a: 'Todos nuestros terrenos cuentan con uso de suelo verificado. Te asesoramos sobre permisos y factibilidad de construccion.' }
+        { q: 'Se puede construir en todos los terrenos?', a: 'Todos nuestros terrenos cuentan con uso de suelo verificado. Le asesoramos sobre permisos y factibilidad de construccion.' }
       ]
     }
   };
@@ -1609,11 +1609,11 @@ function tipoPage(tipo, props, allProps) {
   var body = `
   <section style="position:relative;min-height:45vh;display:flex;align-items:flex-end;padding:0;overflow:hidden;background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%)">
     <div style="position:relative;z-index:2;padding:80px 6% 48px;max-width:1000px;width:100%">
-      <div style="font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px">
+      <div style="font-size:.76rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px">
         <a href="/" style="color:inherit;text-decoration:none">Inicio</a> / <a href="/propiedades.html" style="color:inherit;text-decoration:none">Propiedades</a> / ${escapeHtml(tipo)}
       </div>
       <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(193,145,75,.12);border:1px solid rgba(193,145,75,.3);border-radius:100px;padding:5px 14px;margin-bottom:18px">
-        <span style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">${propsDelTipo.length} ${tipo.toLowerCase()}${propsDelTipo.length!==1?'s':''} disponible${propsDelTipo.length!==1?'s':''}</span>
+        <span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or)">${propsDelTipo.length} ${tipo.toLowerCase()}${propsDelTipo.length!==1?'s':''} disponible${propsDelTipo.length!==1?'s':''}</span>
       </div>
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:300;line-height:1.08;color:var(--wh);margin-bottom:14px">${escapeHtml(content.titulo)}</h1>
       <p style="font-size:.9rem;color:var(--sv);font-weight:300;max-width:560px;line-height:1.7">${escapeHtml(content.subtitulo)}</p>
@@ -1626,7 +1626,7 @@ function tipoPage(tipo, props, allProps) {
         [propsDelTipo.length + ' propiedad' + (propsDelTipo.length!==1?'es':''), 'Disponibles'],
         [precioMin && precioMax ? '$'+precioMin.toLocaleString('en-US')+' – $'+precioMax.toLocaleString('en-US') : '—', 'Rango de precios'],
         [zonasDelTipo.length + ' zona' + (zonasDelTipo.length!==1?'s':''), 'Ubicaciones'],
-      ].map(function(pair){ return '<div style="flex:1;min-width:160px;padding:22px 24px;border-right:1px solid var(--bd)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:5px">'+pair[0]+'</div><div style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mt)">'+pair[1]+'</div></div>'; }).join('')}
+      ].map(function(pair){ return '<div style="flex:1;min-width:160px;padding:22px 24px;border-right:1px solid var(--bd)"><div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;color:var(--or);line-height:1;margin-bottom:5px">'+pair[0]+'</div><div style="font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mt)">'+pair[1]+'</div></div>'; }).join('')}
     </div>
   </div>
 
@@ -1638,8 +1638,8 @@ function tipoPage(tipo, props, allProps) {
       </div>
       ${zonasDelTipo.length ? `
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px">
-        <span style="font-size:.65rem;font-weight:600;color:var(--mt);padding:6px 0;margin-right:8px">Zonas con ${tipo.toLowerCase()}:</span>
-        ${zonasDelTipo.map(function(z){ var zSlug = zonaSlug(z); return '<a href="/zonas/'+zSlug+'.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:5px 12px;font-size:.67rem;font-weight:600;color:var(--or);letter-spacing:.06em;text-decoration:none">'+escapeHtml(z)+'</a>'; }).join('')}
+        <span style="font-size:.76rem;font-weight:600;color:var(--mt);padding:6px 0;margin-right:8px">Zonas con ${tipo.toLowerCase()}:</span>
+        ${zonasDelTipo.map(function(z){ var zSlug = zonaSlug(z); return '<a href="/zonas/'+zSlug+'.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:5px 12px;font-size:.76rem;font-weight:600;color:var(--or);letter-spacing:.06em;text-decoration:none">'+escapeHtml(z)+'</a>'; }).join('')}
       </div>` : ''}
     </div>
   </section>
@@ -1687,9 +1687,9 @@ function tipoPage(tipo, props, allProps) {
   ${otrosTipos.length ? `
   <section style="padding:48px 6%;background:var(--ink);border-top:1px solid var(--bd)">
     <div style="max-width:1200px;margin:0 auto;text-align:center">
-      <p style="font-size:.75rem;color:var(--mt);margin-bottom:16px">Tambien te puede interesar</p>
+      <p style="font-size:.75rem;color:var(--mt);margin-bottom:16px">Tambien le puede interesar</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
-        ${otrosTipos.map(function(t){ var tSlug = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-'); return '<a href="/tipos/'+tSlug+'.html" style="background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:8px 20px;font-size:.72rem;font-weight:600;color:var(--or);text-decoration:none">'+escapeHtml(t)+'</a>'; }).join('')}
+        ${otrosTipos.map(function(t){ var tSlug = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-'); return '<a href="/tipos/'+tSlug+'.html" style="background:rgba(193,145,75,.08);border:1px solid rgba(193,145,75,.25);border-radius:100px;padding:8px 20px;font-size:.76rem;font-weight:600;color:var(--or);text-decoration:none">'+escapeHtml(t)+'</a>'; }).join('')}
         <a href="/propiedades.html" class="btn-or" style="margin-left:8px">Ver todo el catalogo</a>
       </div>
     </div>

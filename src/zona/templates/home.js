@@ -4,6 +4,7 @@ const { escapeHtml, ikTransform } = require('../../shared/utils');
 const A = require('../analysis');
 const B = require('./blocks');
 const { I, waLink } = B;
+const SV = require('./servicios');
 
 function indexPage(props, card) {
   const D = A.loadZoneData();
@@ -36,20 +37,19 @@ function indexPage(props, card) {
   const body = `
 <!-- HERO -->
 <section class="h2-hero">
-  <video autoplay muted loop playsinline preload="metadata" aria-hidden="true" poster="${escapeHtml(heroPoster)}">
-    <source src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm" type="video/webm">
-  </video>
+  <img class="h2-poster" src="${escapeHtml(heroPoster)}" alt="" aria-hidden="true" fetchpriority="high" width="1600" height="900">
+  <video muted loop playsinline preload="none" aria-hidden="true" data-src="https://ik.imagekit.io/Zona/Zona_INNmueble_Guatemala_Hero_16_9.webm"></video>
   <div class="h2-ov"></div>
   <div class="h2-wrap">
     <div>
       <div class="h2-ey">
         <span class="h2-chip"><span class="dot"></span>Asesoría inmobiliaria con análisis, valores y claridad</span>
       </div>
-      <h1 class="h2-h1">No compres<br><em>a ciegas.</em></h1>
-      <p class="h2-lead">Propiedades en Guatemala analizadas por ubicación, valor y potencial antes de llegar a ti. Te decimos lo que conviene saber, también lo que otros no mencionan.</p>
+      <h1 class="h2-h1">No compre<br><em>a ciegas.</em></h1>
+      <p class="h2-lead">Propiedades en Guatemala analizadas por ubicación, valor y potencial antes de llegar a usted. Le decimos lo que conviene saber, también lo que otros no mencionan.</p>
       <div class="h2-ctas">
         <a href="/propiedades.html" class="btn-gold">Ver propiedades analizadas</a>
-        <a href="#diagnostico" class="btn-ghost">Diagnóstico en 1 minuto</a>
+        <a href="#diagnostico" class="z3-link">Diagnóstico en 1 minuto ${I.arrow}</a>
       </div>
       <div class="h2-proof">
         <span><b>${nAn}</b> anuncios analizados</span>
@@ -67,7 +67,7 @@ function indexPage(props, card) {
       </div>
       <div class="h2-pane" id="pane-buscar">
         <div class="h2-field">
-          <label class="h2-label" for="hs-q">¿Dónde buscas?</label>
+          <label class="h2-label" for="hs-q">¿Dónde busca?</label>
           <input class="h2-in" id="hs-q" placeholder="Zona, condominio o municipio" autocomplete="off">
         </div>
         <div class="h2-row">
@@ -91,17 +91,19 @@ function indexPage(props, card) {
 <script>
 document.querySelectorAll('.h2-tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.h2-tab').forEach(function(x){x.classList.remove('on')});t.classList.add('on');document.querySelectorAll('.h2-pane').forEach(function(p){p.classList.remove('on')});document.getElementById('pane-'+t.dataset.p).classList.add('on');});});
 (function(){function go(){var q=document.getElementById('hs-q').value.trim(),t=document.getElementById('hs-t').value,p=document.getElementById('hs-p').value,u=[];if(t)u.push('tipo='+encodeURIComponent(t));if(q)u.push('q='+encodeURIComponent(q));if(p)u.push('pmax='+p);location.href='/propiedades.html'+(u.length?'?'+u.join('&'):'');}
-document.getElementById('hs-go').addEventListener('click',go);document.getElementById('hs-q').addEventListener('keydown',function(e){if(e.key==='Enter')go();});})();
+document.getElementById('hs-go').addEventListener('click',go);
+/* Video de portada: solo en pantallas grandes y despues de cargar la pagina */
+window.addEventListener('load',function(){var v=document.querySelector('.h2-hero video');if(!v||window.innerWidth<900||(navigator.connection&&navigator.connection.saveData))return;setTimeout(function(){var s=document.createElement('source');s.src=v.dataset.src;s.type='video/webm';v.appendChild(s);v.load();v.play().then(function(){v.classList.add('on')}).catch(function(){});},600);});document.getElementById('hs-q').addEventListener('keydown',function(e){if(e.key==='Enter')go();});})();
 </script>
 
 <!-- MÉTODO -->
-<section class="sec" style="background:var(--ink2)">
+<section class="sec lt">
   <div class="sec-in">
-    <div class="sec-head"><div><div class="ey">Cómo trabajamos</div><h2 class="st">Antes de mostrarte una propiedad, <em>la analizamos.</em></h2></div>
-      <p>Cada propiedad publicada pasa por el mismo filtro. Así puedes comparar con criterio y decidir sin presión.</p></div>
+    <div class="sec-head"><div><div class="ey">Cómo trabajamos</div><h2 class="st">Antes de mostrarle una propiedad, <em>la analizamos.</em></h2></div>
+      <p>Cada propiedad publicada pasa por el mismo filtro. Así puede comparar con criterio y decidir sin presión.</p></div>
     <div class="method">
       <div class="method-step">${I.map}<div class="method-n">01</div><h3>Ubicación</h3><p>Accesos, traslado real a Zona 10 en hora pico, servicios y entorno. La ubicación también se invierte.</p></div>
-      <div class="method-step">${I.chart}<div class="method-n">02</div><h3>Valor</h3><p>Comparamos el precio con ${nAn} anuncios de la zona. Te mostramos si está por debajo, dentro o por encima del rango típico.</p></div>
+      <div class="method-step">${I.chart}<div class="method-n">02</div><h3>Valor</h3><p>Comparamos el precio con ${nAn} anuncios de la zona. Le mostramos si está por debajo, dentro o por encima del rango típico.</p></div>
       <div class="method-step">${I.shield}<div class="method-n">03</div><h3>Claridad</h3><p>Puntos fuertes, lo que conviene revisar y la debida diligencia documental antes de cualquier oferta.</p></div>
     </div>
     <p class="brand-line">No se trata de vender por vender. Se trata de <b>decidir bien.</b></p>
@@ -112,10 +114,19 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
 <section style="padding:100px 0 0;background:var(--ink)">
   <div style="padding:0 6% 40px" class="sec-in">
     <div class="sec-head" style="margin-bottom:0"><div><div class="ey">Propiedades analizadas</div><h2 class="st">Cada una con su <em>ficha de análisis</em></h2></div>
-      <p>Precio frente al mercado, traslado estimado y puntos a revisar. Abre cualquier propiedad para ver el detalle.</p></div>
+      <p>Precio frente al mercado, traslado estimado y puntos a revisar. Abra cualquier propiedad para ver el detalle.</p></div>
   </div>
   <div class="prop-grid">${featured.map((p, i) => card(p, i)).join('')}</div>
   <div style="text-align:center;padding:40px 6%"><a href="/propiedades.html" class="btn-ghost">Ver las ${activas} propiedades ${I.arrow}</a></div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="sec lt" id="servicios">
+  <div class="sec-in">
+    <div class="sec-head"><div><div class="ey">Servicios</div><h2 class="st">Acompañamiento completo, <em>con análisis en cada paso.</em></h2></div>
+      <p>Comprar, vender, rentar o invertir con información clara y documentos en orden. <a class="z3-link-ink" href="/servicios.html">Ver todos los servicios</a></p></div>
+    ${SV.serviciosGrid(6)}
+  </div>
 </section>
 
 <!-- DIAGNÓSTICO -->
@@ -124,11 +135,11 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
     <div>
       <div class="ey">Diagnóstico inmobiliario</div>
       <h2 class="st">Cuatro preguntas. <em>Una búsqueda con criterio.</em></h2>
-      <p style="font-size:.88rem;color:var(--sv);line-height:1.85;font-weight:300;margin:14px 0 24px;max-width:440px">Cuéntanos qué buscas y te mostramos al instante las propiedades que encajan, ordenadas por su posición frente al mercado. Si nada encaja, te avisamos cuando aparezca.</p>
+      <p class="z3-p" style="margin:14px 0 24px;max-width:440px">Cuéntenos qué busca y le mostramos al instante las propiedades que encajan, ordenadas por su posición frente al mercado. Si nada encaja, le avisamos cuando aparezca.</p>
       <ul class="checks">
-        <li>${I.check}<span><b>Sin registro.</b> Ves resultados de inmediato.</span></li>
+        <li>${I.check}<span><b>Sin registro.</b> Resultados de inmediato.</span></li>
         <li>${I.check}<span><b>Con datos.</b> Cada opción muestra si su precio está en rango.</span></li>
-        <li>${I.check}<span><b>Con seguimiento.</b> Un asesor revisa tu caso por WhatsApp.</span></li>
+        <li>${I.check}<span><b>Con seguimiento.</b> Un asesor revisa su caso por WhatsApp.</span></li>
       </ul>
     </div>
     ${B.diagnosticoWidget(props, { id: 'dx' })}
@@ -156,24 +167,25 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
       }).join('')}
     </div>
     <p class="src-note" style="margin-top:18px">Fuente: Índice Zona-INNmueble con ${nAn} anuncios en venta y ${(D.n_rentas || 0).toLocaleString('en-US')} en alquiler, datos al ${escapeHtml(fecha)}. Precios de oferta publicados; no constituyen avalúo. <a href="/indice.html">Ver metodología e índice completo</a>.</p>
+    <div class="z3-actions" style="margin-top:22px"><a href="/indice.html" class="btn-gold">Ver el índice completo</a><a href="${waLink('Hola, quiero recibir el Índice Zona-INNmueble de valores por zona.')}" target="_blank" rel="noopener" class="btn-ghost">Recibirlo por WhatsApp cada mes</a></div>
   </div>
 </section>
 
 <!-- PROPIETARIOS -->
-<section class="sec" style="background:var(--ink2)">
+<section class="sec lt">
   <div class="sec-in split">
     <div class="split-img"><img src="${escapeHtml(premiumImg)}" alt="Propiedad promocionada por Zona-INNmueble" loading="lazy"><div class="split-cap">Promoción profesional · Zona-INNmueble</div></div>
     <div>
       <div class="ey">Para propietarios</div>
-      <h2 class="st">Tu propiedad merece <em>mejor promoción.</em></h2>
-      <p style="font-size:.88rem;color:var(--sv);line-height:1.85;font-weight:300;margin-top:14px">Vender bien no es publicar en más portales. Es llegar con un precio defendible, una presentación impecable y ante el comprador correcto.</p>
+      <h2 class="st">Su propiedad merece <em>mejor promoción.</em></h2>
+      <p class="z3-p" style="margin-top:14px">Vender bien no es publicar en más portales. Es llegar con un precio defendible, una presentación impecable y ante el comprador correcto.</p>
       <ul class="checks">
-        <li>${I.chart}<span><b>Precio con datos:</b> comparamos con el mercado real de tu zona.</span></li>
+        <li>${I.chart}<span><b>Precio con datos:</b> comparamos con el mercado real de su zona.</span></li>
         <li>${I.orbit}<span><b>Recorrido virtual 360°</b> y fotografía editada profesionalmente.</span></li>
         <li>${I.film}<span><b>Reel cinematográfico</b> y campaña segmentada en Meta Ads.</span></li>
         <li>${I.users}<span><b>Compradores filtrados</b> antes de cada visita.</span></li>
       </ul>
-      <div style="display:flex;gap:12px;flex-wrap:wrap"><a href="/vender.html" class="btn-gold">Solicita una evaluación</a><a href="/vender.html#estimador" class="btn-ghost">Estimar valor de mi propiedad</a></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap"><a href="/vender.html" class="btn-gold">Solicitar una evaluación</a><a href="/vender.html#estimador" class="btn-ghost">Estimar valor de mi propiedad</a></div>
     </div>
   </div>
 </section>
@@ -184,7 +196,7 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
     <div>
       <div class="ey">Búsqueda privada</div>
       <h2 class="st">Hay propiedades que <em>no se publican.</em></h2>
-      <p style="font-size:.88rem;color:var(--sv);line-height:1.85;font-weight:300;margin:14px 0 26px">Algunos propietarios prefieren vender con discreción. Si buscas algo específico (una zona, un condominio, una finca con agua), registramos tu perfil y te contactamos solo cuando aparezca algo que encaje.</p>
+      <p class="z3-p" style="margin:14px 0 26px">Algunos propietarios prefieren vender con discreción. Si busca algo específico (una zona, un condominio, una finca con agua), registramos su perfil y le contactamos solo cuando aparezca algo que encaje.</p>
       <a href="${waLink('Hola, busco una propiedad que no está publicada. Quiero registrar mi búsqueda privada.')}" target="_blank" rel="noopener" class="btn-gold">${I.wa} Registrar búsqueda privada</a>
       <p class="src-note" style="margin-top:12px">Discreción y respuesta en menos de 2 horas en horario hábil.</p>
     </div>
@@ -192,25 +204,8 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
   </div>
 </section>
 
-<!-- ÍNDICE -->
-<section class="sec" style="background:var(--ink2);padding-top:40px">
-  <div class="sec-in">
-    <div class="idx-band">
-      <div>
-        <div class="ey" style="color:var(--el)">Índice Zona-INNmueble</div>
-        <h2 class="st-large">Valores de referencia por zona en Guatemala, <em style="color:var(--or)">en un solo documento.</em></h2>
-        <p style="font-size:.86rem;color:var(--sv);line-height:1.85;font-weight:300;margin:12px 0 24px;max-width:520px">Precio por m², precio típico, renta y rendimiento por zona, sector y tramo de carretera. Consúltalo gratis o recíbelo en tu WhatsApp cada mes.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap"><a href="/indice.html" class="btn-gold">Ver el índice</a><a href="${waLink('Hola, quiero recibir el Índice Zona-INNmueble de valores por zona.')}" target="_blank" rel="noopener" class="btn-ghost">Recibir por WhatsApp</a></div>
-      </div>
-      <div class="idx-mini">
-        ${zones.slice(0, 5).map(z => z.casa && z.casa.m2 ? `<div><span>${escapeHtml(z.nombre)}</span><b>$${z.casa.m2[1].toLocaleString('en-US')}/m²</b></div>` : '').join('')}
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- TIPOS -->
-<section class="sec" style="background:var(--ink)">
+<section class="sec" style="background:var(--ink2)">
   <div class="sec-in">
     <div class="sec-head"><div><div class="ey">Portafolio</div><h2 class="st">Propiedades para <em>cada objetivo</em></h2></div></div>
     <div class="tipo2">
@@ -221,14 +216,14 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
 </section>
 
 <!-- COMPROMISOS -->
-<section class="sec" style="background:var(--ink2)">
+<section class="sec lt">
   <div class="sec-in">
-    <div class="sec-head"><div><div class="ey">Nuestro compromiso</div><h2 class="st">Lo que puedes esperar <em>de nosotros</em></h2></div></div>
+    <div class="sec-head"><div><div class="ey">Nuestro compromiso</div><h2 class="st">Lo que puede esperar <em>de nosotros</em></h2></div></div>
     <div class="commit">
       <div><h4>Análisis antes que opinión</h4><p>Cada recomendación se apoya en datos de mercado, no en lo que conviene vender.</p></div>
-      <div><h4>Lo bueno y lo que conviene revisar</h4><p>Te decimos los puntos fuertes y también lo que hay que verificar antes de ofertar.</p></div>
-      <div><h4>Documentos en orden</h4><p>Revisamos titularidad, gravámenes e impuestos contigo antes de cualquier compromiso.</p></div>
-      <div><h4>Cero presión</h4><p>Decides con calma. Si una propiedad no te conviene, te lo decimos.</p></div>
+      <div><h4>Lo bueno y lo que conviene revisar</h4><p>Le decimos los puntos fuertes y también lo que hay que verificar antes de ofertar.</p></div>
+      <div><h4>Documentos en orden</h4><p>Revisamos titularidad, gravámenes e impuestos con usted antes de cualquier compromiso.</p></div>
+      <div><h4>Cero presión</h4><p>Usted decide con calma. Si una propiedad no le conviene, se lo decimos.</p></div>
     </div>
   </div>
 </section>
@@ -236,9 +231,9 @@ document.getElementById('hs-go').addEventListener('click',go);document.getElemen
 <!-- CONTACTO -->
 <section id="contacto" class="sec" style="background:var(--ink);text-align:center">
   <div style="max-width:640px;margin:0 auto">
-    <div class="ey" style="justify-content:center">Escríbenos hoy</div>
-    <h2 class="st">Tu próxima propiedad empieza <em>con una mejor decisión.</em></h2>
-    <p style="font-size:.86rem;color:var(--sv);line-height:1.9;margin:10px 0 34px;font-weight:300">Cuéntanos qué buscas, qué quieres vender o qué propiedad estás evaluando. Te respondemos con análisis, no con presión.</p>
+    <div class="ey" style="justify-content:center">Escríbanos hoy</div>
+    <h2 class="st">Su próxima propiedad empieza <em>con una mejor decisión.</em></h2>
+    <p class="z3-p" style="margin:10px 0 34px">Cuéntenos qué busca, qué quiere vender o qué propiedad está evaluando. Le respondemos con análisis, no con presión.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <a href="${waLink('Hola, me interesa una asesoría de Zona INNmueble.')}" target="_blank" rel="noopener" class="btn-gold">${I.wa} Escribir por WhatsApp</a>
       <a href="/propiedades.html" class="btn-ghost">Ver propiedades</a>

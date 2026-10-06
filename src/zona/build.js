@@ -216,6 +216,7 @@ write(path.join(OUT,'propiedades.html'),  catalogPage(props)); console.log('   �
 // ── Rediseño 2026-10: páginas de análisis y captación ──
 const EX = require('./templates/extra-pages');
 const BL = require('./templates/blocks');
+write(path.join(OUT,'servicios.html'),   require('./templates/servicios').serviciosPage()); console.log('   ✔  servicios.html');
 write(path.join(OUT,'vender.html'),      EX.venderPage());          console.log('   ✔  vender.html');
 write(path.join(OUT,'diagnostico.html'), EX.diagnosticoPage(props)); console.log('   ✔  diagnostico.html');
 write(path.join(OUT,'indice.html'),      EX.indicePage());          console.log('   ✔  indice.html');
@@ -436,6 +437,7 @@ const urls = [
   ...require('./templates/zona-valor').zoneIndex().list.map(e => ({ loc:'/valor/'+e.slug+'.html', priority:'0.7', changefreq:'weekly', lastmod: new Date().toISOString().substring(0,10) })),
   { loc:'/vender.html',      priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
   { loc:'/diagnostico.html', priority:'0.8', changefreq:'monthly', lastmod: new Date().toISOString().substring(0,10) },
+  { loc:'/servicios.html', priority:'0.9', changefreq:'monthly', lastmod:'2026-10-06' },
   { loc:'/cuanto-cuesta-casa-fraijanes-2026.html',   priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/como-comprar-finca-guatemala.html',         priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
   { loc:'/mejores-zonas-vivir-guatemala.html',        priority:'0.8', changefreq:'monthly', lastmod:'2026-06-19' },
@@ -460,6 +462,7 @@ write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
 write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html\n'); console.log('   ✔  google verification');
 
+console.log('   ✔  seguimiento diferido en ' + require('./defer-tracking').deferAll(OUT) + ' páginas');
 console.log('\n✅  Build completo!\n');
 
 }).catch(function(err){

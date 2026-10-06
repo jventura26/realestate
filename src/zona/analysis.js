@@ -230,7 +230,7 @@ function analyze(p) {
     else if (norm(p.estadoConstruccion) === 'usada' && !year) cons.push('Propiedad usada: conviene una inspección técnica antes de ofertar.');
     if (out.pricePos === 'alto') cons.push('Precio por encima del rango típico de oferta en la zona: vale la pena revisar comparables y qué lo justifica.');
     if (out.pricePos === 'bajo') cons.push('Precio por debajo del rango típico: entender el motivo (estado, tamaño, ubicación exacta) antes de decidir.');
-    if (out.commute && out.commute.pico && out.commute.pico[1] >= 60) cons.push('Trayecto largo a Zona 10 en hora pico: evalúa tu rutina de traslado.');
+    if (out.commute && out.commute.pico && out.commute.pico[1] >= 60) cons.push('Trayecto largo a Zona 10 en hora pico: evalúe su rutina de traslado.');
     if (chars.includes('Condominio cerrado') && !p.cuotaMant && !p.cuotaMantenimiento) cons.push('Confirmar cuota de mantenimiento del condominio.');
     if (tk === 'Finca' || tk === 'Terreno') cons.push('Verificar medida registral vs. medida física y acceso legal.');
     if (norm(p.estadoConstruccion) === 'nueva' && /preventa|planos/.test(norm(p.titulo))) cons.push('Venta en planos: revisar respaldo del desarrollador y plazos de entrega.');
@@ -337,7 +337,7 @@ function fichaAnalisis(p, a) {
   // 4. Debida diligencia
   blocks.push(`<div class="za-block"><div class="za-h">${ICON.doc} Debida diligencia</div>
     <ul class="za-docs">${docsChecklist(p)}</ul>
-    <p class="za-note">Revisamos estos puntos contigo antes de cualquier oferta. No se trata de vender por vender.</p></div>`);
+    <p class="za-note">Revisamos estos puntos con usted antes de cualquier oferta. No se trata de vender por vender.</p></div>`);
 
   return `<section class="za-ficha" id="analisis">
     <div class="za-head"><div><div class="za-ey">Ficha de análisis Zona-INNmueble</div><h2 class="za-title">Lo que conviene saber <em>antes de decidir</em></h2></div></div>

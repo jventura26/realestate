@@ -82,7 +82,7 @@ function diagnosticoWidget(props, opts = {}) {
   return `<div class="dx-card glass" id="${id}">
   <div class="dx-progress"><i id="${id}-bar"></i></div>
   <div class="dx-step on" data-q="obj">
-    <div class="dx-q">¿Qué quieres lograr?</div><div class="dx-hint">Pregunta 1 de 4</div>
+    <div class="dx-q">¿Qué quiere lograr?</div><div class="dx-hint">Pregunta 1 de 4</div>
     <div class="dx-opts">
       <button class="dx-opt" data-v="Vivir">Vivir<small>Casa o apartamento para mi familia</small></button>
       <button class="dx-opt" data-v="Renta">Invertir para renta<small>Ingreso mensual y ocupación</small></button>
@@ -91,7 +91,7 @@ function diagnosticoWidget(props, opts = {}) {
     </div>
   </div>
   <div class="dx-step" data-q="ppto">
-    <div class="dx-q">¿Cuál es tu presupuesto?</div><div class="dx-hint">Pregunta 2 de 4 · referencia en dólares</div>
+    <div class="dx-q">¿Cuál es su presupuesto?</div><div class="dx-hint">Pregunta 2 de 4 · referencia en dólares</div>
     <div class="dx-opts">
       <button class="dx-opt" data-v="0-200000">Hasta $200K<small>≈ hasta Q1.5M</small></button>
       <button class="dx-opt" data-v="200000-350000">$200K – $350K<small>≈ Q1.5M – Q2.7M</small></button>
@@ -100,7 +100,7 @@ function diagnosticoWidget(props, opts = {}) {
     </div>
   </div>
   <div class="dx-step" data-q="zona">
-    <div class="dx-q">¿Dónde te ves?</div><div class="dx-hint">Pregunta 3 de 4</div>
+    <div class="dx-q">¿Dónde se ve viviendo o invirtiendo?</div><div class="dx-hint">Pregunta 3 de 4</div>
     <div class="dx-opts">
       <button class="dx-opt" data-v="ciudad">Ciudad<small>Zonas 10, 13, 14, 15, 16</small></button>
       <button class="dx-opt" data-v="caes">Carretera a El Salvador<small>Fraijanes, Pinula, condominios</small></button>
@@ -118,22 +118,22 @@ function diagnosticoWidget(props, opts = {}) {
     </div>
   </div>
   <div class="dx-result" id="${id}-res">
-    <div class="za-ey">Tu diagnóstico</div>
+    <div class="za-ey">Su diagnóstico</div>
     <div class="dx-q" id="${id}-title">Esto es lo que encontramos</div>
     <div class="dx-sum" id="${id}-sum"></div>
     <div class="dx-matches" id="${id}-matches"></div>
     <a class="btn-gold" id="${id}-wa" href="#" target="_blank" rel="noopener" style="width:100%">${I.wa} Recibir mi análisis por WhatsApp</a>
-    <p class="src-note" style="margin-top:10px;text-align:center">Un asesor revisa tu caso y te responde con opciones concretas. Sin compromiso.</p>
+    <p class="src-note" style="margin-top:10px;text-align:center">Un asesor revisa su caso y le responde con opciones concretas. Sin compromiso.</p>
     <form class="dx-alert" id="${id}-af" novalidate>
       <div class="za-h" style="margin-bottom:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg> Avísame cuando entre algo así</div>
-      <p class="src-note" style="margin-bottom:12px">Cuando publiquemos una propiedad que coincida con tu búsqueda, te escribimos por WhatsApp. Solo eso.</p>
+      <p class="src-note" style="margin-bottom:12px">Cuando publiquemos una propiedad que coincida con su búsqueda, le escribimos por WhatsApp. Solo eso.</p>
       <div class="h2-row">
         <div><label class="h2-label" for="${id}-an">Nombre</label><input class="h2-in" id="${id}-an" autocomplete="given-name" required></div>
         <div><label class="h2-label" for="${id}-at">WhatsApp</label><input class="h2-in" id="${id}-at" type="tel" autocomplete="tel" placeholder="+502" required></div>
       </div>
       <div class="h2-row" style="margin-top:10px">
         <div><label class="h2-label" for="${id}-az">Zona</label><select class="h2-sel" id="${id}-az" required>
-          <option value="">Elige una zona</option><option>Zona 10</option><option>Zona 14</option><option>Zona 15</option><option value="Zona 16">Zona 16 / Cayalá</option><option value="Carretera a El Salvador">Carretera a El Salvador / Fraijanes</option><option value="Mixco">Mixco / San Cristóbal</option></select></div>
+          <option value="">Elija una zona</option><option>Zona 10</option><option>Zona 14</option><option>Zona 15</option><option value="Zona 16">Zona 16 / Cayalá</option><option value="Carretera a El Salvador">Carretera a El Salvador / Fraijanes</option><option value="Mixco">Mixco / San Cristóbal</option></select></div>
         <div><label class="h2-label" for="${id}-ak">Tipo</label><select class="h2-sel" id="${id}-ak"><option>Casa</option><option>Apartamento</option><option>Terreno</option><option>Finca</option><option value="">Cualquiera</option></select></div>
       </div>
       <label class="dx-consent"><input type="checkbox" id="${id}-ac" required> Acepto recibir por WhatsApp avisos de propiedades que coincidan con mi búsqueda. Puedo pedir que se detengan en cualquier momento. <a href="/privacidad.html" target="_blank">Privacidad</a></label>
@@ -177,11 +177,11 @@ function diagnosticoWidget(props, opts = {}) {
     sum.innerHTML=['<span>'+LBL.obj[ans.obj]+'</span>','<span>'+(lo?fmt(lo):'Hasta')+(hi<9e7?' – '+fmt(hi):' +')+'</span>','<span>'+LBL.zona[ans.zona]+'</span>','<span>'+ans.plazo+'</span>'].join('');
     var box=document.getElementById('${id}-matches');
     if(m.length){
-      document.getElementById('${id}-title').textContent=m.length===1?'Una propiedad encaja con tu perfil':m.length+' propiedades encajan con tu perfil';
+      document.getElementById('${id}-title').textContent=m.length===1?'Una propiedad encaja con su perfil':m.length+' propiedades encajan con su perfil';
       box.innerHTML=m.map(function(p){var tag=p.zp?('<span style="color:var(--'+(p.zp==='bajo'?'ok':p.zp==='alto'?'warn':'el')+')"> · '+(p.zp==='bajo'?'bajo':p.zp==='alto'?'sobre':'en')+' rango de zona</span>'):'';return '<a class="dx-m" href="/propiedades/'+p.s+'.html"><img src="'+p.img+'" alt=""><div><b>'+p.t+'</b><span>'+p.pf+' · '+p.loc+tag+'</span></div></a>';}).join('');
     } else {
-      document.getElementById('${id}-title').textContent='Tu búsqueda necesita un análisis a la medida';
-      box.innerHTML='<p class="dx-empty">Hoy no tenemos publicada una propiedad que cumpla los cuatro criterios. Muchas opciones no se publican: déjanos tu perfil y te avisamos cuando aparezca algo que realmente encaje.</p>';
+      document.getElementById('${id}-title').textContent='Su búsqueda necesita un análisis a la medida';
+      box.innerHTML='<p class="dx-empty">Muchas de las mejores opciones no se publican. Déjenos su perfil y le avisamos cuando aparezca algo que realmente encaje con los cuatro criterios.</p>';
     }
     var msg='Hola, hice el diagnóstico en zona-innmueble.com.\\nObjetivo: '+LBL.obj[ans.obj]+'\\nPresupuesto: '+(lo?fmt(lo):'hasta')+(hi<9e7?' a '+fmt(hi):' o más')+'\\nZona: '+LBL.zona[ans.zona]+'\\nPlazo: '+ans.plazo+(m.length?'\\nMe interesan: '+m.map(function(p){return p.t}).join(' / '):'')+'\\n¿Me pueden enviar un análisis?';
     document.getElementById('${id}-wa').href='https://wa.me/${WA}?text='+encodeURIComponent(msg);
@@ -195,9 +195,9 @@ function diagnosticoWidget(props, opts = {}) {
     e.preventDefault();
     var g=function(k){return (document.getElementById('${id}-'+k).value||'').trim()},msg=document.getElementById('${id}-am');
     var tel=g('at').replace(/[^0-9]/g,'');
-    if(!g('an')||tel.length<8){msg.textContent='Escribe tu nombre y un número de WhatsApp válido.';msg.className='dx-amsg err';return;}
-    if(!g('az')){msg.textContent='Elige la zona que te interesa.';msg.className='dx-amsg err';return;}
-    if(!document.getElementById('${id}-ac').checked){msg.textContent='Necesitamos tu autorización para escribirte por WhatsApp.';msg.className='dx-amsg err';return;}
+    if(!g('an')||tel.length<8){msg.textContent='Escriba su nombre y un número de WhatsApp válido.';msg.className='dx-amsg err';return;}
+    if(!g('az')){msg.textContent='Elija la zona que le interesa.';msg.className='dx-amsg err';return;}
+    if(!document.getElementById('${id}-ac').checked){msg.textContent='Necesitamos su autorización para escribirle por WhatsApp.';msg.className='dx-amsg err';return;}
     var r=ans.ppto?ans.ppto.split('-'):['',''],eid='ld'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
     var ck=function(n){var mm=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return mm?mm[2]:''};
     var body={alerta:true,consentimiento:true,nombre:g('an'),telefono:tel,zona_interes:g('az'),tipo_propiedad:g('ak'),
@@ -210,10 +210,10 @@ function diagnosticoWidget(props, opts = {}) {
       .then(function(res){return res.json().then(function(j){return {ok:res.ok,j:j}})})
       .then(function(x){
         if(!x.ok)throw new Error(x.j&&x.j.error||'error');
-        msg.textContent='Listo. Te avisaremos por WhatsApp cuando entre una propiedad así en '+g('az')+'.';msg.className='dx-amsg ok';
+        msg.textContent='Listo. Le avisaremos por WhatsApp cuando entre una propiedad así en '+g('az')+'.';msg.className='dx-amsg ok';
         try{if(window.fbq)fbq('track','Lead',{content_name:'Alerta diagnostico',content_category:g('az')},{eventID:eid});if(window.zTrack)zTrack('AlertaRegistrada',{zona:g('az'),tipo:g('ak')});}catch(e2){}
       })
-      .catch(function(){btn.disabled=false;msg.textContent='No pudimos activar la alerta. Escríbenos por WhatsApp y la activamos por ti.';msg.className='dx-amsg err';});
+      .catch(function(){btn.disabled=false;msg.textContent='No pudimos activar la alerta. Escríbanos por WhatsApp y la activamos por usted.';msg.className='dx-amsg err';});
   });
 })();
 </script>`;
@@ -253,7 +253,7 @@ function valorZonaWidget(opts = {}) {
   function usd(n){return n>=1e6?'$'+(n/1e6).toFixed(2).replace(/\\.?0+$/,'')+'M':'$'+Math.round(n/1e3)+'K';}
   function go(){
     var box=document.getElementById('${id}-res'),t=document.getElementById('${id}-t').value;
-    if(!sel){box.innerHTML='<p class="src-note">Escribe una zona y elige una opción de la lista.</p>';box.classList.add('on');return;}
+    if(!sel){box.innerHTML='<p class="src-note">Escriba una zona y elija una opción de la lista.</p>';box.classList.add('on');return;}
     var d=sel.t[t];
     if(!d){var alt=Object.keys(sel.t);box.innerHTML='<h4>'+sel.n+'</h4><p class="src-note">No hay suficientes anuncios de '+t.toLowerCase()+'s en esta zona para dar una referencia confiable'+(alt.length?'. Disponible: '+alt.join(', ')+'.':'.')+'</p>';box.classList.add('on');return;}
     var area=${withArea ? `parseFloat(document.getElementById('${id}-a').value)||0` : '0'};
