@@ -970,7 +970,7 @@ img{max-width:100%;display:block}
 <style>
 /* red.inmuhub.com: ficha para colegas, sin formulario ni WhatsApp */
 .ih-red #zpContactForm,.ih-red .zp-share-grid a[href*="wa.me"],.ih-red a[href*="wa.me"],.ih-red a[href*="api.whatsapp"]{display:none!important}
-.ih-red .zp-share-grid{grid-template-columns:1fr!important}
+.ih-red .zp-share-grid{display:none!important}
 </style>
 </head>
 <body>
