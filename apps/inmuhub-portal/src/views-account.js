@@ -31,7 +31,7 @@ export function loginPage(env, { error, email = '', next = '', notice, intro }) 
     <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" value="${email}" required></label>
     <label>Contraseña<input type="password" name="clave" autocomplete="current-password" maxlength="200" required></label>
     <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-    <p class="small muted">¿Olvidó su contraseña? Escríbanos por WhatsApp y le enviamos una clave temporal.</p>
+    <p class="small"><a href="/recuperar">¿Olvidó su contraseña?</a></p>
   </form>
   <div class="auth-alt">
     <h2 class="display-sm">¿Aún no tiene cuenta?</h2>
@@ -149,19 +149,70 @@ export function accountPage(env, { account, props, notice, favs = [] }) {
     <div class="panel">
       <div class="eyebrow">Sus datos</div>
       <p class="small">${account.email}<br>${account.whatsapp ? `+${account.whatsapp}` : ''}</p>
-      <p class="small muted">Para cambiar sus datos o su contraseña, escríbanos por WhatsApp.</p>
+      <p class="small muted">Para cambiar su contraseña use <a href="/recuperar">este enlace</a>. Para cambiar sus datos, escríbanos por WhatsApp.</p>
     </div>
   </div>
 </section>`;
   return layout(env, { title: 'Mi cuenta', path: '/mi-cuenta', body, noindex: true });
 }
 
-export function adminAccountsPage(env, { accounts, notice, tempPassword }) {
+export function forgotPage(env, { sent = false, error, email = '', byWhatsapp = false }) {
+  const body = html`
+<section class="wrap section narrow auth">
+  <div class="eyebrow">Mi cuenta</div>
+  <h1 class="display-md">Recuperar contraseña</h1>
+  ${sent
+    ? html`<div class="form-card">
+      ${byWhatsapp
+        ? html`<p class="notice" role="status">Recibimos su solicitud. Si existe una cuenta con <strong>${email}</strong>, le enviamos el enlace para crear su nueva contraseña al WhatsApp registrado en la cuenta.</p>
+      <p class="small muted">El enlace vale por una hora y sirve una sola vez. Lo enviamos en horario hábil.</p>`
+        : html`<p class="notice" role="status">Si existe una cuenta con <strong>${email}</strong>, le enviamos un enlace para crear una nueva contraseña.</p>
+      <p class="small muted">El enlace vale por una hora y sirve una sola vez. Revise también la carpeta de correo no deseado. Si no le llega en unos minutos, escríbanos por WhatsApp y se lo hacemos llegar.</p>`}
+      <a class="btn btn-outline btn-block" href="/ingresar">Volver a ingresar</a>
+    </div>`
+    : html`<p class="lead">Escriba el correo con el que creó su cuenta y le enviamos un enlace para crear una nueva contraseña.</p>
+  <form class="form-card" method="post" action="/recuperar">
+    ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
+    <label>Correo<input type="email" name="correo" autocomplete="email" maxlength="120" value="${email}" required></label>
+    <input type="text" name="empresa_web" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+    <button class="btn btn-primary btn-block" type="submit">Enviar enlace</button>
+    <p class="small"><a href="/ingresar">Volver a ingresar</a></p>
+  </form>`}
+</section>`;
+  return layout(env, { title: 'Recuperar contraseña', path: '/recuperar', body, noindex: true });
+}
+
+export function resetPage(env, { token = '', name = '', error, invalid = false }) {
+  const body = html`
+<section class="wrap section narrow auth">
+  <div class="eyebrow">Mi cuenta</div>
+  <h1 class="display-md">Nueva contraseña</h1>
+  ${invalid
+    ? html`<div class="form-card">
+      <p class="form-error" role="alert">Este enlace ya no es válido. Vence a la hora de enviado y sirve una sola vez.</p>
+      <a class="btn btn-primary btn-block" href="/recuperar">Pedir un enlace nuevo</a>
+    </div>`
+    : html`<p class="lead">${name ? `Hola, ${name.split(' ')[0]}. ` : ''}Elija una contraseña de al menos 8 caracteres.</p>
+  <form class="form-card" method="post" action="/restablecer">
+    ${error ? html`<p class="form-error" role="alert">${error}</p>` : ''}
+    <input type="hidden" name="t" value="${token}">
+    <label>Nueva contraseña<input type="password" name="clave" autocomplete="new-password" minlength="8" maxlength="200" required></label>
+    <label>Repítala<input type="password" name="clave2" autocomplete="new-password" minlength="8" maxlength="200" required></label>
+    <button class="btn btn-primary btn-block" type="submit">Guardar e ingresar</button>
+  </form>`}
+</section>`;
+  return layout(env, { title: 'Nueva contraseña', path: '/restablecer', body, noindex: true });
+}
+
+export function adminAccountsPage(env, { accounts, notice, tempPassword, resetLink }) {
   const pending = accounts.filter((a) => a.status === 'pendiente').length;
   const body = html`
 <section class="wrap section admin">
   <div class="section-head"><h1 class="display-sm">Cuentas</h1><a class="btn btn-outline btn-sm" href="/admin">Volver al panel</a></div>
   ${notice ? html`<p class="notice" role="status">${notice}</p>` : ''}
+  ${resetLink ? html`<div class="notice" role="status">Enlace para que <strong>${resetLink.email}</strong> cree su nueva contraseña (vale 1 hora, un solo uso):<br><code style="user-select:all;word-break:break-all">${resetLink.url}</code>
+    ${resetLink.wa ? html`<br><a class="btn btn-primary btn-xs" href="${resetLink.wa}" target="_blank" rel="noopener">Enviar por WhatsApp</a>` : ''}</div>` : ''}
+  ${accounts.some((a) => a.reset_pending) ? html`<p class="notice" role="status">${accounts.filter((a) => a.reset_pending).length} persona(s) pidieron recuperar su contraseña en las últimas 24 horas. Use «Enlace de clave» en su fila.</p>` : ''}
   ${tempPassword ? html`<p class="notice" role="status">Clave temporal para <strong>${tempPassword.email}</strong>: <code style="user-select:all">${tempPassword.value}</code> · Envíesela por WhatsApp. No se volverá a mostrar.</p>` : ''}
   <div class="kpis">
     <div><span>Compradores</span><strong>${accounts.filter((a) => a.role === 'comprador').length}</strong></div>
@@ -172,7 +223,7 @@ export function adminAccountsPage(env, { accounts, notice, tempPassword }) {
   <div class="table-wrap"><table>
     <thead><tr><th>Nombre</th><th>Tipo</th><th>Contacto</th><th>Propiedades</th><th>Estado</th><th>Acciones</th></tr></thead>
     <tbody>${accounts.map((a) => html`<tr>
-      <td><strong>${a.name}</strong>${a.company ? html`<br><span class="small muted">${a.company}</span>` : ''}<br><span class="small muted">Desde ${String(a.created_at).slice(0, 10)}</span></td>
+      <td><strong>${a.name}</strong>${a.reset_pending ? html` <span class="status status-revision">Pidió nueva clave</span>` : ''}${a.company ? html`<br><span class="small muted">${a.company}</span>` : ''}<br><span class="small muted">Desde ${String(a.created_at).slice(0, 10)}</span></td>
       <td>${ROLE[a.role]}</td>
       <td class="small">${a.email}<br>${a.whatsapp ? html`<a href="https://wa.me/${a.whatsapp}" target="_blank" rel="noopener">+${a.whatsapp}</a>` : ''}</td>
       <td>${a.props}</td>
@@ -182,6 +233,7 @@ export function adminAccountsPage(env, { accounts, notice, tempPassword }) {
         ${a.status === 'suspendida'
           ? html`<button name="accion" value="activar" class="btn btn-outline btn-xs">Reactivar</button>`
           : html`<button name="accion" value="suspender" class="btn btn-outline btn-xs">Suspender</button>`}
+        <button name="accion" value="enlace" class="btn ${a.reset_pending ? 'btn-primary' : 'btn-outline'} btn-xs">Enlace de clave</button>
         <button name="accion" value="clave" class="btn btn-outline btn-xs">Clave temporal</button>
       </form></td>
     </tr>`)}</tbody>
@@ -212,7 +264,7 @@ function buyerAccountPage(env, { account, notice, favs }) {
   <div class="panel">
     <div class="eyebrow">Sus datos</div>
     <p class="small">${account.email}<br>${account.whatsapp ? `+${account.whatsapp}` : ''}</p>
-    <p class="small muted">Para cambiar sus datos o su contraseña, escríbanos por WhatsApp.</p>
+    <p class="small muted">Para cambiar su contraseña use <a href="/recuperar">este enlace</a>. Para cambiar sus datos, escríbanos por WhatsApp.</p>
   </div>
 </section>`;
   return layout(env, { title: 'Mi cuenta', path: '/mi-cuenta', body, noindex: true });

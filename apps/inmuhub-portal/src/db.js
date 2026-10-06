@@ -471,7 +471,10 @@ export async function accountProperties(db, accountId) {
 export async function adminListAccounts(db) {
   const { results } = await db
     .prepare(`SELECT a.id, a.role, a.status, a.name, a.email, a.whatsapp, a.company, a.created_at, a.last_login_at,
-        (SELECT COUNT(*) FROM properties p WHERE p.account_id = a.id) AS props
+        (SELECT COUNT(*) FROM properties p WHERE p.account_id = a.id) AS props,
+        EXISTS (SELECT 1 FROM password_resets r WHERE r.account_id = a.id AND r.via IN ('correo', 'solicitud')
+          AND r.created_at > datetime('now', '-1 day')
+          AND NOT EXISTS (SELECT 1 FROM password_resets u WHERE u.account_id = a.id AND u.used_at IS NOT NULL AND u.via != 'solicitud' AND u.used_at > r.created_at)) AS reset_pending
       FROM accounts a ORDER BY CASE a.status WHEN 'pendiente' THEN 0 ELSE 1 END, a.created_at DESC LIMIT 200`)
     .all();
   return results;

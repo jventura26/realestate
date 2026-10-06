@@ -376,6 +376,37 @@ async function handlePublicar(request, env, ctx) {
 
 // ---------- Cuentas ----------
 
+// Correo transaccional (enlace para nueva contraseña) vía Resend. Sin RESEND_API_KEY no se envía
+// y la solicitud queda marcada en /admin/cuentas para enviarla por WhatsApp.
+async function sendResetEmail(env, acc, link) {
+  if (!env.RESEND_API_KEY) return false;
+  const first = (acc.name || '').split(' ')[0];
+  const text = [
+    `Hola${first ? ', ' + first : ''}:`,
+    '',
+    'Recibimos una solicitud para crear una nueva contraseña en inmuhub.',
+    'Use este enlace (vale por una hora y sirve una sola vez):',
+    '',
+    link,
+    '',
+    'Si usted no lo pidió, ignore este correo: su contraseña actual sigue igual.',
+    '',
+    'inmuhub · Portal inmobiliario curado en Guatemala',
+  ].join('\n');
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: env.ACCOUNT_MAIL_FROM || 'inmuhub <cuentas@inmuhub.com>',
+      to: [acc.email],
+      subject: 'Su enlace para crear una nueva contraseña',
+      text,
+    }),
+  });
+  if (!res.ok) console.error('Resend', res.status, await res.text().catch(() => ''));
+  return res.ok;
+}
+
 function safeNext(next) {
   return /^\/(?!\/)[a-z0-9/_-]*(#[a-z0-9-]+)?$/i.test(next || '') && !next.startsWith('/admin') ? next : '/mi-cuenta';
 }
@@ -397,7 +428,7 @@ async function handleAccounts(request, env, url, path, method) {
     const next = safeNext(field(form, 'next', 200));
     const fail = (error, status = 401) => page(acviews.loginPage(env, { error, email, next }), status, noStore);
     if (!email || !password) return fail('Escriba su correo y contraseña.', 422);
-    if (await auth.tooManyAttempts(env.DB, email)) return fail('Demasiados intentos. Espere 15 minutos o pídanos una clave temporal por WhatsApp.', 429);
+    if (await auth.tooManyAttempts(env.DB, email)) return fail('Demasiados intentos. Espere 15 minutos o use «¿Olvidó su contraseña?».', 429);
     const acc = await db.findAccountByEmail(env.DB, email);
     if (!acc || !(await auth.verifyPassword(password, acc.password_hash))) {
       await auth.recordFailure(env.DB, email, ip);
@@ -406,6 +437,57 @@ async function handleAccounts(request, env, url, path, method) {
     if (acc.status === 'suspendida') return fail('Esta cuenta está suspendida. Escríbanos por WhatsApp si cree que es un error.', 403);
     await auth.clearFailures(env.DB, email);
     return redirect(next, 303, { 'Set-Cookie': await auth.createSession(env.DB, acc.id) });
+  }
+
+  if (path === '/recuperar' && method === 'GET') {
+    return page(acviews.forgotPage(env, {}), 200, noStore);
+  }
+
+  if (path === '/recuperar' && method === 'POST') {
+    const form = await request.formData();
+    const email = field(form, 'correo', 120).toLowerCase();
+    if (field(form, 'empresa_web')) return redirect('/');
+    if (!auth.validEmail(email)) return page(acviews.forgotPage(env, { error: 'Escriba un correo válido.', email }), 422, noStore);
+    if (env.PUBLISH_LIMITER) {
+      const { success } = await env.PUBLISH_LIMITER.limit({ key: `rec:${ip || 'local'}` });
+      if (!success) return page(acviews.forgotPage(env, { error: 'Recibimos varias solicitudes seguidas. Espere un minuto e intente de nuevo.', email }), 429, noStore);
+    }
+    const acc = await db.findAccountByEmail(env.DB, email);
+    // La respuesta es la misma exista o no la cuenta, para no revelar qué correos están registrados.
+    if (acc && acc.status !== 'suspendida' && (await auth.recentResetRequests(env.DB, acc.id)) < 3) {
+      let sent = false;
+      if (env.RESEND_API_KEY) {
+        const token = await auth.createResetToken(env.DB, acc.id, 'correo');
+        sent = await sendResetEmail(env, acc, `${env.SITE_URL}/restablecer?t=${token}`).catch((e) => {
+          console.error('Correo de clave', e);
+          return false;
+        });
+      }
+      if (!sent) await auth.recordResetRequest(env.DB, acc.id);
+    }
+    return page(acviews.forgotPage(env, { sent: true, email, byWhatsapp: !env.RESEND_API_KEY }), 200, noStore);
+  }
+
+  if (path === '/restablecer' && method === 'GET') {
+    const token = url.searchParams.get('t') || '';
+    const r = await auth.findReset(env.DB, token);
+    if (!r || r.status === 'suspendida') return page(acviews.resetPage(env, { invalid: true }), 410, noStore);
+    return page(acviews.resetPage(env, { token, name: r.name }), 200, { ...noStore, 'Referrer-Policy': 'no-referrer' });
+  }
+
+  if (path === '/restablecer' && method === 'POST') {
+    const form = await request.formData();
+    const token = field(form, 't', 64);
+    const r = await auth.findReset(env.DB, token);
+    if (!r || r.status === 'suspendida') return page(acviews.resetPage(env, { invalid: true }), 410, noStore);
+    const pw = typeof form.get('clave') === 'string' ? form.get('clave').slice(0, 200) : '';
+    const pw2 = typeof form.get('clave2') === 'string' ? form.get('clave2').slice(0, 200) : '';
+    const problem = auth.passwordProblem(pw) || (pw !== pw2 ? 'Las dos contraseñas no coinciden.' : null);
+    if (problem) return page(acviews.resetPage(env, { token, name: r.name, error: problem }), 422, noStore);
+    await db.setAccountPassword(env.DB, r.account_id, await auth.hashPassword(pw)); // cierra las demás sesiones
+    await auth.consumeReset(env.DB, r.token_hash, r.account_id);
+    await auth.clearFailures(env.DB, r.email);
+    return redirect('/mi-cuenta?ok=clave', 303, { 'Set-Cookie': await auth.createSession(env.DB, r.account_id) });
   }
 
   if (path === '/registro' && method === 'GET') {
@@ -457,6 +539,7 @@ async function handleAccounts(request, env, url, path, method) {
     const ref = (url.searchParams.get('ref') || '').replace(/[^A-Z0-9-]/gi, '').slice(0, 12);
     const notice = {
       bienvenida: 'Su cuenta está lista.',
+      clave: 'Su nueva contraseña quedó guardada.',
       publicada: `Recibimos su propiedad${ref ? ` (${ref})` : ''}. La revisamos y le escribimos por WhatsApp.`,
     }[url.searchParams.get('ok')];
     const [props, favs] = await Promise.all([db.accountProperties(env.DB, account.id), db.accountFavorites(env.DB, account.id)]);
@@ -1213,6 +1296,17 @@ export default {
           const form = await request.formData();
           const id = Number(accountAction[1]);
           const action = field(form, 'accion', 20);
+          if (action === 'enlace') {
+            const acc = await env.DB.prepare('SELECT id, email, name, whatsapp FROM accounts WHERE id = ?').bind(id).first();
+            if (!acc) return redirect('/admin/cuentas');
+            const link = `${env.SITE_URL}/restablecer?t=${await auth.createResetToken(env.DB, acc.id, 'admin')}`;
+            const first = (acc.name || '').split(' ')[0];
+            const wa = acc.whatsapp
+              ? waLink(acc.whatsapp, `Hola${first ? ' ' + first : ''}, le comparto el enlace para crear su nueva contraseña en inmuhub. Vale por una hora y sirve una sola vez: ${link}`)
+              : null;
+            const accounts = await db.adminListAccounts(env.DB);
+            return page(acviews.adminAccountsPage(env, { accounts, resetLink: { email: acc.email, url: link, wa } }), 200, { 'Cache-Control': 'no-store' });
+          }
           if (action === 'clave') {
             const temp = auth.temporaryPassword();
             await db.setAccountPassword(env.DB, id, await auth.hashPassword(temp));

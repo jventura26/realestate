@@ -99,3 +99,40 @@ export function temporaryPassword() {
   const b = crypto.getRandomValues(new Uint8Array(10));
   return [...b].map((x) => A[x % A.length]).join('').replace(/(.{5})/, '$1-');
 }
+
+// ---- Recuperar contraseña: enlaces de un solo uso, válidos por 1 hora ----
+const RESET_MINUTES = 60;
+
+export async function createResetToken(db, accountId, via = 'correo') {
+  const token = hex(crypto.getRandomValues(new Uint8Array(32)));
+  const expires = new Date(Date.now() + RESET_MINUTES * 60e3).toISOString();
+  await db.prepare('INSERT INTO password_resets (token_hash, account_id, expires_at, via) VALUES (?, ?, ?, ?)')
+    .bind(await sha256(token), accountId, expires, via).run();
+  return token;
+}
+
+// Registra que alguien pidió recuperar la clave sin poder enviarle el enlace (sin proveedor de correo).
+export async function recordResetRequest(db, accountId) {
+  await db.prepare("INSERT INTO password_resets (token_hash, account_id, expires_at, via) VALUES (?, ?, datetime('now'), 'solicitud')")
+    .bind(`solicitud-${crypto.randomUUID()}`, accountId).run();
+}
+
+export async function recentResetRequests(db, accountId, minutes = 15) {
+  const since = new Date(Date.now() - minutes * 60e3).toISOString().replace('T', ' ').slice(0, 19);
+  const r = await db.prepare('SELECT COUNT(*) AS n FROM password_resets WHERE account_id = ? AND created_at > ?').bind(accountId, since).first();
+  return r?.n || 0;
+}
+
+export async function findReset(db, token) {
+  if (!/^[a-f0-9]{64}$/.test(token || '')) return null;
+  return db.prepare(
+    `SELECT r.token_hash, r.account_id, a.email, a.name, a.status FROM password_resets r JOIN accounts a ON a.id = r.account_id
+      WHERE r.token_hash = ? AND r.used_at IS NULL AND r.expires_at > ? AND r.via != 'solicitud'`
+  ).bind(await sha256(token), new Date().toISOString()).first();
+}
+
+export async function consumeReset(db, tokenHash, accountId) {
+  await db.prepare("UPDATE password_resets SET used_at = datetime('now') WHERE token_hash = ?").bind(tokenHash).run();
+  // Cualquier otro enlace pendiente de la misma cuenta deja de servir.
+  await db.prepare("UPDATE password_resets SET used_at = datetime('now') WHERE account_id = ? AND used_at IS NULL").bind(accountId).run();
+}
