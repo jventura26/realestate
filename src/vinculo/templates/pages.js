@@ -809,7 +809,7 @@ function detailPage(prop, allProps) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(prop.titulo||'Propiedad')} | INMUHUB.COM</title>
 <meta name="description" content="${esc((cleanDesc||prop.titulo||'Propiedad en Guatemala').substring(0,160))}">
-<link rel="canonical" href="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
+<link rel="canonical" href="${propUrl}">
 <link rel="icon" type="image/png" href="/assets/favicon2.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
@@ -820,7 +820,7 @@ function detailPage(prop, allProps) {
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(prop.titulo||'Propiedad')} | INMUHUB.COM">
 <meta property="og:description" content="${esc(ogDesc)}">
-<meta property="og:url" content="https://inmuhub.com/propiedades/${esc(prop.slug||'')}.html">
+<meta property="og:url" content="${propUrl}">
 <meta property="og:image" content="${esc(prop.mainImage||'')}">
 <meta property="og:locale" content="es_GT">
 <meta name="twitter:card" content="summary_large_image">
