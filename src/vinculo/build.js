@@ -103,7 +103,7 @@ function copyAssets() {
 }
 
 console.log('\n Building INMUHUB.COM\n');
-Promise.all([fetchKV(), fetchBrokers()]).then(([kvData, brokersData]) => {
+Promise.all([fetchKV(), fetchBrokers(), require('./enlaces').fetchPortalSlugs()]).then(([kvData, brokersData, portalSlugs]) => {
 const brokers = brokersData || [];
 let allProps = kvData ? normalizeKV(kvData) : parseProperties(CSV);
 allProps = allProps.filter(p => {
@@ -118,6 +118,8 @@ const isColegaOnly = p => Array.isArray(p.sitios) && p.sitios.includes('colegas'
 const props = allProps.filter(p => !isColegaOnly(p));
 const colegaProps = allProps.filter(isColegaOnly);
 require('./enlaces').assignCleanLinks(props.concat(colegaProps), DOMAIN);
+require('./enlaces').assignPortalCanonicals(props.concat(colegaProps), portalSlugs, DOMAIN);
+console.log(` portal: ${props.filter(p=>p.portalUrl).length} fichas con equivalente en /propiedad/`);
 console.log(` ${colegaProps.length} propiedades solo para colegas`);
 console.log(` ${props.length} propiedades ${kvData ? 'desde KV' : 'desde CSV'}`);
 
@@ -269,9 +271,9 @@ const urls = [
   { loc:'/blog/', priority:'0.9', changefreq:'weekly' },
   ...articles.map(a=>({ loc:"/blog/"+a.slug+".html", priority:'0.85', changefreq:'monthly' })),
   ...landings.map(l=>({ loc:'/'+l.slug+'.html', priority:'0.9', changefreq:'monthly' })),
-  ...props.map(p=>({ loc:`/propiedades/${p.slug}.html`, priority:'0.8', changefreq:'weekly' })),
+  ...props.filter(p=>!p.portalUrl).map(p=>({ loc: p.cleanPath || `/propiedades/${p.slug}`, priority:'0.8', changefreq:'weekly' })),
 ];
-write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls)); console.log(' sitemap.xml');
+write(path.join(OUT,'sitemap.xml'), generateSitemap(DOMAIN, urls.map(u => ({ ...u, loc: u.loc.replace(/\.html$/, '') })))); console.log(' sitemap.xml');
 const src404 = require('path').join(__dirname, '404.html');
 if(fs.existsSync(src404)){fs.copyFileSync(src404, require('path').join(OUT,'404.html'));console.log(' 404.html');}
 

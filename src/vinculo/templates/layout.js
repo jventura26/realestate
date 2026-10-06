@@ -20,7 +20,7 @@ const pageTitle = title
 : 'Propiedades en Venta en Guatemala | INMUHUB — Portal Inmobiliario Premium';
 const metaDesc = escapeHtml(desc || 'Portal inmobiliario premium en Guatemala. Casas, apartamentos, fincas y terrenos verificados en Zona 10, Zona 14, Zona 15, Cayala, Fraijanes y Carretera a El Salvador. Precios actualizados.');
 const ogImg = ogImage || `${DOMAIN}/assets/og.jpg`;
-const canon = `${DOMAIN}${canonical || '/'}`;
+const canon = `${DOMAIN}${canonical || '/'}`.replace(/\.html$/, ''); // Pages sirve sin .html; un canonical con .html apunta a una redireccion
 
 return `<!DOCTYPE html>
 <html lang="es">

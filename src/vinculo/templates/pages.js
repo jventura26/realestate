@@ -809,7 +809,7 @@ function detailPage(prop, allProps) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(prop.titulo||'Propiedad')} | INMUHUB.COM</title>
 <meta name="description" content="${esc((cleanDesc||prop.titulo||'Propiedad en Guatemala').substring(0,160))}">
-<link rel="canonical" href="${propUrl}">
+<link rel="canonical" href="${prop.portalUrl ? esc(prop.portalUrl) : propUrl}">
 <link rel="icon" type="image/png" href="/assets/favicon2.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">

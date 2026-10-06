@@ -81,4 +81,40 @@ function cleanLinkRedirects(props) {
   return lines.join('\n');
 }
 
-module.exports = { assignCleanLinks, cleanLinkRedirects };
+// Ficha equivalente en el portal nuevo de inmuhub.com (/propiedad/<slug>).
+// Cuando existe, la ficha anterior le cede el canonical para que Google indexe
+// una sola version de cada propiedad.
+const PORTAL_ALIAS = {
+  'elgin-zona13': 'zona13-elgin', 'socorro': 'elsocorro', 'sanjeronimo': 'san-jeronimo',
+  'asuncionmita': 'asuncion-mita', 'kanajuyu': 'kanajuyu-16', 'haciendanueva': 'hacienda-nueva',
+  'alcala': 'villas-alcala', 'santarosalia': 'santa-rosalia', 'alta-mar': 'chulamar',
+  'carretera-a-olmeca-casa-en-venta-renta-para-uso-comercial': 'olmeca',
+  'sancristobal': 'san-cristobal2', 'sancristobal-b7': 'san-cristobal',
+  'finca-en-chimaltenango': 'finca-chimaltenango'
+};
+
+function fetchPortalSlugs() {
+  return new Promise(resolve => {
+    require('https').get('https://inmuhub.com/sitemap.xml', res => {
+      let d = ''; res.on('data', c => d += c);
+      res.on('end', () => {
+        const set = new Set();
+        (d.match(/\/propiedad\/[a-z0-9-]+/gi) || []).forEach(m => set.add(m.split('/').pop()));
+        resolve(set.size ? set : null);
+      });
+    }).on('error', () => resolve(null));
+  });
+}
+
+function assignPortalCanonicals(props, portalSlugs, domain) {
+  props.forEach(p => {
+    const alias = PORTAL_ALIAS[p.slug];
+    let target = null;
+    if (portalSlugs) target = alias && portalSlugs.has(alias) ? alias : (portalSlugs.has(p.slug) ? p.slug : null);
+    else target = alias || null; // sin conexion: solo los equivalentes ya confirmados
+    p.portalUrl = target ? domain + '/propiedad/' + target : '';
+  });
+  return props;
+}
+
+module.exports = { assignCleanLinks, cleanLinkRedirects, fetchPortalSlugs, assignPortalCanonicals };
