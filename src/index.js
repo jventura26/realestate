@@ -607,7 +607,10 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo, o
   }
 }
 __name(upsertWhatsAppLead, "upsertWhatsAppLead");
-var WA_FOLLOWUP_INTERVALS_DAYS = [1, 3, 7, 21, 35, 50, 70, 90];
+// Dias desde la ultima respuesta de la persona en que sale cada seguimiento (5 en total).
+// Entre un seguimiento y el siguiente siempre se respeta la diferencia de dias, aunque alguno salga tarde.
+var WA_FOLLOWUP_INTERVALS_DAYS = [2, 7, 15, 30, 60];
+var WA_FOLLOWUP_MIN_GAP_DAYS = 4;
 var WA_FOLLOWUP_STOP_STAGES = ["Cierre", "Perdido"];
 var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
@@ -632,6 +635,19 @@ async function sendTeamAlert(env, to, contacto, detalle, fallbackText) {
 __name(sendTeamAlert, "sendTeamAlert");
 var WA_REVIEW_DELAY_DAYS = 10;
 var WA_REVIEW_URL_DEFAULT = "https://g.page/r/REEMPLAZAR-CON-TU-LINK-DE-RESENAS/review";
+// Cada seguimiento tiene dos versiones: [con interes conocido, sin interes]. {nombre} e {interes} se reemplazan.
+var PREMIUM_FOLLOWUPS = [
+  ["Buenos d\xEDas, {nombre}. Quedo pendiente de lo que conversamos sobre {interes}. Si desea, le preparo un breve an\xE1lisis de valor de la zona para que lo eval\xFAe con calma.",
+   "Buenos d\xEDas, {nombre}. Quedo atento a su b\xFAsqueda. Si me comparte la zona y el rango que tiene en mente, le preparo una selecci\xF3n curada de opciones."],
+  ["{nombre}, le comparto una referencia \xFAtil mientras decide: en esta herramienta puede consultar el valor por m\xB2 de cada zona, con datos publicados del mercado.\nhttps://zona-innmueble.com/valor-por-zona?utm_source=whatsapp&utm_campaign=seguimiento\nSi desea, la revisamos juntos para {interes}.",
+   "{nombre}, le comparto una referencia \xFAtil para su decisi\xF3n: en esta herramienta puede consultar el valor por m\xB2 de cada zona, con datos publicados del mercado.\nhttps://zona-innmueble.com/valor-por-zona?utm_source=whatsapp&utm_campaign=seguimiento"],
+  ["{nombre}, muchas de las mejores propiedades se mueven en privado antes de publicarse. Si su inter\xE9s en {interes} sigue en pie, con gusto le comparto opciones afines de nuestra red.",
+   "{nombre}, muchas de las mejores propiedades se mueven en privado antes de publicarse. Si su b\xFAsqueda sigue en pie, con gusto le comparto opciones de nuestra red que no est\xE1n en portales."],
+  ["Ha pasado un tiempo, {nombre}. El mercado en {interes} sigue movi\xE9ndose y puede haber alternativas nuevas para usted. Cuando guste, se las comparto con su an\xE1lisis.",
+   "Ha pasado un tiempo, {nombre}. El mercado sigue movi\xE9ndose y puede haber alternativas nuevas para usted. Cuando guste retomar, aqu\xED estamos."],
+  ["{nombre}, cierro este seguimiento para no interrumpirle. Cuando decida retomar su b\xFAsqueda, nuestros asesores Jorge Ventura y Zoraida Quintana le atienden personalmente al 4769-2366. Fue un gusto conversar con usted.",
+   "{nombre}, cierro este seguimiento para no interrumpirle. Cuando decida retomar su b\xFAsqueda, nuestros asesores Jorge Ventura y Zoraida Quintana le atienden personalmente al 4769-2366. Fue un gusto conversar con usted."]
+];
 var DEFAULT_FOLLOWUP_TEMPLATES = [
   "Hola {nombre}, \xBFseguimos afinando la b\xFAsqueda? Cuando guste, aqu\xED estoy.",
   "A veces la propiedad correcta aparece cuando uno menos la busca. Si gusta, le comparto otra opci\xF3n que podr\xEDa interesarle.",
@@ -644,15 +660,31 @@ var DEFAULT_FOLLOWUP_TEMPLATES = [
 ];
 async function getFollowUpTemplates(env) {
   try {
-    var custom = await env.DB.get("wa_followup_templates");
+    var custom = await env.DB.get("wa_followup_templates_v2");
     if (custom) {
       var arr = JSON.parse(custom);
       if (Array.isArray(arr) && arr.length) return arr;
     }
   } catch (e) {}
-  return DEFAULT_FOLLOWUP_TEMPLATES;
+  return PREMIUM_FOLLOWUPS;
 }
 __name(getFollowUpTemplates, "getFollowUpTemplates");
+// Nombre de la plantilla aprobada por Meta para cada seguimiento (fuera de la ventana de 24 h).
+// Se pueden registrar en KV "wa_followup_template_names" como lista JSON, una por seguimiento.
+async function getFollowUpTemplateNames(env) {
+  try {
+    var raw = await env.DB.get("wa_followup_template_names");
+    var arr = raw ? JSON.parse(raw) : null;
+    if (Array.isArray(arr) && arr.length) return arr;
+  } catch (e) {}
+  return [];
+}
+__name(getFollowUpTemplateNames, "getFollowUpTemplateNames");
+function followUpInteres(lead) {
+  var p = String(lead.propiedad || "").split("|")[0].trim();
+  return p || String(lead.zona_interes || "").trim();
+}
+__name(followUpInteres, "followUpInteres");
 var WA_FOLLOWUP_MAX_SENDS_PER_RUN = 35;
 async function sendFollowUps(env) {
   try {
@@ -660,7 +692,10 @@ async function sendFollowUps(env) {
     var leads = raw ? JSON.parse(raw) : [];
     if (!leads.length) return;
     var templates = await getFollowUpTemplates(env);
+    var tplNames = await getFollowUpTemplateNames(env);
     var now = Date.now();
+    // Domingo no se escribe: se respeta el descanso (hora de Guatemala).
+    if (new Date(now - 6 * 3600e3).getUTCDay() === 0) return;
     var changed = false;
     var sentCount = 0;
     for (var i = 0; i < leads.length; i++) {
@@ -682,7 +717,10 @@ async function sendFollowUps(env) {
         changed = true;
       }
       if (lead.followUpStatus !== "active") continue;
-      if (typeof lead.followUpStage !== "number" || lead.followUpStage >= WA_FOLLOWUP_INTERVALS_DAYS.length) continue;
+      if (typeof lead.followUpStage !== "number") continue;
+      if (lead.followUpStage >= WA_FOLLOWUP_INTERVALS_DAYS.length) { lead.followUpStatus = "completed"; changed = true; continue; }
+      // Nunca dos seguimientos con menos de WA_FOLLOWUP_MIN_GAP_DAYS de diferencia (corrige los envios diarios).
+      if (lead.lastFollowUpAt && now - new Date(lead.lastFollowUpAt).getTime() < WA_FOLLOWUP_MIN_GAP_DAYS * 864e5) continue;
       if (!lead.nextFollowUpAt || new Date(lead.nextFollowUpAt).getTime() > now) continue;
       // El chequeo de pausa-por-humano cuesta una subrequest -- se hace hasta
       // aqui, ya filtrados los leads que en realidad estan en fecha de recibir
@@ -691,8 +729,10 @@ async function sendFollowUps(env) {
       // TODOS antes de filtrar agotaba el limite y tronaba el cron completo).
       if (await isAiPausedForHuman(env, lead.wa_from)) continue;
       var stageIdx = lead.followUpStage;
-      var tpl = templates[stageIdx] || DEFAULT_FOLLOWUP_TEMPLATES[stageIdx];
-      if (!tpl) continue;
+      var pair = templates[stageIdx] || PREMIUM_FOLLOWUPS[stageIdx];
+      if (!pair) continue;
+      var interes = followUpInteres(lead);
+      var tpl = Array.isArray(pair) ? (interes ? pair[0] : pair[1]) : pair;
       var nombre = (lead.nombre && lead.nombre !== "Contacto WhatsApp") ? lead.nombre.split(" ")[0] : "";
       // Si nunca hay lastInboundAt (p.ej. un lead de Meta Lead Ads contactado
       // primero por nosotros via plantilla, que todavia no ha respondido),
@@ -701,16 +741,21 @@ async function sendFollowUps(env) {
       var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : 0;
       var withinWindow = (now - anchorTime) < WA_24H_WINDOW_MS;
       if (withinWindow) {
-        var text = tpl.split("{nombre}").join(nombre || "").replace(/\s{2,}/g, " ").trim();
+        var text = tpl.split("{interes}").join(interes).split("{nombre}").join(nombre || "").replace(/^[\s,.]+/, "").replace(/[ \t]{2,}/g, " ").trim();
+        text = text.charAt(0).toUpperCase() + text.slice(1);
         await sendWhatsAppMessage(env, lead.wa_from, text);
       } else {
-        await sendWhatsAppTemplateMessage(env, lead.wa_from, WA_FOLLOWUP_TEMPLATE_NAME, WA_FOLLOWUP_TEMPLATE_LANG, [nombre || "de nuevo"]);
+        await sendWhatsAppTemplateMessage(env, lead.wa_from, tplNames[stageIdx] || WA_FOLLOWUP_TEMPLATE_NAME, WA_FOLLOWUP_TEMPLATE_LANG, [nombre || "de nuevo"]);
       }
+      lead.lastFollowUpAt = new Date(now).toISOString();
       lead.followUpStage = stageIdx + 1;
       if (lead.followUpStage >= WA_FOLLOWUP_INTERVALS_DAYS.length) {
         lead.followUpStatus = "completed";
       } else {
-        lead.nextFollowUpAt = new Date(anchorTime + WA_FOLLOWUP_INTERVALS_DAYS[lead.followUpStage] * 864e5).toISOString();
+        // El siguiente sale a la distancia establecida contando desde HOY, no desde la ultima respuesta:
+        // asi un envio atrasado no provoca envios en dias seguidos.
+        var gapDays = Math.max(WA_FOLLOWUP_MIN_GAP_DAYS, WA_FOLLOWUP_INTERVALS_DAYS[lead.followUpStage] - WA_FOLLOWUP_INTERVALS_DAYS[stageIdx]);
+        lead.nextFollowUpAt = new Date(now + gapDays * 864e5).toISOString();
       }
       changed = true;
       sentCount++;
@@ -736,7 +781,7 @@ async function sendReviewRequests(env) {
       var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : 0;
       var withinWindow = anchorTime && now - anchorTime < WA_24H_WINDOW_MS;
       if (withinWindow) {
-        var text = "Hola" + (nombre ? " " + nombre : "") + ", fue un gusto acompa\xF1arte en este proceso con Zona-INNmueble. Si tienes un minuto, nos ayudar\xEDa mucho que compartieras tu experiencia aqu\xED: " + reviewUrl;
+        var text = (nombre ? nombre + ", f" : "F") + "ue un gusto acompa\xF1arle en este proceso. Si dispone de un minuto, su opini\xF3n sobre la experiencia con Zona-INNmueble nos ayuda a seguir mejorando:\n" + reviewUrl;
         await sendWhatsAppMessage(env, lead.wa_from, text);
         lead.reviewRequestStatus = "sent";
       } else {
@@ -835,7 +880,8 @@ async function notifyMatchingLeadsForNewProperty(env, prop) {
       var anchorTime = lead.lastInboundAt ? new Date(lead.lastInboundAt).getTime() : 0;
       var withinWindow = anchorTime && now - anchorTime < WA_24H_WINDOW_MS;
       if (withinWindow) {
-        var text = "Hola" + (nombre ? " " + nombre : "") + ", encontramos algo en Zona-INNmueble que podr\xEDa conectar con lo que buscabas: " + descripcion + ". Te comparto el link para que lo veas: " + url;
+        var text = (nombre ? nombre + ", " : "") + "se acaba de incorporar a nuestro portafolio una " + descripcion + " que conecta con lo que usted busca. Aqu\xED puede ver la galer\xEDa y todos los detalles:\n" + url;
+        text = text.charAt(0).toUpperCase() + text.slice(1);
         await sendWhatsAppMessage(env, lead.wa_from, text);
       } else {
         await sendWhatsAppTemplateMessage(env, lead.wa_from, WA_NEWLISTING_TEMPLATE_NAME, WA_NEWLISTING_TEMPLATE_LANG, [nombre || "de nuevo", descripcion]);
