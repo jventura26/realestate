@@ -19,7 +19,7 @@ export function imgSrcset(src, widths = [480, 800, 1200]) {
   return widths.map((w) => `${imgUrl(src, w)} ${w}w`).join(', ');
 }
 
-export const ASSET_VERSION = '2026-10-06e';
+export const ASSET_VERSION = '2026-10-06f';
 
 // ---------- Layout ----------
 
@@ -460,6 +460,14 @@ function saveRow(p, account, fav, notice) {
   </div>`;
 }
 
+const NEARBY_SEARCHES = [
+  ['colegios', 'Colegios'],
+  ['universidades', 'Universidades'],
+  ['hospitales', 'Hospitales'],
+  ['supermercados', 'Supermercados'],
+  ['centros comerciales', 'Centros comerciales'],
+];
+
 function locationBlock(p, place, pt, nearby) {
   const groups = nearby?.groups ? POI_GROUPS.filter(([k]) => nearby.groups[k]?.length) : [];
   return html`<section class="block location">
@@ -470,6 +478,10 @@ function locationBlock(p, place, pt, nearby) {
     ${groups.map(([k, label]) => html`<div><h3>${label}</h3><ul>${nearby.groups[k].map((x) => html`<li><span>${x.name}</span><span class="muted">${x.km < 1 ? `${Math.round(x.km * 1000 / 50) * 50} m` : `${formatNumber(x.km, 1)} km`}</span></li>`)}</ul></div>`)}
   </div>
   <p class="small muted">Distancias aproximadas en línea recta desde el sector. Fuente: OpenStreetMap.</p>` : ''}
+  ${pt && !groups.length ? html`<div class="poi-links">
+    <span class="small muted">Explore los alrededores del sector:</span>
+    <div class="poi-chips">${NEARBY_SEARCHES.map(([q, label]) => html`<a class="chip" href="https://www.google.com/maps/search/${encodeURIComponent(q)}/@${pt.lat.toFixed(4)},${pt.lng.toFixed(4)},14z" target="_blank" rel="noopener">${label}</a>`)}</div>
+  </div>` : ''}
 </section>`;
 }
 

@@ -542,6 +542,10 @@ h1, h2, h3 { text-wrap: balance; }
 .poi ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .poi li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
 .poi li span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.poi-links { margin: 16px 0 4px; display: grid; gap: 10px; }
+.poi-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.poi-chips .chip { min-height: 38px; padding: 0 14px; font-size: 13px; border-color: var(--line); color: var(--ink); background: var(--surface); }
+.poi-chips .chip:hover { border-color: var(--brass); color: var(--brass); }
 .poi li span:last-child { white-space: nowrap; }
 /* Búsquedas guardadas */
 .save-search { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin: 14px 0 22px; padding: 14px 18px; border: 1px dashed var(--line); border-radius: 14px; }
