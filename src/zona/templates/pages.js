@@ -195,19 +195,9 @@ function renderCaracteristicas(chars) {
   ];
   const activas = grupos.map(g => ({ ...g, activos: g.items.filter(i => chars.includes(i)) })).filter(g => g.activos.length);
   if (!activas.length) return '';
-  let html = `<div style="margin-top:36px;padding-top:32px;border-top:1px solid var(--bd)">
-    <div style="font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:24px">Características y amenidades</div>`;
+  let html = `<div class="zc-wrap"><div class="zc-title">Características y amenidades</div>`;
   activas.forEach(g => {
-    html += `<div style="margin-bottom:20px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block"></span>
-        <span style="font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sv)">${g.label}</span>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:7px">`;
-    g.activos.forEach(item => {
-      html += `<span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(201,163,91,.06);border:1px solid rgba(201,163,91,.2);border-radius:4px;font-size:.76rem;color:var(--wh);font-weight:400;letter-spacing:.02em">✓ ${item}</span>`;
-    });
-    html += `</div></div>`;
+    html += `<div class="zc-group"><h4>${g.label}</h4><ul class="zc-list">${g.activos.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
   });
   html += `</div>`;
   return html;
@@ -977,6 +967,7 @@ function dv3Tab(id,btn){
   var el=document.getElementById('dv3-'+id);
   if(el)el.classList.add('on');
   btn.classList.add('on');
+  var bar=btn.parentNode;if(bar&&bar.scrollWidth>bar.clientWidth){bar.scrollTo({left:btn.offsetLeft-(bar.clientWidth-btn.offsetWidth)/2,behavior:'smooth'});}
 }
 var _dv3PrecioBase=${(!esExclusiva&&!cfg.precio) ? (prop.priceNumeric||0) : 0};
 var _dv3Moneda=${JSON.stringify((prop.priceFormatted||'').includes('$') ? '$' : 'Q')};

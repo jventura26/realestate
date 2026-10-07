@@ -956,3 +956,37 @@ body .dv3-more form{margin-top:12px}
   body .dv3-head .dv3-title{font-size:1.7rem}
   body .dv3-swiper{margin-top:0}
 }
+
+/* ── Ficha v3 · pestañas, detalles y características legibles ── */
+body .dv3-tabs{display:flex;gap:6px;padding:6px;margin:8px 0 26px;border:1px solid rgba(201,163,91,.22);border-radius:999px;background:rgba(255,255,255,.025);overflow-x:auto!important;max-width:100%;flex-wrap:nowrap!important;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+body .dv3-tab{flex:0 0 auto!important;padding:11px 20px!important;border:0!important;border-radius:999px;background:transparent;color:#C9D3E0!important;font-size:.78rem!important;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:background .2s,color .2s}
+body .dv3-tab:hover{color:#fff!important;background:rgba(255,255,255,.05)}
+body .dv3-tab.on{background:var(--or);color:#0D1B3E!important;box-shadow:0 6px 18px -8px rgba(201,163,91,.6)}
+body .dv3-tab-panel.on{animation:dv3fade .25s ease}
+@keyframes dv3fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+body .dv3-specs-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:none;border:0;border-radius:0;overflow:visible}
+body .dv3-spec{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px}
+body .dv3-spec-l{font-size:.7rem;letter-spacing:.14em;color:#9FB0C6;margin-bottom:6px}
+body .dv3-spec-v{font-size:1.08rem;font-weight:600;color:#fff;line-height:1.35}
+body .dv3-datos{font-size:.95rem;color:#E4EAF2;border-radius:12px;padding:16px 20px}
+
+body .zc-wrap{display:grid;gap:22px}
+body .zc-title{font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--or)}
+body .zc-group{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;background:rgba(255,255,255,.025)}
+body .zc-group h4{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+body .zc-group h4::before{content:'';width:18px;height:1px;background:var(--or)}
+body .zc-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px}
+body .zc-list li{display:flex;align-items:flex-start;gap:10px;font-size:.92rem;color:#E4EAF2;line-height:1.4}
+body .zc-list li::before{content:'';flex:0 0 16px;height:16px;margin-top:2px;border-radius:50%;background:rgba(201,163,91,.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='%23C9A35B' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+
+@media(max-width:768px){
+  body .dv3-tabs{margin:4px -4% 22px;padding:5px;border-radius:999px;margin-left:0;margin-right:0}
+  body .dv3-tab{padding:10px 15px!important;font-size:.72rem!important}
+  body .dv3-specs-grid{grid-template-columns:1fr 1fr!important;gap:10px}
+  body .dv3-spec{padding:14px}
+  body .dv3-spec-v{font-size:1rem}
+  body .zc-group{padding:16px}
+  body .zc-list{grid-template-columns:1fr}
+}
+body .dv3-main{min-width:0}
