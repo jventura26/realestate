@@ -570,12 +570,12 @@ function detailPage(prop, all) {
 .dv3-agent-avatar{width:44px;height:44px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#000;flex-shrink:0}
 .dv3-agent-name{font-size:.82rem;font-weight:700;color:var(--sv)}
 .dv3-agent-role{font-size:.76rem;color:var(--mt);margin-top:2px}
-.dv3-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#25D366;animation:lp 2s ease-in-out infinite;margin-right:6px;flex-shrink:0;vertical-align:middle}
-.dv3-avail{font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#25D366;margin-bottom:16px;display:flex;align-items:center}
-.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#0d1b3e;color:#fff;border:1px solid rgba(37,211,102,.3);padding:13px 16px;border-radius:4px;font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
-.dv3-wa-btn:hover{filter:brightness(1.1)}
-.dv3-wa-btn.outline{background:transparent;border:1px solid rgba(37,211,102,.3);color:rgba(255,255,255,.7)}
-.dv3-wa-btn.outline:hover{background:#0d1b3e;border-color:rgba(37,211,102,.5);color:#fff}
+.dv3-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#C9A35B;animation:lp 2s ease-in-out infinite;margin-right:6px;flex-shrink:0;vertical-align:middle}
+.dv3-avail{font-size:.76rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#C9A35B;margin-bottom:16px;display:flex;align-items:center}
+.dv3-wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#C9A35B;color:#0D1B3E;border:1px solid #C9A35B;padding:13px 16px;border-radius:4px;font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-bottom:8px;transition:all .2s}
+.dv3-wa-btn:hover{background:#D9B776;border-color:#D9B776}
+.dv3-wa-btn.outline{background:transparent;border:1px solid rgba(201,163,91,.35);color:#E4EAF2}
+.dv3-wa-btn.outline:hover{background:rgba(201,163,91,.08);border-color:#C9A35B;color:#fff}
 .dv3-divider{height:1px;background:var(--bd);margin:18px 0}
 .dv3-form-title{font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:14px}
 .dv3-input{width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid var(--gl);color:var(--wh);font-size:.78rem;border-radius:3px;font-family:inherit;margin-bottom:8px;outline:none;transition:border-color .2s;box-sizing:border-box}
@@ -590,8 +590,8 @@ function detailPage(prop, all) {
 .dv3-more-link:last-child{border-bottom:none;padding-bottom:0}
 .dv3-more-link:hover{color:var(--or)}
 .dv3-wa-float{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;padding:10px 4%;background:rgba(13,27,62,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid rgba(201,163,91,.25);gap:8px;align-items:center}
-.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#25D366;color:#fff;border:none;padding:12px 8px;font-family:Montserrat,sans-serif;font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;text-decoration:none}
-.dv3-wa-float a.sec{background:transparent;border:1px solid rgba(201,163,91,.25);color:#C9A35B}
+.dv3-wa-float a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:#C9A35B;color:#0D1B3E;border:none;padding:12px 8px;font-family:Montserrat,sans-serif;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;text-decoration:none}
+.dv3-wa-float a.sec{background:transparent;border:1px solid rgba(201,163,91,.35);color:#E4EAF2}
 /* LIGHTBOX */
 .dv3-lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;align-items:center;justify-content:center;flex-direction:column}
 .dv3-lb.open{display:flex}

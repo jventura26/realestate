@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // Mega-menu handles all dropdown logic above
 </script>
-<script src="/assets/zona-fase1.js?v=20261006" defer></script>
+<script src="/assets/zona-fase1.js?v=20261006b" defer></script>
 <!-- Lead Capture Pop-up: Índice Zona-INNmueble -->
 <div id="zpPopup" role="dialog" aria-modal="true" aria-label="Índice Zona-INNmueble" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(8,16,38,.72);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px">
 <div style="background:linear-gradient(150deg,#122a5a 0%,#0D1B3E 70%);border:1px solid rgba(59,158,255,.25);border-radius:18px;padding:38px 32px 30px;max-width:430px;width:100%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden">
