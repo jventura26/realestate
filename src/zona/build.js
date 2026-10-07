@@ -140,7 +140,7 @@ function copyAssets() {
   }
 
   // Copiar iconos PWA (manifest + apple-touch-icon) desde src/zona/assets
-  const pwaIcons = ['icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
+  const pwaIcons = ['icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png', 'apple-touch-icon.png', 'logo-nav.png', 'logo-transparente.png'];
   pwaIcons.forEach((name) => {
     const srcPath = path.join(__dirname, 'assets', name);
     if (fs.existsSync(srcPath)) {

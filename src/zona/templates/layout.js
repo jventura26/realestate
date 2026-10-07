@@ -120,7 +120,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo"><img src="https://ik.imagekit.io/Zona/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+    <a href="/" class="logo"><img src="/assets/logo-nav.png" alt="Zona INNmueble" width="85" height="52" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="mega-nav" id="nav-links">
       <li data-mega="comprar">
@@ -495,7 +495,7 @@ function toEnglish(html) {
   const wa = (m) => `https://wa.me/${WA}?text=${encodeURIComponent(m)}`;
   const NAV = `<nav>
   <div class="nav-inner">
-    <a href="/en/" class="logo"><img src="https://ik.imagekit.io/Zona/logo.png" alt="Zona INNmueble" style="height:52px;width:auto"></a>
+    <a href="/en/" class="logo"><img src="/assets/logo-nav.png" alt="Zona INNmueble" width="85" height="52" style="height:52px;width:auto"></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="mega-nav" id="nav-links">
       <li><a href="/en/">Buy from abroad</a></li>
