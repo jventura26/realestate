@@ -462,6 +462,7 @@ write(path.join(OUT,'sitemap.xml'),  generateSitemap(DOMAIN, urls)); console.log
 write(path.join(OUT,'robots.txt'),   generateRobots(DOMAIN));        console.log('   ✔  robots.txt');
 write(path.join(OUT,'google24850a801f739dec.html'), 'google-site-verification: google24850a801f739dec.html\n'); console.log('   ✔  google verification');
 
+console.log('   ✔  encabezado unificado en ' + require('./unify-header').unifyHeaders(OUT).length + ' páginas');
 console.log('   ✔  seguimiento diferido en ' + require('./defer-tracking').deferAll(OUT) + ' páginas');
 console.log('\n✅  Build completo!\n');
 
