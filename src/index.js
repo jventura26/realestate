@@ -611,6 +611,8 @@ __name(upsertWhatsAppLead, "upsertWhatsAppLead");
 // Entre un seguimiento y el siguiente siempre se respeta la diferencia de dias, aunque alguno salga tarde.
 var WA_FOLLOWUP_INTERVALS_DAYS = [2, 7, 15, 30, 60];
 var WA_FOLLOWUP_MIN_GAP_DAYS = 4;
+// Plantillas premium (una por seguimiento). Mientras Meta no las apruebe, se usa la plantilla anterior.
+var WA_FOLLOWUP_PREMIUM_TEMPLATES = ["seguimiento_premium_1", "seguimiento_premium_2", "seguimiento_premium_3", "seguimiento_premium_4", "seguimiento_premium_5"];
 var WA_FOLLOWUP_STOP_STAGES = ["Cierre", "Perdido"];
 var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
@@ -627,9 +629,9 @@ __name(alertPhones, "alertPhones");
 // Aviso al equipo. Si existe la plantilla aprobada (WA_ALERT_TEMPLATE, p. ej. "aviso_nuevo_contacto"),
 // se usa para que llegue aunque el asesor no haya escrito en las ultimas 24 h. Si no, texto libre.
 async function sendTeamAlert(env, to, contacto, detalle, fallbackText) {
-  if (env.WA_ALERT_TEMPLATE) {
-    return sendWhatsAppTemplateMessage(env, to, env.WA_ALERT_TEMPLATE, env.WA_ALERT_TEMPLATE_LANG || "es", [contacto, String(detalle || "").replace(/\s+/g, " ").slice(0, 900)]);
-  }
+  var tplName = env.WA_ALERT_TEMPLATE || "aviso_nuevo_contacto";
+  var ok = await sendWhatsAppTemplateMessage(env, to, tplName, env.WA_ALERT_TEMPLATE_LANG || "es", [contacto, String(detalle || "").replace(/\s+/g, " ").slice(0, 900)]);
+  if (ok) return;
   return sendWhatsAppMessage(env, to, fallbackText);
 }
 __name(sendTeamAlert, "sendTeamAlert");
@@ -677,7 +679,7 @@ async function getFollowUpTemplateNames(env) {
     var arr = raw ? JSON.parse(raw) : null;
     if (Array.isArray(arr) && arr.length) return arr;
   } catch (e) {}
-  return [];
+  return WA_FOLLOWUP_PREMIUM_TEMPLATES;
 }
 __name(getFollowUpTemplateNames, "getFollowUpTemplateNames");
 function followUpInteres(lead) {
@@ -745,7 +747,8 @@ async function sendFollowUps(env) {
         text = text.charAt(0).toUpperCase() + text.slice(1);
         await sendWhatsAppMessage(env, lead.wa_from, text);
       } else {
-        await sendWhatsAppTemplateMessage(env, lead.wa_from, tplNames[stageIdx] || WA_FOLLOWUP_TEMPLATE_NAME, WA_FOLLOWUP_TEMPLATE_LANG, [nombre || "de nuevo"]);
+        var okTpl = tplNames[stageIdx] ? await sendWhatsAppTemplateMessage(env, lead.wa_from, tplNames[stageIdx], WA_FOLLOWUP_TEMPLATE_LANG, [nombre || "estimado cliente"]) : false;
+        if (!okTpl) await sendWhatsAppTemplateMessage(env, lead.wa_from, WA_FOLLOWUP_TEMPLATE_NAME, WA_FOLLOWUP_TEMPLATE_LANG, [nombre || "de nuevo"]);
       }
       lead.lastFollowUpAt = new Date(now).toISOString();
       lead.followUpStage = stageIdx + 1;
@@ -1015,9 +1018,12 @@ async function sendWhatsAppTemplateMessage(env, to, templateName, langCode, body
     if (!res.ok) {
       var errBody2 = await res.text().catch(function() { return ""; });
       await logWaError(env, "sendWhatsAppTemplateMessage", "Meta API " + res.status + " template=" + templateName + " lang=" + langCode + " (to=" + to + "): " + errBody2.slice(0, 500));
+      return false;
     }
+    return true;
   } catch (e) {
     await logWaError(env, "sendWhatsAppTemplateMessage", e);
+    return false;
   }
 }
 __name(sendWhatsAppTemplateMessage, "sendWhatsAppTemplateMessage");
