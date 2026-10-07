@@ -708,32 +708,34 @@ function detailPage(prop, all) {
   <span style="color:var(--sv)">${escapeHtml(prop.title)}</span>
 </div>
 
-<div class="dv3-hero">
-  <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" srcset="${escapeHtml(ikTransform(imgRaw,{w:720,q:74}))} 720w, ${escapeHtml(img)} 1400w" sizes="(max-width: 768px) 400px, 100vw" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer" loading="eager" fetchpriority="high" width="1400" height="788">
-  <div class="dv3-hero-overlay"></div>
-  <div class="dv3-hero-content">
-    <div class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</div>
-    ${isNewListing ? '<span class="dv3-badge-new">Nuevo</span>' : ''}${prop.tour360 ? '<span class="dv3-badge-new" style="background:var(--el);color:#fff">Recorrido 360°</span>' : ''}
-    <h1 class="dv3-title">${escapeHtml(prop.title)}</h1>
-    <div class="dv3-loc">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      ${escapeHtml(locLabel(prop))}
-    </div>
-  </div>
+<div class="dv3-mosaic${(!esExclusiva&&!cfg.fotos&&gal.length > 2) ? '' : ' single'}">
+  <button type="button" class="dv3-mo-main" onclick="dv3LightOpen(0)" aria-label="Ver fotos en pantalla completa">
+    <img class="dv3-hero-img" id="mi" src="${escapeHtml(img)}" srcset="${escapeHtml(ikTransform(imgRaw,{w:720,q:74}))} 720w, ${escapeHtml(img)} 1400w" sizes="(max-width: 768px) 400px, 66vw" alt="${escapeHtml(prop.title)}" referrerpolicy="no-referrer" loading="eager" fetchpriority="high" width="1400" height="900">
+  </button>
+  ${(!esExclusiva&&!cfg.fotos&&gal.length > 2) ? '<div class="dv3-mo-side">' + gal.slice(1,5).map(function(src,i){var last=(i===3||i===gal.length-2)&&gal.length>5;return '<button type="button" class="dv3-mo-tile" onclick="dv3LightOpen('+String(i+1)+')" aria-label="Ver foto '+String(i+2)+'"><img referrerpolicy="no-referrer" src="'+escapeHtml(ikTransform(src,{w:640,q:72}))+'" alt="" loading="lazy">'+(last?'<span class="dv3-mo-more">+'+String(gal.length-5)+' fotos</span>':'')+'</button>';}).join('') + '</div>' : ''}
+  ${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<button type="button" class="dv3-mo-all" onclick="dv3LightOpen(0)">Ver las '+String(gal.length)+' fotos</button>' : ''}
 </div>
 
-${(!esExclusiva&&!cfg.fotos&&gal.length > 1) ? '<div class="dv3-gal">' + gal.slice(1,6).map(function(src,i){var srcSm=ikTransform(src,{w:700,q:72});if(i===4&&gal.length>5){return '<div class="dv3-gal-more" onclick="dv3LightOpen('+String(i+1)+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcSm)+'" loading="lazy"><div class="dv3-gal-more-label">+'+String(gal.length-5)+' fotos</div></div>';}return '<img referrerpolicy="no-referrer" src="'+escapeHtml(srcSm)+'" alt="'+escapeHtml(prop.title)+'" loading="lazy" onclick="dv3LightOpen('+String(i+1)+')">';}).join('') + '</div>' : ''}
 
 ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){var srcMob=ikTransform(src,{w:720,q:70});return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcMob)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"'+(i===0?' fetchpriority="high"':'')+'></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
+
+<div class="dv3-head">
+  <div class="dv3-head-badges"><span class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</span>${isNewListing ? '<span class="dv3-badge-new">Nuevo</span>' : ''}${prop.tour360 ? '<span class="dv3-badge-new" style="background:var(--el);color:#fff">Recorrido 360°</span>' : ''}</div>
+  <h1 class="dv3-title">${escapeHtml(cardTitle(prop))}</h1>
+  <div class="dv3-loc">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    ${escapeHtml(locLabel(prop))}
+  </div>
+</div>
 
 <div class="dv3-wrap">
   <div class="dv3-main">
 
     <div class="dv3-price-row">
       <div>
-        <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(prop.priceFormatted||prop.precio||'Precio a consultar')}</div>
+        <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : fmtCardPrice(prop).main}</div>
         ${(!esExclusiva&&!cfg.precio&&prop.precioRenta) ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
-        ${(!esExclusiva&&!cfg.precio&&prop.priceSecondary) ? '<div class="dv3-price-sub">≈ '+escapeHtml(prop.priceSecondary)+' · tipo de cambio referencial</div>' : ''}
+        ${(!esExclusiva&&!cfg.precio&&fmtCardPrice(prop).alt) ? '<div class="dv3-price-sub">'+fmtCardPrice(prop).alt+' · tipo de cambio referencial</div>' : ''}
       </div>
       <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
         &#8679; Compartir
@@ -876,15 +878,16 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h7v14H4zM13 4h7v16h-7z"/></svg>
         <span>Agregar a comparar</span>
       </button>
-      <div class="dv3-divider"></div>
-      <div class="dv3-form-title">O d&eacute;jenos sus datos</div>
+      <details class="dv3-more">
+      <summary>Prefiero que me llamen</summary>
       <form onsubmit="var f=this,wa='${waNum}',t=encodeURIComponent('Nuevo lead - ${escapeHtml(prop.title)}\nNombre: '+f.nombre.value+'\nTel\u00e9fono: '+f.telefono.value+'\nMensaje: '+(f.mensaje.value||'Sin mensaje')+'\nURL: ${propUrl}');window.open('https://wa.me/'+wa+'?text='+t,'_blank');f.nextElementSibling.style.display='block';f.reset();return false;">
         <input class="dv3-input" type="text" name="nombre" placeholder="Su nombre completo" required>
         <input class="dv3-input" type="tel" name="telefono" placeholder="Su tel&eacute;fono / WhatsApp" required>
-        <textarea class="dv3-input" name="mensaje" placeholder="&iquest;Qu&eacute; deseas saber?" rows="2" style="resize:none"></textarea>
+        <textarea class="dv3-input" name="mensaje" placeholder="&iquest;Qu&eacute; desea saber?" rows="2" style="resize:none"></textarea>
         <button class="dv3-submit" type="submit">Enviar consulta</button>
       </form>
       <p style="display:none;font-size:.76rem;color:#4ade80;text-align:center;margin:10px 0 0">&check; Enviado. Le contactamos pronto.</p>
+      </details>
     </div>
 
     ${prop.pdfUrl ? '<a href="'+escapeHtml(prop.pdfUrl)+'" target="_blank" rel="noopener" class="dv3-wa-btn outline" style="margin-bottom:16px;text-decoration:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Descargar brochure</a>' : ''}
