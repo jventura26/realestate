@@ -77,9 +77,7 @@ fbq('init','` + pixelId + `');window.__pvId='pv'+Date.now().toString(36)+Math.ra
 window.dataLayer=window.dataLayer||[];window.dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});
 (function(w,d){var done=false;function add(src){var j=d.createElement('script');j.async=true;j.src=src;d.head.appendChild(j);}
 function go(){if(done)return;done=true;['scroll','pointerdown','keydown','touchstart'].forEach(function(e){w.removeEventListener(e,go,{passive:true});});
-add('https://connect.facebook.net/en_US/fbevents.js');
-/* GTM por la ruta propia (Google tag gateway de Cloudflare); si no responde, por googletagmanager.com */
-(w.google_tags_first_party=w.google_tags_first_party||[]).push('GTM-KH4VCQBZ');var g=d.createElement('script');g.async=true;g.src='/mjep/';g.onerror=function(){add('https://www.googletagmanager.com/gtm.js?id=GTM-KH4VCQBZ');};d.head.appendChild(g);}
+add('https://connect.facebook.net/en_US/fbevents.js');add('https://www.googletagmanager.com/gtm.js?id=GTM-KH4VCQBZ');}
 ['scroll','pointerdown','keydown','touchstart'].forEach(function(e){w.addEventListener(e,go,{passive:true,once:true});});
 w.addEventListener('load',function(){setTimeout(go,3500);});})(window,document);
 </script>
