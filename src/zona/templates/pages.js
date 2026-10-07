@@ -56,6 +56,19 @@ function renderDescBloquesZona(bloques, esc) {
 }
 
 // ── Card ─────────────────────────────────────────────────────────────
+// Tarjeta: titulo limpio (sin "|"), precio en formato uniforme y una sola etiqueta de estado.
+function cardTitle(p) {
+  const t = String(p.title || '').split('|')[0].trim();
+  return t || String(p.title || '');
+}
+function fmtCardPrice(p) {
+  const pi = ANA.priceInfo(p);
+  if (!pi) return { main: escapeHtml(p.priceFormatted || ''), alt: '' };
+  const f = (n) => Math.round(n).toLocaleString('en-US');
+  return pi.isUSD
+    ? { main: 'US$' + f(pi.usd), alt: '≈ Q' + f(pi.gtq) }
+    : { main: 'Q' + f(pi.gtq), alt: '≈ US$' + f(pi.usd) };
+}
 function card(p, idx) {
   const cfg = p.privConfig || {};
   const esExclusiva = p.esExclusiva || cfg.exclusiva || false;
@@ -100,22 +113,23 @@ function card(p, idx) {
   }
   const zaTag = ANA.cardTag(ANA.analyze(p));
   const cardId = 'card-' + (p.slug||p.id||Math.random().toString(36).slice(2));
-  const imgsJson = JSON.stringify(imgs.slice(0,10).map(u=>escapeHtml(ikTransform(u,{w:600,q:70}))));
-  const priceLabel = (esExclusiva||cfg.precio) ? 'Precio a consultar' : escapeHtml(p.priceFormatted);
-  const priceAlt = (esExclusiva||cfg.precio) ? '' : (p.priceSecondary ? `<span class="pc-price-alt">≈ ${escapeHtml(p.priceSecondary)}</span>` : '');
+  const imgsJson = JSON.stringify(imgs.slice(0,5).map(u=>escapeHtml(ikTransform(u,{w:600,q:70}))));
+  const cp = fmtCardPrice(p);
+  const priceLabel = (esExclusiva||cfg.precio) ? 'Precio a consultar' : cp.main;
+  const priceAlt = (esExclusiva||cfg.precio) ? '' : (cp.alt ? `<span class="pc-price-alt">${cp.alt}</span>` : '');
 
   // Flechas del carrusel solo si hay galeria
   const arrows = hasGallery ? `
   <button class="card-prev" onclick="event.preventDefault();cardSlide('${cardId}',-1)" aria-label="Anterior">&#8249;</button>
   <button class="card-next" onclick="event.preventDefault();cardSlide('${cardId}',1)" aria-label="Siguiente">&#8250;</button>
-  <div class="card-dots" id="${cardId}-dots">${imgs.slice(0,10).map((_,i)=>`<span class="card-dot${i===0?' active':''}" onclick="event.preventDefault();cardGoto('${cardId}',${i})"></span>`).join('')}</div>
+  <div class="card-dots" id="${cardId}-dots">${imgs.slice(0,5).map((_,i)=>`<span class="card-dot${i===0?' active':''}" onclick="event.preventDefault();cardGoto('${cardId}',${i})"></span>`).join('')}</div>
   ` : '';
 
   const photoCount = hasGallery ? `<span class="card-photo-count">${SVGI.cam} ${imgs.length}</span>` : '';
   const tour360Badge = p.tour360 ? '<span class="pc-360">360°</span>' : '';
   const exclusivaBadge = esExclusiva ? `<span class="pc-badge-excl">Exclusiva</span>` : '';
   const newBadge = (!esExclusiva && isNewListing) ? `<span class="pc-badge-new">Nuevo</span>` : '';
-  const destBadge = p.destacada ? `<span style="position:absolute;bottom:14px;right:52px;background:#C9A35B;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(201,163,91,.4);z-index:5">★</span>` : '';
+  const destBadge = '';
 
   return `<div class="prop-card-wrap" id="${cardId}" data-imgs='${imgsJson}' data-idx="0">
   <a class="prop-card" href="/propiedades/${escapeHtml(p.slug)}.html"
@@ -126,7 +140,7 @@ function card(p, idx) {
     data-area="${parseFloat(p.areaConst)||parseFloat(p.area)||0}">
     <img referrerpolicy="no-referrer" src="${escapeHtml(img)}" alt="${escapeHtml((p.tipo||'Propiedad') + ' en ' + (p.municipio || p.departamento || 'Guatemala') + ' - ' + (p.title||''))}" ${imgLoadAttrs} width="600" height="750" id="${cardId}-img" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=70'">
     <div class="pc-ov"></div>
-    ${badge ? `<span class="pc-badge ${badgeClass}">${escapeHtml(badge)}</span>` : ''}
+    ${badgeClass === 'renta' ? `<span class="pc-badge renta">En renta</span>` : (p.destacada && !esExclusiva ? `<span class="pc-badge">Destacada</span>` : '')}
     ${exclusivaBadge}
     ${newBadge}
     ${destBadge}
@@ -137,7 +151,7 @@ function card(p, idx) {
     <div class="pc-info">
       ${zaTag}
       <div class="pc-tipo">${escapeHtml(p.tipo)} · ${escapeHtml(locLabel(p))}</div>
-      <div class="pc-title">${escapeHtml(p.title)}</div>
+      <div class="pc-title">${escapeHtml(cardTitle(p))}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div class="pc-price">${priceLabel}${priceAlt}</div>
