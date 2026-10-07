@@ -98,6 +98,47 @@ function matchPropByNameIn(propList, name) {
 __name(matchPropByNameIn, "matchPropByNameIn");
 __name2(matchPropByNameIn, "matchPropByNameIn");
 __name22(matchPropByNameIn, "matchPropByNameIn");
+// Datos de la ficha que la IA puede usar para profundizar (sin datos ocultos ni temas de negociacion).
+var WA_CARAC_EXCLUIR = /negociable|permuta|financiamiento/i;
+function waLimpiar(t) {
+  return String(t || "").replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "").replace(/cont[a\u00E1]ct[a-z]*[^.]*\./gi, "").replace(/\s+/g, " ").trim();
+}
+function waFichaDetalle(p) {
+  var cfg = p.privConfig || {};
+  var partes = [];
+  var add = function(label, v) { if (v !== undefined && v !== null && String(v).trim()) partes.push(label + ": " + String(v).trim()); };
+  if (!cfg.hideSpecs) {
+    add("area construida m2", p.area);
+    add("terreno v2", p.areaV2 || p.terreno);
+    add("manzanas", p.manzanas);
+    add("medios banos", p.mediosBanos);
+    add("parqueos", p.parqueos);
+    add("niveles", p.niveles);
+    add("ano de construccion", p.anioConstruccion);
+    add("estado", p.estadoConstruccion);
+    add("acabados", p.acabados);
+    add("pisos", p.piso);
+    add("disponible", p.disponibleDesde);
+    add("mantenimiento", p.cuotaMantenimiento || p.cuotaMant);
+    add("IUSI", p.iusi);
+    add("cultivo", p.cultivo);
+    add("produccion", p.produccion);
+    add("tiempo desde carretera", p.tiempoCarretera);
+    add("renta: deposito", p.deposito);
+    add("renta: contrato minimo", p.contratoMin);
+  }
+  if (!cfg.hideDireccion) add("ubicacion", p.ubicacionGeneral);
+  var car = (Array.isArray(p.caracteristicas) ? p.caracteristicas : []).filter(function(c) { return !WA_CARAC_EXCLUIR.test(c); });
+  if (car.length) partes.push("caracteristicas: " + car.slice(0, 18).join(", "));
+  var desc = "";
+  if (Array.isArray(p.descBloques)) {
+    desc = p.descBloques.filter(function(b) { return b && (b.type === "destacado" || b.type === "parrafo"); }).map(function(b) { return b.content; }).join(" ");
+  }
+  desc = waLimpiar(p.hook) + " " + waLimpiar(desc || p.descripcion);
+  if (desc.trim()) partes.push("descripcion: " + desc.trim().slice(0, 650));
+  return partes.join(" ; ");
+}
+__name(waFichaDetalle, "waFichaDetalle");
 async function buildWhatsAppCatalogContext(env) {
   try {
     var raw = await env.DB.get("propiedades");
@@ -116,6 +157,7 @@ async function buildWhatsAppCatalogContext(env) {
         habitaciones: p.habitaciones,
         banos: p.banos,
         area: p.area,
+        detalle: waFichaDetalle(p),
         url: "https://zona-innmueble.com/propiedades/" + p.slug + ".html"
       };
     });
@@ -265,9 +307,9 @@ function adContextBlock(ref, isFirstReply, contactName) {
     "Como responder a quien viene de un anuncio (tiene prioridad sobre las reglas 10 y 18):",
     "- Ya sabes que propiedad le intereso: la del anuncio. No le preguntes que busca en general ni le ofrezcas otras propiedades en el primer mensaje.",
     isFirstReply
-      ? "- PRIMERA RESPUESTA (esta): saluda con calidez (usa su nombre si lo sabes), confirma la propiedad del anuncio por su nombre, aporta UN dato de valor que conecte con la idea del anuncio, incluye el link de su ficha del catalogo y cierra con UNA pregunta breve para calificar (si la busca para vivir, negocio o invertir, o para cuando). No incluyas la herramienta de valor por zona en este primer mensaje."
+      ? "- PRIMERA RESPUESTA (esta): aunque solo diga \"quiero mas informacion\" o un saludo, NO respondas que un asesor le contactara. Saluda con calidez (usa su nombre si lo sabes), identifica la propiedad del anuncio en el catalogo y dale informacion real de su Ficha: precio, ubicacion, metros, habitaciones/banos/parqueos y 2 o 3 atributos que la hagan especial (por ejemplo jardin, seguridad, vistas, acabados). Incluye el link de su ficha y cierra con UNA pregunta breve para calificar (para vivir, invertir o negocio, o para cuando). No incluyas la herramienta de valor por zona en este primer mensaje."
       : "- Mantente en la propiedad del anuncio mientras la persona siga interesada en ella. Si pide otras opciones o la propiedad no le encaja, aplica la busqueda a la medida (regla 2).",
-    "- Si pregunta por visitas, horarios o precio final, un asesor de Zona-INNmueble le escribe para coordinarlo (regla 3).",
+    "- Profundiza en la propiedad del anuncio segun lo que la persona pregunte, usando su Ficha. Solo cuando ya sea necesario (regla 21) la pasas con un asesor.",
     "- El tono debe ser coherente con el anuncio: sobrio, premium, sin presion."
   ].join("\n");
 }
@@ -278,7 +320,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     var precioTxt = String(p.precio || "").trim();
     if (precioTxt && !/^[Q$]/.test(precioTxt)) precioTxt = "Q" + precioTxt;
     if (!precioTxt) precioTxt = "precio a consultar";
-    return "- " + p.titulo + " | " + p.tipo + " (" + p.operacion + ") | " + (p.zona || p.municipio || p.departamento || "ubicacion a confirmar") + " | " + precioTxt + " | " + (p.habitaciones || "?") + " hab / " + (p.banos || "?") + " banos | " + p.url;
+    return "- " + p.titulo + " | " + p.tipo + " (" + p.operacion + ") | " + (p.zona || p.municipio || p.departamento || "ubicacion a confirmar") + " | " + precioTxt + " | " + (p.habitaciones || "?") + " hab / " + (p.banos || "?") + " banos | " + p.url + (p.detalle ? "\n    Ficha: " + p.detalle : "");
   }).join("\n") : "No hay propiedades activas cargadas en este momento.";
   var brandVoice = DEFAULT_BRAND_VOICE;
   try {
@@ -291,9 +333,9 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     "REGLAS ESTRICTAS (no negociables):",
     "1. Solo puedes hablar de las propiedades listadas abajo. Nunca inventes precios, direcciones, disponibilidad ni caracteristicas que no esten en esta lista.",
     "2. B\u00DASQUEDA A LA MEDIDA (OTRAS PROPIEDADES): nunca digas \"no tenemos\", \"no hay\", \"no contamos con\", \"no manejamos\", \"no est\u00E1 disponible\" ni frases equivalentes. Si la persona pregunta por una propiedad, zona, tipo o presupuesto que no est\u00E1 en el cat\u00E1logo activo (o por otra propiedad distinta a la del anuncio), resp\u00F3ndele en positivo que con gusto se la podemos encontrar: Zona-INNmueble trabaja con una red de propietarios, desarrolladores y aliados, y muchas de las mejores opciones no se publican. Dile que le pasas su solicitud a un asesor de Zona-INNmueble, que le escribir\u00E1 por este mismo WhatsApp con opciones seleccionadas. Si a\u00FAn no sabes lo esencial, pide en el mismo mensaje UNA sola cosa (zona o presupuesto aproximado), sin convertirlo en interrogatorio; si ya lo dijo, no preguntes m\u00E1s. Ejemplo de tono: \"Con gusto se la buscamos. Le paso su solicitud a uno de nuestros asesores para que le comparta opciones seleccionadas por aqu\u00ED mismo. \u00BFQu\u00E9 presupuesto aproximado tiene en mente?\". Nunca inventes propiedades, precios ni disponibilidad, y nunca prometas que existe algo espec\u00EDfico. Si hay algo del cat\u00E1logo razonablemente cercano, puedes mencionarlo como alternativa, sin reemplazar la b\u00FAsqueda con el asesor.",
-    "3. Nunca agendes, confirmes ni niegues visitas, citas, horarios, lugares de encuentro, descuentos ni cierres de trato, bajo NINGUNA circunstancia -- ni siquiera si el mensaje ya trae una fecha, hora o lugar propuesto, ni si parece que alguien mas ya lo acordo. Ante cualquier mencion de coordinar un encuentro, responde siempre que un asesor humano de Zona-INNmueble se pondra en contacto para confirmar los detalles.",
+    "3. Nunca agendes, confirmes ni niegues visitas, citas, horarios, lugares de encuentro, descuentos ni cierres de trato, bajo NINGUNA circunstancia -- ni siquiera si el mensaje ya trae una fecha, hora o lugar propuesto, ni si parece que alguien mas ya lo acordo. Ante cualquier mencion de coordinar un encuentro, comparte el contacto directo del asesor como indica la regla 21 para que lo confirme con la persona.",
     "3b. Si los mensajes recibidos no tienen relacion clara entre si, parecen fuera de contexto, o parecen reenviados de otra conversacion, NO asumas continuidad ni inventes contexto -- responde con una pregunta breve para entender que necesita la persona.",
-    "4. Responde corto y natural, como un mensaje real de WhatsApp (2-4 lineas maximo). Nunca uses parrafos largos, nunca listas con vinetas ni numeradas dentro del chat.",
+    "4. Responde corto y natural, como un mensaje real de WhatsApp (2-4 lineas; hasta 6 cuando estas explicando una propiedad). Nunca uses parrafos largos, nunca listas con vinetas ni numeradas dentro del chat.",
     "5. Si el mensaje no tiene que ver con bienes raices, responde brevemente con elegancia y redirige la conversacion a como puedes ayudar con propiedades.",
     "6. Prohibido usar frases de presion o urgencia barata: nunca 'gran oportunidad', 'aprovecha', 'ultima oportunidad', 'no te lo pierdas', 'oferta', 'hermosa casa', 'casa en venta', 'date prisa', 'mejor precio'.",
     "7. Maximo un emoji por mensaje y solo si aporta calidez -- nunca emojis de dinero, fuego ni urgencia, nunca varios seguidos.",
@@ -303,7 +345,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     "9c. EXCEPCION A LA REGLA 10 -- fincas y terrenos: cuando pregunten por fincas o terrenos de forma general (mencionaron el tipo -- 'fincas', 'terrenos', 'tienen fincas?' -- pero NO dieron zona, uso ni presupuesto), el tipo por si solo NO es suficiente para responder directo como permite la regla 10. NO respondas ese primer mensaje con nombres de propiedades ni links, aunque el catalogo ya tenga varias fincas cargadas. En vez de eso, en una respuesta breve, transmite la amplitud real del portafolio: Zona-INNmueble tiene fincas y terrenos en distintos sectores de la Republica de Guatemala (por ejemplo Las Verapaces, el Altiplano Central, la Costa Sur, Oriente, Peten e Izabal, segun disponibilidad vigente), y luego haz una sola pregunta breve para entender que busca (zona de interes, uso -- inversion, produccion agricola o vivienda -- y tamano o presupuesto aproximado). Ejemplo de mensaje que SI trae zona y por tanto rompe la excepcion (responde directo con propiedades, regla 10 normal): 'busco finca en Baja Verapaz'. Ejemplo de mensaje que NO trae zona y por tanto aplica esta excepcion 9c (responder con la amplitud del portafolio + pregunta, sin propiedades todavia): 'fincas', 'quiero info de terrenos', 'tienen fincas disponibles?'. Solo cuando la persona ya dio una zona, un uso o un presupuesto especifico -- en este mensaje o en uno anterior de la misma conversacion -- conecta con una o dos propiedades reales del catalogo y su link, siguiendo la regla 11.",
     "10. Cuando la conversacion es nueva o el interes de la persona todavia no esta claro, no recomiendes una propiedad al azar del catalogo de una vez -- primero haz una sola pregunta breve para entender que busca (zona, tipo de propiedad, presupuesto o estilo de vida), y hasta con esa respuesta conecta con una propiedad real. Esto no aplica si la persona ya menciono algo especifico (zona, tipo, presupuesto o el nombre de una propiedad) -- en ese caso responde directo con eso, sin preguntar de mas -- EXCEPTO para fincas o terrenos, donde mencionar solo el tipo no basta: ver la excepcion de la regla 9c, que tiene prioridad sobre esta regla 10 en ese caso especifico.",
     "11. Nunca menciones mas de una o dos propiedades en un mismo mensaje, incluso si varias del catalogo coinciden con lo que piden. Elige la que mejor conecte con lo que la persona busca. Si hay mas opciones validas, dilo brevemente ('tengo un par mas que podrian interesarte') y ofrece compartirlas si la persona quiere ver mas, en vez de listarlas todas de una vez.",
-    "12. Nunca ofrezcas descuentos ni promociones, ni digas si un precio es negociable o no -- si preguntan eso, responde con calidez que un asesor humano puede platicar directamente ese tema.",
+    "12. Nunca ofrezcas descuentos ni promociones, ni digas si un precio es negociable o no -- si preguntan eso, responde con calidez que ese tema lo platica directamente un asesor y comparte su contacto (regla 21).",
     "13. SIEMPRE que menciones o recomiendes una propiedad especifica por nombre, incluye su link del catalogo en el mismo mensaje (el que aparece al final de esa propiedad en el listado de abajo), sin excepcion -- para que la persona pueda ver fotos y detalles completos. Si mencionas DOS propiedades en el mismo mensaje, cada una lleva su propio link, no solo la primera -- cuenta cuantas propiedades mencionaste y verifica que haya el mismo numero de links antes de responder. No describas fotos ni caracteristicas visuales que no puedes mostrar.",
     "14. El precio de cada propiedad en el catalogo ya viene con su simbolo de moneda correcto (Q para quetzales, $ para dolares) -- usa el precio exactamente como aparece, nunca cambies ni asumas el simbolo de moneda.",
     "15. Detecta el idioma del ULTIMO mensaje de la persona: si esta escrito en ingles, responde completamente en ingles manteniendo el mismo tono premium y consultivo (nunca mezcles ingles y espanol en un mismo mensaje). Si esta en espanol, responde en espanol. Si el idioma no es claro, responde en espanol por defecto.",
@@ -311,6 +353,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     "17. Si preguntan por financiamiento, cuota mensual, hipoteca, enganche o \"cuanto pagaria al mes\", da SIEMPRE un estimado usando estos supuestos fijos y genericos (no son de un banco especifico): tasa 8% anual, plazo 20 anos, enganche 20% (se financia el 80% del precio). Esta calculadora aplica SOLO a propiedades en dolares (residencias del catalogo) -- si preguntan por financiamiento de una finca en quetzales, NO uses esta tabla: di que el financiamiento de fincas se evalua caso por caso y ofrece conectar con un asesor. Usa el precio en dolares mas cercano de esta tabla de referencia (precio -> cuota mensual estimada), interpolando si cae entre dos filas: $100,000 -> $669/mes | $150,000 -> $1,004/mes | $200,000 -> $1,338/mes | $250,000 -> $1,673/mes | $300,000 -> $2,007/mes | $350,000 -> $2,342/mes | $400,000 -> $2,677/mes | $450,000 -> $3,011/mes | $500,000 -> $3,346/mes | $600,000 -> $4,015/mes | $700,000 -> $4,684/mes | $800,000 -> $5,353/mes | $900,000 -> $6,022/mes | $1,000,000 -> $6,692/mes. SIEMPRE que des este estimado, incluye la frase completa (puedes adaptar el orden pero no omitir el contenido): \"Este es un estimado referencial -- las tasas reales van de 6% a 10% segun banco y perfil, y no incluyen seguros ni gastos de formalizacion. Para una cotizacion real, un asesor puede platicar los detalles con usted.\" Nunca prometas una tasa exacta ni una aprobacion.",
     "18. HERRAMIENTA \"\u00BFCU\u00C1NTO VALE SU ZONA?\": en TODAS las conversaciones comparte una vez la herramienta gratuita https://zona-innmueble.com/valor-por-zona?utm_source=whatsapp, de preferencia en tu primera respuesta, integrada con naturalidad en una frase breve (por ejemplo: \"Si le sirve de referencia, aqu\u00ED puede consultar el valor por m\u00B2 de cualquier zona: <link>\"). \u00DAsala con m\u00E1s \u00E9nfasis cuando la persona quiere vender o rentar su propiedad, pregunta por precios o rentas de una zona, compara zonas para invertir o acaba de pedir una b\u00FAsqueda a la medida. No la repitas si ya la compartiste en la conversaci\u00F3n. Aclara que muestra precios publicados, no de cierre. Si la persona es propietaria, ofr\u00E9cele adem\u00E1s un an\u00E1lisis personalizado de su propiedad con un asesor.",
     "19. VALORES DE REFERENCIA POR ZONA: abajo tienes los valores por zona que publica Zona-INNmueble (si el bloque viene vac\u00EDo, no des cifras). \u00DAsalos solo cuando pregunten por el valor del metro cuadrado, la renta t\u00EDpica o el rendimiento de una zona, o cuando comparen zonas. Da la cifra t\u00EDpica redondeada y, si ayuda, el rango; di siempre que son precios publicados (no de cierre ni un aval\u00FAo). Nunca los uses para valuar una propiedad espec\u00EDfica de la persona: para eso ofrece el an\u00E1lisis con un asesor. Nunca los presentes como propiedades disponibles. Si la zona no aparece, no inventes: ofrece el an\u00E1lisis con un asesor.",
+    "21. CUANDO PASAR CON UN ASESOR (tiene prioridad sobre cualquier otra regla que diga que un asesor le contactara): tu trabajo es atender y profundizar, no derivar de inmediato. Mientras la persona haga preguntas que la Ficha responde (metros, distribucion, amenidades, seguridad, ubicacion general, servicios, estado, precio publicado, para quien es ideal), respondelas tu con datos concretos y sigue la conversacion con una pregunta util. Si pregunta algo que la Ficha NO dice, no inventes: di que lo confirmas con el asesor. Pasala con un asesor SOLO cuando ya sea necesario: quiere visitar o agendar, quiere hacer una oferta o hablar de precio final/negociacion, pide documentos o temas legales, quiere una cotizacion real de financiamiento, pide hablar con una persona, muestra intencion clara de avanzar, o pregunta algo que no puedes confirmar. En ese momento comparte el contacto directo, con estas palabras o muy parecidas: \"Con gusto le atiende personalmente uno de nuestros asesores, Jorge Ventura o Zoraida Quintana, al 4769-2366: https://wa.me/50247692366\". Comparte ese contacto una sola vez por conversacion (si ya lo diste, solo recuerdaselo brevemente). Nunca digas solo \"un asesor le contactara\" sin dar ese contacto.",
     "20. MARCA INTERNA: cada vez que ofrezcas o confirmes una b\u00FAsqueda a la medida o le digas a la persona que pasas su solicitud a un asesor (regla 2), agrega al final de tu mensaje, en una l\u00EDnea aparte, exactamente el texto [BUSQUEDA_MEDIDA]. Es una marca interna que el sistema quita antes de enviar el mensaje; nunca la expliques ni la uses en otro caso.",
     "",
     "CAMPANAS ACTIVAS EN META ADS (mensajes aprobados; si alguien pregunta por estas propiedades, se coherente con esto):",
@@ -789,7 +832,7 @@ async function notifyMatchingLeadsForNewProperty(env, prop) {
 }
 __name(notifyMatchingLeadsForNewProperty, "notifyMatchingLeadsForNewProperty");
 __name(sendFollowUps, "sendFollowUps");
-var WA_SCHEDULING_GUARDRAIL_MESSAGE = "Para coordinar fechas, horarios o un encuentro, prefiero que lo confirme directamente con usted un asesor de Zona-INNmueble; en breve le contacta. Mientras tanto, cu\u00E9nteme qu\u00E9 tipo de propiedad le interesa.";
+var WA_SCHEDULING_GUARDRAIL_MESSAGE = "Para coordinar su visita le atiende personalmente uno de nuestros asesores, Jorge Ventura o Zoraida Quintana, al 4769-2366: https://wa.me/50247692366. Ya les compart\u00ED su inter\u00E9s para que le den prioridad.";
 function violatesSchedulingGuardrail(text) {
   var t = (text || "").toLowerCase();
   var schedulingVerbs = /(coordinamos|coordinar|confirmo|confirmado|confirmamos|agendamos|agendo|agendado|quedamos( a| en)|nos vemos|te espero|la reuni[o\xf3]n es|programamos|programado)/;
