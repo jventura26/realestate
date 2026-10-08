@@ -124,6 +124,7 @@ function waFichaDetalle(p) {
     add("cultivo", p.cultivo);
     add("produccion", p.produccion);
     add("tiempo desde carretera", p.tiempoCarretera);
+    add("precio de renta mensual (ademas de la venta)", p.precioRenta);
     add("renta: deposito", p.deposito);
     add("renta: contrato minimo", p.contratoMin);
   }

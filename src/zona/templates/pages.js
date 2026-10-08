@@ -59,6 +59,16 @@ function renderDescBloquesZona(bloques, esc) {
 
 // ── Card ─────────────────────────────────────────────────────────────
 // Tarjeta: titulo limpio (sin "|"), precio en formato uniforme y una sola etiqueta de estado.
+// Operacion legible y precio de renta cuando la propiedad esta en venta y en renta.
+function operLabel(p) {
+  const o = String(p.operacion || p.cinta || 'Venta');
+  return /venta\s*\/\s*renta|venta y renta/i.test(o) ? 'Venta y renta' : o;
+}
+function rentaTxt(p) {
+  const r = String(p.precioRenta || '').trim();
+  if (!r) return '';
+  return /mes/i.test(r) ? r : r + ' /mes';
+}
 function cardTitle(p) {
   const t = String(p.title || '').split('|')[0].trim();
   return t || String(p.title || '');
@@ -156,7 +166,7 @@ function card(p, idx) {
       <div class="pc-title">${escapeHtml(cardTitle(p))}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="pc-price">${priceLabel}${priceAlt}</div>
+        <div class="pc-price">${priceLabel}${priceAlt}${(!(esExclusiva||cfg.precio) && rentaTxt(p)) ? `<span class="pc-price-rent">En renta: ${escapeHtml(rentaTxt(p))}</span>` : ''}</div>
         <span class="pc-arr">→</span>
       </div>
     </div>
@@ -409,7 +419,7 @@ function detailPage(prop, all) {
 
   const specs = [
     { l:'Tipo',              v: prop.tipo },
-    { l:'Operación',         v: prop.operacion || prop.cinta },
+    { l:'Operación',         v: operLabel(prop) },
     (prop.zona && prop.zona.trim() && prop.zona.trim() !== (prop.municipio||'').trim()) ? { l:'Zona', v: prop.zona } : null,
     !isLand(prop)&&prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones',  v: prop.habitaciones } : null,
     !isLand(prop)&&prop.banos&&prop.banos!=='0'               ? { l:'Baños completos', v: prop.banos }        : null,
@@ -455,7 +465,7 @@ function detailPage(prop, all) {
   const galOrdered = galMainPick
     ? [galMainPick, ...prop.gallery.filter(u => u !== galMainPick)]
     : prop.gallery;
-  const gal    = galOrdered.slice(0, 10);
+  const gal    = galOrdered.slice(0, 40); // todas las fotos que se suban (tope de seguridad 40)
   const galHtml= gal.length > 1
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="var m=document.getElementById('mi');m.removeAttribute('srcset');m.src=this.src">`).join('')}</div>` : '';
 
@@ -712,7 +722,7 @@ function detailPage(prop, all) {
 ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){var srcMob=ikTransform(src,{w:720,q:70});return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcMob)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"'+(i===0?' fetchpriority="high"':'')+'></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
 
 <div class="dv3-head">
-  <div class="dv3-head-badges"><span class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</span>${isNewListing ? '<span class="dv3-badge-new">Nuevo</span>' : ''}${prop.tour360 ? '<span class="dv3-badge-new" style="background:var(--el);color:#fff">Recorrido 360°</span>' : ''}</div>
+  <div class="dv3-head-badges"><span class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(operLabel(prop))}</span>${isNewListing ? '<span class="dv3-badge-new">Nuevo</span>' : ''}${prop.tour360 ? '<span class="dv3-badge-new" style="background:var(--el);color:#fff">Recorrido 360°</span>' : ''}</div>
   <h1 class="dv3-title">${escapeHtml(cardTitle(prop))}</h1>
   <div class="dv3-loc">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -726,8 +736,8 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     <div class="dv3-price-row">
       <div>
         <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : fmtCardPrice(prop).main}</div>
-        ${(!esExclusiva&&!cfg.precio&&prop.precioRenta) ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
         ${(!esExclusiva&&!cfg.precio&&fmtCardPrice(prop).alt) ? '<div class="dv3-price-sub">'+fmtCardPrice(prop).alt+' · tipo de cambio referencial</div>' : ''}
+        ${(!esExclusiva&&!cfg.precio&&rentaTxt(prop)) ? '<div class="dv3-price-rent"><span>Tambi&eacute;n en renta</span>'+escapeHtml(rentaTxt(prop))+'</div>' : ''}
       </div>
       <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
         &#8679; Compartir

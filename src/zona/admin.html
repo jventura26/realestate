@@ -862,8 +862,12 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
             </div>
             <div class="fg-row c3">
               <div class="fg"><label>Tipo</label><select id="fTipo"><option>Casa</option><option>Apartamento</option><option>Finca</option><option>Local</option><option>Terreno</option></select></div>
-              <div class="fg"><label>Operación</label><select id="fOperacion"><option>Venta</option><option>Renta</option><option>Venta/Renta</option></select></div>
+              <div class="fg"><label>Operación</label><select id="fOperacion" onchange="toggleRentaField()"><option>Venta</option><option>Renta</option><option value="Venta/Renta">Venta y renta</option></select></div>
               <div class="fg"><label>Listing</label><select id="fTipoListing"><option>Residencial</option><option>Finca</option><option>Inversión</option><option>Comercial</option></select></div>
+            </div>
+            <div class="fg-row c2" id="rentaRow" style="display:none">
+              <div class="fg"><label>Precio de renta mensual</label><input type="text" id="fPrecioRenta" placeholder="Ej: 2,500"></div>
+              <div class="fg"><label>Moneda de la renta</label><select id="fMonedaRenta"><option value="USD">USD (Dólares)</option><option value="Q">Q (Quetzales)</option></select></div>
             </div>
             <div class="fg-row c2">
               <div class="fg"><label>Zona / Colonia</label><input type="text" id="fZona" placeholder="Ej: Kanajuyú"></div>
@@ -2774,6 +2778,7 @@ function clearForm() {
   (function(){var b=document.getElementById('ihLinksBox');if(b)b.style.display='none';})();
   document.querySelectorAll('.char-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.char-item').classList.remove('checked');});
   setStatus('Activa'); setCinta(''); galUrls=[]; renderGallery(); descBloques=[]; renderDescBlocks();
+  (function(){var e=document.getElementById('fPrecioRenta');if(e)e.value='';toggleRentaField();})();
   const imgPrev=document.getElementById('imgPreview');
   if(imgPrev)imgPrev.style.display='none';
 }
@@ -2803,6 +2808,7 @@ function loadForm(p) {
   sel('fBrokerId',p.broker_id);
   document.getElementById('fDestacada').checked=!!p.destacada;
   descBloques=p.descBloques||[]; renderDescBlocks();
+  (function(){var r=String(p.precioRenta||'');document.getElementById('fMonedaRenta').value=/^\s*Q/i.test(r)?'Q':'USD';set('fPrecioRenta',r.replace(/^\s*(Q|\$|USD)\s*/i,'').replace(/\s*\/\s*mes\s*$/i,''));toggleRentaField();})();
   document.getElementById('fPrivada').checked=!!p.privada;
   document.getElementById('sZona').checked=p.sitios?p.sitios.includes('zona'):true;
   document.getElementById('sInmu').checked=p.sitios?p.sitios.includes('inmu'):true;
@@ -2881,6 +2887,7 @@ async function saveProp() {
     descripcion:g('fDescripcion'),hook:g('fHook'),descCorta:g('fDescCorta'),
     pdfUrl:g('fPdfUrl'),privada:document.getElementById('fPrivada').checked,
     precioReal:g('fPrecioReal'),contactoVendedor:g('fContactoVendedor'),
+    precioRenta:(function(){var v=g('fPrecioRenta');if(!v||g('fOperacion')!=='Venta/Renta')return '';v=v.trim();if(/^[Q$]|USD|GTQ/i.test(v))return v;var n=v.replace(/[^0-9.]/g,'');var f=n?Number(n).toLocaleString('en-US'):v;return (g('fMonedaRenta')==='Q'?'Q ':'$')+f+' /mes';})(),
     notasInternas:g('fNotasInternas'),estadoLegal:g('fEstadoLegal'),
     departamento:g('fDepartamento'),lat:g('fLat'),lng:g('fLng'),
     imagen:g('fImagen'),gallery:galUrls,
@@ -3897,6 +3904,9 @@ setTimeout(function() {
 
 // ── INIT ─────────────────────────────────────────────────────
 checkSession();
+
+// Precio de renta: solo aplica cuando la propiedad esta en venta y en renta.
+function toggleRentaField(){var row=document.getElementById('rentaRow');var op=document.getElementById('fOperacion');if(row&&op)row.style.display=op.value==='Venta/Renta'?'':'none';}
 
 // DESC BLOQUES
 let descBloques = [];

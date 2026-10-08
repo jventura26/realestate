@@ -110,8 +110,8 @@ window.zTrack=function(name,data,standard){
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://zona-inmu.tours-virtuales-gt.workers.dev">
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-<link rel="preload" href="/assets/zona-styles.css?v=20261006b" as="style">
-<link rel="stylesheet" href="/assets/zona-styles.css?v=20261006b">
+<link rel="preload" href="/assets/zona-styles.css?v=20261008" as="style">
+<link rel="stylesheet" href="/assets/zona-styles.css?v=20261008">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
