@@ -919,6 +919,7 @@ function violatesNoInventoryRule(text) {
   return /\bno (tenemos|contamos con|manejamos|disponemos de)\b/.test(t) ||
     /\bno hay (propiedades|opciones|nada|inventario|disponibilidad|casas|apartamentos|terrenos|fincas)\b/.test(t) ||
     /\bno (tengo|encontre|encuentro) (propiedades|opciones|nada)\b/.test(t) ||
+    /\bno (tengo|tenemos|encontre|encuentro|hay) (un|una|uno|ningun|ninguna|algo)\b/.test(t) ||
     /\bno esta(mos)? disponible/.test(t) && /\b(catalogo|inventario)\b/.test(t);
 }
 __name(violatesNoInventoryRule, "violatesNoInventoryRule");
@@ -3650,6 +3651,11 @@ var index_default = {
       var taPrompt = await buildWhatsAppSystemPrompt(env, taCat, taAd ? { ref: { headline: taAd, body: "" }, isFirstReply: true, contactName: "Ana" } : null);
       var taT0 = Date.now();
       var taReply = await askWhatsAppAssistant(env, taPrompt, [], taMsg);
+      if (violatesNoInventoryRule(taReply)) {
+        var taRetry = await askWhatsAppAssistant(env, taPrompt + "\n\nIMPORTANTE: " + NO_INVENTORY_RETRY_NOTE, [], taMsg);
+        if (taRetry && !violatesNoInventoryRule(taRetry)) taReply = taRetry;
+      }
+      taReply = taReply.replace(/\s*\[BUSQUEDA_MEDIDA\]\s*/gi, " ").trim();
       return jsonRes({ ms: Date.now() - taT0, promptChars: taPrompt.length, model: env.ANTHROPIC_MODEL || "claude-sonnet-4-5", hasKey: !!env.ANTHROPIC_API_KEY, reply: taReply });
     }
     if (method === "GET" && path === "/api/whatsapp/debug-errors") {
