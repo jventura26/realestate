@@ -3354,7 +3354,10 @@ function updateCompleteness() {
   fields.forEach(function(f) {
     total += f.w;
     var el = document.getElementById(f.id);
-    if (el && el.value && el.value.trim()) score += f.w;
+    var ok = el && el.value && el.value.trim();
+    // La descripcion cuenta como completa si se escribio en el campo o en los bloques.
+    if (!ok && f.id === 'fDescripcion' && typeof getDescBloques === 'function' && getDescBloques().length) ok = true;
+    if (ok) score += f.w;
     else missing.push(f.id.replace('f',''));
   });
   if (document.querySelectorAll('.chars-grid input:checked').length > 0) score += 5;
@@ -3917,7 +3920,7 @@ function renderDescBlocks() {
     const ph = b.type==='lista' ? 'Un elemento por l\u00ednea...' : 'Escribe aqu\u00ed...';
     return '<div class="desc-block">'
       + '<div class="desc-block-type"><i class="ti ' + icons[b.type] + '"></i> ' + labels[b.type] + '</div>'
-      + '<textarea oninput="descBloques[' + i + '].content=this.value" placeholder="' + ph + '">' + (b.content||'') + '</textarea>'
+      + '<textarea oninput="descBloques[' + i + '].content=this.value;formDirty=true;updateCompleteness()" placeholder="' + ph + '">' + String(b.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</textarea>'
       + '<button class="desc-block-del" onclick="removeDescBlock(' + i + ')" title="Eliminar bloque"><i class="ti ti-trash"></i></button>'
       + '</div>';
   }).join('');

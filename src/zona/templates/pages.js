@@ -51,7 +51,9 @@ function renderDescBloquesZona(bloques, esc) {
           + '<span>' + esc(item) + '</span></li>').join('')
         + '</ul>';
     }
-    return '<p style="margin:0 0 16px;line-height:1.8;color:var(--sv)">' + esc(c) + '</p>';
+    // Cada linea en blanco del bloque es un parrafo nuevo; los saltos simples se respetan.
+    return c.split(/\n\s*\n/).map(par => par.trim()).filter(Boolean)
+      .map(par => '<p style="margin:0 0 16px;line-height:1.8;color:var(--sv)">' + esc(par).replace(/\n/g, '<br>') + '</p>').join('');
   }).join('');
 }
 
