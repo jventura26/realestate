@@ -3906,7 +3906,7 @@ setTimeout(function() {
 checkSession();
 
 // Precio de renta: solo aplica cuando la propiedad esta en venta y en renta.
-function toggleRentaField(){var row=document.getElementById('rentaRow');var op=document.getElementById('fOperacion');if(row&&op)row.style.display=op.value==='Venta/Renta'?'':'none';}
+function toggleRentaField(){var row=document.getElementById('rentaRow');var op=document.getElementById('fOperacion');if(row&&op)row.style.display=op.value==='Venta/Renta'?'':'none';var pr=document.getElementById('fPrecioRenta'),mr=document.getElementById('fMonedaRenta'),mv=document.getElementById('fMoneda');if(pr&&mr&&mv&&!pr.value.trim())mr.value=mv.value==='Q'?'Q':'USD';}
 
 // DESC BLOQUES
 let descBloques = [];
