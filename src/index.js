@@ -130,13 +130,13 @@ function waFichaDetalle(p) {
   }
   if (!cfg.hideDireccion) add("ubicacion", p.ubicacionGeneral);
   var car = (Array.isArray(p.caracteristicas) ? p.caracteristicas : []).filter(function(c) { return !WA_CARAC_EXCLUIR.test(c); });
-  if (car.length) partes.push("caracteristicas: " + car.slice(0, 18).join(", "));
+  if (car.length) partes.push("caracteristicas: " + car.slice(0, 12).join(", "));
   var desc = "";
   if (Array.isArray(p.descBloques)) {
     desc = p.descBloques.filter(function(b) { return b && (b.type === "destacado" || b.type === "parrafo"); }).map(function(b) { return b.content; }).join(" ");
   }
   desc = waLimpiar(p.hook) + " " + waLimpiar(desc || p.descripcion);
-  if (desc.trim()) partes.push("descripcion: " + desc.trim().slice(0, 650));
+  if (desc.trim()) partes.push("descripcion: " + desc.trim().slice(0, 380));
   return partes.join(" ; ");
 }
 __name(waFichaDetalle, "waFichaDetalle");
@@ -332,6 +332,9 @@ var WA_PREMIUM_STYLE = [
   "EJEMPLO AL PASARLA CON UN ASESOR:",
   "\"Con gusto. Para coordinar su visita y atender cada detalle, le acompañara personalmente uno de nuestros asesores, Jorge Ventura o Zoraida Quintana, al 4769-2366:\\nhttps://wa.me/50247692366\\nYa tienen el contexto de su consulta.\""
 ].join("\n");
+// Todo lo anterior a esta marca es igual en cada mensaje y se guarda en cache de la API
+// (cuesta ~10% al reutilizarse); lo posterior (contexto del anuncio) cambia por conversacion.
+var WA_PROMPT_SPLIT = "<<CONTEXTO_CONVERSACION>>";
 async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
   var valoresTexto = await getValoresZonaTexto(env);
   var catalogoTexto = catalogo.length ? catalogo.map(function(p) {
@@ -378,13 +381,14 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     "",
     "CAMPANAS ACTIVAS EN META ADS (mensajes aprobados; si alguien pregunta por estas propiedades, se coherente con esto):",
     await getWaCampaigns(env),
-    adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : "",
     "",
     "VALORES DE REFERENCIA POR ZONA (precios publicados, no de cierre):",
     valoresTexto || "(sin datos disponibles en este momento)",
     "",
     "CATALOGO ACTIVO (unica fuente de verdad):",
-    catalogoTexto
+    catalogoTexto,
+    WA_PROMPT_SPLIT,
+    adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : ""
   ].join("\n");
 }
 __name(buildWhatsAppSystemPrompt, "buildWhatsAppSystemPrompt");
@@ -620,7 +624,7 @@ var WA_FOLLOWUP_TEMPLATE_LANG = "es";
 var WA_NEWLISTING_TEMPLATE_NAME = "seguimiento_2_zona_innmueble";
 var WA_NEWLISTING_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
-var WA_ALERT_PHONE_DEFAULT = "50247692366,50245542088";
+var WA_ALERT_PHONE_DEFAULT = "50247692366";
 // Numeros que reciben los avisos (separados por coma). Se puede cambiar con la variable WA_ALERT_PHONE.
 function alertPhones(env, from) {
   return String(env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT).split(",").map(function(x) { return x.replace(/\D/g, ""); })
@@ -949,7 +953,12 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
       body: JSON.stringify({
         model: env.ANTHROPIC_MODEL || "claude-sonnet-4-5",
         max_tokens: 400,
-        system: systemPrompt,
+        system: (function() {
+          var parts = String(systemPrompt).split(WA_PROMPT_SPLIT);
+          var out = [{ type: "text", text: parts[0], cache_control: { type: "ephemeral" } }];
+          if (parts[1] && parts[1].trim()) out.push({ type: "text", text: parts[1].trim() });
+          return out;
+        })(),
         messages
       }),
       signal: controller.signal
