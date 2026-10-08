@@ -955,13 +955,15 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
       signal: controller.signal
     });
     clearTimeout(hardTimeout);
-    var data = await res.json();
+    var data = await res.json().catch(function() { return null; });
     if (data && data.content && data.content[0] && data.content[0].text) {
       return data.content[0].text.trim();
     }
+    await logWaError(env, "askWhatsAppAssistant", "Anthropic " + res.status + ": " + JSON.stringify(data || {}).slice(0, 500));
     return "Gracias por escribir a Zona-INNmueble. Para atenderle de inmediato, puede comunicarse con nuestros asesores Jorge Ventura o Zoraida Quintana al 4769-2366:\nhttps://wa.me/50247692366";
   } catch (e) {
     clearTimeout(hardTimeout);
+    await logWaError(env, "askWhatsAppAssistant", e && e.name === "AbortError" ? "Tiempo agotado esperando a la IA" : e);
     return "Gracias por escribir a Zona-INNmueble. Para atenderle de inmediato, puede comunicarse con nuestros asesores Jorge Ventura o Zoraida Quintana al 4769-2366:\nhttps://wa.me/50247692366";
   }
 }
@@ -3628,6 +3630,18 @@ var index_default = {
       if (!psPhone) return jsonRes({ error: "falta ?phone=" }, 400);
       var psVal = await env.DB.get("wa_paused:" + psPhone);
       return jsonRes({ phone: psPhone, paused: !!psVal });
+    }
+    if (method === "GET" && path === "/api/whatsapp/test-ai") {
+      // Prueba de la IA sin enviar nada por WhatsApp: devuelve la respuesta que daria.
+      var taToken = new URL(request.url).searchParams.get("token");
+      if (taToken !== (env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026")) return jsonRes({ error: "no autorizado" }, 403);
+      var taMsg = new URL(request.url).searchParams.get("msg") || "\u00A1Hola! Quiero m\u00E1s informaci\u00F3n.";
+      var taAd = new URL(request.url).searchParams.get("ad");
+      var taCat = await buildWhatsAppCatalogContext(env);
+      var taPrompt = await buildWhatsAppSystemPrompt(env, taCat, taAd ? { ref: { headline: taAd, body: "" }, isFirstReply: true, contactName: "Ana" } : null);
+      var taT0 = Date.now();
+      var taReply = await askWhatsAppAssistant(env, taPrompt, [], taMsg);
+      return jsonRes({ ms: Date.now() - taT0, promptChars: taPrompt.length, model: env.ANTHROPIC_MODEL || "claude-sonnet-4-5", hasKey: !!env.ANTHROPIC_API_KEY, reply: taReply });
     }
     if (method === "GET" && path === "/api/whatsapp/debug-errors") {
       var errToken = new URL(request.url).searchParams.get("token");
