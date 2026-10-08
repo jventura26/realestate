@@ -338,7 +338,7 @@ var WA_PROMPT_SPLIT = "<<CONTEXTO_CONVERSACION>>";
 async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
   var valoresTexto = await getValoresZonaTexto(env);
   var catalogoTexto = catalogo.length ? catalogo.map(function(p) {
-    var precioTxt = String(p.precio || "").trim();
+    var precioTxt = String(p.precio || "").replace(/\(?\s*(precio\s+)?negociable\s*\)?/ig, "").trim();
     if (precioTxt && !/^[Q$]/.test(precioTxt)) precioTxt = "Q" + precioTxt;
     if (!precioTxt) precioTxt = "precio a consultar";
     return "- " + p.titulo + " | " + p.tipo + " (" + p.operacion + ") | " + (p.zona || p.municipio || p.departamento || "ubicacion a confirmar") + " | " + precioTxt + " | " + (p.habitaciones || "?") + " hab / " + (p.banos || "?") + " banos | " + p.url + (p.detalle ? "\n    Ficha: " + p.detalle : "");
