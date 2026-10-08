@@ -967,6 +967,7 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
     clearTimeout(hardTimeout);
     var data = await res.json().catch(function() { return null; });
     if (data && data.content && data.content[0] && data.content[0].text) {
+      try { await env.DB.put("wa_ai_last_ok", new Date().toISOString()); } catch (eOk) {}
       return data.content[0].text.trim();
     }
     await logWaError(env, "askWhatsAppAssistant", "Anthropic " + res.status + ": " + JSON.stringify(data || {}).slice(0, 500));
@@ -3350,6 +3351,24 @@ var index_default = {
       const rawInf = await env.DB.get("informe_clientes");
       if (!rawInf) return jsonRes({ error: "Informe no publicado" }, 404);
       return jsonRes(JSON.parse(rawInf));
+    }
+    if (method === "GET" && path === "/api/admin/ia-status") {
+      // Estado de la IA de WhatsApp para el panel: ultima respuesta correcta y ultima falla.
+      if (!(await requireAuth(request, env))) return jsonRes({ error: "No autenticado" }, 401);
+      var isOk = await env.DB.get("wa_ai_last_ok");
+      var isRaw = await env.DB.get("wa_debug_errors");
+      var isErrs = (isRaw ? JSON.parse(isRaw) : []).filter(function(e) { return e.where === "askWhatsAppAssistant"; });
+      var isLast = isErrs.length ? isErrs[isErrs.length - 1] : null;
+      var failing = !!(isLast && (!isOk || new Date(isLast.at) > new Date(isOk)));
+      var reason = "";
+      if (failing) {
+        var m = String(isLast.message || "");
+        reason = /credit balance/i.test(m) ? "Sin saldo en la cuenta de Anthropic. Recargue en console.anthropic.com \u2192 Plans & Billing." :
+          /Tiempo agotado/i.test(m) ? "La IA tard\u00F3 demasiado en responder." :
+          /401|authentication|api[_ -]?key/i.test(m) ? "La clave de la API no es v\u00E1lida." :
+          /overloaded|529|rate/i.test(m) ? "La API est\u00E1 saturada o con l\u00EDmite de uso; se recupera sola." : "Error de la IA: " + m.slice(0, 160);
+      }
+      return jsonRes({ ok: !failing, lastOk: isOk, lastError: isLast ? isLast.at : null, reason: reason, hasKey: !!env.ANTHROPIC_API_KEY });
     }
     if (method === "GET" && path === "/api/leads") {
       const authed2 = await requireAuth(request, env);

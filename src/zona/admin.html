@@ -324,7 +324,29 @@ tr:hover td{background:#FAFBFF}
 
 .gal-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .gal-item{position:relative}
-.gal-item img{width:64px;height:50px;object-fit:cover;border-radius:5px;border:1px solid var(--border)}
+.gal-item img{width:64px;height:50px;object-fit:cover;border-radius:5px;border:1px solid var(--border);background:var(--bg2,#eef1f5)}
+.gal-item{cursor:grab}.gal-item.dragging{opacity:.4}.gal-item.over img{outline:2px solid var(--or);outline-offset:1px}
+.gal-item.is-cover img{outline:2px solid var(--or)}
+.gal-n{position:absolute;left:3px;top:3px;background:rgba(13,27,62,.75);color:#fff;font-size:9px;font-weight:700;border-radius:3px;padding:0 4px;line-height:14px}
+.gal-cover{position:absolute;left:3px;bottom:3px;background:var(--or);color:#fff;font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:3px;padding:1px 4px}
+.gal-setcover{position:absolute;left:3px;bottom:3px;background:rgba(13,27,62,.75);color:#fff;font-size:11px;border-radius:3px;width:16px;height:16px;display:none;align-items:center;justify-content:center;cursor:pointer}
+.gal-arrows{position:absolute;right:3px;bottom:3px;display:none;gap:2px}
+.gal-arrows b{background:rgba(13,27,62,.75);color:#fff;font-size:12px;width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.gal-item:hover .gal-setcover,.gal-item:hover .gal-arrows{display:flex}
+@media (hover:none){.gal-setcover,.gal-arrows{display:flex}}
+.gal-count{width:100%;font-size:10px;color:var(--text3);margin-top:4px}
+.ia-status{display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:10px;font-size:13px;margin-bottom:14px;border:1px solid var(--border)}
+.ia-status i{font-size:18px}
+.ia-loading{color:var(--text3)}
+.ia-ok{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3);color:#15803d}
+.ia-fail{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.35);color:#b91c1c}
+.pp-overlay{position:fixed;inset:0;background:rgba(13,27,62,.55);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px}
+.pp-box{background:var(--surface,#fff);color:var(--text,#1B2742);border-radius:14px;max-width:460px;width:100%;padding:22px 22px 18px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.pp-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pp-title i{color:var(--or)}
+.pp-sub{font-size:12px;color:var(--text3);margin:0 0 10px}
+.pp-list{margin:0 0 16px;padding-left:18px;font-size:13px;line-height:1.5;display:grid;gap:6px}
+.pp-actions{display:flex;justify-content:flex-end;gap:8px}
 .gal-item button{position:absolute;top:2px;right:2px;background:var(--red);color:var(--wh);border:none;border-radius:3px;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 
 /* TOAST */
@@ -421,8 +443,11 @@ body.dark .empty-state{color:var(--dm-text3)}
 .desc-block-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--or);margin-bottom:6px;display:flex;align-items:center;gap:4px}
 .desc-block textarea{width:100%;min-height:60px;border:1px solid var(--border);border-radius:4px;padding:8px;font-size:13px;font-family:Inter,sans-serif;resize:vertical;background:var(--bg);color:var(--text)}
 .desc-block-del{position:absolute;top:6px;right:6px;background:none;border:none;color:#EF4444;cursor:pointer;font-size:14px;opacity:.5;transition:opacity .2s}
+.desc-block-move{position:absolute;top:6px;right:30px;display:flex;gap:2px}
+.desc-block-move button{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;opacity:.6;padding:0 2px}
+.desc-block-move button:hover{opacity:1;color:var(--or)}
 .desc-block-del:hover{opacity:1}
-.desc-block-add{display:flex;gap:6px;margin-top:6px}
+.desc-block-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .desc-block-add button{flex:1;padding:7px;border:1.5px dashed var(--border);border-radius:6px;background:none;font-size:11px;color:var(--text3);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px}
 .desc-block-add button:hover{border-color:var(--or);color:var(--or)}
 .star-cell{color:#F59E0B;font-size:14px}
@@ -816,9 +841,11 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
     </div>
     <div class="main">
       <div class="topbar">
-        <button class="mob-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>\n        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <button class="mob-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+        <div class="topbar-title" id="pageTitle">Dashboard</div>
         <button class="topbar-search" onclick="openSearch()" title="Buscar (Ctrl+K)"><i class="ti ti-search"></i> Buscar... <span class="search-kbd">Ctrl+K</span></button>
-        <button class="btn btn-ghost btn-sm" id="darkToggle" onclick="toggleDark()" title="Modo oscuro"><i class="ti ti-moon"></i></button>\n        <button class="btn btn-ghost btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Actualizar</button>
+        <button class="btn btn-ghost btn-sm" id="darkToggle" onclick="toggleDark()" title="Modo oscuro"><i class="ti ti-moon"></i></button>
+        <button class="btn btn-ghost btn-sm" onclick="refreshData()"><i class="ti ti-refresh"></i> Actualizar</button>
         <button class="btn btn-ghost btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
         <button class="btn btn-primary btn-sm" onclick="openModal(null)"><i class="ti ti-plus"></i> Nueva propiedad</button>
       </div>
@@ -879,7 +906,7 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
           <div class="fsec">
             <div class="fsec-title"><i class="ti ti-tag"></i> Etiqueta / Cinta</div>
             <div class="cinta-pills" id="cintaPills">
-              <div class="cinta-pill active" data-val="" onclick="setCinta('')">Nin�٥�na</div>
+              <div class="cinta-pill active" data-val="" onclick="setCinta('')">Ninguna</div>
               <div class="cinta-pill" data-val="Exclusiva" onclick="setCinta('Exclusiva')">Exclusiva</div>
               <div class="cinta-pill" data-val="Premium" onclick="setCinta('Premium')">Premium</div>
               <div class="cinta-pill" data-val="Nueva" onclick="setCinta('Nueva')">Nueva</div>
@@ -904,7 +931,7 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
               <div class="fg"><label>Parqueos</label><input type="number" id="fParqueos" placeholder="0" min="0"></div>
               <div class="fg"><label>Niveles</label><input type="number" id="fNiveles" placeholder="1" min="1"></div>
             </div>
-            <div class="fg"><label>Datos técnicos (resumen)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m�  · Terreno 2,400 m�"></div>
+            <div class="fg"><label>Datos técnicos (resumen)</label><input type="text" id="fDatosTecnicos" placeholder="Ej: 4 hab · 4 baños · 580 m² · Terreno 2,400 m²"></div>
           </div>
 
           <div class="fsec">
@@ -939,6 +966,7 @@ body.dark .inf-tip{background:#2a1e12;color:#FFB36B}
               <button type="button" onclick="addDescBlock('parrafo')"><i class="ti ti-align-left"></i> Párrafo</button>
               <button type="button" onclick="addDescBlock('destacado')"><i class="ti ti-blockquote"></i> Destacado</button>
               <button type="button" onclick="addDescBlock('lista')"><i class="ti ti-list"></i> Lista</button>
+              <button type="button" onclick="useDescTemplate()" style="border-color:var(--or);color:var(--or)"><i class="ti ti-template"></i> Estructura base</button>
             </div>
             <div style="margin-top:6px;font-size:10px;color:var(--text3)">Opcional: agrega bloques para una descripción más estructurada en el sitio.</div>
           </div>
@@ -1382,7 +1410,7 @@ function showPage(page) {
   document.getElementById('pageTitle').textContent = titles[page] || page;
   const mc = document.getElementById('mainContent');
   if (!mc) return;
-  if (page === 'dashboard')   renderDashboard(mc);
+  if (page === 'dashboard')   { renderDashboard(mc); loadIaStatus(); }
   if (page === 'propiedades') renderPropiedades(mc);
   if (page === 'leads')       renderLeads(mc);
   if (page === 'crm')         renderCRM(mc);
@@ -1523,6 +1551,16 @@ function infCopy(btn, id) {
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────
+// Estado de la IA de WhatsApp (se muestra en el Dashboard).
+async function loadIaStatus(){
+  const el=document.getElementById('iaStatus'); if(!el)return;
+  try{
+    const r=await fetch(API+'/api/admin/ia-status',{credentials:'include'}); const d=await r.json();
+    const hace=t=>{if(!t)return 'sin registro';const m=Math.round((Date.now()-new Date(t))/60000);return m<1?'hace un momento':m<60?'hace '+m+' min':m<1440?'hace '+Math.round(m/60)+' h':'hace '+Math.round(m/1440)+' d';};
+    if(d.ok){el.className='ia-status ia-ok';el.innerHTML='<i class="ti ti-circle-check"></i> <span><b>IA de WhatsApp activa.</b> Última respuesta '+hace(d.lastOk)+'.</span>';}
+    else{el.className='ia-status ia-fail';el.innerHTML='<i class="ti ti-alert-triangle"></i> <span><b>La IA de WhatsApp no está respondiendo.</b> '+(d.reason||'')+' Los clientes reciben el mensaje de respaldo con el contacto del asesor.</span>';}
+  }catch(e){el.className='ia-status ia-fail';el.innerHTML='<i class="ti ti-alert-triangle"></i> <span>No se pudo revisar el estado de la IA.</span>';}
+}
 function renderDashboard(mc) {
   const activas  = props.filter(p => !p.estado || p.estado === 'Activa').length;
   const vendidas = props.filter(p => p.estado === 'Vendida').length;
@@ -1544,6 +1582,7 @@ function renderDashboard(mc) {
   const recentLeads = [...leads].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).slice(0,6);
 
   mc.innerHTML = `
+    <div id="iaStatus" class="ia-status ia-loading"><i class="ti ti-robot"></i> <span>Revisando la IA de WhatsApp…</span></div>
     <div class="stats-grid">
       <div class="stat-card blue">
         <i class="ti ti-building stat-icon"></i>
@@ -2850,6 +2889,7 @@ function previewImg() {
   const val=document.getElementById('fImagen').value;
   const img=document.getElementById('imgPreview');
   if(val){img.src=val;img.style.display='block';}else{img.style.display='none';}
+  if(typeof renderGallery==='function')renderGallery();
 }
 
 function addGalImg() {
@@ -2859,15 +2899,51 @@ function addGalImg() {
 
 function removeGalImg(i){galUrls.splice(i,1);renderGallery();}
 
+// Miniatura liviana (ImageKit) para que la galeria cargue rapido en el admin.
+function ikThumb(u){u=String(u||'');if(!/ik\.imagekit\.io/.test(u))return u;return u+(u.indexOf('?')>=0?'&':'?')+'tr=w-200,h-150,c-at_max,q-70';}
+let galDragFrom=-1;
+function galDrop(to){if(galDragFrom<0||galDragFrom===to)return;const it=galUrls.splice(galDragFrom,1)[0];galUrls.splice(to,0,it);galDragFrom=-1;formDirty=true;renderGallery();}
+function galMove(i,d){const j=i+d;if(j<0||j>=galUrls.length)return;const t=galUrls[i];galUrls[i]=galUrls[j];galUrls[j]=t;formDirty=true;renderGallery();}
+function setPortada(i){const u=galUrls[i];if(!u)return;document.getElementById('fImagen').value=u;galUrls.splice(i,1);galUrls.unshift(u);formDirty=true;previewImg();renderGallery();updateCompleteness();showToast('Portada actualizada','success');}
 function renderGallery() {
   const wrap=document.getElementById('galWrap');
   if(!wrap)return;
-  wrap.innerHTML=galUrls.map((u,i)=>`<div class="gal-item"><img src="${u}" loading="lazy" onerror="this.style.opacity='.3'"><button onclick="removeGalImg(${i})">x</button></div>`).join('');
+  const portada=(document.getElementById('fImagen')||{}).value||'';
+  wrap.innerHTML=galUrls.map((u,i)=>`<div class="gal-item${u===portada?' is-cover':''}" draggable="true" ondragstart="galDragFrom=${i};this.classList.add('dragging')" ondragend="this.classList.remove('dragging')" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="event.preventDefault();galDrop(${i})" title="Arrastre para ordenar">`
+    +`<img src="${ikThumb(u)}" loading="lazy" decoding="async" onerror="if(this.src!=='${u}'){this.src='${u}'}else{this.style.opacity='.3'}">`
+    +`<span class="gal-n">${i+1}</span>`
+    +(u===portada?'<span class="gal-cover">Portada</span>':`<span class="gal-setcover" onclick="setPortada(${i})" title="Usar como portada">&#9733;</span>`)
+    +`<span class="gal-arrows"><b onclick="galMove(${i},-1)" title="Mover antes">&#8249;</b><b onclick="galMove(${i},1)" title="Mover después">&#8250;</b></span>`
+    +`<button onclick="removeGalImg(${i})" title="Quitar foto">x</button></div>`).join('')
+    +(galUrls.length?`<div class="gal-count">${galUrls.length} foto${galUrls.length===1?'':'s'} · arrastre para ordenar · &#9733; para elegir portada</div>`:'');
 }
 
-async function saveProp() {
+// Revision antes de publicar: avisa lo que afecta la calidad de la ficha.
+function prePublishIssues(){
+  const v=id=>((document.getElementById(id)||{}).value||'').trim();
+  const out=[];
+  const fotos=galUrls.length+(v('fImagen')&&galUrls.indexOf(v('fImagen'))<0?1:0);
+  if(!v('fImagen'))out.push('No tiene imagen de portada.');
+  if(fotos<8)out.push('Tiene '+fotos+' foto'+(fotos===1?'':'s')+'. Recomendamos al menos 8 para una ficha premium.');
+  if(!v('fDescripcion')&&!(typeof getDescBloques==='function'&&getDescBloques().length))out.push('No tiene descripción ni bloques de descripción.');
+  if(!v('fLat')||!v('fLng'))out.push('No tiene ubicación en el mapa (latitud y longitud).');
+  if(v('fOperacion')==='Venta/Renta'&&!v('fPrecioRenta'))out.push('Está en "Venta y renta" pero falta el precio de renta mensual.');
+  if(!v('fPrecio'))out.push('No tiene precio (se mostrará "Precio a consultar").');
+  if(/negociable|ganga|oportunidad|barat|remate/i.test(v('fPrecio')))out.push('El precio incluye texto ("'+v('fPrecio')+'"). Deje solo la cifra; la negociación la maneja el asesor.');
+  if(/ganga|oportunidad única|compra ya|garantizad/i.test(v('fTitulo')+' '+v('fHook')))out.push('El título o el hook usa frases de presión (ganga, oportunidad única, compra ya, garantizada).');
+  return out;
+}
+function showPrePublish(issues){
+  let ov=document.getElementById('ppOverlay');
+  if(!ov){ov=document.createElement('div');ov.id='ppOverlay';ov.className='pp-overlay';document.body.appendChild(ov);}
+  ov.innerHTML='<div class="pp-box"><div class="pp-title"><i class="ti ti-clipboard-check"></i> Antes de publicar</div><p class="pp-sub">Encontramos estos puntos que pueden restarle calidad a la ficha:</p><ul class="pp-list">'
+    +issues.map(t=>'<li>'+t.replace(/</g,'&lt;')+'</li>').join('')
+    +'</ul><div class="pp-actions"><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'ppOverlay\').remove()">Revisar</button><button class="btn btn-sm" style="background:var(--or);color:#fff;border:none" onclick="document.getElementById(\'ppOverlay\').remove();saveProp(true)">Guardar de todas formas</button></div></div>';
+}
+async function saveProp(force) {
   const titulo=document.getElementById('fTitulo').value.trim();
   if(!titulo){showToast('El título es obligatorio','error');return;}
+  if(force!==true){const issues=prePublishIssues();if(issues.length){showPrePublish(issues);return;}}
   const chars=Array.from(document.querySelectorAll('.char-item input[type=checkbox]:checked')).map(cb=>cb.value);
   const sitios=[];
   if(document.getElementById('sZona').checked)sitios.push('zona');
@@ -3462,7 +3538,7 @@ function saveDraft() {
   if (!titulo || !titulo.value) { showToast('Agrega al menos un título'); return; }
   document.getElementById('fEstado').value = 'Pausada';
   setStatus('Pausada');
-  saveProp();
+  saveProp(true);
 }
 
 // ── COUNT-UP ANIMATION ───────────────────────────────────────
@@ -3915,6 +3991,21 @@ function addDescBlock(type) {
   descBloques.push({type, content:''});
   renderDescBlocks();
 }
+// Estructura base: el mismo orden en todas las fichas (entrada, destacado, ambientes, amenidades).
+const DESC_TEMPLATE = [
+  {type:'parrafo', hint:'Entrada: 2-3 líneas sobre el estilo de vida que ofrece la propiedad y su ubicación. Ej: Una residencia pensada para vivir con amplitud y privacidad, a minutos de…'},
+  {type:'destacado', hint:'Lo más valioso en una frase: lo que la hace diferente. Ej: Jardín de 300 m² con vista abierta al valle, dentro de un condominio con garita 24/7.'},
+  {type:'lista', hint:'Ambientes, uno por línea. Ej:\nSala y comedor integrados con doble altura\nCocina equipada con isla\nHabitación principal con walk-in closet y baño privado'},
+  {type:'lista', hint:'Amenidades y entorno, uno por línea. Ej:\nGarita y seguridad 24/7\nÁrea social con BBQ\nA 10 minutos de centros comerciales'},
+  {type:'parrafo', hint:'Cierre: para quién es ideal (familia, inversión, renta). Ej: Ideal para una familia que busca tranquilidad sin alejarse de la ciudad.'}
+];
+function useDescTemplate(){
+  const filled = descBloques.some(b => (b.content||'').trim());
+  if (filled) { showToast('Ya tiene bloques escritos: la estructura se agregó al final','success'); }
+  descBloques = (filled ? descBloques : []).concat(DESC_TEMPLATE.map(b => ({type:b.type, content:'', hint:b.hint})));
+  renderDescBlocks();
+}
+function moveDescBlock(i,d){const j=i+d;if(j<0||j>=descBloques.length)return;const t=descBloques[i];descBloques[i]=descBloques[j];descBloques[j]=t;renderDescBlocks();}
 
 function removeDescBlock(i) {
   descBloques.splice(i,1);
@@ -3927,17 +4018,18 @@ function renderDescBlocks() {
   const labels = {parrafo:'P\u00e1rrafo',destacado:'Destacado',lista:'Lista'};
   const icons = {parrafo:'ti-align-left',destacado:'ti-blockquote',lista:'ti-list'};
   wrap.innerHTML = descBloques.map((b,i) => {
-    const ph = b.type==='lista' ? 'Un elemento por l\u00ednea...' : 'Escribe aqu\u00ed...';
+    const ph = String(b.hint || (b.type==='lista' ? 'Un elemento por l\u00ednea...' : 'Escribe aqu\u00ed...')).replace(/"/g,'&quot;');
     return '<div class="desc-block">'
       + '<div class="desc-block-type"><i class="ti ' + icons[b.type] + '"></i> ' + labels[b.type] + '</div>'
       + '<textarea oninput="descBloques[' + i + '].content=this.value;formDirty=true;updateCompleteness()" placeholder="' + ph + '">' + String(b.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</textarea>'
+      + '<span class="desc-block-move"><button type="button" onclick="moveDescBlock(' + i + ',-1)" title="Subir"><i class="ti ti-arrow-up"></i></button><button type="button" onclick="moveDescBlock(' + i + ',1)" title="Bajar"><i class="ti ti-arrow-down"></i></button></span>'
       + '<button class="desc-block-del" onclick="removeDescBlock(' + i + ')" title="Eliminar bloque"><i class="ti ti-trash"></i></button>'
       + '</div>';
   }).join('');
 }
 
 function getDescBloques() {
-  return descBloques.filter(b => b.content && b.content.trim());
+  return descBloques.filter(b => b.content && b.content.trim()).map(b => ({type:b.type, content:b.content}));
 }
 
 </script>
