@@ -928,7 +928,7 @@ ${relHtml}
   <button class="dv3-lb-nav dv3-lb-prev" onclick="dv3LightNav(-1)">&#8249;</button>
   <button class="dv3-lb-nav dv3-lb-next" onclick="dv3LightNav(1)">&#8250;</button>
   <span class="dv3-lb-counter" id="dv3lbCounter"></span>
-  <img class="dv3-lb-img" id="dv3lbImg" src="" alt="">
+  <img class="dv3-lb-img" id="dv3lbImg" alt="">
   <div class="dv3-lb-strip" id="dv3lbStrip"></div>
 </div>
 

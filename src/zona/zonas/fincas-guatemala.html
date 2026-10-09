@@ -61,13 +61,13 @@ section{padding:80px 6%}
 
 .alt-bg{background:var(--ink2)}
 
-.tipos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:24px}
+.tipos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:16px;margin-top:24px}.tipos-grid>*{min-width:0;overflow-wrap:anywhere}@media(max-width:400px){.tipo-card{padding:16px 10px!important}}
 .tipo-card{background:rgba(255,255,255,.04);border:1px solid var(--bd);padding:24px;text-align:center;transition:border-color .3s}
 .tipo-card:hover{border-color:var(--gl)}
 .tipo-icon{font-size:1.8rem;margin-bottom:10px}
 .tipo-name{font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--wh)}
 
-.depto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:24px}
+.depto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:14px;margin-top:24px}
 .depto-card{background:rgba(255,255,255,.04);border:1px solid var(--bd);padding:18px 16px;font-size:.75rem;color:var(--sv);text-align:center;letter-spacing:.03em}
 
 .price-table{width:100%;border-collapse:collapse;margin-top:24px}

@@ -563,3 +563,10 @@ h1, h2, h3 { text-wrap: balance; }
 .verify-card-ink .light { color: var(--light); }
 .verify-card h2 { display: flex; align-items: center; gap: 10px; }
 .map-box .leaflet-tile-pane { filter: grayscale(.9) contrast(.92) brightness(1.05); }
+/* Pantallas muy angostas (320–360 px): el encabezado no debe desbordarse */
+@media (max-width: 360px) {
+  .brand { font-size: 22px; }
+  .header-actions { gap: 2px; }
+  .header-actions .btn-sm { padding: 0 10px; font-size: 13px; }
+  .header-row { gap: 8px; }
+}

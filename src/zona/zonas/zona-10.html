@@ -61,7 +61,7 @@ section{padding:80px 6%}
 
 .alt-bg{background:var(--ink2)}
 
-.tipos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:24px}
+.tipos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:16px;margin-top:24px}.tipos-grid>*{min-width:0;overflow-wrap:anywhere}@media(max-width:400px){.tipo-card{padding:16px 10px!important}}
 .tipo-card{background:rgba(255,255,255,.04);border:1px solid var(--bd);padding:24px;text-align:center;transition:border-color .3s}
 .tipo-card:hover{border-color:var(--gl)}
 .tipo-icon{font-size:1.8rem;margin-bottom:10px}
