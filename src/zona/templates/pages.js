@@ -119,7 +119,7 @@ function card(p, idx) {
       if (ca(p.areaConst)) meta.push(ca(p.areaConst) + ' m²');
     } else {
       if (p.manzanas) meta.push(p.manzanas + ' mz');
-      else if (p.areaV2) meta.push(p.areaV2 + ' v²');
+      else if (parseFloat(p.areaV2)>0) meta.push(p.areaV2 + ' v²');
       else if (ca(p.area)) meta.push(ca(p.area) + ' m²');
     }
   }
@@ -427,7 +427,7 @@ function detailPage(prop, all) {
     prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? { l:'Parqueos', v: prop.parqueos } : null,
     prop.niveles&&prop.niveles!=='0'           ? { l:'Niveles',       v: prop.niveles }      : null,
     ca(prop.areaConst)||ca(prop.area) ? { l: isLand(prop) ? 'Área m²' : 'Área construida m²', v: ca(prop.areaConst)||ca(prop.area) } : null,
-    prop.areaV2                                ? { l:'Área v²',       v: prop.areaV2 }       : null,
+    parseFloat(prop.areaV2)>0                  ? { l:'Área v²',       v: prop.areaV2 }       : null,
     prop.terreno                               ? { l:'Terreno',       v: prop.terreno }      : null,
     prop.anioConstruccion                      ? { l:'Año construcción', v: prop.anioConstruccion } : null,
     prop.estadoConstruccion                    ? { l:'Condición',     v: prop.estadoConstruccion } : null,
@@ -518,7 +518,7 @@ function detailPage(prop, all) {
     !isLand(prop)&&bathsOf(prop)               ? {icon:SVGI.bath, v:bathsOf(prop), l:'baños'} : null,
     prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon:SVGI.car, v:prop.parqueos, l:'parqueos'} : null,
     ca(prop.areaConst)||ca(prop.area)          ? {icon:SVGI.area, v:ca(prop.areaConst)||ca(prop.area), l:'m²'} : null,
-    prop.areaV2                                ? {icon:SVGI.area, v:prop.areaV2, l:'v²'} : null,
+    parseFloat(prop.areaV2)>0                  ? {icon:SVGI.area, v:prop.areaV2, l:'v²'} : null,
     prop.manzanas                              ? {icon:SVGI.leaf, v:prop.manzanas, l:'mz'} : null,
   ].filter(Boolean);
   const ana = ANA.analyze(prop);
