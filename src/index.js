@@ -344,7 +344,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     var custom = await env.DB.get("wa_brand_voice");
     if (custom && custom.trim()) brandVoice = custom;
   } catch (e) {}
-  return [
+  var shared = [
     brandVoice,
     "",
     WA_PREMIUM_STYLE,
@@ -377,7 +377,6 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     "",
     "CAMPANAS ACTIVAS EN META ADS (mensajes aprobados; si alguien pregunta por estas propiedades, se coherente con esto):",
     await getWaCampaigns(env),
-    adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : "",
     "",
     "VALORES DE REFERENCIA POR ZONA (precios publicados, no de cierre):",
     valoresTexto || "(sin datos disponibles en este momento)",
@@ -385,6 +384,12 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     "CATALOGO ACTIVO (unica fuente de verdad):",
     catalogoTexto
   ].join("\n");
+  // "shared" es igual para todos los clientes y se guarda en la cache de Anthropic (cobra ~10% al
+  // reutilizarse). "extra" es propio de cada conversacion (anuncio de origen) y va sin cache.
+  return {
+    shared,
+    extra: adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : ""
+  };
 }
 __name(buildWhatsAppSystemPrompt, "buildWhatsAppSystemPrompt");
 function stripAccents(s) {
@@ -614,6 +619,9 @@ var WA_FOLLOWUP_MIN_GAP_DAYS = 4;
 // Plantillas premium (una por seguimiento). Mientras Meta no las apruebe, se usa la plantilla anterior.
 var WA_FOLLOWUP_PREMIUM_TEMPLATES = ["seguimiento_premium_1", "seguimiento_premium_2", "seguimiento_premium_3", "seguimiento_premium_4", "seguimiento_premium_5"];
 var WA_FOLLOWUP_STOP_STAGES = ["Cierre", "Perdido"];
+// Leads COLD (o sin tier) reciben solo los primeros seguimientos (dias 2 y 7); WARM y HOT reciben
+// los 5. Si un lead COLD vuelve a escribir, su secuencia se reinicia como cualquier otro.
+var WA_FOLLOWUP_COLD_MAX_STAGES = 2;
 var WA_FOLLOWUP_TEMPLATE_NAME = "seguimiento_zona_innmueble";
 var WA_FOLLOWUP_TEMPLATE_LANG = "es";
 var WA_NEWLISTING_TEMPLATE_NAME = "seguimiento_2_zona_innmueble";
@@ -721,6 +729,11 @@ async function sendFollowUps(env) {
       if (lead.followUpStatus !== "active") continue;
       if (typeof lead.followUpStage !== "number") continue;
       if (lead.followUpStage >= WA_FOLLOWUP_INTERVALS_DAYS.length) { lead.followUpStatus = "completed"; changed = true; continue; }
+      if ((lead.lead_tier || "COLD") === "COLD" && lead.followUpStage >= WA_FOLLOWUP_COLD_MAX_STAGES) {
+        lead.followUpStatus = "completed_cold_short";
+        changed = true;
+        continue;
+      }
       // Nunca dos seguimientos con menos de WA_FOLLOWUP_MIN_GAP_DAYS de diferencia (corrige los envios diarios).
       if (lead.lastFollowUpAt && now - new Date(lead.lastFollowUpAt).getTime() < WA_FOLLOWUP_MIN_GAP_DAYS * 864e5) continue;
       if (!lead.nextFollowUpAt || new Date(lead.nextFollowUpAt).getTime() > now) continue;
@@ -935,6 +948,12 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
   var apiKey = env.ANTHROPIC_API_KEY;
   if (!apiKey) return "Gracias por escribir a Zona-INNmueble. Para atenderle de inmediato, puede comunicarse con nuestros asesores Jorge Ventura o Zoraida Quintana al 4769-2366:\nhttps://wa.me/50247692366";
   var messages = history.concat([{ role: "user", content: userMessage }]);
+  // systemPrompt puede ser texto o { shared, extra }: la parte compartida va con cache_control.
+  var system = systemPrompt;
+  if (systemPrompt && typeof systemPrompt === "object") {
+    system = [{ type: "text", text: systemPrompt.shared, cache_control: { type: "ephemeral" } }];
+    if (systemPrompt.extra) system.push({ type: "text", text: systemPrompt.extra });
+  }
   var controller = new AbortController();
   var hardTimeout = setTimeout(function() { controller.abort(); }, 20000);
   try {
@@ -948,7 +967,7 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
       body: JSON.stringify({
         model: env.ANTHROPIC_MODEL || "claude-sonnet-4-5",
         max_tokens: 400,
-        system: systemPrompt,
+        system,
         messages
       }),
       signal: controller.signal
@@ -1209,10 +1228,17 @@ async function notifyBusquedaMedida(env, from, lead) {
   }
 }
 __name(notifyBusquedaMedida, "notifyBusquedaMedida");
+// Cada aviso al equipo es una plantilla que Meta cobra, por cada numero. Antes salia con cada
+// mensaje del cliente; ahora sale con el primer mensaje del contacto, cuando vuelve a escribir
+// despues de 24 h, o cuando llega desde un anuncio (clic nuevo en Meta Ads).
+var WA_ALERT_COOLDOWN_SECONDS = 60 * 60 * 24;
 async function notifyLeadAlert(env, from, contactName, userText, adRef) {
   try {
     var phones = alertPhones(env, from);
     if (!phones.length) return;
+    var cooldownKey = "wa_alert_sent:" + from;
+    if (!adRef && await env.DB.get(cooldownKey)) return;
+    await env.DB.put(cooldownKey, new Date().toISOString(), { expirationTtl: WA_ALERT_COOLDOWN_SECONDS });
     var nombreMostrar = contactName || ("+" + from);
     var textoCorto = String(userText || "").slice(0, 300);
     var alertText = "Nuevo mensaje en WhatsApp de " + nombreMostrar + " (+" + from + ")" + (adRef ? " desde el anuncio \u00AB" + (adRef.headline || "Meta Ads") + "\u00BB" : "") + ":\n\"" + textoCorto + "\"";
@@ -1243,7 +1269,10 @@ async function processWhatsAppTurn(env, from, userText, contactName, referral) {
   }, WA_FILLER_TIMEOUT_MS);
   var reply = await askWhatsAppAssistant(env, systemPrompt, history, userText);
   if (violatesNoInventoryRule(reply)) {
-    var retry = await askWhatsAppAssistant(env, systemPrompt + "\n\nIMPORTANTE: " + NO_INVENTORY_RETRY_NOTE, history, userText);
+    var retry = await askWhatsAppAssistant(env, {
+      shared: systemPrompt.shared,
+      extra: (systemPrompt.extra ? systemPrompt.extra + "\n\n" : "") + "IMPORTANTE: " + NO_INVENTORY_RETRY_NOTE
+    }, history, userText);
     if (retry && !violatesNoInventoryRule(retry)) reply = retry;
   }
   clearTimeout(fillerTimer);
