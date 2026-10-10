@@ -577,6 +577,17 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo, o
     lead.lead_tier = scoring.tier;
     if (isNew) leads.push(lead); else leads[idx] = lead;
     await env.DB.put("leads", JSON.stringify(leads));
+    // Respaldo individual por contacto: si dos mensajes llegan al mismo tiempo y una escritura
+    // de la lista "leads" pisa a la otra, el panel recupera el lead desde aqui.
+    try {
+      var cut = function(v, n) { return String(v || "").slice(0, n); };
+      await env.DB.put("lead_wa:" + from, "1", { metadata: {
+        id: cut(lead.id, 20), nombre: cut(lead.nombre, 60), telefono: cut(lead.telefono, 20),
+        fecha: cut(lead.fecha || lead.createdAt, 30), lastInboundAt: cut(lead.lastInboundAt, 30),
+        source: cut(lead.source || lead.fuente, 30), ad_headline: cut(lead.ad_headline, 80),
+        propiedad: cut(lead.propiedad, 80), zona_interes: cut(lead.zona_interes, 40)
+      } });
+    } catch (eBk) {}
     var shouldNotify = isNew || nuevaBusquedaMedida || (changed && lead.lead_tier !== prevTier);
     if (nuevaBusquedaMedida) notifyBusquedaMedida(env, from, lead).catch(function() {});
     if (shouldNotify) {
@@ -3375,7 +3386,33 @@ var index_default = {
       if (!authed2) return jsonRes({ error: "No autenticado" }, 401);
       const raw2 = await env.DB.get("leads");
       const data2 = raw2 ? JSON.parse(raw2) : [];
-      return jsonRes(data2.sort((a, b2) => new Date(b2.fecha || b2.createdAt || 0) - new Date(a.fecha || a.createdAt || 0)));
+      // Recuperar leads de WhatsApp que se hayan perdido por escrituras simultaneas.
+      try {
+        const byFrom = {};
+        data2.forEach((l) => { if (l.wa_from) byFrom[l.wa_from] = l; });
+        let cursor = undefined, repaired = 0;
+        for (let pg = 0; pg < 10; pg++) {
+          const lst = await env.DB.list({ prefix: "lead_wa:", cursor });
+          for (const k of lst.keys) {
+            const from = k.name.slice(8), m = k.metadata || {};
+            const ex = byFrom[from];
+            if (!ex) {
+              const rec = { id: m.id || String(Date.now()), wa_from: from, telefono: m.telefono || "+" + from, nombre: m.nombre || "Contacto WhatsApp", email: "",
+                fuente: m.source || "WhatsApp IA", source: m.source || "WhatsApp IA", createdAt: m.fecha, fecha: m.fecha, lastInboundAt: m.lastInboundAt,
+                stage: "Nuevo", ad_headline: m.ad_headline || "", propiedad: m.propiedad || "", zona_interes: m.zona_interes || "", tipo_propiedad: "", presupuesto: "",
+                followUpStage: 0, followUpStatus: "active", nextFollowUpAt: new Date(Date.now() + 2 * 864e5).toISOString() };
+              data2.push(rec); byFrom[from] = rec; repaired++;
+            } else if (m.lastInboundAt && (!ex.lastInboundAt || new Date(m.lastInboundAt) > new Date(ex.lastInboundAt))) {
+              ex.lastInboundAt = m.lastInboundAt; repaired++;
+            }
+          }
+          if (lst.list_complete) break;
+          cursor = lst.cursor;
+        }
+        if (repaired) await env.DB.put("leads", JSON.stringify(data2));
+      } catch (eRep) {}
+      const act = (l) => new Date(l.lastInboundAt || l.fecha || l.createdAt || 0).getTime() || new Date(l.fecha || l.createdAt || 0).getTime() || 0;
+      return jsonRes(data2.sort((a, b2) => act(b2) - act(a)));
     }
     if (method === "POST" && path === "/api/leads/import") {
       if (!await requireAuth(request, env)) return jsonRes({ error: "No autorizado" }, 401);

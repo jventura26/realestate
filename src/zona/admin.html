@@ -1580,7 +1580,7 @@ function renderDashboard(mc) {
   const typeData = Object.keys(typeCount).sort((a,b)=>typeCount[b]-typeCount[a]).map(k=>({label:k,count:typeCount[k]}));
   const chartColors = ['#F5820D','#0D1B3E','#22c55e','#3B82F6','#f59e0b','#ef4444','#8b5cf6'];
 
-  const recentLeads = [...leads].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).slice(0,6);
+  const recentLeads = [...leads].sort((a,b)=>leadActivity(b)-leadActivity(a)).slice(0,6);
 
   mc.innerHTML = `
     <div id="iaStatus" class="ia-status ia-loading"><i class="ti ti-robot"></i> <span>Revisando la IA de WhatsApp…</span></div>
@@ -1990,17 +1990,14 @@ function buildTable(data, sortable) {
 }
 
 // ── LEADS PAGE ───────────────────────────────────────────────
+function leadActivity(l){ var t=new Date(l.lastInboundAt||l.fecha||l.createdAt||0).getTime(); return isNaN(t)?(new Date(l.fecha||0).getTime()||0):t; }
 function renderLeads(mc) {
   const stages = ['Nuevo','Contactado','Calificado','Negociación','Cerrado','Perdido'];
   const counters = {};
   stages.forEach(s => counters[s] = leads.filter(l=>(l.stage||'Nuevo')===s).length);
   let filtered = leadFilter === 'todos' ? leads : leadFilter === 'medida' ? leads.filter(l=>l.busqueda_medida) : leads.filter(l=>(l.stage||'Nuevo')===leadFilter);
-  // Ordenar por lead_score desc (los HOT primero) para que el asesor sepa a quien llamar primero
-  filtered = filtered.slice().sort(function(a,b){
-    var d = (b.lead_score||0) - (a.lead_score||0);
-    if (d !== 0) return d;
-    return new Date(b.fecha||0) - new Date(a.fecha||0);
-  });
+  // Lo mas reciente primero: quien escribio ultimo (nuevo o que regresa) aparece arriba.
+  filtered = filtered.slice().sort(function(a,b){ return leadActivity(b) - leadActivity(a); });
 
   mc.innerHTML = `
     <div class="leads-toolbar" style="flex-wrap:wrap;gap:10px">
@@ -2032,12 +2029,7 @@ function filterLeads() {
       (l.tipo||'').toLowerCase().includes(q)
     );
   }
-  // Ordenar por lead_score desc (los HOT primero)
-  filtered = filtered.slice().sort(function(a,b){
-    var d = (b.lead_score||0) - (a.lead_score||0);
-    if (d !== 0) return d;
-    return new Date(b.fecha||0) - new Date(a.fecha||0);
-  });
+  filtered = filtered.slice().sort(function(a,b){ return leadActivity(b) - leadActivity(a); });
 
   const grid = mc.querySelector('.lead-grid');
   const empty = mc.querySelector('.empty-state');
@@ -2094,7 +2086,7 @@ function buildLeadCard(l) {
         ${l.busqueda_medida?`<span title="Búsqueda a la medida" style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;background:#FFF4E6;color:#C2410C">A la medida</span>`:''}
         ${fase?`<span style="margin-top:4px;display:inline-flex;font-size:10px;padding:2px 6px;background:#EFF6FF;color:#1E40AF;border-radius:4px">${esc(fase)}</span>`:''}
       </div>
-      <div class="lead-time">${formatDate(l.fecha)}</div>
+      <div class="lead-time">${formatDate(l.fecha)}${l.lastInboundAt && (new Date(l.lastInboundAt) - new Date(l.fecha||0)) > 36e5 ? ' · <b style="color:var(--or)">escribió de nuevo ' + formatDate(l.lastInboundAt) + '</b>' : ''}</div>
     </div>
     ${ph?`<div class="lead-detail"><i class="ti ti-phone"></i>${esc(ph)}</div>`:''}
     ${email?`<div class="lead-detail"><i class="ti ti-mail"></i>${esc(email)}</div>`:''}
