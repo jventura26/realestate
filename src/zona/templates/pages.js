@@ -51,12 +51,24 @@ function renderDescBloquesZona(bloques, esc) {
           + '<span>' + esc(item) + '</span></li>').join('')
         + '</ul>';
     }
-    return '<p style="margin:0 0 16px;line-height:1.8;color:var(--sv)">' + esc(c) + '</p>';
+    // Cada linea en blanco del bloque es un parrafo nuevo; los saltos simples se respetan.
+    return c.split(/\n\s*\n/).map(par => par.trim()).filter(Boolean)
+      .map(par => '<p style="margin:0 0 16px;line-height:1.8;color:var(--sv)">' + esc(par).replace(/\n/g, '<br>') + '</p>').join('');
   }).join('');
 }
 
 // ── Card ─────────────────────────────────────────────────────────────
 // Tarjeta: titulo limpio (sin "|"), precio en formato uniforme y una sola etiqueta de estado.
+// Operacion legible y precio de renta cuando la propiedad esta en venta y en renta.
+function operLabel(p) {
+  const o = String(p.operacion || p.cinta || 'Venta');
+  return /venta\s*\/\s*renta|venta y renta/i.test(o) ? 'Venta y renta' : o;
+}
+function rentaTxt(p) {
+  const r = String(p.precioRenta || '').trim();
+  if (!r) return '';
+  return /mes/i.test(r) ? r : r + ' /mes';
+}
 function cardTitle(p) {
   const t = String(p.title || '').split('|')[0].trim();
   return t || String(p.title || '');
@@ -107,7 +119,7 @@ function card(p, idx) {
       if (ca(p.areaConst)) meta.push(ca(p.areaConst) + ' m²');
     } else {
       if (p.manzanas) meta.push(p.manzanas + ' mz');
-      else if (p.areaV2) meta.push(p.areaV2 + ' v²');
+      else if (parseFloat(p.areaV2)>0) meta.push(p.areaV2 + ' v²');
       else if (ca(p.area)) meta.push(ca(p.area) + ' m²');
     }
   }
@@ -154,7 +166,7 @@ function card(p, idx) {
       <div class="pc-title">${escapeHtml(cardTitle(p))}</div>
       ${meta.length ? `<div class="pc-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>` : ''}
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="pc-price">${priceLabel}${priceAlt}</div>
+        <div class="pc-price">${priceLabel}${priceAlt}${(!(esExclusiva||cfg.precio) && rentaTxt(p)) ? `<span class="pc-price-rent">En renta: ${escapeHtml(rentaTxt(p))}</span>` : ''}</div>
         <span class="pc-arr">→</span>
       </div>
     </div>
@@ -407,7 +419,7 @@ function detailPage(prop, all) {
 
   const specs = [
     { l:'Tipo',              v: prop.tipo },
-    { l:'Operación',         v: prop.operacion || prop.cinta },
+    { l:'Operación',         v: operLabel(prop) },
     (prop.zona && prop.zona.trim() && prop.zona.trim() !== (prop.municipio||'').trim()) ? { l:'Zona', v: prop.zona } : null,
     !isLand(prop)&&prop.habitaciones&&prop.habitaciones!=='0' ? { l:'Habitaciones',  v: prop.habitaciones } : null,
     !isLand(prop)&&prop.banos&&prop.banos!=='0'               ? { l:'Baños completos', v: prop.banos }        : null,
@@ -415,7 +427,7 @@ function detailPage(prop, all) {
     prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? { l:'Parqueos', v: prop.parqueos } : null,
     prop.niveles&&prop.niveles!=='0'           ? { l:'Niveles',       v: prop.niveles }      : null,
     ca(prop.areaConst)||ca(prop.area) ? { l: isLand(prop) ? 'Área m²' : 'Área construida m²', v: ca(prop.areaConst)||ca(prop.area) } : null,
-    prop.areaV2                                ? { l:'Área v²',       v: prop.areaV2 }       : null,
+    parseFloat(prop.areaV2)>0                  ? { l:'Área v²',       v: prop.areaV2 }       : null,
     prop.terreno                               ? { l:'Terreno',       v: prop.terreno }      : null,
     prop.anioConstruccion                      ? { l:'Año construcción', v: prop.anioConstruccion } : null,
     prop.estadoConstruccion                    ? { l:'Condición',     v: prop.estadoConstruccion } : null,
@@ -453,7 +465,7 @@ function detailPage(prop, all) {
   const galOrdered = galMainPick
     ? [galMainPick, ...prop.gallery.filter(u => u !== galMainPick)]
     : prop.gallery;
-  const gal    = galOrdered.slice(0, 10);
+  const gal    = galOrdered.slice(0, 40); // todas las fotos que se suban (tope de seguridad 40)
   const galHtml= gal.length > 1
     ? `<div class="gal-mini">${gal.slice(1).map(src=>`<img referrerpolicy="no-referrer" src="${escapeHtml(src)}" alt="${escapeHtml(prop.title)}" loading="lazy" onclick="var m=document.getElementById('mi');m.removeAttribute('srcset');m.src=this.src">`).join('')}</div>` : '';
 
@@ -506,7 +518,7 @@ function detailPage(prop, all) {
     !isLand(prop)&&bathsOf(prop)               ? {icon:SVGI.bath, v:bathsOf(prop), l:'baños'} : null,
     prop.parqueos&&prop.parqueos!=='0'&&prop.parqueos!=='No' ? {icon:SVGI.car, v:prop.parqueos, l:'parqueos'} : null,
     ca(prop.areaConst)||ca(prop.area)          ? {icon:SVGI.area, v:ca(prop.areaConst)||ca(prop.area), l:'m²'} : null,
-    prop.areaV2                                ? {icon:SVGI.area, v:prop.areaV2, l:'v²'} : null,
+    parseFloat(prop.areaV2)>0                  ? {icon:SVGI.area, v:prop.areaV2, l:'v²'} : null,
     prop.manzanas                              ? {icon:SVGI.leaf, v:prop.manzanas, l:'mz'} : null,
   ].filter(Boolean);
   const ana = ANA.analyze(prop);
@@ -710,7 +722,7 @@ function detailPage(prop, all) {
 ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"><div class="dv3-swiper-track" id="dv3swTrack">'+gal.map(function(src,i){var srcMob=ikTransform(src,{w:720,q:70});return '<div class="dv3-swiper-slide" onclick="dv3LightOpen('+i+')"><img referrerpolicy="no-referrer" src="'+escapeHtml(srcMob)+'" alt="'+escapeHtml(prop.title)+'" loading="'+(i===0?'eager':'lazy')+'"'+(i===0?' fetchpriority="high"':'')+'></div>';}).join('')+'</div><div class="dv3-swiper-counter" id="dv3swCtr">1 / '+String(gal.length)+'</div><div class="dv3-swiper-dots" id="dv3swDots">'+gal.map(function(_,i){return '<div class="dv3-swiper-dot'+(i===0?' on':'')+'" onclick="dv3SwipeTo('+i+')"></div>';}).join('')+'</div></div>' : ''}
 
 <div class="dv3-head">
-  <div class="dv3-head-badges"><span class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(prop.operacion||prop.cinta||'Venta')}</span>${isNewListing ? '<span class="dv3-badge-new">Nuevo</span>' : ''}${prop.tour360 ? '<span class="dv3-badge-new" style="background:var(--el);color:#fff">Recorrido 360°</span>' : ''}</div>
+  <div class="dv3-head-badges"><span class="dv3-badge">${escapeHtml(prop.tipo)} &middot; ${escapeHtml(operLabel(prop))}</span>${isNewListing ? '<span class="dv3-badge-new">Nuevo</span>' : ''}${prop.tour360 ? '<span class="dv3-badge-new" style="background:var(--el);color:#fff">Recorrido 360°</span>' : ''}</div>
   <h1 class="dv3-title">${escapeHtml(cardTitle(prop))}</h1>
   <div class="dv3-loc">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -724,8 +736,8 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     <div class="dv3-price-row">
       <div>
         <div class="dv3-price">${(esExclusiva||cfg.precio) ? 'Precio a consultar' : fmtCardPrice(prop).main}</div>
-        ${(!esExclusiva&&!cfg.precio&&prop.precioRenta) ? '<div class="dv3-price-sub">Renta mensual: '+escapeHtml(prop.precioRenta)+'</div>' : ''}
         ${(!esExclusiva&&!cfg.precio&&fmtCardPrice(prop).alt) ? '<div class="dv3-price-sub">'+fmtCardPrice(prop).alt+' · tipo de cambio referencial</div>' : ''}
+        ${(!esExclusiva&&!cfg.precio&&rentaTxt(prop)) ? '<div class="dv3-price-rent"><span>Tambi&eacute;n en renta</span>'+escapeHtml(rentaTxt(prop))+'</div>' : ''}
       </div>
       <button class="dv3-share-btn" onclick="if(navigator.share){navigator.share({title:'${escapeHtml(prop.title)}',url:window.location.href});}else{navigator.clipboard.writeText(window.location.href);this.textContent='✓ Copiado';}">
         &#8679; Compartir
@@ -739,8 +751,8 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
     ${ficha}
 
     <div class="dv3-tabs">
-      <button class="dv3-tab on" onclick="dv3Tab('det',this)">Detalles</button>
-      <button class="dv3-tab" onclick="dv3Tab('desc',this)">Descripci&oacute;n</button>
+      <button class="dv3-tab on" onclick="dv3Tab('desc',this)">Descripci&oacute;n</button>
+      <button class="dv3-tab" onclick="dv3Tab('det',this)">Detalles</button>
       ${(prop.caracteristicas&&prop.caracteristicas.length) ? '<button class="dv3-tab" onclick="dv3Tab(\'chars\',this)">Caracter&iacute;sticas</button>' : ''}
       ${prop.tour360 ? '<button class="dv3-tab" onclick="dv3Tab(\'t360\',this)">Recorrido 360°</button>' : ''}
       ${(prop.videoTour||prop.videoUrl||prop.plano) ? '<button class="dv3-tab" onclick="dv3Tab(\'media\',this)">Video / Plano</button>' : ''}
@@ -748,7 +760,7 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       ${(!esExclusiva&&!cfg.precio&&prop.priceNumeric>0&&(prop.operacion||'').toLowerCase()!=='renta') ? '<button class="dv3-tab" onclick="dv3Tab(\'hipoteca\',this)">Costo total</button>' : ''}
     </div>
 
-    <div class="dv3-tab-panel on" id="dv3-det">
+    <div class="dv3-tab-panel" id="dv3-det">
       ${exclusivaBanner}
       ${prop.datosTecnicos ? '<div class="dv3-datos"><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:7px">Resumen</span>'+escapeHtml(prop.datosTecnicos)+'</div>' : ''}
       ${!esExclusiva && !cfg.specs ? '<div class="dv3-specs-grid">'+specs.map(function(s){return '<div class="dv3-spec"><div class="dv3-spec-l">'+escapeHtml(s.l)+'</div><div class="dv3-spec-v">'+escapeHtml(String(s.v))+'</div></div>';}).join('')+'</div>' : (!esExclusiva ? '' : '')}
@@ -760,11 +772,11 @@ ${(!esExclusiva&&!cfg.fotos&&gal.length>1) ? '<div class="dv3-swiper" id="dv3sw"
       ${prop.colindancias ? '<div class="dv3-datos" style="margin-top:10px"><span style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);display:block;margin-bottom:5px">Colindancias</span>'+escapeHtml(prop.colindancias)+'</div>' : ''}
     </div>
 
-    <div class="dv3-tab-panel" id="dv3-desc">
+    <div class="dv3-tab-panel on" id="dv3-desc">
       ${(esExclusiva||cfg.descripcion) ? '<div style="padding:24px;text-align:center;color:var(--mt);font-style:italic">Descripción disponible previa consulta.</div>' : ''}
       ${(!esExclusiva&&!cfg.descripcion&&prop.hook&&!GENERIC_HOOK.test(prop.hook)) ? '<div style="margin-bottom:20px;padding:16px 20px;border-left:2px solid var(--or);background:rgba(201,163,91,.04)"><div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:6px">Destacado</div><div style=\"font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;font-weight:300;color:var(--sv);line-height:1.8;font-style:italic\">\"'+escapeHtml(prop.hook)+'\"</div></div>' : ''}
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Acerca de esta propiedad</div>
-      <div class="dv3-desc">${(esExclusiva||cfg.descripcion) ? '' : renderDesc(prop.description)}</div>
+      ${(esExclusiva||cfg.descripcion||!String(prop.description||'').trim()) ? '' : '<div class="dv3-desc">'+renderDesc(prop.description)+'</div>'}
       ${(prop.descBloques && Array.isArray(prop.descBloques) && prop.descBloques.length > 0 && !esExclusiva && !cfg.descripcion) ? '<div style="margin-top:20px">' + renderDescBloquesZona(prop.descBloques, escapeHtml) + '</div>' : ''}
       ${(!esExclusiva&&!cfg.ubicacion&&prop.ubicacionGeneral) ? '<div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--bd)"><div style=\"font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px\">Ubicaci&oacute;n</div><div style=\"font-size:.84rem;color:var(--sv);line-height:1.7\">'+ escapeHtml(prop.ubicacionGeneral)+'</div></div>' : ''}
     </div>
@@ -916,7 +928,7 @@ ${relHtml}
   <button class="dv3-lb-nav dv3-lb-prev" onclick="dv3LightNav(-1)">&#8249;</button>
   <button class="dv3-lb-nav dv3-lb-next" onclick="dv3LightNav(1)">&#8250;</button>
   <span class="dv3-lb-counter" id="dv3lbCounter"></span>
-  <img class="dv3-lb-img" id="dv3lbImg" src="" alt="">
+  <img class="dv3-lb-img" id="dv3lbImg" alt="">
   <div class="dv3-lb-strip" id="dv3lbStrip"></div>
 </div>
 

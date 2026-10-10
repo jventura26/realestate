@@ -7,3 +7,6 @@ dist/
 /dist/vinculo/herramientas/calculadora-hipotecaria.html
 /dist/vinculo/herramientas/dashboard-v2.html
 
+
+# Cache local de wrangler
+.wrangler/

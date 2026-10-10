@@ -19,7 +19,7 @@ export function imgSrcset(src, widths = [480, 800, 1200]) {
   return widths.map((w) => `${imgUrl(src, w)} ${w}w`).join(', ');
 }
 
-export const ASSET_VERSION = '2026-10-06f';
+export const ASSET_VERSION = '2026-10-09a';
 
 // ---------- Layout ----------
 

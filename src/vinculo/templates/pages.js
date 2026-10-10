@@ -565,7 +565,7 @@ function dualPriceDetail(prop, esc) {
 
 function detailPage(prop, allProps) {
   const esc = s => escapeHtml ? escapeHtml(String(s||'')) : String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const gallery = (prop.gallery||[]).slice(0,10);
+  const gallery = (prop.gallery||[]).slice(0,40);
   const mainImg = prop.mainImageThumb||prop.mainImage||'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80';
   const imgs = gallery.length ? gallery : [mainImg];
 
@@ -605,7 +605,8 @@ function detailPage(prop, allProps) {
   const moneda = prop.moneda||'USD';
   const precioStr = precio ? moneda + ' ' + precio : '';
   const dp = dualPriceDetail(prop, esc);
-  const operStr = prop.operacion||'';
+  const operStr = /venta\s*\/\s*renta/i.test(prop.operacion||'') ? 'Venta y renta' : (prop.operacion||'');
+  const rentaStr = (function(){var r=String(prop.precioRenta||'').trim();return r ? (/mes/i.test(r)?r:r+' /mes') : '';})();
 
   // Quick specs
   const specs = [];
@@ -1002,7 +1003,7 @@ ${mobGalHTML}${galHTML}
 
     <h1 class="zp-title">${esc(prop.titulo||'Propiedad')}</h1>
 
-    ${precioStr ? `<div class="zp-price">${dp.main}</div>${dp.sub ? '<div style="font-size:.85rem;color:#64748b;margin-bottom:2px">'+dp.sub+'</div>' : ''}<div class="zp-price-sub">${esc(operStr)}</div>${comparableHTML}` : ''}
+    ${precioStr ? `<div class="zp-price">${dp.main}</div>${dp.sub ? '<div style="font-size:.85rem;color:#64748b;margin-bottom:2px">'+dp.sub+'</div>' : ''}<div class="zp-price-sub">${esc(operStr)}</div>${rentaStr ? '<div class="zp-price-sub" style="font-weight:600;color:#9C7A3C">Tambi&eacute;n en renta: '+esc(rentaStr)+'</div>' : ''}${comparableHTML}` : ''}
 
     ${specsHTML ? `<div class="zp-specs">${specsHTML}</div>` : ''}
 
@@ -1065,7 +1066,7 @@ ${mobGalHTML}${galHTML}
   <!-- SIDEBAR -->
   <div class="zp-side">
     <div class="zp-card">
-      ${precioStr ? `<div class="zp-card-price">${dp.sidebar}</div>${dp.sidebarSub ? '<div style="font-size:.8rem;color:#94a3b8;margin-bottom:2px">'+dp.sidebarSub+'</div>' : ''}<div class="zp-card-op">${esc(operStr)}</div>` : ''}
+      ${precioStr ? `<div class="zp-card-price">${dp.sidebar}</div>${dp.sidebarSub ? '<div style="font-size:.8rem;color:#94a3b8;margin-bottom:2px">'+dp.sidebarSub+'</div>' : ''}<div class="zp-card-op">${esc(operStr)}</div>${rentaStr ? '<div class="zp-card-op" style="color:#9C7A3C">En renta: '+esc(rentaStr)+'</div>' : ''}` : ''}
 
       <div class="zp-avail"><span class="dot"></span>Disponible</div>
 

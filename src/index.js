@@ -124,18 +124,19 @@ function waFichaDetalle(p) {
     add("cultivo", p.cultivo);
     add("produccion", p.produccion);
     add("tiempo desde carretera", p.tiempoCarretera);
+    add("precio de renta mensual (ademas de la venta)", p.precioRenta);
     add("renta: deposito", p.deposito);
     add("renta: contrato minimo", p.contratoMin);
   }
   if (!cfg.hideDireccion) add("ubicacion", p.ubicacionGeneral);
   var car = (Array.isArray(p.caracteristicas) ? p.caracteristicas : []).filter(function(c) { return !WA_CARAC_EXCLUIR.test(c); });
-  if (car.length) partes.push("caracteristicas: " + car.slice(0, 18).join(", "));
+  if (car.length) partes.push("caracteristicas: " + car.slice(0, 12).join(", "));
   var desc = "";
   if (Array.isArray(p.descBloques)) {
     desc = p.descBloques.filter(function(b) { return b && (b.type === "destacado" || b.type === "parrafo"); }).map(function(b) { return b.content; }).join(" ");
   }
   desc = waLimpiar(p.hook) + " " + waLimpiar(desc || p.descripcion);
-  if (desc.trim()) partes.push("descripcion: " + desc.trim().slice(0, 650));
+  if (desc.trim()) partes.push("descripcion: " + desc.trim().slice(0, 380));
   return partes.join(" ; ");
 }
 __name(waFichaDetalle, "waFichaDetalle");
@@ -331,10 +332,13 @@ var WA_PREMIUM_STYLE = [
   "EJEMPLO AL PASARLA CON UN ASESOR:",
   "\"Con gusto. Para coordinar su visita y atender cada detalle, le acompañara personalmente uno de nuestros asesores, Jorge Ventura o Zoraida Quintana, al 4769-2366:\\nhttps://wa.me/50247692366\\nYa tienen el contexto de su consulta.\""
 ].join("\n");
+// Todo lo anterior a esta marca es igual en cada mensaje y se guarda en cache de la API
+// (cuesta ~10% al reutilizarse); lo posterior (contexto del anuncio) cambia por conversacion.
+var WA_PROMPT_SPLIT = "<<CONTEXTO_CONVERSACION>>";
 async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
   var valoresTexto = await getValoresZonaTexto(env);
   var catalogoTexto = catalogo.length ? catalogo.map(function(p) {
-    var precioTxt = String(p.precio || "").trim();
+    var precioTxt = String(p.precio || "").replace(/\(?\s*(precio\s+)?negociable\s*\)?/ig, "").trim();
     if (precioTxt && !/^[Q$]/.test(precioTxt)) precioTxt = "Q" + precioTxt;
     if (!precioTxt) precioTxt = "precio a consultar";
     return "- " + p.titulo + " | " + p.tipo + " (" + p.operacion + ") | " + (p.zona || p.municipio || p.departamento || "ubicacion a confirmar") + " | " + precioTxt + " | " + (p.habitaciones || "?") + " hab / " + (p.banos || "?") + " banos | " + p.url + (p.detalle ? "\n    Ficha: " + p.detalle : "");
@@ -344,7 +348,7 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     var custom = await env.DB.get("wa_brand_voice");
     if (custom && custom.trim()) brandVoice = custom;
   } catch (e) {}
-  var shared = [
+  return [
     brandVoice,
     "",
     WA_PREMIUM_STYLE,
@@ -382,14 +386,10 @@ async function buildWhatsAppSystemPrompt(env, catalogo, adCtx) {
     valoresTexto || "(sin datos disponibles en este momento)",
     "",
     "CATALOGO ACTIVO (unica fuente de verdad):",
-    catalogoTexto
+    catalogoTexto,
+    WA_PROMPT_SPLIT,
+    adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : ""
   ].join("\n");
-  // "shared" es igual para todos los clientes y se guarda en la cache de Anthropic (cobra ~10% al
-  // reutilizarse). "extra" es propio de cada conversacion (anuncio de origen) y va sin cache.
-  return {
-    shared,
-    extra: adCtx ? adContextBlock(adCtx.ref, adCtx.isFirstReply, adCtx.contactName) : ""
-  };
 }
 __name(buildWhatsAppSystemPrompt, "buildWhatsAppSystemPrompt");
 function stripAccents(s) {
@@ -577,6 +577,17 @@ async function upsertWhatsAppLead(env, from, contactName, convoText, catalogo, o
     lead.lead_tier = scoring.tier;
     if (isNew) leads.push(lead); else leads[idx] = lead;
     await env.DB.put("leads", JSON.stringify(leads));
+    // Respaldo individual por contacto: si dos mensajes llegan al mismo tiempo y una escritura
+    // de la lista "leads" pisa a la otra, el panel recupera el lead desde aqui.
+    try {
+      var cut = function(v, n) { return String(v || "").slice(0, n); };
+      await env.DB.put("lead_wa:" + from, "1", { metadata: {
+        id: cut(lead.id, 20), nombre: cut(lead.nombre, 60), telefono: cut(lead.telefono, 20),
+        fecha: cut(lead.fecha || lead.createdAt, 30), lastInboundAt: cut(lead.lastInboundAt, 30),
+        source: cut(lead.source || lead.fuente, 30), ad_headline: cut(lead.ad_headline, 80),
+        propiedad: cut(lead.propiedad, 80), zona_interes: cut(lead.zona_interes, 40)
+      } });
+    } catch (eBk) {}
     var shouldNotify = isNew || nuevaBusquedaMedida || (changed && lead.lead_tier !== prevTier);
     if (nuevaBusquedaMedida) notifyBusquedaMedida(env, from, lead).catch(function() {});
     if (shouldNotify) {
@@ -627,7 +638,7 @@ var WA_FOLLOWUP_TEMPLATE_LANG = "es";
 var WA_NEWLISTING_TEMPLATE_NAME = "seguimiento_2_zona_innmueble";
 var WA_NEWLISTING_TEMPLATE_LANG = "es";
 var WA_24H_WINDOW_MS = 24 * 60 * 60 * 1000;
-var WA_ALERT_PHONE_DEFAULT = "50247692366,50245542088";
+var WA_ALERT_PHONE_DEFAULT = "50247692366";
 // Numeros que reciben los avisos (separados por coma). Se puede cambiar con la variable WA_ALERT_PHONE.
 function alertPhones(env, from) {
   return String(env.WA_ALERT_PHONE || WA_ALERT_PHONE_DEFAULT).split(",").map(function(x) { return x.replace(/\D/g, ""); })
@@ -927,6 +938,7 @@ function violatesNoInventoryRule(text) {
   return /\bno (tenemos|contamos con|manejamos|disponemos de)\b/.test(t) ||
     /\bno hay (propiedades|opciones|nada|inventario|disponibilidad|casas|apartamentos|terrenos|fincas)\b/.test(t) ||
     /\bno (tengo|encontre|encuentro) (propiedades|opciones|nada)\b/.test(t) ||
+    /\bno (tengo|tenemos|encontre|encuentro|hay) (un|una|uno|ningun|ninguna|algo)\b/.test(t) ||
     /\bno esta(mos)? disponible/.test(t) && /\b(catalogo|inventario)\b/.test(t);
 }
 __name(violatesNoInventoryRule, "violatesNoInventoryRule");
@@ -948,12 +960,6 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
   var apiKey = env.ANTHROPIC_API_KEY;
   if (!apiKey) return "Gracias por escribir a Zona-INNmueble. Para atenderle de inmediato, puede comunicarse con nuestros asesores Jorge Ventura o Zoraida Quintana al 4769-2366:\nhttps://wa.me/50247692366";
   var messages = history.concat([{ role: "user", content: userMessage }]);
-  // systemPrompt puede ser texto o { shared, extra }: la parte compartida va con cache_control.
-  var system = systemPrompt;
-  if (systemPrompt && typeof systemPrompt === "object") {
-    system = [{ type: "text", text: systemPrompt.shared, cache_control: { type: "ephemeral" } }];
-    if (systemPrompt.extra) system.push({ type: "text", text: systemPrompt.extra });
-  }
   var controller = new AbortController();
   var hardTimeout = setTimeout(function() { controller.abort(); }, 20000);
   try {
@@ -967,19 +973,27 @@ async function askWhatsAppAssistant(env, systemPrompt, history, userMessage) {
       body: JSON.stringify({
         model: env.ANTHROPIC_MODEL || "claude-sonnet-4-5",
         max_tokens: 400,
-        system,
+        system: (function() {
+          var parts = String(systemPrompt).split(WA_PROMPT_SPLIT);
+          var out = [{ type: "text", text: parts[0], cache_control: { type: "ephemeral" } }];
+          if (parts[1] && parts[1].trim()) out.push({ type: "text", text: parts[1].trim() });
+          return out;
+        })(),
         messages
       }),
       signal: controller.signal
     });
     clearTimeout(hardTimeout);
-    var data = await res.json();
+    var data = await res.json().catch(function() { return null; });
     if (data && data.content && data.content[0] && data.content[0].text) {
+      try { await env.DB.put("wa_ai_last_ok", new Date().toISOString()); } catch (eOk) {}
       return data.content[0].text.trim();
     }
+    await logWaError(env, "askWhatsAppAssistant", "Anthropic " + res.status + ": " + JSON.stringify(data || {}).slice(0, 500));
     return "Gracias por escribir a Zona-INNmueble. Para atenderle de inmediato, puede comunicarse con nuestros asesores Jorge Ventura o Zoraida Quintana al 4769-2366:\nhttps://wa.me/50247692366";
   } catch (e) {
     clearTimeout(hardTimeout);
+    await logWaError(env, "askWhatsAppAssistant", e && e.name === "AbortError" ? "Tiempo agotado esperando a la IA" : e);
     return "Gracias por escribir a Zona-INNmueble. Para atenderle de inmediato, puede comunicarse con nuestros asesores Jorge Ventura o Zoraida Quintana al 4769-2366:\nhttps://wa.me/50247692366";
   }
 }
@@ -1269,10 +1283,7 @@ async function processWhatsAppTurn(env, from, userText, contactName, referral) {
   }, WA_FILLER_TIMEOUT_MS);
   var reply = await askWhatsAppAssistant(env, systemPrompt, history, userText);
   if (violatesNoInventoryRule(reply)) {
-    var retry = await askWhatsAppAssistant(env, {
-      shared: systemPrompt.shared,
-      extra: (systemPrompt.extra ? systemPrompt.extra + "\n\n" : "") + "IMPORTANTE: " + NO_INVENTORY_RETRY_NOTE
-    }, history, userText);
+    var retry = await askWhatsAppAssistant(env, systemPrompt + "\n\nIMPORTANTE: " + NO_INVENTORY_RETRY_NOTE, history, userText);
     if (retry && !violatesNoInventoryRule(retry)) reply = retry;
   }
   clearTimeout(fillerTimer);
@@ -3367,12 +3378,56 @@ var index_default = {
       if (!rawInf) return jsonRes({ error: "Informe no publicado" }, 404);
       return jsonRes(JSON.parse(rawInf));
     }
+    if (method === "GET" && path === "/api/admin/ia-status") {
+      // Estado de la IA de WhatsApp para el panel: ultima respuesta correcta y ultima falla.
+      if (!(await requireAuth(request, env))) return jsonRes({ error: "No autenticado" }, 401);
+      var isOk = await env.DB.get("wa_ai_last_ok");
+      var isRaw = await env.DB.get("wa_debug_errors");
+      var isErrs = (isRaw ? JSON.parse(isRaw) : []).filter(function(e) { return e.where === "askWhatsAppAssistant"; });
+      var isLast = isErrs.length ? isErrs[isErrs.length - 1] : null;
+      var failing = !!(isLast && (!isOk || new Date(isLast.at) > new Date(isOk)));
+      var reason = "";
+      if (failing) {
+        var m = String(isLast.message || "");
+        reason = /credit balance/i.test(m) ? "Sin saldo en la cuenta de Anthropic. Recargue en console.anthropic.com \u2192 Plans & Billing." :
+          /Tiempo agotado/i.test(m) ? "La IA tard\u00F3 demasiado en responder." :
+          /401|authentication|api[_ -]?key/i.test(m) ? "La clave de la API no es v\u00E1lida." :
+          /overloaded|529|rate/i.test(m) ? "La API est\u00E1 saturada o con l\u00EDmite de uso; se recupera sola." : "Error de la IA: " + m.slice(0, 160);
+      }
+      return jsonRes({ ok: !failing, lastOk: isOk, lastError: isLast ? isLast.at : null, reason: reason, hasKey: !!env.ANTHROPIC_API_KEY });
+    }
     if (method === "GET" && path === "/api/leads") {
       const authed2 = await requireAuth(request, env);
       if (!authed2) return jsonRes({ error: "No autenticado" }, 401);
       const raw2 = await env.DB.get("leads");
       const data2 = raw2 ? JSON.parse(raw2) : [];
-      return jsonRes(data2.sort((a, b2) => new Date(b2.fecha || b2.createdAt || 0) - new Date(a.fecha || a.createdAt || 0)));
+      // Recuperar leads de WhatsApp que se hayan perdido por escrituras simultaneas.
+      try {
+        const byFrom = {};
+        data2.forEach((l) => { if (l.wa_from) byFrom[l.wa_from] = l; });
+        let cursor = undefined, repaired = 0;
+        for (let pg = 0; pg < 10; pg++) {
+          const lst = await env.DB.list({ prefix: "lead_wa:", cursor });
+          for (const k of lst.keys) {
+            const from = k.name.slice(8), m = k.metadata || {};
+            const ex = byFrom[from];
+            if (!ex) {
+              const rec = { id: m.id || String(Date.now()), wa_from: from, telefono: m.telefono || "+" + from, nombre: m.nombre || "Contacto WhatsApp", email: "",
+                fuente: m.source || "WhatsApp IA", source: m.source || "WhatsApp IA", createdAt: m.fecha, fecha: m.fecha, lastInboundAt: m.lastInboundAt,
+                stage: "Nuevo", ad_headline: m.ad_headline || "", propiedad: m.propiedad || "", zona_interes: m.zona_interes || "", tipo_propiedad: "", presupuesto: "",
+                followUpStage: 0, followUpStatus: "active", nextFollowUpAt: new Date(Date.now() + 2 * 864e5).toISOString() };
+              data2.push(rec); byFrom[from] = rec; repaired++;
+            } else if (m.lastInboundAt && (!ex.lastInboundAt || new Date(m.lastInboundAt) > new Date(ex.lastInboundAt))) {
+              ex.lastInboundAt = m.lastInboundAt; repaired++;
+            }
+          }
+          if (lst.list_complete) break;
+          cursor = lst.cursor;
+        }
+        if (repaired) await env.DB.put("leads", JSON.stringify(data2));
+      } catch (eRep) {}
+      const act = (l) => new Date(l.lastInboundAt || l.fecha || l.createdAt || 0).getTime() || new Date(l.fecha || l.createdAt || 0).getTime() || 0;
+      return jsonRes(data2.sort((a, b2) => act(b2) - act(a)));
     }
     if (method === "POST" && path === "/api/leads/import") {
       if (!await requireAuth(request, env)) return jsonRes({ error: "No autorizado" }, 401);
@@ -3656,6 +3711,23 @@ var index_default = {
       if (!psPhone) return jsonRes({ error: "falta ?phone=" }, 400);
       var psVal = await env.DB.get("wa_paused:" + psPhone);
       return jsonRes({ phone: psPhone, paused: !!psVal });
+    }
+    if (method === "GET" && path === "/api/whatsapp/test-ai") {
+      // Prueba de la IA sin enviar nada por WhatsApp: devuelve la respuesta que daria.
+      var taToken = new URL(request.url).searchParams.get("token");
+      if (taToken !== (env.WHATSAPP_VERIFY_TOKEN || "zona_innmueble_whatsapp_2026")) return jsonRes({ error: "no autorizado" }, 403);
+      var taMsg = new URL(request.url).searchParams.get("msg") || "\u00A1Hola! Quiero m\u00E1s informaci\u00F3n.";
+      var taAd = new URL(request.url).searchParams.get("ad");
+      var taCat = await buildWhatsAppCatalogContext(env);
+      var taPrompt = await buildWhatsAppSystemPrompt(env, taCat, taAd ? { ref: { headline: taAd, body: "" }, isFirstReply: true, contactName: "Ana" } : null);
+      var taT0 = Date.now();
+      var taReply = await askWhatsAppAssistant(env, taPrompt, [], taMsg);
+      if (violatesNoInventoryRule(taReply)) {
+        var taRetry = await askWhatsAppAssistant(env, taPrompt + "\n\nIMPORTANTE: " + NO_INVENTORY_RETRY_NOTE, [], taMsg);
+        if (taRetry && !violatesNoInventoryRule(taRetry)) taReply = taRetry;
+      }
+      taReply = taReply.replace(/\s*\[BUSQUEDA_MEDIDA\]\s*/gi, " ").trim();
+      return jsonRes({ ms: Date.now() - taT0, promptChars: taPrompt.length, model: env.ANTHROPIC_MODEL || "claude-sonnet-4-5", hasKey: !!env.ANTHROPIC_API_KEY, reply: taReply });
     }
     if (method === "GET" && path === "/api/whatsapp/debug-errors") {
       var errToken = new URL(request.url).searchParams.get("token");

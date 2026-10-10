@@ -990,3 +990,7 @@ body .zc-list li::before{content:'';flex:0 0 16px;height:16px;margin-top:2px;bor
   body .zc-list{grid-template-columns:1fr}
 }
 body .dv3-main{min-width:0}
+/* Precio de renta cuando la propiedad esta en venta y en renta */
+.pc-price-rent{display:block;margin-top:4px;font-size:.74rem;font-weight:500;letter-spacing:.02em;color:#C9A35B}
+body .dv3-price-rent{display:inline-flex;align-items:center;gap:10px;margin-top:10px;padding:8px 14px;border:1px solid rgba(201,163,91,.35);border-radius:999px;font-size:.95rem;font-weight:600;color:#fff}
+body .dv3-price-rent span{font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#C9A35B}
